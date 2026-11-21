@@ -1,0 +1,131 @@
+{
+  "app": {
+    "name": "RuptureWatch TN",
+    "title": "RuptureWatch TN, alerte précoce sur les ruptures de médicaments",
+    "description": "Prototype de plateforme d’alerte précoce et de coordination sur les ruptures de médicaments en Tunisie.",
+    "prototype": "Prototype de démonstration",
+    "skipToContent": "Aller au contenu"
+  },
+  "home": {
+    "tagline": "Repérer les ruptures de médicaments avant qu’elles n’atteignent le comptoir.",
+    "howTitle": "Comment ça marche",
+    "steps": {
+      "report": {
+        "title": "Signaler",
+        "body": "Une pharmacie déclare un médicament commandé et non livré, en deux gestes, sur le web ou par WhatsApp."
+      },
+      "signal": {
+        "title": "Qualifier",
+        "body": "Les signalements de plusieurs pharmacies, croisés avec les avis de régulateurs étrangers, donnent à chaque médicament un niveau."
+      },
+      "act": {
+        "title": "Agir",
+        "body": "Les pharmacies, les grossistes, les pharmacies hospitalières et la coordination reçoivent l’alerte et la conduite à tenir."
+      }
+    },
+    "levelsLabel": "Les quatre niveaux",
+    "rolesTitle": "Essayer le prototype",
+    "rolesIntro": "Choisissez un rôle. La connexion se fait en un clic, sans mot de passe.",
+    "rolesNote": "Les organisations de démonstration sont fictives. Leurs données portent la mention",
+    "signedInAs": "Vous êtes connecté en tant que {role}.",
+    "continue": "Continuer dans cet espace",
+    "signInError": "La connexion au rôle de démonstration a échoué. Réessayez dans un instant.",
+    "footer": "Prototype étudiant, AOTN TSYP 14. Aucun statut officiel. Données de démonstration signalées comme simulées.",
+    "statusLink": "État du service",
+    "jumpToRoles": "Choisir un rôle de démonstration"
+  },
+  "roles": {
+    "pharmacyTunis": {
+      "label": "Pharmacie (Tunis)",
+      "hint": "Signaler une commande non livrée, suivre ses médicaments."
+    },
+    "pharmacySfax": {
+      "label": "Pharmacie (Sfax)",
+      "hint": "Une autre pharmacie, dans un autre gouvernorat."
+    },
+    "wholesaler": {
+      "label": "Grossiste",
+      "hint": "Voir les signaux et leur répartition par gouvernorat."
+    },
+    "hospital": {
+      "label": "Pharmacie hospitalière",
+      "hint": "Voir les signaux qui concernent l’hôpital."
+    },
+    "coordinator": {
+      "label": "Coordination",
+      "hint": "Carte des signaux, explication de chaque niveau, journal des décisions."
+    },
+    "signInAs": "Se connecter en tant que {role}",
+    "switch": "Changer de rôle"
+  },
+  "orgTypes": {
+    "pharmacy": "Pharmacie d’officine",
+    "wholesaler": "Grossiste répartiteur",
+    "hospital_pharmacy": "Pharmacie hospitalière",
+    "coordinator": "Cellule de coordination"
+  },
+  "levels": {
+    "none": "Aucun signal",
+    "watch": "Sous surveillance",
+    "likely": "Probable",
+    "confirmed": "Confirmée",
+    "cleared": "Levée"
+  },
+  "origin": {
+    "official_source": "Source officielle",
+    "tester": "Testeur",
+    "simulated": "Simulé",
+    "label": "Origine des données : {origin}"
+  },
+  "space": {
+    "organisation": "Organisation",
+    "governorate": "Gouvernorat",
+    "emptyTitle": "Cet espace est en cours de construction",
+    "emptyBody": "Les écrans de ce rôle arrivent dans la prochaine version du prototype. Aucune donnée n’est affichée tant qu’elle n’existe pas.",
+    "profileMissing": "Ce compte n’est relié à aucune organisation de démonstration.",
+    "wrongSpace": "Cet espace n’est pas celui de votre rôle.",
+    "titles": {
+      "pharmacy": "Espace pharmacie",
+      "wholesaler": "Espace grossiste",
+      "hospital_pharmacy": "Espace pharmacie hospitalière",
+      "coordinator": "Espace coordination"
+    }
+  },
+  "status": {
+    "title": "État du service",
+    "intro": "Vérification en direct de la base de données et de la version déployée.",
+    "database": "Base de données",
+    "databaseOk": "Répond",
+    "databaseError": "Ne répond pas",
+    "schemaVersion": "Version du schéma",
+    "commit": "Version déployée",
+    "checkedAt": "Vérifié le",
+    "unknown": "Inconnue",
+    "mapTitle": "Les 24 gouvernorats",
+    "mapIntro": "Contour des gouvernorats, utilisé plus tard par la carte des signaux.",
+    "mapSource": "Limites administratives : {source}."
+  },
+  "map": {
+    "label": "Carte des gouvernorats de Tunisie",
+    "listLabel": "Valeurs par gouvernorat",
+    "noValue": "Aucune valeur"
+  },
+  "search": {
+    "title": "Vérification de la recherche",
+    "intro": "Page de contrôle, hors navigation. Tapez un nom commercial, une DCI, un mot incomplet ou mal orthographié.",
+    "label": "Médicament",
+    "placeholder": "Ex. augmentin, amoxicilline, levetir…",
+    "noResult": "Aucun médicament trouvé pour « {q} ».",
+    "tooShort": "Tapez au moins deux lettres.",
+    "error": "La recherche a échoué. Réessayez.",
+    "score": "score",
+    "results": "{count} résultats",
+    "source": "Catalogue : liste CNAM des médicaments du régime de base (VEI)."
+  },
+  "errors": {
+    "generic": "Une erreur est survenue."
+  },
+  "whatsapp": {
+    "ack": "Bien reçu : « {text} ». RuptureWatch TN, prototype."
+  }
+}

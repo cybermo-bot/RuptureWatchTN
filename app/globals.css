@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+/* Design tokens. Source: CLAUDE.md section 9. Adjust only for contrast (see docs/DECISIONS.md). */
+:root {
+  --ink: #10201b;
+  --ink-muted: #55635e;
+  --surface: #ffffff;
+  --surface-subtle: #f3f6f5;
+  --line: #dce3e0;
+  --brand: #0e6b57;
+  --brand-strong: #0a5444;
+  --level-watch: #9a7500;
+  --level-likely: #c95a14;
+  --level-confirmed: #b42318;
+  --level-cleared: #2f7d4f;
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-surface: var(--surface);
+  --color-surface-subtle: var(--surface-subtle);
+  --color-line: var(--line);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-level-watch: var(--level-watch);
+  --color-level-likely: var(--level-likely);
+  --color-level-confirmed: var(--level-confirmed);
+  --color-level-cleared: var(--level-cleared);
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    color: var(--ink);
+    background: var(--surface);
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.55;
+    text-rendering: optimizeLegibility;
+  }
+
+  a {
+    color: var(--brand);
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+
+  a:hover {
+    color: var(--brand-strong);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--brand) 18%, transparent);
+  }
+}
+
+@layer components {
+  /* Lists separated by hairlines, not cards. */
+  .hairline-list > * + * {
+    border-top: 1px solid var(--line);
+  }
+
+  .hairline-list-framed {
+    border-block: 1px solid var(--line);
+  }
+
+  /* Tables: hairline rows, subtle header band. */
+  .hairline-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hairline-table th {
+    background: var(--surface-subtle);
+    color: var(--ink-muted);
+    font-weight: 500;
+    font-size: 0.875rem;
+    text-align: start;
+    padding: 0.625rem 0.75rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .hairline-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
