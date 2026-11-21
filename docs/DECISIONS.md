@@ -29,7 +29,7 @@ Natural Earth admin-1 (public domain) has only 23 Tunisian units: Ariana (TN-12)
 - `governorate_counts` repeats in SQL the counting done by `countByGovernorate()` in `lib/signal`. This is the one place a rule exists outside `lib/signal`, because the access boundary has to be in the database. The thresholds are not decided in SQL: the server passes them from `lib/signal/params.ts`. `tests/db/access.test.ts` checks that both give the same counts on the same data, window and delay edges included.
 - `signals.evidence` and `signal_events.evidence` reject any JSON with keys such as `pharmacyId`, `organisation_id` or `reports` (check constraint).
 - `signal_events` is append only, enforced by a trigger, even for the service role. The scenario reset (session 4) can delete only inside a function that sets `rupturewatch.allow_event_reset = on` for its transaction.
-- Grants are written explicitly in each migration, so access does not depend on the project's default exposure settings.
+- Grants are written explicitly in each migration, so access does not depend on the project's default exposure settings. Our project grants nothing by default: `system_meta` had been left to the defaults and `/api/health` failed on the first deployment, fixed in migration 000700. `tests/db/grants.test.ts` now runs the migrations both with and without default grants and checks the full privilege matrix for every table and public function.
 
 ### Governorates are a migration, not a seed
 The 24 governorates (ISO 3166-2:TN, checked against the ISO list) are official reference data, not demo data, so they are inserted by a migration and exist in every environment. Seed files hold only `simulated` rows.

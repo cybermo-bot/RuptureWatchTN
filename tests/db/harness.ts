@@ -10,9 +10,20 @@ import { unaccent } from '@electric-sql/pglite/contrib/unaccent';
 const ROOT = join(__dirname, '..', '..');
 const MIGRATIONS = join(ROOT, 'supabase', 'migrations');
 
-export async function createTestDatabase(): Promise<PGlite> {
+/**
+ * defaultGrants: true mirrors older Supabase projects, which grant anon and authenticated
+ * everything on new tables in public; false mirrors newer projects, which grant nothing.
+ * Migrations must give the same access in both.
+ */
+export async function createTestDatabase({ defaultGrants = true }: { defaultGrants?: boolean } = {}): Promise<PGlite> {
   const db = await PGlite.create({ extensions: { pg_trgm, unaccent } });
   await db.exec(readFileSync(join(__dirname, 'supabase-shim.sql'), 'utf8'));
+  if (!defaultGrants) {
+    await db.exec(`
+      alter default privileges in schema public revoke all on tables from anon, authenticated, service_role;
+      alter default privileges in schema public revoke all on sequences from anon, authenticated, service_role;
+    `);
+  }
   for (const file of readdirSync(MIGRATIONS).filter((f) => f.endsWith('.sql')).sort()) {
     try {
       await db.exec(readFileSync(join(MIGRATIONS, file), 'utf8'));

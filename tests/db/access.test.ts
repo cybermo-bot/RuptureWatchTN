@@ -342,7 +342,8 @@ describe('signals and the event log', () => {
         );
         await tx.query(`update public.signal_events set rule = 'changed'`);
       }),
-    ).rejects.toThrow(/append only/);
+      // The service role has no update grant (000700); the trigger is the second barrier.
+    ).rejects.toThrow(/append only|permission denied/);
     await expect(
       as(db, { kind: 'service' }, async (tx) => {
         await tx.query(
