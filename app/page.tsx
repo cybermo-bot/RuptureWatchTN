@@ -27,7 +27,8 @@ async function readSession(): Promise<CurrentSession | null> {
 
 export default async function HomePage({ searchParams }: PageProps<'/'>) {
   const params = await searchParams;
-  const signInFailed = typeof params.erreur === 'string';
+  const signInError =
+    params.erreur === 'occupe' ? t('home.signInBusy') : typeof params.erreur === 'string' ? t('home.signInError') : null;
   const session = await readSession();
 
   return (
@@ -96,9 +97,9 @@ export default async function HomePage({ searchParams }: PageProps<'/'>) {
             </h2>
             <p className="pt-1.5 pb-5 text-ink-muted">{t('home.rolesIntro')}</p>
 
-            {signInFailed ? (
+            {signInError ? (
               <p role="alert" className="mb-5 border-s-2 border-level-confirmed ps-3 text-ink">
-                {t('home.signInError')}
+                {signInError}
               </p>
             ) : null}
 

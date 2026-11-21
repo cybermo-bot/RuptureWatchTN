@@ -38,6 +38,10 @@ The 24 governorates (ISO 3166-2:TN, checked against the ISO list) are official r
 `tests/db/` runs the real migrations in PGlite (Postgres compiled to WebAssembly, with `pg_trgm` and `unaccent`) behind a small shim for Supabase's roles and `auth.uid()` (`tests/db/supabase-shim.sql`). `tests/live/` repeats the key checks against the real project with the real demo accounts (`npm run test:live`).
 
 ### One-click demo roles
+- "Changer de rôle" signs out with `scope: 'local'`. The default (global) would revoke every session of the shared demo account, signing out other visitors using the same role.
+- Supabase limits sign-ins to 30 per 5 minutes per IP by default, and all demo sign-ins come from the server. The limit is raised in the dashboard (manual step), and a 429 shows a plain "try again in a minute" message.
+- Interface text inline in JSX fails the lint (`react/jsx-no-literals`), enforcing that all text lives in `messages/fr.json`.
+
 Five auth users, one per role button, created by `scripts/seed-demo.ts`, all sharing `DEMO_ACCOUNT_PASSWORD` from the server environment. The button sends only a role key from a fixed list. Emails use the reserved `.example` domain, so no mail can ever be sent. "Changer de rôle" signs out and returns to the role picker.
 
 ### Next.js 16 with Cache Components turned off

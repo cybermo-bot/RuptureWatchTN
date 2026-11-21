@@ -22,7 +22,8 @@ export async function signInAsDemoRole(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword({ email: role.email, password });
   if (error) {
     console.error('signInAsDemoRole failed', { role: role.key, code: error.code, status: error.status });
-    redirect('/?erreur=connexion');
+    // 429: Supabase limits sign-ins per IP, and every demo sign-in comes from this server.
+    redirect(error.status === 429 ? '/?erreur=occupe' : '/?erreur=connexion');
   }
   redirect(role.home);
 }
@@ -30,6 +31,7 @@ export async function signInAsDemoRole(formData: FormData) {
 /** "Changer de rôle": ends the demo session and returns to the role picker. */
 export async function switchRole() {
   const supabase = await createUserClient();
-  await supabase.auth.signOut();
+  // Local scope: the demo accounts are shared, so never end other visitors' sessions.
+  await supabase.auth.signOut({ scope: 'local' });
   redirect('/#roles');
 }
