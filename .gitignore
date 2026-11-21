@@ -1,0 +1,36 @@
+# dependencies
+/node_modules
+
+# testing
+/coverage
+/test-results
+/playwright-report
+
+# next.js
+/.next/
+/out/
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+
+# env files: secrets never enter the repository
+.env
+.env*.local
+.env.*
+!.env.example
+
+# vercel
+.vercel
+
+# supabase local state
+/supabase/.temp
+/supabase/.branches
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
