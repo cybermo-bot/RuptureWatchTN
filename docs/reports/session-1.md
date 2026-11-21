@@ -64,9 +64,9 @@ All in `docs/DECISIONS.md`. The main ones:
 
 ## 6. Manual steps pending for the team lead
 
-1. Fill the four Supabase values in `.env.local` (done for the three random values).
+1. Supabase: URL, publishable key and secret key received and checked (auth answers 200 with both keys). Still needed: the database connection string (`SUPABASE_DB_URL`, session pooler), without which the migrations cannot be applied.
 2. Supabase dashboard, Authentication → Rate Limits: raise "sign-ups and sign-ins" from 30 to about 300 per 5 minutes. Every demo sign-in comes from the server's IP.
-3. Create the GitHub repository and give its URL, so the code can be pushed and CI can run.
+3. GitHub repository received; `main` pushed to https://github.com/cybermo-bot/RuptureWatchTN. The repository is private, so the CI result has to be read in its Actions tab.
 4. Import the repository in Vercel and add the environment values (not `SUPABASE_DB_URL`, which stays on your machine).
 5. GitHub repository variable `HEALTH_URL` = `https://<deployment>/api/health`, then run the keep-alive workflow once by hand.
 6. Meta: give the WhatsApp values, then set the webhook URL to `https://<deployment>/api/whatsapp/webhook` with the verify token from `.env.local`, and subscribe to `messages`.
