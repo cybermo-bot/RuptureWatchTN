@@ -13,7 +13,7 @@ loadLocalEnv();
 const dbUrl = need('SUPABASE_DB_URL');
 const cli = join(ROOT, 'node_modules', 'supabase', 'dist', 'supabase.js');
 
-const result = spawnSync(process.execPath, [cli, 'db', 'push', '--db-url', dbUrl, ...process.argv.slice(2)], {
+const result = spawnSync(process.execPath, [cli, 'db', 'push', `--remote=${dbUrl}`, ...process.argv.slice(2)], {
   cwd: ROOT,
   stdio: 'inherit',
 });
