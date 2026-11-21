@@ -16,7 +16,7 @@ export async function SpacePage({ type }: { type: OrganisationType }) {
 
   const { organisation } = session;
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col">
       <PageHeader
         meta={t(`orgTypes.${organisation.type}`)}
         title={t(`space.titles.${organisation.type}`)}
@@ -32,7 +32,7 @@ export async function SpacePage({ type }: { type: OrganisationType }) {
           </dl>
         }
       />
-      <EmptyState title={t('space.emptyTitle')} body={t('space.emptyBody')} />
+      <EmptyState afterRule title={t('space.emptyTitle')} body={t('space.emptyBody')} />
     </div>
   );
 }
