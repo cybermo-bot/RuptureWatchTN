@@ -1,6 +1,8 @@
 {
   "app": {
     "name": "RuptureWatch TN",
+    "wordmark": "RuptureWatch",
+    "wordmarkCountry": "TN",
     "title": "RuptureWatch TN, alerte précoce sur les ruptures de médicaments",
     "description": "Prototype de plateforme d’alerte précoce et de coordination sur les ruptures de médicaments en Tunisie.",
     "prototype": "Prototype de démonstration",
@@ -32,7 +34,8 @@
     "signInError": "La connexion au rôle de démonstration a échoué. Réessayez dans un instant.",
     "footer": "Prototype étudiant, AOTN TSYP 14. Aucun statut officiel. Données de démonstration signalées comme simulées.",
     "statusLink": "État du service",
-    "jumpToRoles": "Choisir un rôle de démonstration"
+    "jumpToRoles": "Choisir un rôle de démonstration",
+    "signInBusy": "Trop de connexions de démonstration en même temps. Réessayez dans une minute."
   },
   "roles": {
     "pharmacyTunis": {
@@ -123,7 +126,14 @@
     "source": "Catalogue : liste CNAM des médicaments du régime de base (VEI)."
   },
   "errors": {
-    "generic": "Une erreur est survenue."
+    "generic": "Une erreur est survenue.",
+    "notFoundTitle": "Page introuvable",
+    "notFoundBody": "Cette adresse ne correspond à aucune page du prototype.",
+    "errorTitle": "Cette page n’a pas pu s’afficher",
+    "errorBody": "Une erreur inattendue est survenue. Rien n’a été enregistré à votre place. Réessayez, ou revenez à l’accueil.",
+    "retry": "Réessayer",
+    "home": "Revenir à l’accueil",
+    "reference": "Référence de l’erreur : {digest}"
   },
   "whatsapp": {
     "ack": "Bien reçu : « {text} ». RuptureWatch TN, prototype."

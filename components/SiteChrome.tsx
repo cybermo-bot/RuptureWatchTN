@@ -8,8 +8,8 @@ export function Wordmark() {
       href="/"
       className="inline-flex min-h-12 items-center gap-1.5 text-ink no-underline hover:text-ink"
     >
-      <span className="text-[1.0625rem] font-semibold tracking-tight">RuptureWatch</span>
-      <span className="font-mono text-sm text-ink-muted">TN</span>
+      <span className="text-[1.0625rem] font-semibold tracking-tight">{t('app.wordmark')}</span>
+      <span className="font-mono text-sm text-ink-muted">{t('app.wordmarkCountry')}</span>
       <span className="sr-only">, {t('app.title')}</span>
     </Link>
   );
