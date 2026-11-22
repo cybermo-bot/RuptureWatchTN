@@ -17,6 +17,14 @@ const STEPS: { id: string; title: MessageKey; body: MessageKey }[] = [
 
 const LEVELS: Level[] = ['watch', 'likely', 'confirmed', 'cleared'];
 
+// What a visitor can look at without choosing a role, the scenario first.
+const EXPLORE: { href: string; title: MessageKey; body: MessageKey }[] = [
+  { href: '/scenario', title: 'core.home.explore.scenario.title', body: 'core.home.explore.scenario.body' },
+  { href: '/vues', title: 'core.home.explore.views.title', body: 'core.home.explore.views.body' },
+  { href: '/methode', title: 'core.home.explore.method.title', body: 'core.home.explore.method.body' },
+  { href: '/retour', title: 'core.home.explore.replay.title', body: 'core.home.explore.replay.body' },
+];
+
 async function readSession(): Promise<CurrentSession | null> {
   try {
     return await getCurrentSession();
@@ -49,9 +57,12 @@ export default async function HomePage({ searchParams }: PageProps<'/'>) {
               >
                 {t('core.home.tagline')}
               </h1>
+              <ButtonLink href="/scenario" className="mt-8">
+                {t('core.home.scenarioCta')}
+              </ButtonLink>
               <a
                 href="#roles"
-                className="mt-6 inline-flex min-h-12 items-center gap-2 font-medium text-brand underline underline-offset-4 lg:hidden"
+                className="mt-4 flex min-h-12 w-fit items-center gap-2 font-medium text-brand underline underline-offset-4 lg:hidden"
               >
                 {t('core.home.jumpToRoles')}
                 <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
@@ -89,6 +100,22 @@ export default async function HomePage({ searchParams }: PageProps<'/'>) {
                   </li>
                 ))}
               </ol>
+            </section>
+
+            <section aria-labelledby="comprendre" className="pb-12 lg:pb-24">
+              <h2 id="comprendre" className="pb-4 text-sm font-medium text-ink-muted">
+                {t('core.home.exploreTitle')}
+              </h2>
+              <ul className="hairline-list border-y border-line">
+                {EXPLORE.map((item) => (
+                  <li key={item.href}>
+                    <Link href={item.href} className="group flex min-h-12 flex-col gap-1 py-4 no-underline">
+                      <span className="font-semibold text-brand underline underline-offset-4">{t(item.title)}</span>
+                      <span className="max-w-prose text-ink-muted">{t(item.body)}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </section>
           </div>
 
