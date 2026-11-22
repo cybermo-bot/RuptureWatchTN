@@ -385,5 +385,69 @@
       "polling": "Mise à jour toutes les quelques secondes."
     },
     "changeTo": "devient"
+  },
+  "export": {
+    "title": "Exporter les données",
+    "intro": "Les signaux en cours et le nombre de pharmacies qui signalent, par gouvernorat. Uniquement des totaux : aucun fichier ne contient le nom, l’identifiant ou l’adresse d’une pharmacie.",
+    "csv": "Télécharger en CSV",
+    "json": "Télécharger en JSON",
+    "formatNote": "CSV : une ligne par médicament et par gouvernorat où des pharmacies signalent (une seule ligne, sans gouvernorat, si aucune). JSON : un objet par médicament, avec la liste de ses gouvernorats.",
+    "columnsTitle": "Colonnes",
+    "colName": "Colonne",
+    "colMeaning": "Signification",
+    "colOrigin": "D’où vient la valeur",
+    "smallCounts": "Les nombres de pharmacies de 1 et 2 s’écrivent « <3 ». Quand le total est « <3 », le nombre de gouvernorats est laissé vide : avec lui, on pourrait déduire 1 ou 2.",
+    "disclaimer": "Ces données ne sont pas une déclaration officielle de rupture. Les lignes marquées « simulated » viennent des organisations de démonstration.",
+    "back": "Retour à la coordination",
+    "columns": {
+      "molecule_id": {
+        "meaning": "Identifiant de la molécule dans RuptureWatch.",
+        "origin": "Catalogue national (liste CNAM), importé."
+      },
+      "molecule_name": {
+        "meaning": "Nom de la molécule (DCI), tel qu’écrit dans la liste CNAM.",
+        "origin": "Catalogue national (liste CNAM)."
+      },
+      "level": {
+        "meaning": "Niveau actuel : watch (sous surveillance), likely (probable), confirmed (confirmée), cleared (levée).",
+        "origin": "Calculé par les règles d’alerte à partir des signalements et des avis étrangers."
+      },
+      "since": {
+        "meaning": "Date et heure (UTC) depuis lesquelles le médicament est à ce niveau.",
+        "origin": "Calculé par les règles d’alerte."
+      },
+      "rule": {
+        "meaning": "Identifiant de la règle qui a fixé le niveau. La page « Méthode » explique chaque règle.",
+        "origin": "Calculé par les règles d’alerte."
+      },
+      "pharmacies_14d": {
+        "meaning": "Pharmacies distinctes qui signalent une commande non livrée depuis plus de 72 heures, sur les 14 derniers jours, dans tout le pays.",
+        "origin": "Signalements des pharmacies (web et WhatsApp), comptés au dernier calcul du niveau."
+      },
+      "governorates_14d": {
+        "meaning": "Nombre de gouvernorats de ces pharmacies. Vide si le total de pharmacies est « <3 ».",
+        "origin": "Signalements des pharmacies, au dernier calcul du niveau."
+      },
+      "pharmacies_7d": {
+        "meaning": "Même décompte sur les 7 derniers jours.",
+        "origin": "Signalements des pharmacies, au dernier calcul du niveau."
+      },
+      "origins": {
+        "meaning": "Origine des données derrière ce niveau : official_source (source officielle), tester (pharmacien testeur), simulated (démonstration).",
+        "origin": "Origine enregistrée sur chaque signalement et chaque avis."
+      },
+      "governorate_code": {
+        "meaning": "Code ISO 3166-2 du gouvernorat (TN-11 pour Tunis).",
+        "origin": "Liste officielle ISO 3166-2:TN."
+      },
+      "governorate_name": {
+        "meaning": "Nom du gouvernorat.",
+        "origin": "Liste officielle ISO 3166-2:TN."
+      },
+      "governorate_pharmacies_14d": {
+        "meaning": "Pharmacies distinctes de ce gouvernorat qui signalent ce médicament sur les 14 derniers jours.",
+        "origin": "Signalements des pharmacies, comptés au moment de l’export."
+      }
+    }
   }
 }
