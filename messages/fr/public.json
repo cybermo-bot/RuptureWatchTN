@@ -32,5 +32,23 @@
     "prescribers": {
       "title": "Vérification rapide pour les prescripteurs"
     }
+  },
+  "map": {
+    "label": "Carte",
+    "loading": "Chargement de la carte…",
+    "fallbackNote": "Carte de secours : OpenStreetMap. Google Maps n’est pas disponible pour le moment.",
+    "nearMe": "Près de moi",
+    "locating": "Recherche de votre position…",
+    "positionNote": "Votre position reste sur votre téléphone. Elle n’est jamais enregistrée.",
+    "positionDenied": "Position non autorisée. La carte reste où elle est.",
+    "positionUnavailable": "Position introuvable pour le moment.",
+    "you": "Vous êtes ici",
+    "testPage": {
+      "title": "Essai de la carte des patients",
+      "intro": "Deux points de test fictifs, pour vérifier la carte et sa carte de secours. Aucune pharmacie réelle.",
+      "marker1": "Point de test 1",
+      "marker2": "Point de test 2",
+      "detail": "Position fictive"
+    }
   }
 }

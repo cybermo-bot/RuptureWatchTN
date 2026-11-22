@@ -4,6 +4,13 @@ Newest first. Each entry: what was decided, and why.
 
 ## 2026-11-22, shared foundations
 
+### One patient map: Google Maps when a key works, Leaflet with OpenStreetMap otherwise
+- `components/maps/PatientMap.tsx` loads the Google Maps JavaScript API itself (one script tag, `loading=async`, a callback), with no wrapper library. It falls back to OpenStreetMap when the browser key is absent, the script fails or takes more than 8 seconds, or Google refuses the key (`gm_authFailure`: wrong referrer, quota, billing).
+- `leaflet` (npm, BSD-2-Clause): the fallback map. Small (about 40 KB gzipped), no API key, loaded with a dynamic import only when the fallback is used. `@types/leaflet` and `@types/google.maps` (dev only): types for the two map APIs, so the component stays under strict TypeScript.
+- `onProvider` tells the page which map is showing, so a page can keep Google Places results off the fallback map (rule 13).
+- Markers use Google's `AdvancedMarkerElement`, which needs a map ID. `NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID` holds ours; without it Google's documented `DEMO_MAP_ID` is used, which is fine for development but not for production.
+- `/dev/carte` is a check page with two fictional test points, not linked from the interface.
+
 ### Message files split by track, keys prefixed by namespace
 - `messages/fr/{core,public,directory,library,wholesaler}.json` and `messages/ar/{public,directory,library}.json`. Every key starts with its namespace (`core.home.tagline`, `public.pages.medicines.title`), so the type checker catches a key in the wrong file and two tracks never edit the same file. Existing keys moved to `core` unchanged.
 - `t()` stays French. Public pages use `translator(locale)` with the locale from `getTranslator()` (`lib/i18n-server.ts`). A key missing in Arabic shows the French text and warns once in development.
