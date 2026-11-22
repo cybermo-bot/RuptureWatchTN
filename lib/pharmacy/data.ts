@@ -186,10 +186,18 @@ export interface Impact {
   windowDays: number;
 }
 
-/** What the pharmacy's report added to, nationally: counts only (report_impact). */
-export async function getImpact(moleculeId: string): Promise<Impact | null> {
+/**
+ * What the pharmacy's report added to, nationally: counts only (report_impact).
+ * The time is passed from this server, whose clock also stamped the report's reported_at:
+ * with the database's own now(), a report stamped a few seconds ahead would not count yet.
+ */
+export async function getImpact(moleculeId: string, at: Date = new Date()): Promise<Impact | null> {
   const supabase = await createUserClient();
-  const { data, error } = await supabase.rpc('report_impact', { p_molecule_id: moleculeId, ...countingParams() });
+  const { data, error } = await supabase.rpc('report_impact', {
+    p_molecule_id: moleculeId,
+    ...countingParams(),
+    p_at: at.toISOString(),
+  });
   if (error) {
     console.error('report_impact failed', error.message);
     return null;

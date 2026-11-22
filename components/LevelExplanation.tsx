@@ -11,13 +11,15 @@ function pharmacies(n: number): string {
 }
 
 export function explanationText(rule: RuleId, evidence: StoredEvidence): string {
-  return t(`rules.${rule}`, {
+  const text = t(`rules.${rule}`, {
     pharmacies: pharmacies(evidence.pharmacies14d),
     pharmacies7d: pharmacies(evidence.pharmacies7d),
     delivered: pharmacies(evidence.deliveredAgainPharmacies),
     governorates: evidence.governorates14d,
     sources: (evidence.notices ?? []).map((n) => n.source).join(t('explanation.sourcesSeparator')),
   });
+  // A sentence may start with a count ("moins de 3 pharmacies…"): capitalise it.
+  return text.charAt(0).toLocaleUpperCase('fr') + text.slice(1);
 }
 
 export function LevelExplanation({
