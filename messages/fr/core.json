@@ -604,5 +604,44 @@
       }
     },
     "backHome": "Retour à l’accueil"
+  },
+  "scenario": {
+    "title": "Le scénario : une rupture simulée, du premier signe à la levée",
+    "intro": "Trois semaines de signalements fictifs pour un médicament fictif, joués pas à pas par les vraies règles d’alerte. Tout se passe dans votre navigateur : rien n’est écrit dans la base de données.",
+    "molecule": "Médicament de démonstration (fictif)",
+    "noticeSource": "Autorité étrangère fictive",
+    "play": "Lancer le scénario",
+    "resume": "Reprendre",
+    "pause": "Pause",
+    "step": "Étape suivante",
+    "restart": "Recommencer",
+    "progress": "Étape {n} sur {total}",
+    "day": "Jour {day}",
+    "startText": "Avant le scénario : aucun signalement, aucun avis étranger.",
+    "foreignNotice": "Une autorité étrangère (fictive) publie un avis de pénurie pour ce médicament.",
+    "firstReport": "Une pharmacie de {governorate} signale une commande non livrée.",
+    "secondReport": "Une deuxième pharmacie de {governorate} signale une commande non livrée.",
+    "thirdReport": "Une troisième pharmacie de {governorate} signale une commande non livrée.",
+    "otherGovernorate": "Une pharmacie de {governorate} signale à son tour : c’est un deuxième gouvernorat.",
+    "fifthReport": "Une autre pharmacie de {governorate} signale une commande non livrée.",
+    "deliveredAgain": "Une pharmacie de {governorate} signale que le médicament est de nouveau livré.",
+    "whatHappens": "Ce qui se passe",
+    "levelTitle": "Niveau",
+    "unchanged": "Le niveau ne change pas.",
+    "changedFrom": "Avant : {level}",
+    "alertsTitle": "Qui reçoit une alerte",
+    "alertsNone": "Personne : le niveau ne change pas.",
+    "recipients": {
+      "followers": "Les pharmacies qui suivent ce médicament",
+      "wholesalers": "Les grossistes",
+      "hospitals": "Les pharmacies hospitalières",
+      "coordination": "La coordination"
+    },
+    "standDown": "C’est un message de levée : l’alerte est terminée.",
+    "historyTitle": "Changements de niveau",
+    "historyEmpty": "Aucun changement pour l’instant.",
+    "end": "Fin du scénario : le médicament est de nouveau livré, l’alerte est levée.",
+    "memoryNote": "Rien n’est enregistré : « Recommencer » remet tout à zéro.",
+    "controls": "Commandes du scénario"
   }
 }
