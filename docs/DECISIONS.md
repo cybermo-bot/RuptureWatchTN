@@ -2,6 +2,14 @@
 
 Newest first. Each entry: what was decided, and why.
 
+## 2026-11-22, session 4
+
+### Fixes from session 2's questions
+- **Valproate**: the demo pharmacies follow both ACIDE VALPROIQUE (Depakine, Valoxine) and VALPROATE DE SODIUM + ACIDE VALPROIQUE (`supabase/seed/demo-follows.json`, applied live).
+- **No exact count under 3 through the API** (migration 0011). Signed-in users lose select on `signals.evidence` and `signal_events.evidence` and keep it on the other columns (level, since, rule, times), so Realtime still announces changes. Evidence is read only through `signals_view`, `signal_events_view` and `my_alerts`, which pass it through `app.shown_evidence`: pharmacy counts 1 and 2 become `'<3'`, the number of governorates is withheld (null) below 3 pharmacies, and the object is rebuilt key by key so a key added to stored evidence later is never passed on unseen. The stored evidence stays exact for the service role and the audit. `lib/signals/shown.ts` applies the same rule in TypeScript for the in-memory scenario; a test checks that both agree. `explanationText` also suppresses a raw 1 or 2, in case exact counts are ever passed to it.
+- **Impact wording**: `report_impact` keeps counting the reporting pharmacy; the sentence now says so: "Avec la vôtre, N pharmacies signalent ce médicament…", "Avec la vôtre, moins de 3 pharmacies…" below 3.
+- **Tester numbering** (migration 0012): `reset_tester_numbering()` restarts the sequence at 1 only when no tester pharmacy exists, so two pharmacies can never share a number; the migration calls it once. `npm run verify:clean` calls it after removing a run's testers, and no longer removes the seeded follows of the demo pharmacies when re-seeding happened after `--since`.
+
 ## 2026-11-22, shared foundations
 
 ### One patient map: Google Maps when a key works, Leaflet with OpenStreetMap otherwise

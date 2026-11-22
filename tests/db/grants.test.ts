@@ -20,8 +20,9 @@ const TABLES: Record<string, { anon?: Priv[]; authenticated?: Priv[]; service_ro
   profiles: { authenticated: ['select'], service_role: ALL },
   followed_molecules: { authenticated: ['select', 'insert', 'delete'], service_role: ALL },
   reports: { authenticated: ['select', 'insert'], service_role: ALL },
-  signals: { authenticated: ['select'], service_role: ALL },
-  signal_events: { authenticated: ['select'], service_role: ['select', 'insert', 'delete'] },
+  // signals and signal_events: select on the columns without counts only (see below).
+  signals: { service_role: ALL },
+  signal_events: { service_role: ['select', 'insert', 'delete'] },
   alerts: { authenticated: ['select'], service_role: ALL },
   wa_inbound: { service_role: ALL },
   // Requests: no direct access but the service role (functions only).
@@ -45,6 +46,10 @@ const FUNCTIONS: Record<string, { anon: boolean; authenticated: boolean }> = {
   'public.requests_for_my_pharmacy()': { anon: false, authenticated: true },
   'public.request_answers_public(uuid)': { anon: true, authenticated: true },
   'public.demand_by_governorate(uuid, integer)': { anon: false, authenticated: true },
+  'public.signals_view(uuid[])': { anon: false, authenticated: true },
+  'public.signal_events_view(uuid, integer)': { anon: false, authenticated: true },
+  'public.my_alerts(integer)': { anon: false, authenticated: true },
+  'public.reset_tester_numbering()': { anon: false, authenticated: false },
 };
 
 const ROLES = ['anon', 'authenticated', 'service_role'] as const;
@@ -89,6 +94,19 @@ describe.each([
       ]);
       expect({ role, callable: rows[0].ok }).toEqual({ role, callable: expected[role] });
     }
+  });
+
+  it.each([
+    ['signals', ['molecule_id', 'level', 'since', 'rule', 'evidence', 'updated_at']],
+    ['signal_events', ['id', 'molecule_id', 'from_level', 'to_level', 'rule', 'evidence', 'at']],
+  ])('a signed-in user may select every column of %s but evidence', async (table, columns) => {
+    const { rows } = await db.query<{ col: string }>(
+      `select c as col from unnest($1::text[]) c where has_column_privilege('authenticated', $2, c, 'select') order by 1`,
+      [columns, `public.${table}`],
+    );
+    expect(rows.map((r) => r.col)).toEqual(columns.filter((c) => c !== 'evidence').sort());
+    const anon = await db.query<{ ok: boolean }>(`select has_any_column_privilege('anon', $1, 'select') as ok`, [`public.${table}`]);
+    expect(anon.rows[0].ok).toBe(false);
   });
 
   it('a signed-in user may insert into availability_answers only the columns a pharmacy fills', async () => {

@@ -301,10 +301,16 @@ describe('what a pharmacy can see', () => {
   it('no table or function a pharmacy can read returns another organisation’s id or name', async () => {
     const seen = await as(db, user(USER.p2), async (tx) => {
       const out: unknown[] = [];
-      for (const table of ['organisations', 'profiles', 'reports', 'followed_molecules', 'signals', 'signal_events', 'alerts', 'foreign_notices']) {
+      for (const table of ['organisations', 'profiles', 'reports', 'followed_molecules', 'alerts', 'foreign_notices']) {
         out.push((await tx.query(`select * from public.${table}`)).rows);
       }
+      // signals and signal_events: only the columns without counts are readable (migration 0011).
+      out.push((await tx.query('select molecule_id, level, since, rule, updated_at from public.signals')).rows);
+      out.push((await tx.query('select id, molecule_id, from_level, to_level, rule, at from public.signal_events')).rows);
       out.push((await tx.query(`select * from public.report_impact($1)`, [MOL])).rows);
+      for (const fn of ['signals_view()', 'signal_events_view()', 'my_alerts()']) {
+        out.push((await tx.query(`select * from public.${fn}`)).rows);
+      }
       return JSON.stringify(out);
     });
     for (const [orgId, name] of Object.entries(NAMES)) {

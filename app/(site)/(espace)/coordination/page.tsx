@@ -10,8 +10,8 @@ import { HOME_BY_TYPE } from '@/lib/demo/roles';
 import { createUserClient } from '@/lib/db/server';
 import { formatDate } from '@/lib/format';
 import { t } from '@/lib/i18n';
-import type { Level, RuleId } from '@/lib/signal';
-import type { StoredEvidence } from '@/lib/signals/recompute';
+import type { Level } from '@/lib/signal';
+import type { SignalRow } from '@/lib/pharmacy/data';
 
 const RANK: Record<Level, number> = { confirmed: 4, likely: 3, watch: 2, cleared: 1, none: 0 };
 
@@ -23,16 +23,16 @@ export default async function CoordinationHome() {
   if (session.organisation.type !== 'coordinator') redirect(HOME_BY_TYPE[session.organisation.type]);
 
   const supabase = await createUserClient();
-  const { data, error } = await supabase.from('signals').select('molecule_id, level, since, rule, evidence, molecules ( name )');
-  if (error) throw new Error(`signals: ${error.message}`);
-  const signals = (data ?? [])
+  const { data, error } = await supabase.rpc('signals_view', {});
+  if (error) throw new Error(`signals_view: ${error.message}`);
+  const signals = ((data ?? []) as SignalRow[])
     .map((s) => ({
-      moleculeId: s.molecule_id as string,
-      name: (s.molecules as unknown as { name: string } | null)?.name ?? '',
-      level: s.level as Level,
-      since: s.since as string,
-      rule: s.rule as RuleId,
-      evidence: s.evidence as StoredEvidence,
+      moleculeId: s.molecule_id,
+      name: s.molecule_name,
+      level: s.level,
+      since: s.since,
+      rule: s.rule,
+      evidence: s.evidence,
     }))
     .sort((a, b) => RANK[b.level] - RANK[a.level] || b.since.localeCompare(a.since));
 

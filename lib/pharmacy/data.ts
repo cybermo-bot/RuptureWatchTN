@@ -1,17 +1,22 @@
 // What a pharmacy's screens read. Everything goes through the visitor's own session, so
 // row-level security applies: a pharmacy reads its own reports, follows and alerts, the
-// public catalogue, and signals as counts. Nothing here uses the service role.
+// public catalogue, and signals as display counts (signals_view, my_alerts: counts under 3
+// read '<3'). Nothing here uses the service role.
 
 import 'server-only';
 import { createUserClient } from '@/lib/db/server';
 import { activeNotices, DEFAULT_PARAMS, type ForeignNotice, type Level, type Origin, type RuleId } from '@/lib/signal';
-import { countingParams, type StoredEvidence } from '@/lib/signals/recompute';
+import { countingParams } from '@/lib/signals/recompute';
+import type { ShownEvidence } from '@/lib/signals/shown';
+import type { Impact } from './impact-text';
+
+export type { Impact };
 
 export interface SignalView {
   level: Level;
   since: string;
   rule: RuleId;
-  evidence: StoredEvidence;
+  evidence: ShownEvidence;
 }
 
 export interface FollowedMolecule {
@@ -20,20 +25,28 @@ export interface FollowedMolecule {
   signal: SignalView | null;
 }
 
+/** A row of signals_view (migration 0011). */
+export interface SignalRow {
+  molecule_id: string;
+  molecule_name: string;
+  level: Level;
+  since: string;
+  rule: RuleId;
+  evidence: ShownEvidence;
+  updated_at: string;
+}
+
 const RANK: Record<Level, number> = { confirmed: 4, likely: 3, watch: 2, cleared: 1, none: 0 };
 
 export async function signalsFor(moleculeIds: string[]): Promise<Map<string, SignalView>> {
   if (moleculeIds.length === 0) return new Map();
   const supabase = await createUserClient();
-  const { data, error } = await supabase
-    .from('signals')
-    .select('molecule_id, level, since, rule, evidence')
-    .in('molecule_id', moleculeIds);
-  if (error) throw new Error(`signals: ${error.message}`);
+  const { data, error } = await supabase.rpc('signals_view', { p_molecule_ids: moleculeIds });
+  if (error) throw new Error(`signals_view: ${error.message}`);
   return new Map(
-    (data ?? []).map((s) => [
-      s.molecule_id as string,
-      { level: s.level as Level, since: s.since as string, rule: s.rule as RuleId, evidence: s.evidence as StoredEvidence },
+    ((data ?? []) as SignalRow[]).map((s) => [
+      s.molecule_id,
+      { level: s.level, since: s.since, rule: s.rule, evidence: s.evidence },
     ]),
   );
 }
@@ -132,43 +145,36 @@ export interface AlertView {
   from: Level;
   to: Level;
   rule: RuleId;
-  evidence: StoredEvidence;
+  evidence: ShownEvidence;
 }
 
-interface AlertEventRow {
+interface AlertRow {
+  id: string;
+  sent_at: string;
+  read_at: string | null;
+  molecule_id: string;
+  molecule_name: string;
   from_level: Level;
   to_level: Level;
   rule: RuleId;
-  evidence: StoredEvidence;
-  molecule_id: string;
-  molecules: { name: string } | null;
+  evidence: ShownEvidence;
 }
 
 export async function getAlerts(): Promise<AlertView[]> {
   const supabase = await createUserClient();
-  const { data, error } = await supabase
-    .from('alerts')
-    .select('id, sent_at, read_at, signal_events ( from_level, to_level, rule, evidence, molecule_id, molecules ( name ) )')
-    .order('sent_at', { ascending: false })
-    .limit(50);
-  if (error) throw new Error(`alerts: ${error.message}`);
-  return (data ?? []).flatMap((a) => {
-    const e = a.signal_events as unknown as AlertEventRow | null;
-    if (!e) return [];
-    return [
-      {
-        id: a.id as string,
-        sentAt: a.sent_at as string,
-        readAt: a.read_at as string | null,
-        moleculeId: e.molecule_id,
-        moleculeName: e.molecules?.name ?? '',
-        from: e.from_level,
-        to: e.to_level,
-        rule: e.rule,
-        evidence: e.evidence,
-      },
-    ];
-  });
+  const { data, error } = await supabase.rpc('my_alerts', { p_limit: 50 });
+  if (error) throw new Error(`my_alerts: ${error.message}`);
+  return ((data ?? []) as AlertRow[]).map((a) => ({
+    id: a.id,
+    sentAt: a.sent_at,
+    readAt: a.read_at,
+    moleculeId: a.molecule_id,
+    moleculeName: a.molecule_name,
+    from: a.from_level,
+    to: a.to_level,
+    rule: a.rule,
+    evidence: a.evidence,
+  }));
 }
 
 export async function countUnreadAlerts(): Promise<number> {
@@ -178,13 +184,6 @@ export async function countUnreadAlerts(): Promise<number> {
   return count ?? 0;
 }
 
-export interface Impact {
-  /** "<3" below 3 pharmacies, otherwise the number. */
-  pharmacies: string;
-  /** Withheld (null) below 3 pharmacies. */
-  governorates: number | null;
-  windowDays: number;
-}
 
 /**
  * What the pharmacy's report added to, nationally: counts only (report_impact).

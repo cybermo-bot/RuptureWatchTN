@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { explanationText } from '@/components/LevelExplanation';
-import type { StoredEvidence } from '@/lib/signals/recompute';
+import type { ShownEvidence } from '@/lib/signals/shown';
 
-const evidence = (e: Partial<StoredEvidence>): StoredEvidence => ({
+const evidence = (e: Partial<ShownEvidence>): ShownEvidence => ({
   pharmacies14d: 0,
   governorates14d: 0,
   pharmacies7d: 0,
@@ -15,9 +15,16 @@ const evidence = (e: Partial<StoredEvidence>): StoredEvidence => ({
 
 describe('explanation sentences', () => {
   it('shows pharmacy counts under 3 as "moins de 3" and capitalises the sentence', () => {
-    expect(explanationText('local_reports_below_threshold', evidence({ pharmacies14d: 1, governorates14d: 1 }))).toBe(
+    expect(explanationText('local_reports_below_threshold', evidence({ pharmacies14d: '<3', governorates14d: null }))).toBe(
       'Moins de 3 pharmacie(s) signale(nt) une commande non livrée depuis plus de 72 heures sur les 14 derniers jours.',
     );
+  });
+
+  it('still reads "moins de 3" if exact counts of 1 or 2 are passed by mistake', () => {
+    for (const n of [1, 2]) {
+      expect(explanationText('two_pharmacies_7d', evidence({ pharmacies7d: n }))).toMatch(/^Moins de 3 pharmacies/);
+      expect(explanationText('local_reports_below_threshold', evidence({ pharmacies14d: n, governorates14d: n }))).toMatch(/^Moins de 3/);
+    }
   });
 
   it('fills pharmacies and governorates from the counts', () => {
