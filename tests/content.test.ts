@@ -3,7 +3,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import fr from '@/messages/fr.json';
+import core from '@/messages/fr/core.json';
 import type { RuleId } from '@/lib/signal';
 import { t, tList } from '@/lib/i18n';
 
@@ -28,25 +28,25 @@ const RULES = {
   cleared_expired: true,
 } satisfies Record<RuleId, true>;
 
-describe('team content in messages/fr.json', () => {
+describe('team content in messages/fr/core.json', () => {
   it('guidance is copied word for word from docs/content/guidance.fr.json', () => {
-    expect(fr.guidance).toEqual(content('guidance.fr.json'));
+    expect(core.guidance).toEqual(content('guidance.fr.json'));
   });
 
   it('rule sentences are copied word for word from docs/content/rules.fr.json', () => {
-    expect(fr.rules).toEqual(content('rules.fr.json'));
+    expect(core.rules).toEqual(content('rules.fr.json'));
   });
 
   it.each(Object.keys(RULES))('rule %s has a sentence', (rule) => {
-    const sentence = (fr.rules as Record<string, string>)[rule];
+    const sentence = (core.rules as Record<string, string>)[rule];
     expect(typeof sentence).toBe('string');
     expect(sentence.length).toBeGreaterThan(10);
   });
 
   it('every rule sentence has a level guidance and the disclaimer is the product rule line', () => {
-    expect(t('guidance.disclaimer')).toBe("Ceci n'est pas une déclaration officielle de rupture.");
+    expect(t('core.guidance.disclaimer')).toBe("Ceci n'est pas une déclaration officielle de rupture.");
     for (const level of ['watch', 'likely', 'confirmed', 'cleared'] as const) {
-      expect(tList(`guidance.levels.${level}.guidance`).length).toBeGreaterThan(0);
+      expect(tList(`core.guidance.levels.${level}.guidance`).length).toBeGreaterThan(0);
     }
   });
 });

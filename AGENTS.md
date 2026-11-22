@@ -55,7 +55,7 @@ If a task seems to require breaking one, stop and ask.
 - **Explain every level.** Wherever a level is shown, one tap reveals why: which rule fired, how many pharmacies, how many governorates, which foreign notice.
 - **A stranger understands it in two minutes.** One-click demo roles, no password, a "run the scenario" button, plain French.
 - **Works on a modest Android phone on mobile data.** Design at 360 px first. Keep pages light.
-- **French interface, public pages in French and Arabic.** All text lives in `messages/fr.json` and `messages/ar.json`, never inline in components. Public pages switch to Arabic with correct right-to-left layout; the professional spaces stay in French.
+- **French interface, public pages in French and Arabic.** All text lives in `messages/fr/<namespace>.json` and `messages/ar/<namespace>.json`, keys prefixed by namespace (`public.request.title`), never inline in components. Public pages switch to Arabic with correct right-to-left layout; the professional spaces stay in French.
 - **Honest by default.** Limits, unknowns and simulated data are stated in the interface, in plain words.
 
 ## 5. Stack
@@ -82,8 +82,8 @@ components/           UI components
 lib/signal/           warning logic (do not duplicate)
 lib/db/               database access helpers
 lib/whatsapp/         Cloud API client and message parsing
-messages/fr.json      all interface text, French
-messages/ar.json      Arabic, public pages
+messages/fr/<ns>.json all interface text, French, one file per namespace (core, public, directory, library, wholesaler)
+messages/ar/<ns>.json Arabic, public namespaces only (public, directory, library)
 supabase/migrations/  SQL migrations, numbered
 supabase/seed/        seed files, all rows marked simulated
 scripts/              data import scripts

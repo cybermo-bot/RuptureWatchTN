@@ -23,27 +23,27 @@ export async function PharmacyHeader({ session, active }: { session: CurrentSess
   return (
     <header className="flex flex-col gap-6">
       <div className="flex flex-col gap-1">
-        <p className="text-sm text-ink-muted">{t('orgTypes.pharmacy')}</p>
-        <h1 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">{t('space.titles.pharmacy')}</h1>
+        <p className="text-sm text-ink-muted">{t('core.orgTypes.pharmacy')}</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">{t('core.space.titles.pharmacy')}</h1>
         <p className="text-ink-muted">
           {session.organisation.governorateName ?? session.organisation.governorateCode}{' '}
           <span className="font-mono text-sm">{session.organisation.governorateCode}</span>
         </p>
       </div>
       <ButtonLink href="/pharmacie/signaler" className="w-full sm:w-auto sm:self-start">
-        {t('pharmacy.reportCta')}
+        {t('core.pharmacy.reportCta')}
       </ButtonLink>
-      <nav aria-label={t('pharmacy.tabsLabel')} className="flex gap-6 border-b border-line">
-        {tab('followed', '/pharmacie', t('pharmacy.tabs.followed'))}
+      <nav aria-label={t('core.pharmacy.tabsLabel')} className="flex gap-6 border-b border-line">
+        {tab('followed', '/pharmacie', t('core.pharmacy.tabs.followed'))}
         {tab(
           'alerts',
           '/pharmacie/alertes',
-          t('pharmacy.tabs.alerts'),
+          t('core.pharmacy.tabs.alerts'),
           unread > 0 ? (
             <span className="rounded-full bg-ink px-2 py-0.5 font-mono text-xs text-white">
               <span aria-hidden="true">{unread}</span>
               <span className="sr-only">
-                {unread === 1 ? t('pharmacy.tabs.unreadOne') : t('pharmacy.tabs.unreadCount', { count: unread })}
+                {unread === 1 ? t('core.pharmacy.tabs.unreadOne') : t('core.pharmacy.tabs.unreadCount', { count: unread })}
               </span>
             </span>
           ) : null,

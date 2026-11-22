@@ -26,8 +26,8 @@ export const DEMO_ROLES = [
     organisationId: '00000000-0000-4000-8000-000000000a01',
     profileRole: 'pharmacist',
     home: '/pharmacie',
-    labelKey: 'roles.pharmacyTunis.label',
-    hintKey: 'roles.pharmacyTunis.hint',
+    labelKey: 'core.roles.pharmacyTunis.label',
+    hintKey: 'core.roles.pharmacyTunis.hint',
   },
   {
     key: 'pharmacie-sfax',
@@ -35,8 +35,8 @@ export const DEMO_ROLES = [
     organisationId: '00000000-0000-4000-8000-000000000a06',
     profileRole: 'pharmacist',
     home: '/pharmacie',
-    labelKey: 'roles.pharmacySfax.label',
-    hintKey: 'roles.pharmacySfax.hint',
+    labelKey: 'core.roles.pharmacySfax.label',
+    hintKey: 'core.roles.pharmacySfax.hint',
   },
   {
     key: 'grossiste',
@@ -44,8 +44,8 @@ export const DEMO_ROLES = [
     organisationId: '00000000-0000-4000-8000-000000000b01',
     profileRole: 'wholesaler',
     home: '/grossiste',
-    labelKey: 'roles.wholesaler.label',
-    hintKey: 'roles.wholesaler.hint',
+    labelKey: 'core.roles.wholesaler.label',
+    hintKey: 'core.roles.wholesaler.hint',
   },
   {
     key: 'hopital',
@@ -53,8 +53,8 @@ export const DEMO_ROLES = [
     organisationId: '00000000-0000-4000-8000-000000000c01',
     profileRole: 'hospital_pharmacist',
     home: '/hopital',
-    labelKey: 'roles.hospital.label',
-    hintKey: 'roles.hospital.hint',
+    labelKey: 'core.roles.hospital.label',
+    hintKey: 'core.roles.hospital.hint',
   },
   {
     key: 'coordination',
@@ -62,8 +62,8 @@ export const DEMO_ROLES = [
     organisationId: '00000000-0000-4000-8000-000000000d01',
     profileRole: 'coordinator',
     home: '/coordination',
-    labelKey: 'roles.coordinator.label',
-    hintKey: 'roles.coordinator.hint',
+    labelKey: 'core.roles.coordinator.label',
+    hintKey: 'core.roles.coordinator.hint',
   },
 ] as const satisfies readonly DemoRole[];
 

@@ -8,10 +8,10 @@ import { t, type MessageKey } from '@/lib/i18n';
 // Tap two of the report flow: when the order was placed. One tap sends the report.
 
 const CHOICES: { value: 'd3' | 'd5' | 'd8' | 'lt3'; label: MessageKey }[] = [
-  { value: 'd3', label: 'report.delays.d3' },
-  { value: 'd5', label: 'report.delays.d5' },
-  { value: 'd8', label: 'report.delays.d8' },
-  { value: 'lt3', label: 'report.delays.lt3' },
+  { value: 'd3', label: 'core.report.delays.d3' },
+  { value: 'd5', label: 'core.report.delays.d5' },
+  { value: 'd8', label: 'core.report.delays.d8' },
+  { value: 'lt3', label: 'core.report.delays.lt3' },
 ];
 
 function Choices() {
@@ -34,7 +34,7 @@ function Choices() {
         >
           <span>{t(c.label)}</span>
           {pending && chosen === c.value ? (
-            <span className="text-sm font-normal text-ink-muted">{t('common.sending')}</span>
+            <span className="text-sm font-normal text-ink-muted">{t('core.common.sending')}</span>
           ) : (
             <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" className="text-ink-muted rtl:-scale-x-100">
               <path d="M6 3.5 L10.5 8 L6 12.5" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
@@ -57,13 +57,13 @@ export function ReportTimingForm({ moleculeId, headingId }: { moleculeId: string
       <div aria-live="polite">
         {state.status === 'too_early' ? (
           <div role="status" className="flex flex-col gap-1 border-s-2 border-level-watch ps-4">
-            <p className="font-semibold text-ink">{t('guidance.tooEarly.title')}</p>
-            <p className="max-w-prose text-ink">{t('guidance.tooEarly.body')}</p>
+            <p className="font-semibold text-ink">{t('core.guidance.tooEarly.title')}</p>
+            <p className="max-w-prose text-ink">{t('core.guidance.tooEarly.body')}</p>
           </div>
         ) : null}
         {state.status === 'error' ? (
           <p role="alert" className="border-s-2 border-level-confirmed ps-4 text-ink">
-            {t('report.failed')}
+            {t('core.report.failed')}
           </p>
         ) : null}
       </div>

@@ -32,7 +32,7 @@ type State =
 
 function FollowAction({ moleculeId, followed }: { moleculeId: string; followed: boolean }) {
   if (followed) {
-    return <span className="shrink-0 px-3 text-sm font-medium text-ink-muted">{t('follow.following')}</span>;
+    return <span className="shrink-0 px-3 text-sm font-medium text-ink-muted">{t('core.follow.following')}</span>;
   }
   return (
     <form action={followMolecule} className="shrink-0">
@@ -41,7 +41,7 @@ function FollowAction({ moleculeId, followed }: { moleculeId: string; followed: 
         type="submit"
         className="min-h-12 rounded-md border border-brand px-4 text-sm font-medium text-brand hover:bg-surface-subtle"
       >
-        {t('follow.follow')}
+        {t('core.follow.follow')}
       </button>
     </form>
   );
@@ -78,7 +78,7 @@ function Row({
           className="flex min-h-14 items-center justify-between gap-4 py-3 no-underline hover:bg-surface-subtle"
         >
           {text}
-          <span className="shrink-0 text-sm font-medium text-brand">{t('follow.choose')}</span>
+          <span className="shrink-0 text-sm font-medium text-brand">{t('core.follow.choose')}</span>
         </Link>
       </li>
     );
@@ -124,28 +124,28 @@ export function MoleculeSearch({ mode, followedIds = [] }: { mode: 'follow' | 'r
   return (
     <div className="flex flex-col gap-4">
       <Input
-        label={t('follow.searchLabel')}
+        label={t('core.follow.searchLabel')}
         type="search"
         inputMode="search"
         autoComplete="off"
         autoCorrect="off"
         spellCheck={false}
-        placeholder={t('follow.searchPlaceholder')}
+        placeholder={t('core.follow.searchPlaceholder')}
         value={q}
         onChange={(e) => setQ(e.target.value)}
-        hint={tooShort ? t('follow.tooShort') : undefined}
+        hint={tooShort ? t('core.follow.tooShort') : undefined}
       />
       <div aria-live="polite" aria-busy={state.kind === 'loading'}>
-        {state.kind === 'error' ? <p className="text-ink">{t('follow.error')}</p> : null}
+        {state.kind === 'error' ? <p className="text-ink">{t('core.follow.error')}</p> : null}
         {state.kind === 'done' && query.length >= 2 ? (
           state.molecules.length === 0 && state.results.length === 0 ? (
-            <p className="text-ink-muted">{t('follow.noResult', { q: state.q })}</p>
+            <p className="text-ink-muted">{t('core.follow.noResult', { q: state.q })}</p>
           ) : (
             <div className="flex flex-col gap-5">
               {state.molecules.length > 0 ? (
                 <section aria-labelledby={`${headingId}-mol`}>
                   <h3 id={`${headingId}-mol`} className="pb-1 text-sm font-medium text-ink-muted">
-                    {t('follow.moleculesHeading')}
+                    {t('core.follow.moleculesHeading')}
                   </h3>
                   <ul className="hairline-list border-y border-line">
                     {state.molecules.map((m) => (
@@ -155,7 +155,7 @@ export function MoleculeSearch({ mode, followedIds = [] }: { mode: 'follow' | 'r
                         moleculeId={m.id}
                         followed={followed.has(m.id)}
                         title={m.name}
-                        lines={[t('follow.moleculeMeta', { count: m.medicines })]}
+                        lines={[t('core.follow.moleculeMeta', { count: m.medicines })]}
                       />
                     ))}
                   </ul>
@@ -164,7 +164,7 @@ export function MoleculeSearch({ mode, followedIds = [] }: { mode: 'follow' | 'r
               {state.results.length > 0 ? (
                 <section aria-labelledby={`${headingId}-med`}>
                   <h3 id={`${headingId}-med`} className="pb-1 text-sm font-medium text-ink-muted">
-                    {t('follow.medicinesHeading')}
+                    {t('core.follow.medicinesHeading')}
                   </h3>
                   <ul className="hairline-list border-y border-line">
                     {state.results.map((m) => (
@@ -174,7 +174,7 @@ export function MoleculeSearch({ mode, followedIds = [] }: { mode: 'follow' | 'r
                         moleculeId={m.molecule_id}
                         followed={followed.has(m.molecule_id)}
                         title={m.brand}
-                        lines={[m.label, t('follow.medicineMeta', { dci: m.dci })]}
+                        lines={[m.label, t('core.follow.medicineMeta', { dci: m.dci })]}
                       />
                     ))}
                   </ul>

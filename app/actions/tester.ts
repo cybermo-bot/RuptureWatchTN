@@ -44,7 +44,7 @@ export async function joinAsTester(formData: FormData): Promise<void> {
   const { error: orgError } = await admin.rpc('create_tester_pharmacy', {
     p_user_id: created.user.id,
     p_governorate_code: governorate,
-    p_name_template: t('tester.nameTemplate'),
+    p_name_template: t('core.tester.nameTemplate'),
   });
   if (orgError) {
     console.error('tester: create pharmacy failed', { code: orgError.code });

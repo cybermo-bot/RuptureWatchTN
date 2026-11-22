@@ -19,7 +19,7 @@ export function SessionBar({ session }: { session: CurrentSession }) {
             type="submit"
             className="min-h-12 px-1 text-sm font-medium text-brand underline underline-offset-4 hover:text-brand-strong"
           >
-            {t('roles.switch')}
+            {t('core.roles.switch')}
           </button>
         </form>
       )}

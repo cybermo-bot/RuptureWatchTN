@@ -18,13 +18,13 @@ export async function SpacePage({ type }: { type: OrganisationType }) {
   return (
     <div className="flex flex-col">
       <PageHeader
-        meta={t(`orgTypes.${organisation.type}`)}
-        title={t(`space.titles.${organisation.type}`)}
+        meta={t(`core.orgTypes.${organisation.type}`)}
+        title={t(`core.space.titles.${organisation.type}`)}
         description={
           <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 pt-1">
-            <dt>{t('space.organisation')}</dt>
+            <dt>{t('core.space.organisation')}</dt>
             <dd className="text-ink">{organisation.displayName}</dd>
-            <dt>{t('space.governorate')}</dt>
+            <dt>{t('core.space.governorate')}</dt>
             <dd className="text-ink">
               {organisation.governorateName ?? organisation.governorateCode}{' '}
               <span className="font-mono text-sm text-ink-muted">{organisation.governorateCode}</span>
@@ -32,7 +32,7 @@ export async function SpacePage({ type }: { type: OrganisationType }) {
           </dl>
         }
       />
-      <EmptyState afterRule title={t('space.emptyTitle')} body={t('space.emptyBody')} />
+      <EmptyState afterRule title={t('core.space.emptyTitle')} body={t('core.space.emptyBody')} />
     </div>
   );
 }

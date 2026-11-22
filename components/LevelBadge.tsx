@@ -70,7 +70,7 @@ export function LevelBadge({ level, className = '' }: { level: Level; className?
       className={`inline-flex items-center gap-1.5 whitespace-nowrap text-sm font-medium text-ink ${className}`}
     >
       <LevelShape level={level} />
-      <span>{t(`levels.${level}`)}</span>
+      <span>{t(`core.levels.${level}`)}</span>
     </span>
   );
 }

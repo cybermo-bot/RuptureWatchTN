@@ -11,21 +11,21 @@ export function hasGuidance(level: Level): level is GuidedLevel {
 }
 
 export function Disclaimer() {
-  return <p className="font-medium text-ink">{t('guidance.disclaimer')}</p>;
+  return <p className="font-medium text-ink">{t('core.guidance.disclaimer')}</p>;
 }
 
 export function ReviewStatus() {
-  return <p className="text-sm text-ink-muted">{t('guidanceBlock.reviewStatus', { status: t('guidance.reviewStatus') })}</p>;
+  return <p className="text-sm text-ink-muted">{t('core.guidanceBlock.reviewStatus', { status: t('core.guidance.reviewStatus') })}</p>;
 }
 
 export function Guidance({ level, headingLevel = 2 }: { level: Level; headingLevel?: 2 | 3 }) {
   const Heading = headingLevel === 2 ? 'h2' : 'h3';
   return (
     <section className="flex flex-col gap-3">
-      <Heading className="text-sm font-medium text-ink-muted">{t('guidanceBlock.title')}</Heading>
+      <Heading className="text-sm font-medium text-ink-muted">{t('core.guidanceBlock.title')}</Heading>
       {hasGuidance(level) ? (
         <ul className="flex max-w-prose list-disc flex-col gap-1.5 ps-5 text-ink marker:text-ink-muted">
-          {tList(`guidance.levels.${level}.guidance`).map((line) => (
+          {tList(`core.guidance.levels.${level}.guidance`).map((line) => (
             <li key={line}>{line}</li>
           ))}
         </ul>

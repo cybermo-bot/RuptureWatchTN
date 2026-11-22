@@ -6,7 +6,7 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   {
-    // All interface text lives in messages/fr.json (CLAUDE.md, section 4).
+    // All interface text lives in messages/<locale>/<namespace>.json (CLAUDE.md, section 4).
     // Text written directly between JSX tags fails the lint.
     files: ["app/**/*.tsx", "components/**/*.tsx"],
     rules: {

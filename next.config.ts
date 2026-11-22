@@ -5,6 +5,8 @@ import type { NextConfig } from 'next';
 // See docs/DECISIONS.md.
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Two root layouts (app/(site) and app/(public)): one 404 page for unknown addresses.
+  experimental: { globalNotFound: true },
   turbopack: {
     rules: {
       '*.css': {

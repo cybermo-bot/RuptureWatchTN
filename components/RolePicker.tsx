@@ -14,7 +14,7 @@ function RoleButton({ role }: { role: DemoRole }) {
       name="role"
       value={role.key}
       disabled={pending}
-      aria-label={t('roles.signInAs', { role: label })}
+      aria-label={t('core.roles.signInAs', { role: label })}
       className="group flex min-h-16 w-full items-center gap-4 px-1 py-3.5 text-start transition-colors hover:bg-surface disabled:cursor-wait"
     >
       <span className="flex min-w-0 flex-1 flex-col gap-0.5">

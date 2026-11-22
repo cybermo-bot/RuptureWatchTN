@@ -90,7 +90,7 @@ describe('acknowledgement', () => {
   });
 
   it('uses the agreed wording', () => {
-    expect(t('whatsapp.ack', { text: 'Augmentin' })).toBe('Bien reçu : « Augmentin ». RuptureWatch TN, prototype.');
+    expect(t('core.whatsapp.ack', { text: 'Augmentin' })).toBe('Bien reçu : « Augmentin ». RuptureWatch TN, prototype.');
   });
 });
 

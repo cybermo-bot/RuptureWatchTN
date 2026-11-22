@@ -35,7 +35,7 @@ export const GOVERNORATE_SHAPES = map.governorates as GovernorateShape[];
 export const GOVERNORATE_MAP_LICENCE = map.licence;
 
 export function GovernorateMap({ values = {}, title, showLabels = false, className = '' }: GovernorateMapProps) {
-  const name = title ?? t('map.label');
+  const name = title ?? t('core.map.label');
   return (
     <figure className={`m-0 ${className}`}>
       <svg
@@ -74,11 +74,11 @@ export function GovernorateMap({ values = {}, title, showLabels = false, classNa
         ) : null}
       </svg>
       <figcaption className="sr-only">
-        <p>{t('map.listLabel')}</p>
+        <p>{t('core.map.listLabel')}</p>
         <ul>
           {GOVERNORATE_SHAPES.map((g) => (
             <li key={g.code}>
-              {g.name} : {values[g.code]?.text ?? t('map.noValue')}
+              {g.name} : {values[g.code]?.text ?? t('core.map.noValue')}
             </li>
           ))}
         </ul>

@@ -1,0 +1,36 @@
+{
+  "shell": {
+    "skipToContent": "الانتقال إلى المحتوى",
+    "wordmarkTitle": "RuptureWatch TN، إنذار مبكر بنقص الأدوية",
+    "title": "RuptureWatch TN، الأدوية في تونس",
+    "description": "اعرف إن كان نقص دواء ما مؤكدًا، وأي الصيدليات القريبة منك يتوفر لديها. دون حساب، دون اسم، دون رقم هاتف.",
+    "languageLabel": "اللغة",
+    "professionals": "فضاء المهنيين",
+    "footer": "نموذج أولي طلابي، AOTN TSYP 14. لا صفة رسمية له. لا نطلب منك أي حساب أو اسم أو رقم هاتف.",
+    "underConstruction": "هذه الصفحة قيد الإنشاء.",
+    "underConstructionBody": "لا تعرض شيئًا بعد، حتى لا نقدّم معلومات ناقصة.",
+    "notFoundTitle": "الصفحة غير موجودة",
+    "notFoundBody": "هذا العنوان لا يطابق أي صفحة.",
+    "errorTitle": "تعذّر عرض هذه الصفحة",
+    "errorBody": "حدث خطأ غير متوقع. أعد المحاولة بعد لحظة.",
+    "retry": "إعادة المحاولة",
+    "back": "العودة إلى البحث"
+  },
+  "pages": {
+    "medicines": {
+      "title": "أبحث عن دواء"
+    },
+    "medicine": {
+      "title": "دواء"
+    },
+    "request": {
+      "title": "ردود الصيدليات"
+    },
+    "pastShortages": {
+      "title": "حالات النقص السابقة"
+    },
+    "prescribers": {
+      "title": "تحقق سريع للأطباء"
+    }
+  }
+}

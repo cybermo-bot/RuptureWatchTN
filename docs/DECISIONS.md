@@ -2,6 +2,18 @@
 
 Newest first. Each entry: what was decided, and why.
 
+## 2026-11-22, shared foundations
+
+### Message files split by track, keys prefixed by namespace
+- `messages/fr/{core,public,directory,library,wholesaler}.json` and `messages/ar/{public,directory,library}.json`. Every key starts with its namespace (`core.home.tagline`, `public.pages.medicines.title`), so the type checker catches a key in the wrong file and two tracks never edit the same file. Existing keys moved to `core` unchanged.
+- `t()` stays French. Public pages use `translator(locale)` with the locale from `getTranslator()` (`lib/i18n-server.ts`). A key missing in Arabic shows the French text and warns once in development.
+- The Arabic strings of the public shell (header, footer, placeholders, page titles) were written by the developer, not a translator, and need review by an Arabic speaker before the jury sees them.
+
+### Two root layouts: `app/(site)` and `app/(public)`
+`lang` and `dir` must be set on `<html>`, and a nested layout cannot do that. Existing routes moved to `app/(site)/` (French, unchanged URLs); `app/(public)/` has its own root layout reading the `rw-lang` cookie. Moving between the two reloads the page, which is what a language change of the whole document needs. Unknown addresses use `app/global-not-found.tsx`, which requires `experimental.globalNotFound` (Next 16 documents it as experimental; the alternative, a root layout reading the path from a request header, would keep the wrong `dir` after client-side navigation).
+- IBM Plex Sans Arabic is loaded with the `arabic` subset only and not preloaded; Latin text in Arabic pages falls through to IBM Plex Sans. `<Ltr>` (`<bdi dir="ltr">`) keeps medicine names and codes readable inside right-to-left text.
+- The language switch is a plain form posting to a server action (`setLocale`): it works before JavaScript loads, and only redirects to a path on this site.
+
 ## 2026-11-22, session 2
 
 ### Tester onboarding: accounts created by the server, no anonymous sign-in

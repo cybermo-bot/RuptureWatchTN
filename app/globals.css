@@ -109,3 +109,9 @@
     animation-duration: 0.01ms !important;
   }
 }
+
+/* Arabic pages: IBM Plex Sans Arabic for Arabic script, IBM Plex Sans for Latin text inside. */
+html[lang="ar"] body {
+  font-family: var(--font-plex-arabic), var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  line-height: 1.7;
+}

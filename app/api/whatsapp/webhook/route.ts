@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
               {
                 to: message.phone,
                 recipient: message.userId,
-                body: t('whatsapp.ack', { text: quoteForAck(message.body) }),
+                body: t('core.whatsapp.ack', { text: quoteForAck(message.body) }),
                 replyTo: message.messageId,
               },
               env,
