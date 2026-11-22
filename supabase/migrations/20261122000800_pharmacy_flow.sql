@@ -217,6 +217,10 @@ revoke all on function public.create_tester_pharmacy(uuid, text, text) from publ
 grant execute on function public.create_tester_pharmacy(uuid, text, text) to service_role;
 
 -- Molecule search: a query that matches a DCI leads to the molecule first. -----------------
+-- Calling a pg_trgm function loads the module, so its setting below is a known parameter.
+-- Without it, a fresh session treats the setting as an unknown placeholder, which Supabase refuses.
+select extensions.word_similarity('a', 'a');
+
 create function public.search_molecules(q text)
 returns table (id uuid, name text, medicines integer, score real)
 language sql
