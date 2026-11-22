@@ -1,21 +1,22 @@
 {
   "description": "Demo organisations for the prototype. All fictional, all origin = simulated. Applied by scripts/seed-demo.ts.",
   "organisations": [
-    { "id": "00000000-0000-4000-8000-000000000a01", "type": "pharmacy", "display_name": "Pharmacie démo A, Tunis", "governorate_code": "TN-11" },
-    { "id": "00000000-0000-4000-8000-000000000a02", "type": "pharmacy", "display_name": "Pharmacie démo B, Tunis", "governorate_code": "TN-11" },
-    { "id": "00000000-0000-4000-8000-000000000a03", "type": "pharmacy", "display_name": "Pharmacie démo C, Tunis", "governorate_code": "TN-11" },
-    { "id": "00000000-0000-4000-8000-000000000a04", "type": "pharmacy", "display_name": "Pharmacie démo D, Ariana", "governorate_code": "TN-12" },
-    { "id": "00000000-0000-4000-8000-000000000a05", "type": "pharmacy", "display_name": "Pharmacie démo E, Ariana", "governorate_code": "TN-12" },
-    { "id": "00000000-0000-4000-8000-000000000a06", "type": "pharmacy", "display_name": "Pharmacie démo F, Sfax", "governorate_code": "TN-61" },
-    { "id": "00000000-0000-4000-8000-000000000a07", "type": "pharmacy", "display_name": "Pharmacie démo G, Sfax", "governorate_code": "TN-61" },
-    { "id": "00000000-0000-4000-8000-000000000a08", "type": "pharmacy", "display_name": "Pharmacie démo H, Sfax", "governorate_code": "TN-61" },
-    { "id": "00000000-0000-4000-8000-000000000a09", "type": "pharmacy", "display_name": "Pharmacie démo I, Sousse", "governorate_code": "TN-51" },
-    { "id": "00000000-0000-4000-8000-000000000a10", "type": "pharmacy", "display_name": "Pharmacie démo J, Sousse", "governorate_code": "TN-51" },
-    { "id": "00000000-0000-4000-8000-000000000a11", "type": "pharmacy", "display_name": "Pharmacie démo K, Kairouan", "governorate_code": "TN-41" },
-    { "id": "00000000-0000-4000-8000-000000000a12", "type": "pharmacy", "display_name": "Pharmacie démo L, Kairouan", "governorate_code": "TN-41" },
+    { "id": "00000000-0000-4000-8000-000000000a01", "type": "pharmacy", "display_name": "Pharmacie démo A, Tunis", "governorate_code": "TN-11", "latitude": 36.803, "longitude": 10.176, "public_address": "Adresse fictive de démonstration, Tunis" },
+    { "id": "00000000-0000-4000-8000-000000000a02", "type": "pharmacy", "display_name": "Pharmacie démo B, Tunis", "governorate_code": "TN-11", "latitude": 36.799, "longitude": 10.185, "public_address": "Adresse fictive de démonstration, Tunis" },
+    { "id": "00000000-0000-4000-8000-000000000a03", "type": "pharmacy", "display_name": "Pharmacie démo C, Tunis", "governorate_code": "TN-11", "latitude": 36.806, "longitude": 10.183, "public_address": "Adresse fictive de démonstration, Tunis" },
+    { "id": "00000000-0000-4000-8000-000000000a04", "type": "pharmacy", "display_name": "Pharmacie démo D, Ariana", "governorate_code": "TN-12", "latitude": 36.868, "longitude": 10.162, "public_address": "Adresse fictive de démonstration, Ariana" },
+    { "id": "00000000-0000-4000-8000-000000000a05", "type": "pharmacy", "display_name": "Pharmacie démo E, Ariana", "governorate_code": "TN-12", "latitude": 36.864, "longitude": 10.169, "public_address": "Adresse fictive de démonstration, Ariana" },
+    { "id": "00000000-0000-4000-8000-000000000a06", "type": "pharmacy", "display_name": "Pharmacie démo F, Sfax", "governorate_code": "TN-61", "latitude": 34.75, "longitude": 10.756, "public_address": "Adresse fictive de démonstration, Sfax" },
+    { "id": "00000000-0000-4000-8000-000000000a07", "type": "pharmacy", "display_name": "Pharmacie démo G, Sfax", "governorate_code": "TN-61", "latitude": 34.738, "longitude": 10.764, "public_address": "Adresse fictive de démonstration, Sfax" },
+    { "id": "00000000-0000-4000-8000-000000000a08", "type": "pharmacy", "display_name": "Pharmacie démo H, Sfax", "governorate_code": "TN-61", "latitude": 34.748, "longitude": 10.766, "public_address": "Adresse fictive de démonstration, Sfax" },
+    { "id": "00000000-0000-4000-8000-000000000a09", "type": "pharmacy", "display_name": "Pharmacie démo I, Sousse", "governorate_code": "TN-51", "latitude": 35.829, "longitude": 10.633, "public_address": "Adresse fictive de démonstration, Sousse" },
+    { "id": "00000000-0000-4000-8000-000000000a10", "type": "pharmacy", "display_name": "Pharmacie démo J, Sousse", "governorate_code": "TN-51", "latitude": 35.823, "longitude": 10.63, "public_address": "Adresse fictive de démonstration, Sousse" },
+    { "id": "00000000-0000-4000-8000-000000000a11", "type": "pharmacy", "display_name": "Pharmacie démo K, Kairouan", "governorate_code": "TN-41", "latitude": 35.68, "longitude": 10.093, "public_address": "Adresse fictive de démonstration, Kairouan" },
+    { "id": "00000000-0000-4000-8000-000000000a12", "type": "pharmacy", "display_name": "Pharmacie démo L, Kairouan", "governorate_code": "TN-41", "latitude": 35.676, "longitude": 10.1, "public_address": "Adresse fictive de démonstration, Kairouan" },
     { "id": "00000000-0000-4000-8000-000000000b01", "type": "wholesaler", "display_name": "Grossiste démo 1, Ben Arous", "governorate_code": "TN-13" },
     { "id": "00000000-0000-4000-8000-000000000b02", "type": "wholesaler", "display_name": "Grossiste démo 2, Sfax", "governorate_code": "TN-61" },
     { "id": "00000000-0000-4000-8000-000000000c01", "type": "hospital_pharmacy", "display_name": "Pharmacie hospitalière démo, Sousse", "governorate_code": "TN-51" },
     { "id": "00000000-0000-4000-8000-000000000d01", "type": "coordinator", "display_name": "Cellule de coordination démo, Tunis", "governorate_code": "TN-11" }
-  ]
+  ],
+  "positionsNote": "Demo pharmacies only: fictional points near the centre of their governorate, a few hundred metres apart, each checked to be at least 150 m from any pharmacy listed in OpenStreetMap on 2026-11-22. public_address is deliberately not a street address."
 }

@@ -16,6 +16,10 @@ interface SeedOrganisation {
   type: string;
   display_name: string;
   governorate_code: string;
+  /** Demo pharmacies only: fictional points, never a real pharmacy's address. */
+  latitude?: number;
+  longitude?: number;
+  public_address?: string;
 }
 
 async function main() {

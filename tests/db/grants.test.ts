@@ -24,6 +24,10 @@ const TABLES: Record<string, { anon?: Priv[]; authenticated?: Priv[]; service_ro
   signal_events: { authenticated: ['select'], service_role: ['select', 'insert', 'delete'] },
   alerts: { authenticated: ['select'], service_role: ALL },
   wa_inbound: { service_role: ALL },
+  // Requests: no direct access but the service role (functions only).
+  availability_requests: { service_role: ALL },
+  // Answers: insert is granted on columns only (id and answered_at are set by the database).
+  availability_answers: { authenticated: ['select'], service_role: ALL },
 };
 
 const FUNCTIONS: Record<string, { anon: boolean; authenticated: boolean }> = {
@@ -37,6 +41,10 @@ const FUNCTIONS: Record<string, { anon: boolean; authenticated: boolean }> = {
   },
   'public.create_tester_pharmacy(uuid, text, text)': { anon: false, authenticated: false },
   'public.reset_molecule_signal(uuid)': { anon: false, authenticated: false },
+  'public.create_availability_request(uuid, uuid, text, text, text, data_origin)': { anon: false, authenticated: false },
+  'public.requests_for_my_pharmacy()': { anon: false, authenticated: true },
+  'public.request_answers_public(uuid)': { anon: true, authenticated: true },
+  'public.demand_by_governorate(uuid, integer)': { anon: false, authenticated: true },
 };
 
 const ROLES = ['anon', 'authenticated', 'service_role'] as const;
@@ -81,5 +89,13 @@ describe.each([
       ]);
       expect({ role, callable: rows[0].ok }).toEqual({ role, callable: expected[role] });
     }
+  });
+
+  it('a signed-in user may insert into availability_answers only the columns a pharmacy fills', async () => {
+    const { rows } = await db.query<{ col: string }>(
+      `select c as col from unnest(array['id', 'request_id', 'organisation_id', 'answer', 'show_identity', 'answered_at', 'origin']) c
+       where has_column_privilege('authenticated', 'public.availability_answers', c, 'insert') order by 1`,
+    );
+    expect(rows.map((r) => r.col)).toEqual(['answer', 'organisation_id', 'origin', 'request_id', 'show_identity']);
   });
 });
