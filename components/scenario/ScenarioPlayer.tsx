@@ -115,6 +115,7 @@ export function ScenarioPlayer() {
             <h3 className="text-sm font-medium text-ink-muted">{t('core.scenario.levelTitle')}</h3>
             <p className="flex flex-wrap items-center gap-x-3 gap-y-1">
               <LevelBadge level={frame.level} className="text-base" />
+              <OriginBadge origin="simulated" />
               {frame.changed ? (
                 <span className="text-sm text-ink-muted">{t('core.scenario.changedFrom', { level: t(`core.levels.${frame.previous}`) })}</span>
               ) : index > 0 ? (
@@ -126,7 +127,10 @@ export function ScenarioPlayer() {
           </div>
 
           <div className="flex flex-col gap-2">
-            <h3 className="text-sm font-medium text-ink-muted">{t('core.scenario.alertsTitle')}</h3>
+            <h3 className="flex flex-wrap items-center gap-2 text-sm font-medium text-ink-muted">
+              {t('core.scenario.alertsTitle')}
+              <OriginBadge origin="simulated" />
+            </h3>
             {frame.alerted.length === 0 ? (
               <p className="text-ink-muted">{t('core.scenario.alertsNone')}</p>
             ) : (
@@ -147,8 +151,9 @@ export function ScenarioPlayer() {
 
         <div className="flex flex-col gap-8">
           <section aria-labelledby="scenario-carte" className="flex flex-col gap-3">
-            <h2 id="scenario-carte" className="text-sm font-medium text-ink-muted">
+            <h2 id="scenario-carte" className="flex flex-wrap items-center gap-2 text-sm font-medium text-ink-muted">
               {t('core.coordination.mapTitle')}
+              <OriginBadge origin="simulated" />
             </h2>
             <GovernorateMap values={mapValues(frame)} title={t('core.coordination.mapTitle')} className="mx-auto w-full max-w-[16rem]" />
             {frame.counts.length > 0 ? (
@@ -164,8 +169,9 @@ export function ScenarioPlayer() {
           </section>
 
           <section aria-labelledby="scenario-historique" className="flex flex-col gap-3">
-            <h2 id="scenario-historique" className="text-sm font-medium text-ink-muted">
+            <h2 id="scenario-historique" className="flex flex-wrap items-center gap-2 text-sm font-medium text-ink-muted">
               {t('core.scenario.historyTitle')}
+              <OriginBadge origin="simulated" />
             </h2>
             {changes.length === 0 ? (
               <p className="text-sm text-ink-muted">{t('core.scenario.historyEmpty')}</p>
