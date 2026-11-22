@@ -36,7 +36,27 @@
     "statusLink": "État du service",
     "jumpToRoles": "Choisir un rôle de démonstration",
     "signInBusy": "Trop de connexions de démonstration en même temps. Réessayez dans une minute.",
-    "publicLink": "Je cherche un médicament"
+    "publicLink": "Je cherche un médicament",
+    "scenarioCta": "Voir une rupture simulée, du premier signe à la levée",
+    "exploreTitle": "Comprendre",
+    "explore": {
+      "scenario": {
+        "title": "Le scénario",
+        "body": "Une rupture fictive jouée pas à pas par les vraies règles : niveaux, explications, carte et alertes."
+      },
+      "views": {
+        "title": "Un médicament, quatre regards",
+        "body": "Ce que reçoivent une pharmacie, un grossiste, la coordination et le public pour le même médicament."
+      },
+      "method": {
+        "title": "La méthode",
+        "body": "Les niveaux, les règles, les seuils et ce que la plateforme ne fait jamais."
+      },
+      "replay": {
+        "title": "Retour sur les ruptures passées",
+        "body": "Des ruptures documentées en Tunisie, et ce qu’un avis étranger aurait permis de voir venir."
+      }
+    }
   },
   "roles": {
     "pharmacyTunis": {
@@ -681,5 +701,69 @@
     "cursorAfterTn": "Le premier signalement en Tunisie date du {date}.",
     "cursorNoForeign": "Aucun avis étranger dans cet épisode : les règles n’auraient rien vu avant les pharmacies.",
     "cursorNone": "Aucun épisode avec un avis étranger dans le fichier."
+  },
+  "views": {
+    "indexTitle": "Un médicament, quatre regards",
+    "indexIntro": "Choisissez un médicament : la page montre côte à côte ce que reçoivent une pharmacie, un grossiste, la coordination et le public, pour ce même médicament.",
+    "withSignal": "Médicaments avec un niveau en cours",
+    "followed": "Médicaments suivis par la pharmacie de démonstration",
+    "indexEmptyTitle": "Aucun médicament à montrer pour l’instant",
+    "indexEmptyBody": "Aucun signal en cours et aucun médicament suivi par la pharmacie de démonstration. Le scénario montre une rupture simulée de bout en bout.",
+    "scenarioLink": "Voir le scénario",
+    "title": "{molecule} : un médicament, quatre regards",
+    "line": "Chaque panneau montre exactement ce que ce rôle reçoit, rien de plus.",
+    "how": "Chaque panneau est chargé par le serveur avec le compte de démonstration du rôle, ou sans aucun compte pour le public, par les mêmes fonctions que les écrans de ce rôle. Ce sont les règles d’accès de la base de données qui décident de ce qu’il obtient.",
+    "demoNote": "Ces comptes sont ceux de la démonstration, ouverts à tous depuis l’accueil : cette page n’en montre pas plus qu’eux.",
+    "otherMolecule": "Choisir un autre médicament",
+    "panels": {
+      "pharmacy": "Pharmacie",
+      "wholesaler": "Grossiste",
+      "coordination": "Coordination",
+      "public": "Public"
+    },
+    "account": "Compte : {account}",
+    "publicAccount": "Sans compte, comme un patient sur la page publique",
+    "ownName": "C’est son propre nom, le seul nom de pharmacie de cette page.",
+    "level": "Niveau",
+    "noSignal": "Aucun signal pour ce médicament.",
+    "follows": "Suit ce médicament : il reçoit ses alertes.",
+    "notFollowing": "Ne suit pas ce médicament : il n’en reçoit pas les alertes.",
+    "ownReports": "Ses propres signalements",
+    "ownReportsNone": "Aucun signalement de sa part.",
+    "kind": {
+      "not_delivered": "Commande non livrée",
+      "delivered_again": "Livré à nouveau"
+    },
+    "alerts": "Alertes reçues pour ce médicament",
+    "alertsNone": "Aucune alerte reçue pour ce médicament.",
+    "counts": "Pharmacies qui signalent, par gouvernorat, sur {days} jours",
+    "countsNone": "Aucune pharmacie comptée.",
+    "demand": "Demandes des patients, sur {days} jours",
+    "demandNone": "Aucune demande.",
+    "demandRow": "{requests} demande(s), dont {unanswered} sans réponse",
+    "notices": "Avis étrangers en cours",
+    "noticesNone": "Aucun avis étranger en cours.",
+    "timeline": "Changements de niveau",
+    "timelineNone": "Aucun changement de niveau.",
+    "publicConfirmed": "Rupture confirmée depuis le {date}.",
+    "publicNone": "Aucune rupture confirmée à ce jour",
+    "publicNoneNote": "Le public ne voit ni les niveaux en dessous de « confirmée », ni les nombres de pharmacies.",
+    "publicGuidance": "Conseils aux patients : en attente de validation clinique.",
+    "withheld": "Ce que la base de données lui refuse",
+    "withheldNote": "Lectures essayées avec ce même compte, au chargement de la page.",
+    "probe": {
+      "signals": "Niveau détaillé et explication",
+      "counts": "Pharmacies par gouvernorat",
+      "demand": "Demandes des patients",
+      "alerts": "Alertes",
+      "reports": "Signalements de chaque pharmacie"
+    },
+    "result": {
+      "refused": "refusé",
+      "empty": "aucune ligne renvoyée",
+      "returned": "renvoyé"
+    },
+    "errorTitle": "Les comptes de démonstration ne répondent pas pour le moment",
+    "errorBody": "Réessayez dans une minute. La page n’affiche rien plutôt qu’une vue incomplète."
   }
 }

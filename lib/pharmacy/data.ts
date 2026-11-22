@@ -2,8 +2,12 @@
 // row-level security applies: a pharmacy reads its own reports, follows and alerts, the
 // public catalogue, and signals as display counts (signals_view, my_alerts: counts under 3
 // read '<3'). Nothing here uses the service role.
+//
+// The functions that /vues also runs take an optional client: there, the client is signed in
+// as the demo pharmacy, so the same function and the same access rules decide what it shows.
 
 import 'server-only';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { createUserClient } from '@/lib/db/server';
 import { activeNotices, DEFAULT_PARAMS, type ForeignNotice, type Level, type Origin, type RuleId } from '@/lib/signal';
 import { countingParams } from '@/lib/signals/recompute';
@@ -28,9 +32,9 @@ export interface FollowedMolecule {
 
 const RANK: Record<Level, number> = { confirmed: 4, likely: 3, watch: 2, cleared: 1, none: 0 };
 
-export async function signalsFor(moleculeIds: string[]): Promise<Map<string, SignalView>> {
+export async function signalsFor(moleculeIds: string[], client?: SupabaseClient): Promise<Map<string, SignalView>> {
   if (moleculeIds.length === 0) return new Map();
-  const supabase = await createUserClient();
+  const supabase = client ?? (await createUserClient());
   const { data, error } = await supabase.rpc('signals_view', { p_molecule_ids: moleculeIds });
   if (error) throw new Error(`signals_view: ${error.message}`);
   return new Map(
@@ -42,15 +46,15 @@ export async function signalsFor(moleculeIds: string[]): Promise<Map<string, Sig
 }
 
 /** The pharmacy's followed molecules, the most serious level first. */
-export async function getFollowed(): Promise<FollowedMolecule[]> {
-  const supabase = await createUserClient();
+export async function getFollowed(client?: SupabaseClient): Promise<FollowedMolecule[]> {
+  const supabase = client ?? (await createUserClient());
   const { data, error } = await supabase.from('followed_molecules').select('molecule_id, molecules ( name )');
   if (error) throw new Error(`followed_molecules: ${error.message}`);
   const rows = (data ?? []).map((r) => ({
     moleculeId: r.molecule_id as string,
     name: (r.molecules as unknown as { name: string } | null)?.name ?? '',
   }));
-  const signals = await signalsFor(rows.map((r) => r.moleculeId));
+  const signals = await signalsFor(rows.map((r) => r.moleculeId), supabase);
   return rows
     .map((r) => ({ ...r, signal: signals.get(r.moleculeId) ?? null }))
     .sort(
@@ -77,13 +81,13 @@ export interface MoleculeView {
   followed: boolean;
 }
 
-export async function getMoleculeView(moleculeId: string): Promise<MoleculeView | null> {
-  const supabase = await createUserClient();
+export async function getMoleculeView(moleculeId: string, client?: SupabaseClient): Promise<MoleculeView | null> {
+  const supabase = client ?? (await createUserClient());
   const { data: molecule } = await supabase.from('molecules').select('id, name').eq('id', moleculeId).maybeSingle();
   if (!molecule) return null;
 
   const [signals, notices, reports, follow] = await Promise.all([
-    signalsFor([moleculeId]),
+    signalsFor([moleculeId], supabase),
     supabase
       .from('foreign_notices')
       .select('id, molecule_id, source, status, published_at, url, origin')
@@ -150,8 +154,8 @@ interface AlertRow {
   evidence: ShownEvidence;
 }
 
-export async function getAlerts(): Promise<AlertView[]> {
-  const supabase = await createUserClient();
+export async function getAlerts(client?: SupabaseClient): Promise<AlertView[]> {
+  const supabase = client ?? (await createUserClient());
   const { data, error } = await supabase.rpc('my_alerts', { p_limit: 50 });
   if (error) throw new Error(`my_alerts: ${error.message}`);
   return ((data ?? []) as AlertRow[]).map((a) => ({
