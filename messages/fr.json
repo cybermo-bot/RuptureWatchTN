@@ -123,7 +123,10 @@
     "error": "La recherche a échoué. Réessayez.",
     "score": "score",
     "results": "{count} résultats",
-    "source": "Catalogue : liste CNAM des médicaments du régime de base (VEI)."
+    "source": "Catalogue : liste CNAM des médicaments du régime de base (VEI).",
+    "moleculesHeading": "Molécules",
+    "medicinesHeading": "Médicaments",
+    "moleculeMeta": "{count} présentations au catalogue"
   },
   "errors": {
     "generic": "Une erreur est survenue.",
@@ -137,5 +140,211 @@
   },
   "whatsapp": {
     "ack": "Bien reçu : « {text} ». RuptureWatch TN, prototype."
+  },
+  "guidance": {
+    "disclaimer": "Ceci n'est pas une déclaration officielle de rupture.",
+    "reviewStatus": "Brouillon, en attente de relecture par une pharmacienne",
+    "levels": {
+      "watch": {
+        "title": "Sous surveillance",
+        "summary": "Un premier signal existe pour cette molécule.",
+        "guidance": [
+          "Commandez selon votre consommation habituelle, sans anticiper.",
+          "Si une commande n'est pas livrée au bout de 72 heures, signalez-la."
+        ]
+      },
+      "likely": {
+        "title": "Probable",
+        "summary": "Plusieurs pharmacies signalent des commandes non livrées.",
+        "guidance": [
+          "Commandez selon votre consommation habituelle. Les commandes en double chez plusieurs grossistes aggravent la pénurie.",
+          "Pour un patient sous traitement au long cours, invitez-le à contacter son prescripteur avant la fin de sa boîte en cours."
+        ]
+      },
+      "confirmed": {
+        "title": "Confirmée",
+        "summary": "Des pharmacies d'au moins deux gouvernorats signalent des commandes non livrées.",
+        "guidance": [
+          "Ne constituez pas de stock au-delà de votre consommation habituelle.",
+          "Toute décision de changer de traitement revient au prescripteur. Orientez le patient vers lui.",
+          "Quand le médicament revient, signalez-le avec « Livré à nouveau »."
+        ]
+      },
+      "cleared": {
+        "title": "Levée",
+        "summary": "Au moins deux pharmacies signalent que le médicament est de nouveau livré, et aucune commande non livrée n'a été signalée depuis 14 jours.",
+        "guidance": [
+          "Reprenez vos commandes habituelles."
+        ]
+      }
+    },
+    "standDown": "L'alerte sur {molecule} est terminée. Niveau actuel : {level}. Reprenez vos commandes habituelles.",
+    "tooEarly": {
+      "title": "Pas encore un signal",
+      "body": "Une commande devient un signal après 72 heures sans livraison. Un retard de quelques jours est fréquent et ne veut pas dire rupture. Revenez la signaler si elle n'est toujours pas livrée."
+    }
+  },
+  "rules": {
+    "no_evidence": "Aucun signalement récent et aucun avis étranger en cours.",
+    "foreign_notice_only": "Un avis de pénurie publié par une autorité étrangère ({sources}). Sans signalement en Tunisie, ce niveau ne monte jamais au-delà de « sous surveillance ».",
+    "local_reports_below_threshold": "{pharmacies} pharmacie(s) signale(nt) une commande non livrée depuis plus de 72 heures sur les 14 derniers jours.",
+    "two_pharmacies_7d": "{pharmacies7d} pharmacies différentes signalent une commande non livrée sur les 7 derniers jours.",
+    "local_report_plus_foreign_notice": "Au moins une pharmacie signale une commande non livrée, et une autorité étrangère signale une pénurie ({sources}).",
+    "single_governorate_cap": "{pharmacies} pharmacies signalent, mais toutes dans le même gouvernorat. Il en faut au moins deux pour confirmer.",
+    "confirmed_threshold": "{pharmacies} pharmacies dans {governorates} gouvernorats signalent une commande non livrée sur les 14 derniers jours.",
+    "hold_until_delivered": "Le niveau est maintenu : aucune pharmacie n'a encore signalé une nouvelle livraison.",
+    "quiet_period_downgrade": "Aucun signalement depuis 30 jours et aucune nouvelle livraison signalée : le niveau est abaissé.",
+    "delivered_again_cleared": "{delivered} pharmacies signalent que le médicament est de nouveau livré, et aucune commande non livrée n'a été signalée depuis 14 jours.",
+    "cleared_expired": "L'alerte levée n'est plus affichée."
+  },
+  "common": {
+    "fewerThan3": "moins de 3",
+    "back": "Retour",
+    "dateAt": "{date} à {time}",
+    "sending": "Envoi…"
+  },
+  "pharmacy": {
+    "reportCta": "Signaler une commande non livrée",
+    "tabsLabel": "Sections de l’espace pharmacie",
+    "tabs": {
+      "followed": "Mes médicaments suivis",
+      "alerts": "Alertes",
+      "unreadCount": "{count} non lues",
+      "unreadOne": "1 non lue"
+    },
+    "followedEmptyTitle": "Vous ne suivez encore aucun médicament",
+    "followedEmptyBody": "Cherchez un médicament par son nom commercial ou sa DCI, puis suivez sa molécule pour voir son niveau ici et recevoir ses alertes.",
+    "since": "depuis le {date}",
+    "addTitle": "Suivre un médicament",
+    "openMolecule": "Ouvrir la fiche de {molecule}"
+  },
+  "follow": {
+    "searchLabel": "Rechercher un médicament",
+    "searchPlaceholder": "Nom commercial ou DCI, ex. levetiracetam",
+    "follow": "Suivre",
+    "following": "Suivi",
+    "unfollow": "Ne plus suivre",
+    "moleculesHeading": "Molécules",
+    "medicinesHeading": "Médicaments",
+    "moleculeMeta": "{count} présentations au catalogue",
+    "medicineMeta": "DCI : {dci}",
+    "choose": "Choisir",
+    "noResult": "Aucun médicament trouvé pour « {q} ».",
+    "tooShort": "Tapez au moins deux lettres.",
+    "error": "La recherche a échoué. Réessayez.",
+    "followFailed": "Le suivi n’a pas pu être enregistré. Réessayez."
+  },
+  "report": {
+    "title": "Signaler une commande non livrée",
+    "pickTitle": "Quel médicament ?",
+    "pickFollowed": "Vos médicaments suivis",
+    "pickOther": "Un autre médicament",
+    "whenTitle": "Quand l’avez-vous commandé ?",
+    "whenIntro": "Le signalement part dès que vous choisissez.",
+    "delays": {
+      "d3": "Il y a 3 jours",
+      "d5": "4 à 7 jours",
+      "d8": "Plus d’une semaine",
+      "lt3": "Moins de 3 jours"
+    },
+    "failed": "Le signalement n’a pas pu être enregistré. Réessayez.",
+    "deliveredAgain": "Livré à nouveau",
+    "deliveredAgainHint": "Vous aviez signalé ce médicament. Dites-nous quand il vous est livré de nouveau.",
+    "backToMolecule": "Retour à la fiche"
+  },
+  "result": {
+    "title": "Signalement enregistré",
+    "titleDelivered": "Nouvelle livraison enregistrée",
+    "levelChange": "Niveau du médicament",
+    "before": "Avant",
+    "after": "Après",
+    "unchanged": "Le niveau ne change pas.",
+    "why": "Pourquoi ce niveau",
+    "impactTitle": "Ce que votre signalement change",
+    "impact": "Votre signalement s’ajoute à {pharmacies} pharmacies dans {governorates} gouvernorats sur les {days} derniers jours.",
+    "impactOneGovernorate": "Votre signalement s’ajoute à {pharmacies} pharmacies dans 1 gouvernorat sur les {days} derniers jours.",
+    "impactFew": "Avec votre signalement, moins de 3 pharmacies signalent ce médicament sur les {days} derniers jours.",
+    "impactDelivered": "Votre signalement de livraison compte pour lever l’alerte quand d’autres pharmacies le confirment.",
+    "impactUnavailable": "Le décompte national n’est pas disponible pour l’instant.",
+    "toMolecule": "Voir la fiche du médicament",
+    "toHome": "Retour à mes médicaments"
+  },
+  "guidanceBlock": {
+    "title": "Conduite à tenir",
+    "reviewStatus": "Statut du texte : {status}"
+  },
+  "molecule": {
+    "levelTitle": "Niveau actuel",
+    "since": "Depuis le {date}",
+    "noSignal": "Aucune pharmacie n’a signalé ce médicament récemment.",
+    "noticesTitle": "Avis d’autorités étrangères",
+    "noticesEmpty": "Aucun avis étranger en cours pour cette molécule.",
+    "noticeStatus": {
+      "shortage": "Pénurie",
+      "tension": "Tension",
+      "resolved": "Résolu"
+    },
+    "noticeLink": "Lire l’avis de {source}",
+    "noticePublished": "publié le {date}",
+    "myReportsTitle": "Mes signalements",
+    "myReportsEmpty": "Vous n’avez pas encore signalé ce médicament.",
+    "kind": {
+      "not_delivered": "Commande non livrée",
+      "delivered_again": "Livré à nouveau"
+    },
+    "channel": {
+      "web": "Web",
+      "whatsapp": "WhatsApp"
+    },
+    "orderedOn": "commandé le {date}",
+    "reportTitle": "Signaler",
+    "backHome": "Mes médicaments",
+    "notFound": "Cette molécule n’existe pas dans le catalogue."
+  },
+  "explanation": {
+    "ruleLabel": "Règle appliquée",
+    "sourcesSeparator": ", "
+  },
+  "alerts": {
+    "title": "Alertes",
+    "emptyTitle": "Aucune alerte pour l’instant",
+    "emptyBody": "Vous recevrez ici chaque changement de niveau des médicaments que vous suivez.",
+    "received": "Reçue le {date}",
+    "unread": "Non lue",
+    "markRead": "Marquer comme lue",
+    "markAllRead": "Tout marquer comme lu",
+    "standDownLabel": "Fin d’alerte",
+    "levelChangeLabel": "Changement de niveau",
+    "from": "de",
+    "to": "à",
+    "live": "Cette page se met à jour toute seule."
+  },
+  "tester": {
+    "title": "Rejoindre le test",
+    "intro": "Vous testez RuptureWatch TN comme pharmacien ou pharmacienne. Nous ne demandons que le gouvernorat de votre pharmacie : ni nom, ni nom de pharmacie, ni numéro de téléphone.",
+    "governorate": "Gouvernorat de votre pharmacie",
+    "choose": "Choisir un gouvernorat",
+    "submit": "Rejoindre le test",
+    "nameTemplate": "Pharmacie testeuse n° {n}, {governorate}",
+    "originNote": "Vos signalements porteront la mention",
+    "deviceNote": "Votre accès de testeur est lié à ce navigateur. Gardez-le pour toute la durée du test.",
+    "failed": "L’inscription n’a pas abouti. Réessayez dans un instant.",
+    "invalidGovernorate": "Choisissez un gouvernorat dans la liste."
+  },
+  "invitation": {
+    "title": "Inviter des pharmaciens testeurs",
+    "intro": "Faites scanner ce code par un pharmacien testeur. Le lien ouvre la page d’inscription au test, qui ne demande que le gouvernorat.",
+    "linkLabel": "Lien d’invitation",
+    "qrLabel": "Code QR du lien d’invitation",
+    "missing": "Le code d’invitation n’est pas configuré sur le serveur.",
+    "back": "Retour à la coordination"
+  },
+  "coordination": {
+    "signalsTitle": "Médicaments avec un signal",
+    "emptyTitle": "Aucun signal pour l’instant",
+    "emptyBody": "Dès qu’une pharmacie signale une commande non livrée, le médicament apparaît ici avec son niveau et son explication.",
+    "live": "Cette liste se met à jour toute seule.",
+    "invite": "Inviter des pharmaciens testeurs",
+    "previewNote": "Aperçu : le tableau de bord complet et la carte arrivent dans une prochaine version."
   }
 }
