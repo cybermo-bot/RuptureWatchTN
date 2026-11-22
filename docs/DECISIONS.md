@@ -4,6 +4,22 @@ Newest first. Each entry: what was decided, and why.
 
 ## 2026-11-22, session 2
 
+### Tester onboarding: accounts created by the server, no anonymous sign-in
+- `/rejoindre/<code>` creates a Supabase user with the admin API (random `testeur-<uuid>@rupturewatch.example` address, random 32-byte password never stored, email confirmed) and signs in with it on the server. The session cookie is the only key. This needs no dashboard setting, unlike anonymous sign-ins, and anonymous sign-ins have their own lower rate limit (30 per hour per IP by default), which a test morning could exhaust from one counter.
+- `create_tester_pharmacy()` (service role) creates the pharmacy and the profile in one transaction, numbered from a sequence: "Pharmacie testeuse n° N, <gouvernorat>". Only the governorate is asked.
+- Testers get no "Changer de rôle": signing out would lose the account, and joining again would count the same person as a second pharmacy. Joining again from a browser that already holds a tester session goes straight to `/pharmacie`.
+- `qrcode` (npm, MIT): draws the invite link as an SVG on the server for `/coordination/invitation`. No client JavaScript.
+
+### Report flow
+- Two taps from the space: a followed molecule's row opens its page, which carries the four "when was it ordered" buttons (tap two). The primary button "Signaler une commande non livrée" opens the picker for any other medicine (tap one: the medicine; tap two: when). "Il y a 3 jours", "4 à 7 jours", "Plus d'une semaine" set `ordered_at` to now minus 3, 5, 8 days; "Moins de 3 jours" sends nothing.
+- A pharmacy that reports a molecule follows it automatically, so it receives that molecule's alerts.
+- The result screen reads the level before and after from the recompute (passed in the URL, validated against the five levels; only the visitor's own screen uses them), the explanation from the current signal row, and the impact from `report_impact`.
+- `report_impact` counts distinct pharmacies including the reporter. Below 3 it returns `<3` and withholds the number of governorates, because "<3 in 2 governorates" would reveal exactly 2. The screen then says "Avec votre signalement, moins de 3 pharmacies signalent ce médicament…".
+- "Moins de 3" applies to pharmacy counts in every explanation sentence. Governorate counts are shown as they are: they do not single out a pharmacy.
+
+### Live updates: Supabase Realtime, with polling as a fallback
+`signals` and `alerts` are in the `supabase_realtime` publication (migration 0008). `LiveRefresh` subscribes with the visitor's session (row-level security applies to each event) and re-renders the page on a change. If the channel is not joined within 5 seconds, or drops, it polls instead: every 15 seconds for a pharmacy's alerts, every 4 seconds for the coordinator list (the brief asks for under 5 seconds).
+
 ### The signal service stores each evaluation atomically, with compare-and-set
 - `lib/signals/recompute.ts` loads 120 days of reports and notices, calls `evaluate()`, and stores the result through `apply_signal_evaluation()`, a service-role SQL function. It writes the `signals` row only if level and `updated_at` are still what was read; the event row and the alerts are written in the same transaction. On a conflict nothing is written and the service reloads and evaluates again (up to 5 times). A crash can therefore never leave a level change without its event, and two simultaneous reports never produce a duplicate or skipped event (`tests/signal-service.test.ts`, `tests/db/pharmacy-flow.test.ts`).
 - `updated_at` is set with `clock_timestamp()` and compared as stored (microseconds kept), so two writes in the same transaction-time never compare equal.
