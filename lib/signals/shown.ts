@@ -4,7 +4,7 @@
 // tests/db/signal-views.test.ts checks that both agree. Usable on the server and in the
 // browser (the in-memory scenario).
 
-import { displayCount, type Evidence, type ForeignNotice } from '@/lib/signal';
+import { displayCount, type Evidence, type ForeignNotice, type Origin } from '@/lib/signal';
 
 /** A pharmacy count as shown: 0, '<3', or 3 and more. */
 export type ShownCount = number | '<3';
@@ -25,6 +25,8 @@ export interface ShownEvidence {
   ignoredTooEarly: ShownCount;
   lastNotDeliveredAt: string | null;
   notices: ShownNotice[];
+  /** Where the data behind the level comes from, shown as origin badges. */
+  origins: Origin[];
 }
 
 export function shownCount(n: number): ShownCount {
@@ -32,7 +34,7 @@ export function shownCount(n: number): ShownCount {
 }
 
 /** From an evaluation's evidence (the scenario and the time machine, in memory). */
-export function shownEvidence(e: Evidence): ShownEvidence {
+export function shownEvidence(e: Evidence, origins: Origin[] = []): ShownEvidence {
   const pharmacies14d = shownCount(e.pharmacies14d);
   return {
     pharmacies14d,
@@ -47,5 +49,6 @@ export function shownEvidence(e: Evidence): ShownEvidence {
       publishedAt: n.publishedAt.toISOString(),
       url: n.url,
     })),
+    origins,
   };
 }

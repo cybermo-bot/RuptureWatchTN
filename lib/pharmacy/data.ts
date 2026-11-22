@@ -8,6 +8,7 @@ import { createUserClient } from '@/lib/db/server';
 import { activeNotices, DEFAULT_PARAMS, type ForeignNotice, type Level, type Origin, type RuleId } from '@/lib/signal';
 import { countingParams } from '@/lib/signals/recompute';
 import type { ShownEvidence } from '@/lib/signals/shown';
+import type { SignalRow } from '@/lib/signals/views';
 import type { Impact } from './impact-text';
 
 export type { Impact };
@@ -23,17 +24,6 @@ export interface FollowedMolecule {
   moleculeId: string;
   name: string;
   signal: SignalView | null;
-}
-
-/** A row of signals_view (migration 0011). */
-export interface SignalRow {
-  molecule_id: string;
-  molecule_name: string;
-  level: Level;
-  since: string;
-  rule: RuleId;
-  evidence: ShownEvidence;
-  updated_at: string;
 }
 
 const RANK: Record<Level, number> = { confirmed: 4, likely: 3, watch: 2, cleared: 1, none: 0 };

@@ -181,9 +181,10 @@ describe('fix 2: no exact count under 3 for a signed-in caller', () => {
           ignoredTooEarly: p14,
           lastNotDeliveredAt: evidence.lastNotDeliveredAt?.toISOString() ?? null,
           notices: [],
+          origins: p7 ? ['tester', 'simulated'] : [],
         };
         const { rows } = await db.query<{ e: unknown }>(`select app.shown_evidence($1::jsonb) as e`, [JSON.stringify(stored)]);
-        expect(rows[0].e).toEqual(shownEvidence(evidence));
+        expect(rows[0].e).toEqual(shownEvidence(evidence, stored.origins as ('tester' | 'simulated')[]));
       }
     }
   });
@@ -238,5 +239,32 @@ describe('fix 4: tester numbering restarts at 1', () => {
         /permission denied/,
       );
     }
+  });
+});
+
+describe('origins and public status (migration 0013)', () => {
+  it('signals carry the origins of the data behind them', async () => {
+    const { rows } = await as(db, user(USER.coordinator), (tx) => tx.query<Row>(`select * from public.signals_view()`));
+    for (const r of rows) expect(r.evidence.origins).toEqual(['simulated']);
+  });
+
+  it('public_status tells anyone whether a shortage is confirmed, and nothing below that', async () => {
+    type Status = { confirmed: boolean; since: string | null; origins: string[] };
+    const many = await as(db, anon, (tx) => tx.query<Status>(`select * from public.public_status($1)`, [MOL_MANY]));
+    expect(many.rows).toHaveLength(1);
+    expect(many.rows[0].confirmed).toBe(true);
+    expect(many.rows[0].since).not.toBeNull();
+    expect(many.rows[0].origins).toEqual(['simulated']);
+
+    // "Probable" reads exactly like no signal at all.
+    const few = await as(db, anon, (tx) => tx.query<Status>(`select * from public.public_status($1)`, [MOL_FEW]));
+    const none = await as(db, anon, (tx) => tx.query<Status>(`select * from public.public_status($1)`, [id(0x2ff)]));
+    expect(few.rows).toEqual([{ confirmed: false, since: null, origins: [] }]);
+    expect(none.rows).toEqual(few.rows);
+  });
+
+  it('public_status returns no count, level word or rule', async () => {
+    const { fields } = await as(db, anon, (tx) => tx.query(`select * from public.public_status($1)`, [MOL_MANY]));
+    expect(fields.map((f) => f.name).sort()).toEqual(['confirmed', 'origins', 'since']);
   });
 });

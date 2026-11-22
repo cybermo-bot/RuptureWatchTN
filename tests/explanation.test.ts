@@ -10,6 +10,7 @@ const evidence = (e: Partial<ShownEvidence>): ShownEvidence => ({
   ignoredTooEarly: 0,
   lastNotDeliveredAt: null,
   notices: [],
+  origins: [],
   ...e,
 });
 

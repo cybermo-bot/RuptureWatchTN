@@ -12,6 +12,7 @@ import {
   type Evidence,
   type ForeignNotice,
   type Level,
+  type Origin,
   type PharmacyReport,
   type RuleId,
   type SignalParams,
@@ -38,6 +39,8 @@ export interface StoredEvidence {
   ignoredTooEarly: number;
   lastNotDeliveredAt: string | null;
   notices: { source: string; status: ForeignNotice['status']; publishedAt: string; url: string }[];
+  /** Distinct origins of the reports and notices the evaluation read, for the origin badges. */
+  origins: Origin[];
 }
 
 export interface ApplyInput {
@@ -82,7 +85,15 @@ export class RecomputeConflictError extends Error {
   }
 }
 
-export function toStoredEvidence(e: Evidence): StoredEvidence {
+const ORIGIN_ORDER: Origin[] = ['official_source', 'tester', 'simulated'];
+
+/** Distinct origins of the data an evaluation read, in a fixed order. */
+export function originsOf(reports: { origin: Origin }[], notices: { origin: Origin }[]): Origin[] {
+  const seen = new Set<Origin>([...reports, ...notices].map((x) => x.origin));
+  return ORIGIN_ORDER.filter((o) => seen.has(o));
+}
+
+export function toStoredEvidence(e: Evidence, origins: Origin[] = []): StoredEvidence {
   return {
     pharmacies14d: e.pharmacies14d,
     governorates14d: e.governorates14d,
@@ -96,6 +107,7 @@ export function toStoredEvidence(e: Evidence): StoredEvidence {
       publishedAt: n.publishedAt.toISOString(),
       url: n.url,
     })),
+    origins,
   };
 }
 
@@ -137,7 +149,7 @@ export async function recomputeSignal(
       level: evaluation.level,
       since: evaluation.since,
       rule: evaluation.rule,
-      evidence: toStoredEvidence(evaluation.evidence),
+      evidence: toStoredEvidence(evaluation.evidence, originsOf(reports, notices)),
       at: now,
       // A shown "levée" fading back to "none" is logged, but nobody is alerted for it.
       alert: evaluation.changed && evaluation.rule !== 'cleared_expired',

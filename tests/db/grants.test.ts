@@ -50,6 +50,7 @@ const FUNCTIONS: Record<string, { anon: boolean; authenticated: boolean }> = {
   'public.signal_events_view(uuid, integer)': { anon: false, authenticated: true },
   'public.my_alerts(integer)': { anon: false, authenticated: true },
   'public.reset_tester_numbering()': { anon: false, authenticated: false },
+  'public.public_status(uuid)': { anon: true, authenticated: true },
 };
 
 const ROLES = ['anon', 'authenticated', 'service_role'] as const;
