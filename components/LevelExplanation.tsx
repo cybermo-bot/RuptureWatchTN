@@ -31,7 +31,7 @@ export function LevelExplanation({
   rule,
   evidence,
   showRule = false,
-  methodLink = false,
+  methodLink = true,
 }: {
   rule: RuleId;
   evidence: ShownEvidence;

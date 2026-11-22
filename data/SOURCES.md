@@ -39,3 +39,11 @@ Read 2026-11-21 for the webhook and send formats:
 - https://developers.facebook.com/docs/graph-api/webhooks/getting-started
 
 Test fixtures in `tests/fixtures/whatsapp/` follow the documented example payload.
+
+## OpenStreetMap: map tiles for the fallback patient map, and pharmacy positions checked
+
+- **Publisher:** OpenStreetMap Foundation and contributors.
+- **Page:** https://www.openstreetmap.org/copyright
+- **Tiles:** https://tile.openstreetmap.org/{z}/{x}/{y}.png, loaded live by the visitor's browser in `components/maps/PatientMap.tsx` only when Google Maps is unavailable, under the OSM tile usage policy (https://operations.osmfoundation.org/policies/tiles/). Nothing is stored.
+- **Overpass API:** https://overpass-api.de/api/interpreter, queried on 2026-11-22 for `amenity=pharmacy` near the fictional positions of the demo pharmacies, to keep each at least 150 m from any listed pharmacy. The results were not stored.
+- **Licence:** Open Database License 1.0 (ODbL). Attribution "© OpenStreetMap" is shown on the map.

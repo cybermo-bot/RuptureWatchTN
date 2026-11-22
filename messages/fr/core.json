@@ -449,5 +449,160 @@
         "origin": "Signalements des pharmacies, comptés au moment de l’export."
       }
     }
+  },
+  "method": {
+    "title": "Méthode : comment un niveau est décidé",
+    "intro": "RuptureWatch TN donne à chaque médicament un niveau à partir de deux sources : les signalements des pharmacies et les avis publiés par des autorités de santé étrangères. Les mêmes règles s’appliquent partout : sur le web, sur WhatsApp, dans le scénario et dans le retour sur les ruptures passées.",
+    "paramsNote": "Les seuils sont des paramètres de conception, proposés pour démarrer et faits pour être ajustés pendant un pilote. Les valeurs de cette page sont lues dans le code des règles lui-même : elles ne peuvent pas le contredire.",
+    "toc": "Sur cette page",
+    "levelsTitle": "Les niveaux",
+    "levels": {
+      "watch": "Un premier signe : au moins une pharmacie signale une commande non livrée, ou une autorité étrangère publie une pénurie.",
+      "likely": "Des signes qui concordent : au moins {likelyMin} pharmacies sur {likelyDays} jours, ou un signalement en Tunisie accompagné d’un avis étranger.",
+      "confirmed": "Au moins {confirmMin} pharmacies, dans au moins {confirmGov} gouvernorats, sur {confirmDays} jours.",
+      "cleared": "Le médicament est de nouveau livré : au moins {clearMin} pharmacies le signalent, et aucune commande non livrée n’a été signalée depuis {quietDays} jours. « Levée » reste affiché {clearedDays} jours.",
+      "none": "Aucun signalement récent et aucun avis étranger en cours."
+    },
+    "reportTitle": "Ce qui compte comme un signalement",
+    "report": {
+      "delay": "Une pharmacie signale une commande passée et non livrée. Le signalement ne compte qu’après {hours} heures : une commande plus récente peut encore arriver. Le bouton « Moins de {minDays} jours » n’envoie rien.",
+      "distinct": "On compte des pharmacies, pas des messages : une pharmacie compte une seule fois par période, quel que soit le nombre de ses signalements.",
+      "channels": "Les signalements arrivent par la page web ou par WhatsApp, et sont comptés de la même façon.",
+      "delivered": "« Livré à nouveau » ne compte que s’il est signalé après la dernière commande non livrée.",
+      "notices": "Un avis étranger compte pendant {noticeDays} jours après sa publication, sauf si l’autorité l’a déclaré résolu. Pour chaque autorité, seul son avis le plus récent compte.",
+      "requests": "Les demandes des patients (« ce médicament est-il disponible près de chez moi ? ») ne sont pas des signalements : elles ne changent jamais le niveau. La coordination les voit à côté du signal, comme une mesure de la demande."
+    },
+    "gatesTitle": "Les deux garde-fous",
+    "gate1Title": "Garde-fou 1 : un avis étranger seul ne suffit pas",
+    "gate1": "Un avis étranger seul ne fait jamais monter un médicament au-delà de « sous surveillance ». Une pénurie en France ou en Allemagne n’est pas une pénurie en Tunisie : il faut au moins un signalement d’une pharmacie tunisienne pour aller plus loin.",
+    "gate2Title": "Garde-fou 2 : un seul gouvernorat ne suffit pas",
+    "gate2": "« Confirmée » demande au moins {confirmMin} pharmacies dans au moins {confirmGov} gouvernorats. Un problème de distribution limité à une seule région reste « probable ».",
+    "holdTitle": "Pourquoi un niveau ne redescend pas tout seul",
+    "hold": "Un niveau « probable » ou « confirmée » ne baisse pas parce que les signalements ralentissent : les pharmacies ont peut-être simplement cessé de commander. Il prend fin quand au moins {clearMin} pharmacies signalent une nouvelle livraison et qu’aucune commande non livrée n’a été signalée depuis {quietDays} jours. Sans nouvelle livraison signalée, il redescend après {staleDays} jours sans aucun signalement.",
+    "rulesTitle": "Les règles, une par une",
+    "rulesIntro": "Chaque explication de niveau dans l’application cite l’une de ces règles, par son identifiant.",
+    "rules": {
+      "no_evidence": {
+        "name": "Aucune donnée",
+        "body": "Aucun signalement valide sur {confirmDays} jours et aucun avis étranger en cours : pas de niveau."
+      },
+      "foreign_notice_only": {
+        "name": "Avis étranger seul",
+        "body": "Une autorité étrangère signale une pénurie et aucune pharmacie tunisienne n’a signalé : « sous surveillance », jamais plus (garde-fou 1)."
+      },
+      "local_reports_below_threshold": {
+        "name": "Premiers signalements",
+        "body": "Au moins une pharmacie signale sur {confirmDays} jours, sans atteindre les seuils suivants : « sous surveillance »."
+      },
+      "two_pharmacies_7d": {
+        "name": "Plusieurs pharmacies en une semaine",
+        "body": "Au moins {likelyMin} pharmacies différentes signalent sur {likelyDays} jours : « probable »."
+      },
+      "local_report_plus_foreign_notice": {
+        "name": "Signalement tunisien et avis étranger",
+        "body": "Au moins une pharmacie signale sur {confirmDays} jours et une autorité étrangère signale une pénurie : « probable »."
+      },
+      "single_governorate_cap": {
+        "name": "Un seul gouvernorat",
+        "body": "Au moins {confirmMin} pharmacies signalent, mais dans moins de {confirmGov} gouvernorats : le niveau reste « probable » (garde-fou 2)."
+      },
+      "confirmed_threshold": {
+        "name": "Seuil de confirmation",
+        "body": "Au moins {confirmMin} pharmacies dans au moins {confirmGov} gouvernorats sur {confirmDays} jours : « confirmée »."
+      },
+      "hold_until_delivered": {
+        "name": "Maintien jusqu’à la livraison",
+        "body": "Les signalements ralentissent, mais aucune nouvelle livraison n’est signalée : le niveau « probable » ou « confirmée » est maintenu."
+      },
+      "quiet_period_downgrade": {
+        "name": "Longue période sans signalement",
+        "body": "Aucun signalement depuis {staleDays} jours et pas assez de nouvelles livraisons signalées : le niveau redescend à ce que montrent les données récentes."
+      },
+      "delivered_again_cleared": {
+        "name": "De nouveau livré",
+        "body": "Au moins {clearMin} pharmacies signalent une nouvelle livraison, et aucune commande non livrée n’est signalée depuis {quietDays} jours : « levée »."
+      },
+      "cleared_expired": {
+        "name": "Fin de l’affichage « levée »",
+        "body": "« Levée » reste affiché {clearedDays} jours, puis le médicament revient à « aucun signal ». Personne n’est alerté pour ce retour."
+      }
+    },
+    "paramsTitle": "Les seuils",
+    "colParam": "Paramètre",
+    "colValue": "Valeur",
+    "colMeaning": "Signification",
+    "params": {
+      "minUndeliveredHours": "Heures après la commande avant qu’un signalement compte.",
+      "confirmWindowDays": "Fenêtre de confirmation, en jours : période sur laquelle on compte les pharmacies et les gouvernorats.",
+      "likelyWindowDays": "Fenêtre courte, en jours, pour « probable ».",
+      "likelyMinPharmacies": "Pharmacies différentes dans la fenêtre courte pour « probable ».",
+      "confirmMinPharmacies": "Pharmacies différentes dans la fenêtre de confirmation pour « confirmée ».",
+      "confirmMinGovernorates": "Gouvernorats différents pour « confirmée » (garde-fou 2).",
+      "noticeActiveDays": "Jours pendant lesquels un avis étranger compte.",
+      "quietDays": "Jours sans nouveau signalement avant qu’un niveau puisse être levé.",
+      "clearMinDeliveredPharmacies": "Pharmacies qui signalent une nouvelle livraison pour lever un niveau.",
+      "staleDays": "Jours sans aucun signalement après lesquels un niveau redescend, même sans nouvelle livraison signalée.",
+      "clearedDisplayDays": "Jours pendant lesquels « levée » reste affiché."
+    },
+    "smallCountsTitle": "Les petits nombres",
+    "smallCounts": "Partout où un nombre de pharmacies est montré, 1 et 2 s’affichent « moins de 3 » ou « <3 » : avec un si petit nombre, on pourrait reconnaître une pharmacie. Ce masquage est fait par la base de données elle-même, pas seulement par l’affichage.",
+    "neverTitle": "Ce que la plateforme ne fait jamais",
+    "never": {
+      "name": "Nommer une pharmacie à quelqu’un d’autre. La coordination, les grossistes et les prescripteurs ne voient que des totaux par gouvernorat. Seule exception : une pharmacie qui répond « disponible » à un patient peut choisir, pour cette réponse seulement, de lui montrer son nom et son adresse.",
+      "peers": "Montrer à une pharmacie les signalements, les commandes ou le stock d’une autre pharmacie.",
+      "patients": "Garder des données sur les patients : ni nom, ni ordonnance, ni numéro de téléphone, ni compte. Une demande de patient garde seulement le médicament, une zone approximative et l’heure. La position du patient reste sur son téléphone.",
+      "unlabelled": "Afficher une donnée simulée sans la mention « Simulé ».",
+      "invented": "Inventer un chiffre pour remplir un écran. Quand une donnée manque, l’écran le dit.",
+      "foreignOnly": "Dépasser « sous surveillance » sur la seule foi d’un avis étranger.",
+      "confirmAlone": "Confirmer une rupture avec moins de {confirmMin} pharmacies ou dans un seul gouvernorat, ou changer un niveau à cause des demandes des patients.",
+      "official": "Présenter une alerte comme une déclaration officielle. Chaque alerte porte la mention « Ceci n’est pas une déclaration officielle de rupture. »",
+      "endorsement": "Laisser croire qu’une institution soutient le projet ou l’utilise. Les organisations de démonstration ont des noms visiblement fictifs, et les pharmacies tirées des cartes publiques sont présentées comme non participantes.",
+      "publicLevels": "Montrer au public un score de risque, un niveau inférieur à « confirmée » ou une quantité en stock.",
+      "clinical": "Donner un conseil médical. Les conseils aux patients attendent une validation clinique, et aucune autre molécule n’est jamais proposée à la place d’un médicament.",
+      "foreignData": "Présenter une donnée étrangère comme tunisienne. Chaque avis étranger nomme son autorité.",
+      "google": "Garder les informations de Google Maps, ou les montrer ailleurs que sur une carte Google."
+    },
+    "originsTitle": "Réel ou simulé",
+    "originsIntro": "Chaque donnée affichée porte son origine.",
+    "origins": {
+      "official_source": "Publiée par une source officielle, par exemple l’avis d’une autorité de santé étrangère. Le lien vers la source est toujours donné.",
+      "tester": "Envoyée par un pharmacien qui teste le prototype. Ce sont de vrais signalements, mais d’un petit groupe : ils ne décrivent pas tout le pays.",
+      "simulated": "Créée pour la démonstration : organisations fictives (« Pharmacie démo A, Tunis »), scénario, essais. Elle ne décrit aucune situation réelle."
+    },
+    "sourcesTitle": "Sources des données",
+    "sourcesIntro": "Les dates de téléchargement et les empreintes des fichiers sont dans data/SOURCES.md, dans le dépôt du projet.",
+    "sourceLink": "Voir la source",
+    "licenceLabel": "Conditions d’utilisation",
+    "sources": {
+      "cnam": {
+        "name": "Liste des médicaments remboursés classés VEI (CNAM)",
+        "use": "Le catalogue national : noms commerciaux, molécules, et autres marques d’une même molécule.",
+        "licence": "Publiée librement par la CNAM sur son site pour les professionnels de santé ; aucune licence n’est indiquée. Utilisée comme information publique, avec citation de la CNAM, sans aucun soutien de sa part."
+      },
+      "geoboundaries": {
+        "name": "Limites des gouvernorats (geoBoundaries, OpenStreetMap)",
+        "use": "La carte des 24 gouvernorats.",
+        "licence": "Open Database License (ODbL) 1.0. © les contributeurs d’OpenStreetMap, via geoBoundaries."
+      },
+      "iso": {
+        "name": "Codes des gouvernorats (ISO 3166-2:TN)",
+        "use": "Les codes des 24 gouvernorats (TN-11 pour Tunis).",
+        "licence": "Liste de codes publique ; seuls les codes ont été vérifiés, aucun texte n’a été copié."
+      },
+      "meta": {
+        "name": "Documentation de l’API WhatsApp Cloud (Meta)",
+        "use": "Le format des messages WhatsApp reçus et envoyés. Une référence technique, pas des données.",
+        "licence": "Documentation publique de Meta, lue pour respecter le format ; aucun contenu n’est repris."
+      },
+      "openstreetmap": {
+        "name": "OpenStreetMap",
+        "use": "La carte de secours des patients, quand Google Maps n’est pas disponible, et la vérification que les positions des pharmacies de démonstration ne tombent sur aucune vraie pharmacie.",
+        "licence": "Open Database License (ODbL) 1.0. © les contributeurs d’OpenStreetMap, attribution affichée sous la carte."
+      },
+      "unknown": {
+        "use": "Voir data/SOURCES.md."
+      }
+    },
+    "backHome": "Retour à l’accueil"
   }
 }
