@@ -272,6 +272,31 @@ describe('molecule search', () => {
   });
 });
 
+describe('reset_molecule_signal', () => {
+  it('is refused to pharmacies and coordinators', async () => {
+    for (const caller of [user(USER.p1), user(USER.coordinator)]) {
+      await expect(as(db, caller, (tx) => tx.query('select * from public.reset_molecule_signal($1)', [MOL]))).rejects.toThrow(/permission denied/);
+    }
+  });
+
+  it('removes a molecule’s alerts, events and signal, and only that molecule’s', async () => {
+    await recomputeSignal(pgliteSignalStore(db), MOL_QUIET, at(1));
+    const before = await db.query<{ n: number }>('select count(*)::int as n from public.signal_events where molecule_id = $1', [MOL_QUIET]);
+    expect(before.rows[0].n).toBeGreaterThan(0);
+    const { rows } = await as(db, service, (tx) => tx.query<{ alerts: number; events: number; signals: number }>('select * from public.reset_molecule_signal($1)', [MOL]));
+    expect(rows[0].events).toBe(4);
+    expect(rows[0].signals).toBe(1);
+    const left = await db.query<{ n: number }>('select count(*)::int as n from public.signal_events where molecule_id = $1', [MOL_QUIET]);
+    expect(left.rows[0].n).toBe(before.rows[0].n);
+  });
+
+  it('leaves the event log append only outside the function', async () => {
+    await expect(
+      asCommitted(db, service, (tx) => tx.query('delete from public.signal_events where molecule_id = $1', [MOL_QUIET])),
+    ).rejects.toThrow(/append only/);
+  });
+});
+
 describe('what a pharmacy can see', () => {
   it('no table or function a pharmacy can read returns another organisation’s id or name', async () => {
     const seen = await as(db, user(USER.p2), async (tx) => {
