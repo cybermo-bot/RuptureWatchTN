@@ -10,6 +10,40 @@ Newest first. Each entry: what was decided, and why.
 - **Impact wording**: `report_impact` keeps counting the reporting pharmacy; the sentence now says so: "Avec la vôtre, N pharmacies signalent ce médicament…", "Avec la vôtre, moins de 3 pharmacies…" below 3.
 - **Tester numbering** (migration 0012): `reset_tester_numbering()` restarts the sequence at 1 only when no tester pharmacy exists, so two pharmacies can never share a number; the migration calls it once. `npm run verify:clean` calls it after removing a run's testers, and no longer removes the seeded follows of the demo pharmacies when re-seeding happened after `--since`.
 
+### Signals carry the origins of their data; `public_status` for the public side (migration 0013)
+- The signal service stores, with the evidence, the origins of the reports and notices it counted (`official_source`, `tester`, `simulated`). `shown_evidence` passes them on, so every screen that shows a level can show its origin badge (rule 4) without reading a single report.
+- `public_status(molecule)` is the only signal read open to the public key: confirmed or not, and, only when confirmed, since when and from which origins. The public key cannot call `signals_view`, so rule 10 holds in the database, not only in the pages. Track B's medicine page should use it.
+
+### Coordination and hospital spaces
+- One server component (`SignalsDashboard`) and one loader (`loadDashboard(client, …)`) serve the coordinator, the hospital pharmacy and `/vues`. The selected molecule is in `?m=` (checked as a UUID), so each row is a plain link and the page works before JavaScript loads.
+- The map fills a governorate with its level's colour mixed with white in three bands (`<3`, 3 or 4, 5 and more), with a legend and a table of the same counts, so colour never carries the meaning alone. Every number comes from the database already suppressed.
+- The hospital space is the same without the event log and the export.
+
+### Export
+- `/api/coordination/export?format=csv|json`, coordinator only (403 otherwise), never cached. CSV: one row per molecule and governorate, UTF-8 with a byte order mark so Excel reads the accents, CRLF line ends, and a cell starting with `=`, `+`, `-` or `@` prefixed with `'` so a spreadsheet never runs it as a formula. Counts are the database's (`<3` below 3); `governorates_14d` is empty when `pharmacies_14d` is `<3`.
+
+### Methods page
+- Static. Every threshold is read from `DEFAULT_PARAMS` and every rule sentence uses placeholders; a test fails if a digit is typed into the method texts. Sources are parsed from `data/SOURCES.md` at build time.
+
+### The scenario runs in the browser
+- `buildScenario()` and `evaluate()` run in a client component: eight steps, three seconds apart. The page makes no request while it plays (checked on the deployed site), so it can never write to the database and needs no reset. Fictional medicine, six fictional pharmacies (three in Tunis, two in Sfax, one in Sousse), a fictional foreign authority.
+- The roles shown as alerted at each change are those `apply_signal_evaluation` alerts: pharmacies following the medicine, wholesalers, hospital pharmacies and coordination; nobody when an expired "levée" disappears (`cleared_expired`).
+
+### Time machine (`/retour`)
+- Static page reading `data/reference/episodes.csv` at build time: committing the file redeploys the page. A row with an invalid date or link is left out and the page says which line, instead of guessing.
+- Lead = days from the foreign notice to the first Tunisian report. No foreign notice, or one on the same day or later, is a miss. The median is over the episodes with a lead above zero.
+- The date cursor evaluates the foreign notice alone with `evaluate()` in the browser. The episodes file has no notice status, so the notice is treated as a shortage notice.
+- `lib/content/csv.ts`: a 40-line RFC 4180 reader written here rather than a dependency, for the two team files.
+
+### Importing foreign notices
+- `npm run notices:import`, dry run by default. Names are matched exactly, never fuzzily: a wrong match would put a notice on the wrong medicine. Notices already loaded (same molecule, source, date and link) are skipped, so the script can be run again as the file grows. `published_at` is midnight UTC of the date.
+
+### One shortage, four views (`/vues`)
+- Each signed-in panel uses its own demo account, signed in on the server with `DEMO_ACCOUNT_PASSWORD`; the public panel uses the public key with no session. Sessions are kept in memory per server instance and reused until five minutes before they expire, because Supabase limits sign-ins per IP.
+- The pharmacy and coordination panels call the functions their own screens call (`getMoleculeView`, `getAlerts`, `loadDashboard`), which now accept a client. The wholesaler's screens are track C's and do not exist yet: its panel uses the reads the database grants a wholesaler (`signals_view`, `governorate_counts`, `demand_by_governorate`, `my_alerts`).
+- Each panel also tries the other roles' reads with its own client and lists what the database refused ("refusé") or answered with no rows ("aucune ligne renvoyée", row-level security on `reports`). The rules are measured on every page view, not described.
+- The page shows anyone what the professional demo accounts see. The one-click demo already does; the page says so. For a real pilot, `/vues` and the one-click accounts go.
+
 ## 2026-11-22, shared foundations
 
 ### One patient map: Google Maps when a key works, Leaflet with OpenStreetMap otherwise
