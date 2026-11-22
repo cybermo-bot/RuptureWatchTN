@@ -6,13 +6,17 @@
 // Removes, for rows created at or after --since:
 //   - tester pharmacies (origin tester), their profiles, follows and auth users;
 //   - reports by the demo pharmacies and by those testers;
-//   - follows added by the demo pharmacies (the seeded follows are older);
+//   - follows added by the demo pharmacies, except those in supabase/seed/demo-follows.json;
 //   - the signal state (alerts, event log, signal row) of every molecule those reports touched,
 //     through reset_molecule_signal(), the only sanctioned way to clear the event log.
+// Then restarts tester numbering at 1 (reset_tester_numbering), which does nothing while any
+// tester pharmacy remains.
 // Never run it after real testers have joined: it would remove their pharmacies too.
 
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { DEMO_ROLES } from '../lib/demo/roles';
-import { serviceClient } from './lib/script-env';
+import { ROOT, serviceClient } from './lib/script-env';
 
 function arg(name: string): string | undefined {
   const i = process.argv.indexOf(`--${name}`);
@@ -68,11 +72,15 @@ async function main() {
     const { error } = await supabase.from('reports').delete().in('id', reports.map((r) => r.id as string));
     if (error) throw new Error(`delete reports: ${error.message}`);
   }
-  const { error: followError } = await supabase
-    .from('followed_molecules')
-    .delete()
-    .in('organisation_id', demoPharmacies)
-    .gte('created_at', since);
+  // Follows added during the run, but never the seeded ones (re-seeding may postdate --since).
+  const seeded = (JSON.parse(readFileSync(join(ROOT, 'supabase/seed/demo-follows.json'), 'utf8')) as { molecules: string[] })
+    .molecules;
+  const { data: seededMolecules, error: seededError } = await supabase.from('molecules').select('id').in('name', seeded);
+  if (seededError) throw new Error(`seeded follows: ${seededError.message}`);
+  const keep = (seededMolecules ?? []).map((m) => m.id as string);
+  let followDelete = supabase.from('followed_molecules').delete().in('organisation_id', demoPharmacies).gte('created_at', since);
+  if (keep.length) followDelete = followDelete.not('molecule_id', 'in', `(${keep.join(',')})`);
+  const { error: followError } = await followDelete;
   if (followError) throw new Error(`delete follows: ${followError.message}`);
   if (testerIds.length) {
     const { error: profileError } = await supabase.from('profiles').delete().in('organisation_id', testerIds);
@@ -84,6 +92,14 @@ async function main() {
     const { error } = await supabase.auth.admin.deleteUser(userId);
     if (error) throw new Error(`delete user: ${error.message}`);
   }
+  const { data: numbering, error: numberingError } = await supabase.rpc('reset_tester_numbering');
+  if (numberingError) throw new Error(`reset tester numbering: ${numberingError.message}`);
+  const n = (numbering as { reset: boolean; remaining_testers: number }[] | null)?.[0];
+  console.log(
+    n?.reset
+      ? '  tester numbering restarted at 1'
+      : `  tester numbering kept: ${n?.remaining_testers ?? '?'} tester pharmacies remain`,
+  );
   console.log('Removed.');
 }
 
