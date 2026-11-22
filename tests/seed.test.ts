@@ -28,13 +28,15 @@ describe('demo follows', () => {
     expect(moleculeNames.has(name)).toBe(true);
   });
 
-  it('covers levetiracetam, carbamazepine, valproate, lamotrigine, levothyroxine and every insulin', () => {
+  it('covers levetiracetam, carbamazepine, both valproates, lamotrigine, levothyroxine and every insulin', () => {
     const insulins = [...moleculeNames].filter((n) => n.includes('INSULINE'));
     expect(insulins.length).toBeGreaterThan(0);
     for (const name of ['LEVETIRACETAM', 'CARBAMAZEPINE', 'LAMOTRIGINE', 'LEVOTHYROXINE', ...insulins]) {
       expect(follows.molecules).toContain(name);
     }
     expect(follows.molecules.some((n) => n.includes('VALPROATE DE SODIUM'))).toBe(true);
+    // Depakine and Valoxine are listed under ACIDE VALPROIQUE (session 4, fix 1).
+    expect(follows.molecules).toContain('ACIDE VALPROIQUE');
   });
 
   it('is for the two demo pharmacies', () => {
