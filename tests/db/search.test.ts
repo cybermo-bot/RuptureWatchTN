@@ -110,3 +110,32 @@ describe('search_medicines on the CNAM catalogue', () => {
     expect(hits).toEqual([]);
   });
 });
+
+describe('search_molecules on the full catalogue: a DCI leads to its molecule first', () => {
+  const molecules = (q: string) =>
+    as(db, { kind: 'anon' }, (tx) =>
+      tx.query<{ name: string; medicines: number }>('select name, medicines from public.search_molecules($1)', [q]),
+    ).then((r) => r.rows);
+
+  it.each(['levetiracetam', 'LEVETIRACETAM', 'lévétiracétam', 'levetiracetan', 'levetir'])(
+    '"%s" gives LEVETIRACETAM first, with its 15 presentations',
+    async (q) => {
+      const rows = await molecules(q);
+      expect(rows[0]).toEqual({ name: 'LEVETIRACETAM', medicines: 15 });
+    },
+  );
+
+  it.each(['carbamazepine', 'lamotrigine', 'levothyroxine'])('"%s" gives its molecule first', async (q) => {
+    expect((await molecules(q))[0]?.name).toBe(q.toUpperCase());
+  });
+
+  it('"amoxicilline" gives the molecule and its combinations', async () => {
+    const names = (await molecules('amoxicilline')).map((r) => r.name);
+    expect(names[0]).toBe('AMOXICILLINE');
+    expect(names).toContain('AMOXICILLINE + ACIDE CLAVULANIQUE');
+  });
+
+  it.each(['epitam', 'augmentin'])('a brand name ("%s") gives no molecule, so its brands lead', async (q) => {
+    expect(await molecules(q)).toEqual([]);
+  });
+});

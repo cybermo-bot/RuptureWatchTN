@@ -14,10 +14,17 @@ interface Hit {
   score: number;
 }
 
+interface MoleculeHit {
+  id: string;
+  name: string;
+  medicines: number;
+  score: number;
+}
+
 type State =
   | { kind: 'idle' }
   | { kind: 'loading' }
-  | { kind: 'done'; q: string; results: Hit[] }
+  | { kind: 'done'; q: string; molecules: MoleculeHit[]; results: Hit[] }
   | { kind: 'error' };
 
 export function SearchCheck() {
@@ -35,8 +42,8 @@ export function SearchCheck() {
           signal: controller.signal,
         });
         if (!res.ok) throw new Error(String(res.status));
-        const body = (await res.json()) as { results: Hit[] };
-        setState({ kind: 'done', q: query, results: body.results });
+        const body = (await res.json()) as { molecules: MoleculeHit[]; results: Hit[] };
+        setState({ kind: 'done', q: query, molecules: body.molecules, results: body.results });
       } catch (error) {
         if ((error as Error).name !== 'AbortError') setState({ kind: 'error' });
       }
@@ -67,11 +74,30 @@ export function SearchCheck() {
       <div aria-live="polite" aria-busy={state.kind === 'loading'}>
         {state.kind === 'error' ? <p className="text-ink">{t('search.error')}</p> : null}
         {state.kind === 'done' && q.trim().length >= 2 ? (
-          state.results.length === 0 ? (
+          state.results.length === 0 && state.molecules.length === 0 ? (
             <p className="text-ink-muted">{t('search.noResult', { q: state.q })}</p>
           ) : (
             <>
-              <p className="sr-only">{t('search.results', { count: state.results.length })}</p>
+              <p className="sr-only">{t('search.results', { count: state.molecules.length + state.results.length })}</p>
+              {state.molecules.length > 0 ? (
+                <>
+                  <h2 className="pb-2 text-sm font-medium text-ink-muted">{t('search.moleculesHeading')}</h2>
+                  <ul className="hairline-list mb-6 border-y border-line">
+                    {state.molecules.map((m) => (
+                      <li key={m.id} className="flex items-start justify-between gap-4 py-3">
+                        <div className="flex min-w-0 flex-col gap-0.5">
+                          <span className="font-medium text-ink">{m.name}</span>
+                          <span className="text-sm text-ink-muted">{t('search.moleculeMeta', { count: m.medicines })}</span>
+                        </div>
+                        <span className="shrink-0 text-end font-mono text-xs text-ink-muted">
+                          {t('search.score')} {m.score.toFixed(2)}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                  <h2 className="pb-2 text-sm font-medium text-ink-muted">{t('search.medicinesHeading')}</h2>
+                </>
+              ) : null}
               <ul className="hairline-list border-y border-line">
                 {state.results.map((hit) => (
                   <li key={hit.id} className="flex items-start justify-between gap-4 py-3">
