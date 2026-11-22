@@ -7,6 +7,11 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // Two root layouts (app/(site) and app/(public)): one 404 page for unknown addresses.
   experimental: { globalNotFound: true },
+  // Files read at run time by /methode and /retour, in case they are rendered on request.
+  outputFileTracingIncludes: {
+    '/methode': ['./data/SOURCES.md'],
+    '/retour': ['./data/reference/episodes.csv'],
+  },
   turbopack: {
     rules: {
       '*.css': {
