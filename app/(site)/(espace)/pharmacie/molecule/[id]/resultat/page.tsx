@@ -4,21 +4,13 @@ import { Guidance } from '@/components/Guidance';
 import { LevelBadge } from '@/components/LevelBadge';
 import { LevelExplanation } from '@/components/LevelExplanation';
 import { t } from '@/lib/i18n';
-import { getImpact, getMoleculeView, type Impact } from '@/lib/pharmacy/data';
+import { getImpact, getMoleculeView } from '@/lib/pharmacy/data';
+import { impactText } from '@/lib/pharmacy/impact-text';
 import type { Level } from '@/lib/signal';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const LEVELS: Level[] = ['none', 'watch', 'likely', 'confirmed', 'cleared'];
 const asLevel = (v: unknown): Level | null => (typeof v === 'string' && (LEVELS as string[]).includes(v) ? (v as Level) : null);
-
-function impactText(impact: Impact | null): string {
-  if (!impact) return t('core.result.impactUnavailable');
-  if (impact.governorates === null) return t('core.result.impactFew', { days: impact.windowDays });
-  if (impact.governorates === 1) {
-    return t('core.result.impactOneGovernorate', { pharmacies: impact.pharmacies, days: impact.windowDays });
-  }
-  return t('core.result.impact', { pharmacies: impact.pharmacies, governorates: impact.governorates, days: impact.windowDays });
-}
 
 // What the pharmacist sees right after a report: the level before and after, why, what the
 // report added to nationally, and what to do.
