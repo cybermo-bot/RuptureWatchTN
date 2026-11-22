@@ -3,7 +3,8 @@
 //   npm run seed:demo
 //
 // Idempotent: re-running updates names and resets the demo users' password to
-// DEMO_ACCOUNT_PASSWORD. Seeds no reports, notices or signals.
+// DEMO_ACCOUNT_PASSWORD, and adds the demo pharmacies' followed molecules
+// (supabase/seed/demo-follows.json). Seeds no reports, notices or signals.
 
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -63,6 +64,32 @@ async function main() {
     if (profileError) throw new Error(`profile ${role.key} failed: ${profileError.message}`);
     console.log(`Demo user ready: ${role.key}`);
   }
+
+  await seedFollows(supabase);
+}
+
+/** Followed molecules of the demo pharmacies. Fails if a name is not in the imported catalogue. */
+async function seedFollows(supabase: ReturnType<typeof serviceClient>) {
+  const follows = JSON.parse(readFileSync(join(ROOT, 'supabase/seed/demo-follows.json'), 'utf8')) as {
+    pharmacies: string[];
+    molecules: string[];
+  };
+  const { data, error } = await supabase.from('molecules').select('id, name').in('name', follows.molecules);
+  if (error) throw new Error(`molecules lookup failed: ${error.message}`);
+  const found = new Map((data ?? []).map((m) => [m.name as string, m.id as string]));
+  const missing = follows.molecules.filter((name) => !found.has(name));
+  if (missing.length) throw new Error(`Not in the catalogue (run catalogue:import first?): ${missing.join(', ')}`);
+
+  const rows = follows.pharmacies.flatMap((key) => {
+    const role = DEMO_ROLES.find((r) => r.key === key);
+    if (!role) throw new Error(`Unknown demo role: ${key}`);
+    return follows.molecules.map((name) => ({ organisation_id: role.organisationId, molecule_id: found.get(name)! }));
+  });
+  const { error: followError } = await supabase
+    .from('followed_molecules')
+    .upsert(rows, { onConflict: 'organisation_id,molecule_id', ignoreDuplicates: true });
+  if (followError) throw new Error(`follows failed: ${followError.message}`);
+  console.log(`Follows: ${follows.molecules.length} molecules for ${follows.pharmacies.length} demo pharmacies.`);
 }
 
 main().catch((error) => {

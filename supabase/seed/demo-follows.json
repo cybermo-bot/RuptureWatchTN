@@ -1,0 +1,17 @@
+{
+  "_note": "Molecules followed by the two demo pharmacies. Names are the exact molecule names of the imported CNAM VEI catalogue (06/11/2026). The catalogue has no plain 'VALPROATE DE SODIUM': Depakine is listed as ACIDE VALPROIQUE, and the only molecule with 'valproate de sodium' in its name is the combination below. See docs/reports/session-2.md.",
+  "pharmacies": ["pharmacie-tunis", "pharmacie-sfax"],
+  "molecules": [
+    "LEVETIRACETAM",
+    "CARBAMAZEPINE",
+    "VALPROATE DE SODIUM + ACIDE VALPROIQUE",
+    "LAMOTRIGINE",
+    "LEVOTHYROXINE",
+    "INSULINE HUMAINE",
+    "INSULINE ANALOGUE : GLARGINE",
+    "INSULINE ANALOGUE : DETEMIR",
+    "INSULINE ANALOGUE : INSULINE ASPARTATE",
+    "INSULINE ANALOGUE:GLULISINE",
+    "INSULINE ASPARTE + INSULINE DEGLUDEC"
+  ]
+}
