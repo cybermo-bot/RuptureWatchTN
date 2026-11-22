@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Origins } from '@/components/coordination/SignalsDashboard';
+import { Origins } from '@/components/Origins';
 import { GOVERNORATE_SHAPES } from '@/components/GovernorateMap';
 import { LevelBadge } from '@/components/LevelBadge';
 import { LevelExplanation } from '@/components/LevelExplanation';

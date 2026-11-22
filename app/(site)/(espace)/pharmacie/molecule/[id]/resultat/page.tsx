@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { ButtonLink } from '@/components/Button';
 import { Guidance } from '@/components/Guidance';
 import { LevelBadge } from '@/components/LevelBadge';
+import { Origins } from '@/components/Origins';
 import { LevelExplanation } from '@/components/LevelExplanation';
 import { t } from '@/lib/i18n';
 import { getImpact, getMoleculeView } from '@/lib/pharmacy/data';
@@ -46,7 +47,10 @@ export default async function ReportResult({ params, searchParams }: PageProps<'
           </dd>
           <dt className="text-ink-muted">{t('core.result.after')}</dt>
           <dd>
-            <LevelBadge level={after} className="text-base" />
+            <span className="flex flex-wrap items-center gap-2">
+              <LevelBadge level={after} className="text-base" />
+              <Origins origins={view.signal?.evidence.origins} />
+            </span>
           </dd>
         </dl>
         {before === after ? <p className="text-sm text-ink-muted">{t('core.result.unchanged')}</p> : null}

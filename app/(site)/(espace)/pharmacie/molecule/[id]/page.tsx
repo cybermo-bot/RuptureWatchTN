@@ -4,6 +4,7 @@ import { reportDeliveredAgain, unfollowMolecule, followMolecule } from '@/app/ac
 import { Button } from '@/components/Button';
 import { Guidance } from '@/components/Guidance';
 import { LevelBadge } from '@/components/LevelBadge';
+import { Origins } from '@/components/Origins';
 import { LevelExplanation } from '@/components/LevelExplanation';
 import { OriginBadge } from '@/components/OriginBadge';
 import { ReportTimingForm } from '@/components/ReportTimingForm';
@@ -47,6 +48,7 @@ export default async function MoleculePage({ params }: PageProps<'/pharmacie/mol
         </h2>
         <p className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <LevelBadge level={level} className="text-base" />
+          <Origins origins={view.signal?.evidence.origins} />
           {view.signal && level !== 'none' ? (
             <span className="text-sm text-ink-muted">{t('core.molecule.since', { date: formatDate(view.signal.since) })}</span>
           ) : null}

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { LevelBadge } from '@/components/LevelBadge';
+import { Origins } from '@/components/Origins';
 import { MoleculeSearch } from '@/components/MoleculeSearch';
 import { t } from '@/lib/i18n';
 import { getFollowed } from '@/lib/pharmacy/data';
@@ -31,7 +32,10 @@ export default async function ReportPick() {
                 >
                   <span className="flex min-w-0 flex-col gap-1">
                     <span className="text-lg font-medium break-words text-ink">{m.name}</span>
-                    <LevelBadge level={m.signal?.level ?? 'none'} />
+                    <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                      <LevelBadge level={m.signal?.level ?? 'none'} />
+                      <Origins origins={m.signal?.evidence.origins} />
+                    </span>
                   </span>
                   <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" className="shrink-0 text-ink-muted rtl:-scale-x-100">
                     <path d="M6 3.5 L10.5 8 L6 12.5" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />

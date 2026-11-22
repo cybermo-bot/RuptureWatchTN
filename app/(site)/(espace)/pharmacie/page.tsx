@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { EmptyState } from '@/components/EmptyState';
 import { LevelBadge } from '@/components/LevelBadge';
+import { Origins } from '@/components/Origins';
 import { LiveRefresh } from '@/components/LiveRefresh';
 import { MoleculeSearch } from '@/components/MoleculeSearch';
 import { PharmacyHeader } from '@/components/PharmacyHeader';
@@ -39,6 +40,7 @@ export default async function PharmacyHome() {
                     <span className="font-medium break-words text-ink">{m.name}</span>
                     <span className="flex flex-wrap items-center gap-x-2 text-sm text-ink-muted">
                       <LevelBadge level={m.signal?.level ?? 'none'} />
+                      <Origins origins={m.signal?.evidence.origins} />
                       {m.signal && m.signal.level !== 'none' ? (
                         <span>{t('core.pharmacy.since', { date: formatDate(m.signal.since) })}</span>
                       ) : null}

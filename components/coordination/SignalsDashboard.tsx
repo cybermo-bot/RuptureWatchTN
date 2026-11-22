@@ -3,10 +3,11 @@ import { EmptyState } from '@/components/EmptyState';
 import { GOVERNORATE_SHAPES, GovernorateMap, type GovernorateValue } from '@/components/GovernorateMap';
 import { LevelBadge } from '@/components/LevelBadge';
 import { LevelExplanation } from '@/components/LevelExplanation';
+import { Origins } from '@/components/Origins';
 import { OriginBadge } from '@/components/OriginBadge';
 import { formatDate, formatTime } from '@/lib/format';
 import { t } from '@/lib/i18n';
-import { DEFAULT_PARAMS, type ForeignNotice, type Level, type Origin } from '@/lib/signal';
+import { DEFAULT_PARAMS, type ForeignNotice, type Level } from '@/lib/signal';
 import {
   DEMAND_WINDOW_DAYS,
   type DemandRow,
@@ -46,17 +47,7 @@ function bandFill(level: Level, band: 'few' | 'some' | 'many'): string {
   return `color-mix(in srgb, ${colour} ${BAND_MIX[band]}%, white)`;
 }
 
-export function Origins({ origins }: { origins: Origin[] }) {
-  if (!origins?.length) return null;
-  return (
-    <span className="inline-flex flex-wrap items-center gap-1.5">
-      <span className="sr-only">{t('core.coordination.originsLabel')}</span>
-      {origins.map((o) => (
-        <OriginBadge key={o} origin={o} />
-      ))}
-    </span>
-  );
-}
+export { Origins } from '@/components/Origins';
 
 function Change({ from, to }: { from: Level; to: Level }) {
   return (

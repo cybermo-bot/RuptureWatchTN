@@ -5,6 +5,7 @@ import { EmptyState } from '@/components/EmptyState';
 import { Disclaimer, Guidance, ReviewStatus } from '@/components/Guidance';
 import { LevelExplanation } from '@/components/LevelExplanation';
 import { LevelBadge } from '@/components/LevelBadge';
+import { Origins } from '@/components/Origins';
 import { LiveRefresh } from '@/components/LiveRefresh';
 import { PharmacyHeader } from '@/components/PharmacyHeader';
 import { getCurrentSession } from '@/lib/auth/session';
@@ -47,6 +48,7 @@ function AlertItem({ alert }: { alert: AlertView }) {
             <LevelBadge level={alert.from} />
             <span className="text-sm text-ink-muted">{t('core.alerts.to')}</span>
             <LevelBadge level={alert.to} />
+            <Origins origins={alert.evidence.origins} />
           </p>
         </header>
 
