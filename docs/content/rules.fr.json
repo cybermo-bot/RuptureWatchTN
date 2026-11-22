@@ -1,0 +1,14 @@
+{
+  "_note": "Phrases qui expliquent pourquoi une molécule est à un niveau. Une par règle de lib/signal (RuleId). Les nombres viennent de l'évaluation ; les nombres sous 3 s'affichent « moins de 3 ».",
+  "no_evidence": "Aucun signalement récent et aucun avis étranger en cours.",
+  "foreign_notice_only": "Un avis de pénurie publié par une autorité étrangère ({sources}). Sans signalement en Tunisie, ce niveau ne monte jamais au-delà de « sous surveillance ».",
+  "local_reports_below_threshold": "{pharmacies} pharmacie(s) signale(nt) une commande non livrée depuis plus de 72 heures sur les 14 derniers jours.",
+  "two_pharmacies_7d": "{pharmacies7d} pharmacies différentes signalent une commande non livrée sur les 7 derniers jours.",
+  "local_report_plus_foreign_notice": "Au moins une pharmacie signale une commande non livrée, et une autorité étrangère signale une pénurie ({sources}).",
+  "single_governorate_cap": "{pharmacies} pharmacies signalent, mais toutes dans le même gouvernorat. Il en faut au moins deux pour confirmer.",
+  "confirmed_threshold": "{pharmacies} pharmacies dans {governorates} gouvernorats signalent une commande non livrée sur les 14 derniers jours.",
+  "hold_until_delivered": "Le niveau est maintenu : aucune pharmacie n'a encore signalé une nouvelle livraison.",
+  "quiet_period_downgrade": "Aucun signalement depuis 30 jours et aucune nouvelle livraison signalée : le niveau est abaissé.",
+  "delivered_again_cleared": "{delivered} pharmacies signalent que le médicament est de nouveau livré, et aucune commande non livrée n'a été signalée depuis 14 jours.",
+  "cleared_expired": "L'alerte levée n'est plus affichée."
+}

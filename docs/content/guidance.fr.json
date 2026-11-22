@@ -1,0 +1,44 @@
+{
+  "_note": "Texte d'orientation pour les pharmacies, rédigé par l'équipe. Il porte sur la conduite des commandes et l'orientation des patients, pas sur un traitement. Statut : brouillon, à relire par une pharmacienne hospitalière avant le pilote.",
+  "disclaimer": "Ceci n'est pas une déclaration officielle de rupture.",
+  "reviewStatus": "Brouillon, en attente de relecture par une pharmacienne",
+  "levels": {
+    "watch": {
+      "title": "Sous surveillance",
+      "summary": "Un premier signal existe pour cette molécule.",
+      "guidance": [
+        "Commandez selon votre consommation habituelle, sans anticiper.",
+        "Si une commande n'est pas livrée au bout de 72 heures, signalez-la."
+      ]
+    },
+    "likely": {
+      "title": "Probable",
+      "summary": "Plusieurs pharmacies signalent des commandes non livrées.",
+      "guidance": [
+        "Commandez selon votre consommation habituelle. Les commandes en double chez plusieurs grossistes aggravent la pénurie.",
+        "Pour un patient sous traitement au long cours, invitez-le à contacter son prescripteur avant la fin de sa boîte en cours."
+      ]
+    },
+    "confirmed": {
+      "title": "Confirmée",
+      "summary": "Des pharmacies d'au moins deux gouvernorats signalent des commandes non livrées.",
+      "guidance": [
+        "Ne constituez pas de stock au-delà de votre consommation habituelle.",
+        "Toute décision de changer de traitement revient au prescripteur. Orientez le patient vers lui.",
+        "Quand le médicament revient, signalez-le avec « Livré à nouveau »."
+      ]
+    },
+    "cleared": {
+      "title": "Levée",
+      "summary": "Au moins deux pharmacies signalent que le médicament est de nouveau livré, et aucune commande non livrée n'a été signalée depuis 14 jours.",
+      "guidance": [
+        "Reprenez vos commandes habituelles."
+      ]
+    }
+  },
+  "standDown": "L'alerte sur {molecule} est terminée. Niveau actuel : {level}. Reprenez vos commandes habituelles.",
+  "tooEarly": {
+    "title": "Pas encore un signal",
+    "body": "Une commande devient un signal après 72 heures sans livraison. Un retard de quelques jours est fréquent et ne veut pas dire rupture. Revenez la signaler si elle n'est toujours pas livrée."
+  }
+}
