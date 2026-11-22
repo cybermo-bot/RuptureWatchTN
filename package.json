@@ -14,7 +14,8 @@
     "db:push": "tsx scripts/db-push.ts",
     "seed:demo": "tsx scripts/seed-demo.ts",
     "catalogue:import": "tsx scripts/import-catalogue.ts",
-    "map:build": "tsx scripts/build-governorate-map.ts"
+    "map:build": "tsx scripts/build-governorate-map.ts",
+    "verify:clean": "tsx scripts/clean-verification.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
