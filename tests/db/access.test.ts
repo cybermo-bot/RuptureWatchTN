@@ -131,7 +131,7 @@ describe('reports: who can read', () => {
 
 describe('reports: who can write', () => {
   const insert = `insert into public.reports (organisation_id, governorate_code, molecule_id, kind, ordered_at, origin)
-                  values ($1, $2, $3, 'not_delivered', now() - interval '4 days', 'tester') returning id`;
+                  values ($1, $2, $3, 'not_delivered', now() - interval '4 days', 'simulated') returning id`;
 
   it('a pharmacy can insert a report for itself', async () => {
     const result = await as(db, user(USER.p1), (tx) => tx.query(insert, [ORG.p1, 'TN-11', MOL]));
@@ -168,6 +168,12 @@ describe('reports: who can write', () => {
           [ORG.p1, MOL],
         ),
       ),
+    ).rejects.toThrow(/row-level security/);
+  });
+
+  it('a report carries its organisation’s own origin: a demo pharmacy cannot file a tester report', async () => {
+    await expect(
+      as(db, user(USER.p1), (tx) => tx.query(insert.replace("'simulated'", "'tester'"), [ORG.p1, 'TN-11', MOL])),
     ).rejects.toThrow(/row-level security/);
   });
 

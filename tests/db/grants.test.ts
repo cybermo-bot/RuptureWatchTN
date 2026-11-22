@@ -29,6 +29,13 @@ const TABLES: Record<string, { anon?: Priv[]; authenticated?: Priv[]; service_ro
 const FUNCTIONS: Record<string, { anon: boolean; authenticated: boolean }> = {
   'public.search_medicines(text)': { anon: true, authenticated: true },
   'public.governorate_counts(uuid, integer, integer, timestamptz)': { anon: false, authenticated: true },
+  'public.search_molecules(text)': { anon: true, authenticated: true },
+  'public.report_impact(uuid, integer, integer, timestamptz)': { anon: false, authenticated: true },
+  'public.apply_signal_evaluation(uuid, signal_level, timestamptz, signal_level, timestamptz, text, jsonb, timestamptz, boolean)': {
+    anon: false,
+    authenticated: false,
+  },
+  'public.create_tester_pharmacy(uuid, text, text)': { anon: false, authenticated: false },
 };
 
 const ROLES = ['anon', 'authenticated', 'service_role'] as const;

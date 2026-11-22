@@ -2,6 +2,15 @@
 
 Newest first. Each entry: what was decided, and why.
 
+## 2026-11-22, session 2
+
+### The signal service stores each evaluation atomically, with compare-and-set
+- `lib/signals/recompute.ts` loads 120 days of reports and notices, calls `evaluate()`, and stores the result through `apply_signal_evaluation()`, a service-role SQL function. It writes the `signals` row only if level and `updated_at` are still what was read; the event row and the alerts are written in the same transaction. On a conflict nothing is written and the service reloads and evaluates again (up to 5 times). A crash can therefore never leave a level change without its event, and two simultaneous reports never produce a duplicate or skipped event (`tests/signal-service.test.ts`, `tests/db/pharmacy-flow.test.ts`).
+- `updated_at` is set with `clock_timestamp()` and compared as stored (microseconds kept), so two writes in the same transaction-time never compare equal.
+- No row is written for a molecule with no evidence and no row: `signals` holds only molecules that have had a signal.
+- The fading of "levée" back to none after 7 days (`cleared_expired`) is logged in `signal_events` but alerts nobody: it is not news to anyone. Every other change, stand-downs included, alerts every pharmacy following the molecule and every wholesaler, hospital pharmacy and coordinator organisation.
+- The daily cron (`/api/cron/recompute`, 04:30 UTC, `vercel.json`) checks `Authorization: Bearer <CRON_SECRET>`, which Vercel Cron sends when `CRON_SECRET` is set. Without the variable every call is refused.
+
 ## 2026-11-21, session 1
 
 ### WhatsApp: Graph API v27.0, senders identified by business-scoped id when present
