@@ -48,6 +48,60 @@ Fingerprint check on the live project: `db:fingerprint --out`, `demo:national`, 
 
 Before it, the stray LEVETIRACETAM report (Pharmacie démo F, Sfax, 23 Nov 01:42 UTC) was removed with the sanctioned reset: `npm run verify:clean -- --since 2026-11-23T01:40:00Z --apply` (one report; its signal, one event and six alerts through `reset_molecule_signal`; no tester pharmacy existed).
 
-## Parts 3 to 5
+## Part 3: track B, the public side, on main
+
+**Needs you: `DEVICE_HASH_SALT` is not set on Vercel.** Everything below is deployed (commit `255af10`, schema 20), but the live site cannot take a patient's request yet: our server needs that salt to hash the phone's random id for the 24-hour limit. `/api/health` now says `"patientRequests": false`, and the request page says plainly "Les demandes aux pharmacies ne sont pas encore ouvertes sur ce site" instead of failing. To open it: Vercel → Settings → Environment Variables → `DEVICE_HASH_SALT`, the same value as in `.env.local`, for Production and Preview, then redeploy. `/api/health` should then say `"patientRequests": true`. I have no access to Vercel from here. The whole flow was checked end to end on a local server against the live database (screens below), and the one test request it made was deleted afterwards.
+
+Migrations applied to the live project before the code that needs them: 0017 (`prescriber` organisation type and role), 0018 (`public_molecule_status`, `governorate_counts` by named roles), 0019 (the origins behind a public level), 0020 (`requests_for_pharmacy`, `answer_request_as` for WhatsApp). Each has its access test on the real migrations: `tests/db/public-status.test.ts`, `tests/db/whatsapp-requests.test.ts`, and the function grants in `tests/db/grants.test.ts`.
+
+| Screen | Where | File |
+| --- | --- | --- |
+| Search: brand or molecule, half words; "ruxolitinib" gives the DPM line | deployed | [medicaments-360](session-5/medicaments-360.png) |
+| Status page, the rumour check: "Rupture confirmée depuis le …", Simulé badge, disclaimer, request button, Préviens-moi, brands folded under the caution line | deployed | [medicament-statut-360](session-5/medicament-statut-360.png) |
+| The same in Arabic, right to left | deployed | [medicament-statut-ar-360](session-5/medicament-statut-ar-360.png) |
+| Request page (live: the honest "not open yet" line, until the salt is set) | deployed | [demande-360](session-5/demande-360.png) |
+| Request page with "Près de moi" done on the phone (Tunis) | local, live database | [local-e2e-1-demande](session-5/local-e2e-1-demande.png) |
+| Pharmacy answered "Disponible, me montrer au patient": what the patient now sees | local, live database | [local-e2e-5-repondu](session-5/local-e2e-5-repondu.png) |
+| Patient page: counts, time left, the pharmacy on the map and in the list, "Appelez avant de vous déplacer.", "Présentez votre ordonnance." | local, live database | [local-e2e-6-reponse](session-5/local-e2e-6-reponse.png) |
+| Second request from the same phone: refused kindly, with a link to the open one | local, live database | [local-e2e-7-limite](session-5/local-e2e-7-limite.png) |
+| Pharmacy's request screen (empty state; count on "Plus" and a line on "Mes médicaments" when patients wait) | deployed | [pharmacie-demandes-360](session-5/pharmacie-demandes-360.png) |
+| `/prescripteurs` signed out: explanation and one-click demo button | deployed | [prescripteurs-360](session-5/prescripteurs-360.png) |
+| `/prescripteurs` signed in, tamoxifen: "Probable" with its rule, counts by governorate, no pharmacy, substitution note | deployed | [prescripteurs-verification-360](session-5/prescripteurs-verification-360.png) |
+| `/ruptures-passees`: one row per episode, a source link for every date | deployed | [ruptures-passees-360](session-5/ruptures-passees-360.png) |
+
+Track B done checks:
+
+| Check | Result |
+| --- | --- |
+| Status page reads correctly in French and Arabic | Passed on the deployed site (screens above). |
+| A request sends only the governorate code | Passed locally: the only POST body was `{"moleculeId":"…","governorate":"TN-11","deviceId":"<random uuid>"}`. "Près de moi" found Tunis on the phone; no coordinate left it. |
+| A pharmacy's answer appears on the patient page within 10 s | Passed locally against the live database: 5.1 s from the tap at Pharmacie démo A to the name on the patient page. Not yet on the deployed site (salt). |
+| An anonymous answer increments the count only | Covered by `tests/db/availability.test.ts` and `whatsapp-requests.test.ts`: `request_answers_public` lists only "disponible" answers that chose to show; anonymous ones count in "Réponses". |
+| Second request within 24 hours refused | Passed locally (screen above); the database refusal (`RW429`) is tested. |
+| Préviens-moi survives a reload and shows the banner | The list lives in `localStorage`; the banner compares the stored status with `/api/public/status` at each opening. Checked by hand locally; no automated browser test yet. |
+| `/prescripteurs` shows levels without pharmacies | Passed on the deployed site: the page text contains no pharmacy name; counts read "<3" below three. |
+| `npm run check` | Passed: lint, types, 529 tests. |
+| Access tests for every new function | `public_molecule_status`, `governorate_counts` (prescriber), `requests_for_pharmacy`, `answer_request_as`, all in the grants matrix. |
+
+**WhatsApp.** "Demandes" (word or button) lists the open requests, a row asks the question with three buttons ("Oui, me montrer", "Oui, anonyme", "Pas disponible": Meta caps button titles at 20 characters), one tap answers and offers the next. A new request sends linked pharmacies of the governorate a message with a "Répondre" button if they wrote to the bot in the last 24 hours. Tested in `tests/whatsapp-bot.test.ts` with Meta's payload shapes; inactive on the live site until the Meta values are set, as before.
+
+**`demo:national`** now adds four simulated answers to its tamoxifen requests (none from the one-click pharmacies). Re-run on the live project: `demo:clear` then `demo:national`, levels as in part 2.
+
+### Video demo path (once the salt is set)
+
+1. Phone A (the patient), a private window: open https://rupturewatch-tn.vercel.app/medicaments, type "amlo", tap AMLODIPINE. The page says "Rupture confirmée depuis le …" with its Simulé badge.
+2. Tap "Demander aux pharmacies proches", choose "Tunis" (or "Près de moi" if the phone is in Tunis), tap "Envoyer la demande". The answers page opens: pharmacies asked, "Réponses : moins de 3", time left, "En attente des pharmacies".
+3. Phone B (the pharmacist): open https://rupturewatch-tn.vercel.app, "Pharmacie (Tunis)". The "Mes médicaments" screen says "1 patient attend votre réponse." Tap "Répondre".
+4. On the AMLODIPINE request, tap "Disponible, me montrer au patient". The row says "Réponse envoyée : le patient voit votre pharmacie sur sa carte."
+5. Back on phone A, without touching it: within 10 seconds, "Pharmacie démo A, Tunis" appears on the map and in the list, with "Appelez avant de vous déplacer." and "Présentez votre ordonnance."
+6. Optional: on phone A, "Revenir à ce médicament", "Préviens-moi". Reload: "Vous suivez ce médicament" stays.
+
+A phone can ask for amlodipine once a day: for a second take, use another private window (a new random id).
+
+### Arabic texts to review
+
+All new Arabic texts are in `messages/ar/public.json` under `public.medicines`, `public.medicine`, `public.request`, `public.watch`, `public.past`, `public.prescribers`, `public.origin` and `public.dpm.searchTitle`. The seven texts the brief gives word for word are used as given. The others are my drafts and need a native reader, in particular: "{n} من الأصناف في قائمة الكنام" (presentations), "حريف" (customer, Tunisian usage) in `request.waitingBody`, "استظهر بوصفتك الطبية" (present your prescription), the CNAM categories "حيوي / أساسي / وسيط", and the origin badges "مصدر رسمي / مُختبِر / محاكاة". The professional parts of `/prescripteurs` (level and explanation) stay in French, marked `lang="fr"`.
+
+## Parts 4 and 5
 
 In progress.
