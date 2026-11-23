@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { connection } from 'next/server';
 import { ButtonLink } from '@/components/Button';
 import { GOVERNORATE_SHAPES, GovernorateMap, type GovernorateValue } from '@/components/GovernorateMap';
-import { LevelBadge, LevelShape } from '@/components/LevelBadge';
+import { HomeStage } from '@/components/home/HomeStage';
+import { LevelBadge } from '@/components/LevelBadge';
 import { Origins } from '@/components/Origins';
 import { OriginBadge } from '@/components/OriginBadge';
 import { RolePicker } from '@/components/RolePicker';
@@ -15,9 +16,10 @@ import { loadNationalPicture, type NationalPicture } from '@/lib/home/national';
 import { t, type MessageKey } from '@/lib/i18n';
 import { LEVEL_ORDER } from '@/lib/signals/views';
 
-// The home page shows the product: what the national unit sees in the demonstration first (map
-// filled by the most serious level per governorate, the medicines with their level: simulated
-// signals only, rule 10), then the roles, the scenario, and the pages that explain it. Every
+// The home page shows the product. First the plum stage: the scenario's frozen moment and the
+// "Voir le scénario" button (components/home/HomeStage.tsx). Then what the national unit sees in
+// the demonstration (map filled by the most serious level per governorate, the medicines with
+// their level: simulated signals only, rule 10), the roles, and the pages that explain it. Every
 // figure is computed; simulated data carries its badge.
 
 const EXPLORE: { href: string; icon: LucideIcon; title: MessageKey; body: MessageKey }[] = [
@@ -119,25 +121,22 @@ export default async function HomePage({ searchParams }: PageProps<'/'>) {
     <>
       <SiteHeader />
       <main id="contenu" className="flex-1 bg-page">
-        <section aria-labelledby="accroche" className="border-b border-line bg-surface">
-          <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
-            <h1 id="accroche" className="text-[1.75rem] leading-[1.15] font-semibold tracking-tight text-ink sm:text-4xl lg:max-w-3xl">
-              {t('core.home.tagline')}
-            </h1>
-            <section aria-labelledby="vue-cellule" className="flex flex-col gap-4">
-              <div className="flex flex-col gap-1.5">
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                  <h2 id="vue-cellule" className="text-xl font-semibold text-ink">
-                    {t('core.home.national.title')}
-                  </h2>
-                  <span className="rounded-sm border border-dashed border-ink-muted px-1.5 font-mono text-xs leading-5 tracking-wide text-ink-muted uppercase">
-                    {t('core.home.national.demo')}
-                  </span>
-                </div>
-                <p className="max-w-prose text-sm text-ink-muted">{t('core.home.national.frame')}</p>
+        <HomeStage />
+
+        <section aria-labelledby="vue-cellule" className="border-b border-line">
+          <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-10 sm:px-6 lg:px-8">
+            <div className="flex flex-col gap-1.5">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <h2 id="vue-cellule" className="text-2xl font-semibold tracking-tight text-ink">
+                  {t('core.home.national.title')}
+                </h2>
+                <span className="rounded-sm border border-dashed border-ink-muted px-1.5 font-mono text-xs leading-5 tracking-wide text-ink-muted uppercase">
+                  {t('core.home.national.demo')}
+                </span>
               </div>
-              <National picture={picture} />
-            </section>
+              <p className="max-w-prose text-ink-muted">{t('core.home.national.frame')}</p>
+            </div>
+            <National picture={picture} />
           </div>
         </section>
 
@@ -170,29 +169,6 @@ export default async function HomePage({ searchParams }: PageProps<'/'>) {
             ) : null}
 
             <RolePicker />
-          </div>
-        </section>
-
-        <section aria-labelledby="scenario-titre" className="border-y border-line bg-surface">
-          <div className="mx-auto flex w-full max-w-7xl flex-col items-start gap-4 px-4 py-8 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
-            <div className="flex flex-col gap-1">
-              <h2 id="scenario-titre" className="text-xl font-semibold text-ink">
-                {t('core.home.scenarioTitle')}
-              </h2>
-              <p className="max-w-prose text-ink-muted">{t('core.home.scenarioBody')}</p>
-              <ul className="flex flex-wrap gap-x-4 gap-y-1 pt-1" aria-label={t('core.home.levelsLabel')}>
-                {LEVEL_ORDER.map((level) => (
-                  <li key={level} className="inline-flex items-center gap-1.5 text-sm text-ink">
-                    <LevelShape level={level} />
-                    {t(`core.levels.${level}`)}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <ButtonLink href="/scenario" className="shrink-0">
-              <Play size={18} aria-hidden="true" />
-              {t('core.home.scenarioCta')}
-            </ButtonLink>
           </div>
         </section>
 

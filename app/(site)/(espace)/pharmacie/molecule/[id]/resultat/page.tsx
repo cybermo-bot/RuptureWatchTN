@@ -5,7 +5,6 @@ import { Guidance } from '@/components/Guidance';
 import { LevelBadge } from '@/components/LevelBadge';
 import { LevelExplanation } from '@/components/LevelExplanation';
 import { Origins } from '@/components/Origins';
-import { CountUp } from '@/components/pharmacy/CountUp';
 import { t } from '@/lib/i18n';
 import { getImpact, getMoleculeView } from '@/lib/pharmacy/data';
 import { impactText, type Impact } from '@/lib/pharmacy/impact-text';
@@ -15,7 +14,7 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const LEVELS: Level[] = ['none', 'watch', 'likely', 'confirmed', 'cleared'];
 const asLevel = (v: unknown): Level | null => (typeof v === 'string' && (LEVELS as string[]).includes(v) ? (v as Level) : null);
 
-/** The national count the report added to, counted up once. Below 3, words only. */
+/** The national count the report added to, as a plain figure with its unit. Below 3, words only. */
 function ImpactFigure({ impact }: { impact: Impact }) {
   if (impact.pharmacies === '<3' || impact.governorates === null) {
     return <p className="rw-rise text-lg font-medium text-ink">{t('core.result.countLabelFew')}</p>;
@@ -24,9 +23,7 @@ function ImpactFigure({ impact }: { impact: Impact }) {
   return (
     <p className="flex flex-col gap-1 text-ink">
       <span className="flex items-baseline gap-2">
-        <span className="text-4xl leading-none font-semibold">
-          <CountUp from={0} to={n} />
-        </span>
+        <span className="font-mono text-4xl leading-none font-semibold tabular-nums">{n}</span>
         <span className="text-lg font-medium">{t('core.result.countLabelMany')}</span>
       </span>
       <span className="text-ink-muted">
@@ -40,8 +37,9 @@ function ImpactFigure({ impact }: { impact: Impact }) {
   );
 }
 
-// What the pharmacist sees right after a report: the level before and after, why, what the
-// report added to nationally, and what to do.
+// What the pharmacist sees right after a report, in three steps (session 6): "Signalement reçu",
+// "Ce que votre signalement a changé" (the level before and after, the national count it added
+// to, why), then "Prochaine action" (the team's guidance and the next button).
 export default async function ReportResult({ params, searchParams }: PageProps<'/pharmacie/molecule/[id]/resultat'>) {
   const { id } = await params;
   if (!UUID.test(id)) notFound();
@@ -66,11 +64,11 @@ export default async function ReportResult({ params, searchParams }: PageProps<'
         <p className="text-lg break-words text-ink">{view.name}</p>
       </header>
 
-      <section aria-labelledby="niveau" className="panel flex flex-col gap-4 p-4">
-        <h2 id="niveau" className="text-sm font-medium text-ink-muted">
-          {t('core.result.levelChange')}
+      <section aria-labelledby="change" className="panel flex flex-col gap-4 p-4">
+        <h2 id="change" className="text-lg font-semibold text-ink">
+          {t('core.result.impactTitle')}
         </h2>
-        <dl className="grid grid-cols-[auto_1fr] items-center gap-x-6 gap-y-3">
+        <dl aria-label={t('core.result.levelChange')} className="grid grid-cols-[auto_1fr] items-center gap-x-6 gap-y-3">
           <dt className="text-ink-muted">{t('core.result.before')}</dt>
           <dd>
             <LevelBadge level={before} className="text-base" />
@@ -84,6 +82,18 @@ export default async function ReportResult({ params, searchParams }: PageProps<'
           </dd>
         </dl>
         {before === after ? <p className="text-sm text-ink-muted">{t('core.result.unchanged')}</p> : null}
+        <div className="border-t border-line pt-4">
+          {delivered ? (
+            <p className="max-w-prose text-lg text-ink">{t('core.result.impactDelivered')}</p>
+          ) : impact ? (
+            <>
+              <ImpactFigure impact={impact} />
+              <p className="sr-only">{impactText(impact)}</p>
+            </>
+          ) : (
+            <p className="text-ink">{impactText(null)}</p>
+          )}
+        </div>
         {view.signal ? (
           <div className="flex flex-col gap-1 border-t border-line pt-4">
             <h3 className="text-sm font-medium text-ink-muted">{t('core.result.why')}</h3>
@@ -92,25 +102,12 @@ export default async function ReportResult({ params, searchParams }: PageProps<'
         ) : null}
       </section>
 
-      <section aria-labelledby="impact" className="panel flex flex-col gap-3 p-4">
-        <h2 id="impact" className="text-sm font-medium text-ink-muted">
-          {t('core.result.impactTitle')}
+      <section aria-labelledby="prochaine" className="panel flex flex-col gap-3 p-4">
+        <h2 id="prochaine" className="text-lg font-semibold text-ink">
+          {t('core.result.nextTitle')}
         </h2>
-        {delivered ? (
-          <p className="max-w-prose text-lg text-ink">{t('core.result.impactDelivered')}</p>
-        ) : impact ? (
-          <>
-            <ImpactFigure impact={impact} />
-            <p className="sr-only">{impactText(impact)}</p>
-          </>
-        ) : (
-          <p className="text-ink">{impactText(null)}</p>
-        )}
+        <Guidance level={after} headingLevel={3} />
       </section>
-
-      <div className="panel p-4">
-        <Guidance level={after} />
-      </div>
 
       {/* The next step stays in reach of the thumb on phones. */}
       <div className="safe-bottom fixed inset-x-0 bottom-16 z-20 border-t border-line bg-surface px-4 py-3 lg:static lg:border-0 lg:bg-transparent lg:p-0">

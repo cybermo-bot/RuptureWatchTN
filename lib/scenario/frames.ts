@@ -15,6 +15,7 @@ import {
   type PreviousState,
   type RuleId,
 } from '@/lib/signal';
+import type { MissingEvidence } from '@/lib/signals/missing';
 import { shownEvidence, type ShownEvidence } from '@/lib/signals/shown';
 
 export const SCENARIO_MOLECULE = 'scenario-demo';
@@ -44,6 +45,10 @@ export interface ScenarioFrame {
   level: Level;
   rule: RuleId;
   evidence: ShownEvidence;
+  /** The same evidence with exact counts: the scenario is fictional, so "Ce qui manque" may count. */
+  exact: MissingEvidence;
+  /** The evaluation time of the frame (ISO). */
+  at: string;
   changed: boolean;
   standDown: boolean;
   /** Pharmacies reporting, by governorate, as displayed ('<3' below 3). */
@@ -74,6 +79,8 @@ export function scenarioFrames(noticeSource: string, noticeUrl: string): Scenari
       level: 'none',
       rule: 'no_evidence',
       evidence: shownEvidence(evaluate({ moleculeId: SCENARIO_MOLECULE, reports, notices, now: START }).evidence),
+      exact: { pharmacies14d: 0, governorates14d: 0, pharmacies7d: 0, deliveredAgainPharmacies: 0, lastNotDeliveredAt: null },
+      at: START.toISOString(),
       changed: false,
       standDown: false,
       counts: [],
@@ -97,6 +104,14 @@ export function scenarioFrames(noticeSource: string, noticeUrl: string): Scenari
       level: e.level,
       rule: e.rule,
       evidence: shownEvidence(e.evidence, ['simulated']),
+      exact: {
+        pharmacies14d: e.evidence.pharmacies14d,
+        governorates14d: e.evidence.governorates14d,
+        pharmacies7d: e.evidence.pharmacies7d,
+        deliveredAgainPharmacies: e.evidence.deliveredAgainPharmacies,
+        lastNotDeliveredAt: e.evidence.lastNotDeliveredAt,
+      },
+      at: now.toISOString(),
       changed: e.changed,
       standDown: e.standDown,
       counts: countByGovernorate(reports, SCENARIO_MOLECULE, now, DEFAULT_PARAMS).map((c) => ({

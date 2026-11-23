@@ -6,7 +6,6 @@ import { EmptyState } from '@/components/EmptyState';
 import { LevelChangeWatcher } from '@/components/live/LevelChangeWatcher';
 import { LiveRefresh } from '@/components/LiveRefresh';
 import { MoleculeSearch } from '@/components/MoleculeSearch';
-import { InstallHint } from '@/components/pharmacy/InstallHint';
 import { MoleculeRow } from '@/components/pharmacy/MoleculeRow';
 import { getCurrentSession } from '@/lib/auth/session';
 import { t } from '@/lib/i18n';
@@ -45,8 +44,6 @@ export default async function PharmacyHome() {
           </span>
         </Link>
       ) : null}
-
-      <InstallHint />
 
       <section aria-labelledby="suivis" className="flex flex-col gap-3">
         <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">

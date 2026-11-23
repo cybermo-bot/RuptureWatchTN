@@ -11,6 +11,7 @@ import { OriginBadge } from '@/components/OriginBadge';
 import { ReportTimingForm } from '@/components/ReportTimingForm';
 import { formatDate } from '@/lib/format';
 import { t } from '@/lib/i18n';
+import { DEFAULT_PARAMS } from '@/lib/signal';
 import { ArrivalLine } from '@/components/institutions/Lines';
 import { createUserClient } from '@/lib/db/server';
 import { upcomingArrivals } from '@/lib/institutions/data';
@@ -85,6 +86,9 @@ export default async function MoleculePage({ params, searchParams }: PageProps<'
           </h2>
           <p className="text-sm text-ink-muted">
             {t('core.report.whenTitle')} {t('core.report.whenIntro')}
+          </p>
+          <p className="max-w-prose text-sm text-ink">
+            {t('core.report.rule72', { hours: DEFAULT_PARAMS.minUndeliveredHours })}
           </p>
         </div>
         <ReportTimingForm moleculeId={view.id} headingId="signaler" />

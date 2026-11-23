@@ -33,8 +33,8 @@ test.describe('pharmacy report, then coordination', () => {
     await page.getByRole('button', { name: 'Il y a 3 jours' }).click();
 
     await expect(page).toHaveURL(/\/pharmacie\/molecule\/[0-9a-f-]+\/resultat/);
-    await expect(page.getByRole('heading', { name: 'Signalement enregistré' })).toBeVisible();
-    await expect(page.getByText('Ce que votre signalement change')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Signalement reçu' })).toBeVisible();
+    await expect(page.getByText('Ce que votre signalement a changé')).toBeVisible();
   });
 
   test('2. coordination sees that medicine in its list', async ({ page }) => {

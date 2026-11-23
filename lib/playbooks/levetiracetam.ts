@@ -4,6 +4,7 @@
 
 import { ALLOCATION_PARAMS } from '@/lib/allocation/params';
 import { DEFAULT_PARAMS } from '@/lib/signal';
+import { PLATFORM_ACTORS } from './actors';
 import type { Playbook } from './types';
 
 export const LEVETIRACETAM_PLAYBOOK: Playbook = {
@@ -16,36 +17,7 @@ export const LEVETIRACETAM_PLAYBOOK: Playbook = {
   signal: DEFAULT_PARAMS,
   allocation: ALLOCATION_PARAMS,
   triggerLevel: 'likely',
-  actors: {
-    watch: [
-      { role: 'pharmacy', actions: ['report', 'receiveAlert'] },
-      { role: 'coordinator', actions: ['followSignal'] },
-    ],
-    likely: [
-      { role: 'pharmacy', actions: ['report', 'receiveAlert'] },
-      { role: 'wholesaler', actions: ['proposeSplit', 'recordDecision'] },
-      { role: 'central_pharmacy', actions: ['announceArrival'] },
-      { role: 'hospital_pharmacy', actions: ['followSignal'] },
-      { role: 'coordinator', actions: ['followSignal'] },
-      { role: 'pharmacists_order', actions: ['messagePharmacists'] },
-      { role: 'prescriber', actions: ['checkStatus'] },
-    ],
-    confirmed: [
-      { role: 'pharmacy', actions: ['report', 'receiveAlert', 'reportDelivered'] },
-      { role: 'wholesaler', actions: ['proposeSplit', 'recordDecision'] },
-      { role: 'central_pharmacy', actions: ['announceArrival'] },
-      { role: 'hospital_pharmacy', actions: ['followSignal'] },
-      { role: 'coordinator', actions: ['followSignal'] },
-      { role: 'pharmacists_order', actions: ['messagePharmacists'] },
-      { role: 'prescriber', actions: ['checkStatus'] },
-      { role: 'public', actions: ['publicStatus'] },
-    ],
-    cleared: [
-      { role: 'pharmacy', actions: ['receiveAlert', 'resumeOrders'] },
-      { role: 'coordinator', actions: ['followSignal'] },
-      { role: 'public', actions: ['publicStatus'] },
-    ],
-  },
+  actors: PLATFORM_ACTORS,
   clauses: [
     { id: 'continuity', reviewers: ['hospital_pharmacy', 'clinical_reviewer'], state: 'pending_validation', text: null },
     { id: 'orderCap', reviewers: ['wholesaler', 'supply_coordinator'], state: 'pending_validation', text: null },

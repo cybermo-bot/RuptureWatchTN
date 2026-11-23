@@ -90,7 +90,16 @@
       "frame": "La vue de la cellule nationale de suivi dans la démonstration : seuls des signaux simulés y figurent. Le public ne voit d’un médicament que la rupture confirmée."
     },
     "scenarioTitle": "Une rupture simulée, du premier signe à la levée",
-    "scenarioBody": "Trois semaines jouées pas à pas par les vraies règles, dans votre navigateur. Rien n’est écrit dans la base."
+    "scenarioBody": "Trois semaines jouées pas à pas par les vraies règles, dans votre navigateur. Rien n’est écrit dans la base.",
+    "stage": {
+      "demo": "Démonstration · données simulées",
+      "title": "Du premier signal à la décision",
+      "lead": "Des pharmacies signalent « commandé, non livré ». Des règles publiques en font un niveau d’alerte expliqué, transmis à ceux qui peuvent agir.",
+      "cta": "Voir le scénario",
+      "roles": "Choisir un rôle",
+      "mapTitle": "Pharmacies qui signalent, par gouvernorat",
+      "source": "Image figée du scénario, étape {step} sur {total} : six pharmacies fictives, les règles d’alerte réelles, calculé à l’affichage. Moins de 3 pharmacies s’affiche « <3 »."
+    }
   },
   "roles": {
     "pharmacyTunis": {
@@ -381,17 +390,18 @@
       "pick": "Le médicament",
       "when": "La date de commande"
     },
-    "changeMedicine": "Changer de médicament"
+    "changeMedicine": "Changer de médicament",
+    "rule72": "Règle des {hours} heures : une commande compte comme signal si elle n’est toujours pas livrée {hours} heures après l’avoir passée. Commandée il y a moins de 3 jours ? Rien n’est envoyé, revenez si elle n’arrive pas."
   },
   "result": {
-    "title": "Signalement enregistré",
-    "titleDelivered": "Nouvelle livraison enregistrée",
+    "title": "Signalement reçu",
+    "titleDelivered": "Signalement reçu : médicament de nouveau livré",
     "levelChange": "Niveau du médicament",
     "before": "Avant",
     "after": "Après",
     "unchanged": "Le niveau ne change pas.",
     "why": "Pourquoi ce niveau",
-    "impactTitle": "Ce que votre signalement change",
+    "impactTitle": "Ce que votre signalement a changé",
     "impact": "Avec la vôtre, {pharmacies} pharmacies signalent ce médicament dans {governorates} gouvernorats sur les {days} derniers jours.",
     "impactOneGovernorate": "Avec la vôtre, {pharmacies} pharmacies signalent ce médicament, toutes dans le même gouvernorat, sur les {days} derniers jours.",
     "impactFew": "Avec la vôtre, moins de 3 pharmacies signalent ce médicament sur les {days} derniers jours.",
@@ -404,7 +414,8 @@
     "countGovernorates": "dans {count} gouvernorats",
     "countOneGovernorate": "dans un seul gouvernorat",
     "countWindow": "sur les {days} derniers jours, la vôtre comprise",
-    "newReport": "Signaler un autre médicament"
+    "newReport": "Signaler un autre médicament",
+    "nextTitle": "Prochaine action"
   },
   "guidanceBlock": {
     "title": "Conduite à tenir",
@@ -831,7 +842,7 @@
     "play": "Lancer le scénario",
     "resume": "Reprendre",
     "pause": "Pause",
-    "step": "Étape suivante",
+    "step": "Suivante",
     "restart": "Recommencer",
     "progress": "Étape {n} sur {total}",
     "day": "Jour {day}",
@@ -862,7 +873,20 @@
     "memoryNote": "Rien n’est enregistré : « Recommencer » remet tout à zéro.",
     "controls": "Commandes du scénario",
     "dailyReport": "La même pharmacie signale encore le même médicament",
-    "regionalReport": "Une autre pharmacie du même gouvernorat signale"
+    "regionalReport": "Une autre pharmacie du même gouvernorat signale",
+    "previous": "Précédente",
+    "shortcuts": "Raccourcis : ← et → pour avancer ou reculer, Espace pour lancer ou mettre en pause.",
+    "dayShort": "J{day}",
+    "timelineLabel": "Changements de niveau du scénario",
+    "timelineItem": "Jour {day} : {level}",
+    "timelineItemCurrent": "Jour {day} : {level} (étape affichée)",
+    "paneLabel": "Pourquoi ce niveau, et qui peut agir",
+    "whyTitle": "Pourquoi ce niveau ?",
+    "whoTitle": "Qui peut agir ?",
+    "whoNone": "Personne pour l’instant : il n’y a encore aucun signal.",
+    "actorsLead": "À « {level} », ce que chacun peut faire sur la plateforme :",
+    "actionsSeparator": " ; ",
+    "rulesNote": "Les mêmes règles qu’en production, appliquées dans votre navigateur : les nombres ci-dessus sont exacts parce que tout est fictif."
   },
   "replay": {
     "title": "Retour sur les ruptures passées",
