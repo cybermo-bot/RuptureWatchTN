@@ -7,21 +7,13 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import seed from '@/supabase/seed/allocation-demo.json';
 import { fairSplit, type GovernorateNeed, type Split } from './split';
 
-export const MAX_STOCK = 10_000_000;
+export { MAX_STOCK, parseStock } from './stock';
 /** "Ne pas appliquer" needs at least this many characters of reason (the database checks it too). */
 export const MIN_REASON_LENGTH = 15;
 
 /** The simulated figures for the demonstration (every value marked simulated in the seed file). */
 export const DEMO_NEEDS: GovernorateNeed[] = seed.governorates.map(({ code, monthlyUse, coverDays }) => ({ code, monthlyUse, coverDays }));
 export const DEMO_ORIGIN = seed.origin as 'simulated';
-
-/** A typed stock, or null when it is not a whole number of boxes in range. */
-export function parseStock(value: unknown): number | null {
-  const s = String(value ?? '').replace(/[\s  ]/g, '');
-  if (!/^\d{1,8}$/.test(s)) return null;
-  const n = Number(s);
-  return n >= 1 && n <= MAX_STOCK ? n : null;
-}
 
 export function demoSplit(stock: number): Split {
   return fairSplit(stock, DEMO_NEEDS);

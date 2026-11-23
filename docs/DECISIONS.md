@@ -4,6 +4,14 @@ Newest first. Each entry: what was decided, and why.
 
 ## 2026-11-24, session 6
 
+### Allocation comparison on the wholesaler's split page (part 3)
+
+- The split page now shows the same stock shared two ways, side by side: "Répartition proportionnelle à l'usage", labelled "Modèle de référence" (a point of comparison, not a claim about any wholesaler's practice), and "Répartition selon les jours de couverture" (`fairSplit()`), labelled "Répartition proposée". The decision is recorded on the proposed split, as before; the action recomputes it on the server.
+- `proportionalSplit()` (`lib/allocation/proportional.ts`, pure) follows the same rules as `fairSplit()`, shared through `stockAndReserve()` and `governorateNeeds()` in `split.ts`, not copied: the reserve first, no governorate above its need for the period, what nobody needs stays unallocated. A share above a need is capped and the surplus shared again in proportion. Whole boxes: rounded down, then the largest remainders, equal remainders by governorate code (input order never changes the result).
+- The handoff's fixture figures are confirmed by the code: at 2,500 boxes, 250 reserved, 2,250 allocated under both, lowest cover after 11.0 days (reference) against 17.3 (proposed), from 2.0 before. "Stock nécessaire pour viser 14 jours": 1,604 boxes in all (160 reserve, 1,444 to share); 1,603 falls short. All in `tests/allocation-compare.test.ts`.
+- Both splits are computed in the browser from the same pure functions, so typing a stock updates both at once; the URL keeps `?stock=`, `gouvernorats=tous`, `cible=`. Without JavaScript the GET forms and the link do the same through the server. The page opens on the 2,500-box example so a visitor sees a result at once.
+- The range plot (before: open circle; reference: square; proposed: diamond, on one 0–30 day scale) is HTML, not a server-rendered SVG chart, because it moves as the stock is typed; the table under it carries the same values for screen readers. `CoverChart` is removed.
+
 ### The showcase's "confirmée" medicine is an antiepileptic: LEVETIRACETAM (part 2)
 
 - Everything we submitted says the pilot starts with antiepileptics (Phase 2.2 names carbamazepine and levetiracetam); the national picture confirmed amlodipine. `DEMO_SHORTAGE_MOLECULE` is now `LEVETIRACETAM`: six brands on the CNAM list (Antiomal, Epilepta, Epitam, Epixx, Levet, Vetira), no report, notice, request or past episode of its own on the live project. The 23 simulated reports, 13 governorates, 8 patient requests and the applied wholesaler split are unchanged; only the molecule moved. The four other showcase medicines are unchanged.

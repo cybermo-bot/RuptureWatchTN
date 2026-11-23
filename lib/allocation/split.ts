@@ -38,18 +38,50 @@ export interface Split {
 
 const finiteNonNegative = (n: number) => (Number.isFinite(n) && n > 0 ? n : 0);
 
-export function fairSplit(stockInput: number, needs: readonly GovernorateNeed[], params: AllocationParams = ALLOCATION_PARAMS): Split {
+/** The rules every split shares: whole boxes, the hospital reserve first, the rest to share. */
+export function stockAndReserve(stockInput: number, params: AllocationParams) {
   const stock = Math.floor(finiteNonNegative(stockInput));
   const share = Math.min(1, Math.max(0, params.hospitalReserveShare));
   const reserve = Math.floor(stock * share);
-  const rest = stock - reserve;
+  return { stock, reserve, rest: stock - reserve };
+}
 
-  const govs = needs.map((g) => {
+/** Daily use, current cover and need (the cap: boxes to reach `periodDays` of cover) per governorate. */
+export function governorateNeeds(needs: readonly GovernorateNeed[], params: AllocationParams) {
+  return needs.map((g) => {
     const daily = finiteNonNegative(g.monthlyUse) / params.daysPerMonth;
     const cover = Math.max(0, Number.isFinite(g.coverDays) ? g.coverDays : 0);
     const need = daily > 0 ? Math.max(0, Math.ceil((params.periodDays - cover) * daily - 1e-9)) : 0;
     return { code: g.code, daily, cover, need };
   });
+}
+
+/** The rows of a split from the boxes given to each governorate. */
+export function splitRows(govs: ReturnType<typeof governorateNeeds>, boxes: number[]): GovernorateSplit[] {
+  return govs.map((g, i) => ({
+    code: g.code,
+    boxes: boxes[i],
+    need: g.need,
+    coverBefore: g.daily > 0 ? g.cover : null,
+    coverAfter: g.daily > 0 ? g.cover + boxes[i] / g.daily : null,
+  }));
+}
+
+/** The lowest days of cover after the split, among governorates with a use; null if none. */
+export function minCoverAfter(split: Split): number | null {
+  const values = split.rows.map((r) => r.coverAfter).filter((v): v is number => v !== null);
+  return values.length ? Math.min(...values) : null;
+}
+
+/** The lowest days of cover before the split, among governorates with a use; null if none. */
+export function minCoverBefore(split: Split): number | null {
+  const values = split.rows.map((r) => r.coverBefore).filter((v): v is number => v !== null);
+  return values.length ? Math.min(...values) : null;
+}
+
+export function fairSplit(stockInput: number, needs: readonly GovernorateNeed[], params: AllocationParams = ALLOCATION_PARAMS): Split {
+  const { stock, reserve, rest } = stockAndReserve(stockInput, params);
+  const govs = governorateNeeds(needs, params);
 
   const totalNeed = govs.reduce((n, g) => n + g.need, 0);
   const toGive = Math.min(rest, totalNeed);
@@ -89,13 +121,7 @@ export function fairSplit(stockInput: number, needs: readonly GovernorateNeed[],
     }
   }
 
-  const rows = govs.map((g, i) => ({
-    code: g.code,
-    boxes: boxes[i],
-    need: g.need,
-    coverBefore: g.daily > 0 ? g.cover : null,
-    coverAfter: g.daily > 0 ? g.cover + boxes[i] / g.daily : null,
-  }));
+  const rows = splitRows(govs, boxes);
   const allocated = sum(boxes);
   return { stock, reserve, allocated, unallocated: rest - allocated, rows, params };
 }
