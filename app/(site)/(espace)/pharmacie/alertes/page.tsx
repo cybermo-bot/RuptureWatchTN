@@ -7,7 +7,6 @@ import { LevelExplanation } from '@/components/LevelExplanation';
 import { LevelBadge } from '@/components/LevelBadge';
 import { Origins } from '@/components/Origins';
 import { LiveRefresh } from '@/components/LiveRefresh';
-import { PharmacyHeader } from '@/components/PharmacyHeader';
 import { getCurrentSession } from '@/lib/auth/session';
 import { formatDate, formatTime } from '@/lib/format';
 import { t } from '@/lib/i18n';
@@ -26,8 +25,8 @@ function AlertItem({ alert }: { alert: AlertView }) {
     <li>
       <article
         aria-labelledby={headingId}
-        className={`flex flex-col gap-4 border-s-2 py-6 ps-4 ${
-          standDown ? 'border-level-cleared' : unread ? 'border-ink' : 'border-line'
+        className={`panel flex flex-col gap-4 border-s-4 p-4 ${
+          standDown ? 'border-s-level-cleared' : unread ? 'border-s-ink' : 'border-s-line'
         }`}
       >
         <header className="flex flex-col gap-2">
@@ -89,15 +88,16 @@ export default async function PharmacyAlerts() {
   const unread = alerts.some((a) => a.readAt === null);
 
   return (
-    <div className="flex flex-col gap-8">
-      <PharmacyHeader session={session} active="alerts" />
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <LiveRefresh table="alerts" filter={`organisation_id=eq.${session.organisation.id}`} fallbackMs={15_000} />
       <section aria-labelledby="alertes" className="flex flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 id="alertes" className="sr-only">
-            {t('core.alerts.title')}
-          </h2>
-          <p className="text-sm text-ink-muted">{t('core.alerts.live')}</p>
+          <div className="flex flex-col gap-1">
+            <h1 id="alertes" className="text-2xl font-semibold tracking-tight text-ink">
+              {t('core.alerts.title')}
+            </h1>
+            <p className="text-sm text-ink-muted">{t('core.alerts.live')}</p>
+          </div>
           {unread ? (
             <form action={markAllAlertsRead}>
               <button
@@ -110,9 +110,11 @@ export default async function PharmacyAlerts() {
           ) : null}
         </div>
         {alerts.length === 0 ? (
-          <EmptyState title={t('core.alerts.emptyTitle')} body={t('core.alerts.emptyBody')} />
+          <div className="panel px-4">
+            <EmptyState afterRule title={t('core.alerts.emptyTitle')} body={t('core.alerts.emptyBody')} />
+          </div>
         ) : (
-          <ul className="hairline-list flex flex-col">
+          <ul className="flex flex-col gap-3">
             {alerts.map((a) => (
               <AlertItem key={a.id} alert={a} />
             ))}

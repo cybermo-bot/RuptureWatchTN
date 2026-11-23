@@ -1,3 +1,4 @@
+import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { reportDeliveredAgain, unfollowMolecule, followMolecule } from '@/app/actions/pharmacy';
@@ -26,9 +27,10 @@ export default async function MoleculePage({ params, searchParams }: PageProps<'
   const canSayDelivered = (level === 'likely' || level === 'confirmed') && reportedBefore;
 
   return (
-    <div className="flex flex-col gap-10">
-      <header className="flex flex-col gap-3 border-b border-line pb-6">
-        <Link href="/pharmacie" className="text-sm text-ink-muted">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-5">
+      <header className="flex flex-col gap-2">
+        <Link href="/pharmacie" className="inline-flex min-h-12 w-fit items-center gap-1 text-sm font-medium">
+          <ChevronLeft size={16} aria-hidden="true" className="rtl:-scale-x-100" />
           {t('core.molecule.backHome')}
         </Link>
         <h1 className="text-2xl font-semibold tracking-tight break-words text-ink sm:text-3xl">{view.name}</h1>
@@ -48,7 +50,7 @@ export default async function MoleculePage({ params, searchParams }: PageProps<'
         </form>
       </header>
 
-      <section aria-labelledby="niveau" className="flex flex-col gap-3">
+      <section aria-labelledby="niveau" className="panel flex flex-col gap-3 p-4">
         <h2 id="niveau" className="text-sm font-medium text-ink-muted">
           {t('core.molecule.levelTitle')}
         </h2>
@@ -66,7 +68,7 @@ export default async function MoleculePage({ params, searchParams }: PageProps<'
         )}
       </section>
 
-      <section aria-labelledby="signaler" className="flex flex-col gap-4">
+      <section aria-labelledby="signaler" className="panel flex flex-col gap-4 p-4">
         <div className="flex flex-col gap-1">
           <h2 id="signaler" className="text-lg font-semibold text-ink">
             {t('core.report.title')}
@@ -87,16 +89,20 @@ export default async function MoleculePage({ params, searchParams }: PageProps<'
         ) : null}
       </section>
 
-      {level !== 'none' ? <Guidance level={level} /> : null}
+      {level !== 'none' ? (
+        <div className="panel p-4">
+          <Guidance level={level} />
+        </div>
+      ) : null}
 
-      <section aria-labelledby="avis" className="flex flex-col gap-3">
+      <section aria-labelledby="avis" className="panel flex flex-col gap-3 p-4">
         <h2 id="avis" className="text-sm font-medium text-ink-muted">
           {t('core.molecule.noticesTitle')}
         </h2>
         {view.notices.length === 0 ? (
           <p className="text-ink-muted">{t('core.molecule.noticesEmpty')}</p>
         ) : (
-          <ul className="hairline-list border-y border-line">
+          <ul className="hairline-list">
             {view.notices.map((n) => (
               <li key={n.id} className="flex flex-col gap-1 py-3">
                 <p className="flex flex-wrap items-center gap-2 text-ink">
@@ -117,14 +123,14 @@ export default async function MoleculePage({ params, searchParams }: PageProps<'
         )}
       </section>
 
-      <section aria-labelledby="mes-signalements" className="flex flex-col gap-3">
+      <section aria-labelledby="mes-signalements" className="panel flex flex-col gap-3 p-4">
         <h2 id="mes-signalements" className="text-sm font-medium text-ink-muted">
           {t('core.molecule.myReportsTitle')}
         </h2>
         {view.reports.length === 0 ? (
           <p className="text-ink-muted">{t('core.molecule.myReportsEmpty')}</p>
         ) : (
-          <ul className="hairline-list border-y border-line">
+          <ul className="hairline-list">
             {view.reports.map((r) => (
               <li key={r.id} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 py-3">
                 <span className="flex flex-col gap-0.5">

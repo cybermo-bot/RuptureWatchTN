@@ -1,7 +1,6 @@
-import Link from 'next/link';
-import { LevelBadge } from '@/components/LevelBadge';
-import { Origins } from '@/components/Origins';
 import { MoleculeSearch } from '@/components/MoleculeSearch';
+import { MoleculeRow } from '@/components/pharmacy/MoleculeRow';
+import { ReportProgress } from '@/components/pharmacy/ReportProgress';
 import { t } from '@/lib/i18n';
 import { getFollowed } from '@/lib/pharmacy/data';
 
@@ -9,13 +8,13 @@ import { getFollowed } from '@/lib/pharmacy/data';
 export default async function ReportPick() {
   const followed = await getFollowed();
   return (
-    <div className="flex flex-col gap-8">
-      <header className="flex flex-col gap-2">
-        <Link href="/pharmacie" className="text-sm text-ink-muted">
-          {t('core.molecule.backHome')}
-        </Link>
-        <h1 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">{t('core.report.title')}</h1>
-        <p className="text-lg text-ink">{t('core.report.pickTitle')}</p>
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+      <header className="flex flex-col gap-4">
+        <ReportProgress step={1} />
+        <div className="flex flex-col gap-1">
+          <h1 className="text-2xl font-semibold tracking-tight text-ink">{t('core.report.pickTitle')}</h1>
+          <p className="text-ink-muted">{t('core.report.title')}</p>
+        </div>
       </header>
 
       {followed.length > 0 ? (
@@ -23,31 +22,17 @@ export default async function ReportPick() {
           <h2 id="choix-suivis" className="text-sm font-medium text-ink-muted">
             {t('core.report.pickFollowed')}
           </h2>
-          <ul className="hairline-list border-y border-line">
+          <ul className="panel hairline-list overflow-hidden">
             {followed.map((m) => (
               <li key={m.moleculeId}>
-                <Link
-                  href={`/pharmacie/signaler/${m.moleculeId}`}
-                  className="flex min-h-16 items-center justify-between gap-4 py-3 no-underline hover:bg-surface-subtle"
-                >
-                  <span className="flex min-w-0 flex-col gap-1">
-                    <span className="text-lg font-medium break-words text-ink">{m.name}</span>
-                    <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                      <LevelBadge level={m.signal?.level ?? 'none'} />
-                      <Origins origins={m.signal?.evidence.origins} />
-                    </span>
-                  </span>
-                  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" className="shrink-0 text-ink-muted rtl:-scale-x-100">
-                    <path d="M6 3.5 L10.5 8 L6 12.5" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </Link>
+                <MoleculeRow molecule={m} href={`/pharmacie/signaler/${m.moleculeId}`} large />
               </li>
             ))}
           </ul>
         </section>
       ) : null}
 
-      <section aria-labelledby="choix-autre" className="flex flex-col gap-3">
+      <section aria-labelledby="choix-autre" className="flex flex-col gap-2">
         <h2 id="choix-autre" className="text-sm font-medium text-ink-muted">
           {t('core.report.pickOther')}
         </h2>

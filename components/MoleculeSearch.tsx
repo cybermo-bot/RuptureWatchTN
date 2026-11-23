@@ -1,5 +1,6 @@
 'use client';
 
+import { Search } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useId, useState } from 'react';
 import { followMolecule } from '@/app/actions/pharmacy';
@@ -75,7 +76,7 @@ function Row({
       <li>
         <Link
           href={`/pharmacie/signaler/${moleculeId}`}
-          className="flex min-h-14 items-center justify-between gap-4 py-3 no-underline hover:bg-surface-subtle"
+          className="flex min-h-14 items-center justify-between gap-4 px-4 py-3 no-underline hover:bg-surface-subtle"
         >
           {text}
           <span className="shrink-0 text-sm font-medium text-brand">{t('core.follow.choose')}</span>
@@ -84,7 +85,7 @@ function Row({
     );
   }
   return (
-    <li className="flex min-h-14 items-center justify-between gap-4 py-3">
+    <li className="flex min-h-14 items-center justify-between gap-4 px-4 py-3">
       {text}
       <FollowAction moleculeId={moleculeId} followed={followed} />
     </li>
@@ -125,6 +126,8 @@ export function MoleculeSearch({ mode, followedIds = [] }: { mode: 'follow' | 'r
     <div className="flex flex-col gap-4">
       <Input
         label={t('core.follow.searchLabel')}
+        large
+        icon={<Search size={20} />}
         type="search"
         inputMode="search"
         autoComplete="off"
@@ -147,7 +150,7 @@ export function MoleculeSearch({ mode, followedIds = [] }: { mode: 'follow' | 'r
                   <h3 id={`${headingId}-mol`} className="pb-1 text-sm font-medium text-ink-muted">
                     {t('core.follow.moleculesHeading')}
                   </h3>
-                  <ul className="hairline-list border-y border-line">
+                  <ul className="panel hairline-list overflow-hidden">
                     {state.molecules.map((m) => (
                       <Row
                         key={m.id}
@@ -166,7 +169,7 @@ export function MoleculeSearch({ mode, followedIds = [] }: { mode: 'follow' | 'r
                   <h3 id={`${headingId}-med`} className="pb-1 text-sm font-medium text-ink-muted">
                     {t('core.follow.medicinesHeading')}
                   </h3>
-                  <ul className="hairline-list border-y border-line">
+                  <ul className="panel hairline-list overflow-hidden">
                     {state.results.map((m) => (
                       <Row
                         key={m.id}

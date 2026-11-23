@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
-import { PharmacyHeader } from '@/components/PharmacyHeader';
 import { WhatsAppLinkForm } from '@/components/WhatsAppLinkForm';
 import { unlinkNumber } from '@/app/actions/whatsapp';
 import { getCurrentSession } from '@/lib/auth/session';
@@ -29,19 +28,19 @@ export default async function PharmacyWhatsApp() {
   const enabled = whatsappEnv() !== null;
 
   return (
-    <div className="flex flex-col gap-8">
-      <PharmacyHeader session={session} active="whatsapp" />
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+      <h1 className="text-2xl font-semibold tracking-tight text-ink">{t('core.whatsappLink.title')}</h1>
       <p className="max-w-prose text-ink">{t('core.whatsappLink.intro')}</p>
       {!enabled ? <p className="max-w-prose border-s-2 border-line ps-4 text-ink-muted">{t('core.whatsappLink.unavailable')}</p> : null}
 
-      <section aria-labelledby="relies" className="flex flex-col gap-3">
+      <section aria-labelledby="relies" className="panel flex flex-col gap-3 p-4">
         <h2 id="relies" className="text-lg font-semibold text-ink">
           {t('core.whatsappLink.linkedTitle')}
         </h2>
         {links.length === 0 ? (
           <p className="text-ink-muted">{t('core.whatsappLink.linkedNone')}</p>
         ) : (
-          <ul className="hairline-list max-w-md border-y border-line">
+          <ul className="hairline-list max-w-md">
             {links.map((l) => (
               <li key={l.id} className="flex items-center justify-between gap-4 py-2">
                 <span className="flex flex-col">
@@ -61,7 +60,7 @@ export default async function PharmacyWhatsApp() {
       </section>
 
       {enabled ? (
-        <section aria-labelledby="relier" className="flex flex-col gap-3">
+        <section aria-labelledby="relier" className="panel flex flex-col gap-3 p-4">
           <h2 id="relier" className="text-lg font-semibold text-ink">
             {t('core.whatsappLink.addTitle')}
           </h2>
@@ -69,7 +68,7 @@ export default async function PharmacyWhatsApp() {
         </section>
       ) : null}
 
-      <section aria-labelledby="sur-whatsapp" className="flex flex-col gap-3">
+      <section aria-labelledby="sur-whatsapp" className="panel flex flex-col gap-3 p-4">
         <h2 id="sur-whatsapp" className="text-lg font-semibold text-ink">
           {t('core.whatsappLink.howTitle')}
         </h2>
