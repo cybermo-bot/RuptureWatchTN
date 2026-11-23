@@ -34,8 +34,8 @@ describe('episodes file', () => {
   });
 
   it('computes the summary from the file, nothing typed', () => {
-    expect(episodeStats(file.episodes)).toEqual({ episodes: 4, earlier: 2, medianLeadDays: 30 });
-    expect(episodeStats([])).toEqual({ episodes: 0, earlier: 0, medianLeadDays: null });
+    expect(episodeStats(file.episodes)).toMatchObject({ episodes: 4, earlier: 2, missed: 2, medianLeadDays: 30 });
+    expect(episodeStats([])).toEqual({ episodes: 0, earlier: 0, missed: 0, earlierNotices: 0, medianLeadDays: null });
   });
 
   it('reports missing columns instead of guessing', () => {

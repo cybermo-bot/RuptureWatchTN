@@ -122,6 +122,10 @@ export default function ReplayPage() {
                   <dd className="font-mono text-ink">{stats.earlier}</dd>
                 </div>
                 <div className="flex justify-between gap-6 py-3">
+                  <dt className="text-ink-muted">{t('core.replay.statMissed')}</dt>
+                  <dd className="font-mono text-ink">{stats.missed}</dd>
+                </div>
+                <div className="flex justify-between gap-6 py-3">
                   <dt className="text-ink-muted">{t('core.replay.statMedian')}</dt>
                   <dd className="text-end font-mono text-ink">
                     {stats.medianLeadDays === null
@@ -130,6 +134,11 @@ export default function ReplayPage() {
                   </dd>
                 </div>
               </dl>
+              {stats.earlier > 0 && stats.earlierNotices < stats.earlier ? (
+                <p className="max-w-prose text-sm text-ink">{stats.earlierNotices === 1
+                    ? t('core.replay.statSameNotice', { earlier: stats.earlier })
+                    : t('core.replay.statSameNotices', { earlier: stats.earlier, notices: stats.earlierNotices })}</p>
+              ) : null}
               <p className="max-w-prose text-sm text-ink-muted">{t('core.replay.statsNote')}</p>
               {file.rejected.length ? (
                 <p className="max-w-prose text-sm text-ink">

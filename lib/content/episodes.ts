@@ -89,6 +89,10 @@ export function readEpisodes(root: string = process.cwd()): EpisodeFile {
 export interface EpisodeStats {
   episodes: number;
   earlier: number;
+  /** Episodes with no foreign notice before the first Tunisian report. */
+  missed: number;
+  /** Distinct foreign notices behind the earlier episodes (one notice can cover two episodes). */
+  earlierNotices: number;
   /** Median lead in days among episodes with an earlier foreign notice; null if none. */
   medianLeadDays: number | null;
 }
@@ -97,5 +101,6 @@ export function episodeStats(episodes: Episode[]): EpisodeStats {
   const leads = episodes.filter((e) => e.earlier).map((e) => e.leadDays as number).sort((a, b) => a - b);
   const mid = Math.floor(leads.length / 2);
   const median = leads.length === 0 ? null : leads.length % 2 ? leads[mid] : (leads[mid - 1] + leads[mid]) / 2;
-  return { episodes: episodes.length, earlier: leads.length, medianLeadDays: median };
+  const earlierNotices = new Set(episodes.filter((e) => e.earlier).map((e) => e.foreign?.url ?? e.label)).size;
+  return { episodes: episodes.length, earlier: leads.length, missed: episodes.length - leads.length, earlierNotices, medianLeadDays: median };
 }

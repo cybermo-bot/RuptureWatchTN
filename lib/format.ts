@@ -9,7 +9,8 @@ const toDate = (d: Date | string) => (typeof d === 'string' ? new Date(d) : d);
 
 /** "22 novembre 2026" */
 export function formatDate(d: Date | string): string {
-  return dateFormat.format(toDate(d));
+  // French writes the first of the month "1er".
+  return dateFormat.format(toDate(d)).replace(/^1 /, '1er ');
 }
 
 /** "09:30" */

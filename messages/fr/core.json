@@ -807,7 +807,10 @@
     "cursorBeforeTn": "Le premier signalement en Tunisie n’arrivera que le {date}.",
     "cursorAfterTn": "Le premier signalement en Tunisie date du {date}.",
     "cursorNoForeign": "Aucun avis étranger dans cet épisode : les règles n’auraient rien vu avant les pharmacies.",
-    "cursorNone": "Aucun épisode avec un avis étranger dans le fichier."
+    "cursorNone": "Aucun épisode avec un avis étranger dans le fichier.",
+    "statMissed": "Épisodes manqués : aucun avis étranger avant le premier signalement en Tunisie",
+    "statSameNotice": "Prudence : ces {earlier} épisodes avec avance reposent sur un seul avis étranger. L’avance médiane décrit ce cas, pas une règle générale.",
+    "statSameNotices": "Prudence : ces {earlier} épisodes avec avance reposent sur {notices} avis étrangers seulement. L’avance médiane décrit ces cas, pas une règle générale."
   },
   "views": {
     "indexTitle": "Un médicament, quatre regards",
