@@ -144,7 +144,8 @@
     "backToMedicine": "Revenir à ce médicament",
     "notFoundTitle": "Demande introuvable",
     "notFoundBody": "Cette demande n’existe pas, ou elle a été retirée.",
-    "hours": "{h} h"
+    "hours": "{h} h",
+    "closed": "Les demandes aux pharmacies ne sont pas encore ouvertes sur ce site. Le statut de ce médicament, sur la page précédente, reste à jour."
   },
   "watch": {
     "follow": "Préviens-moi",

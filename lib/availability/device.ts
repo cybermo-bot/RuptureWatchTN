@@ -13,6 +13,11 @@ export function isDeviceId(value: unknown): value is string {
   return typeof value === 'string' && DEVICE_ID.test(value);
 }
 
+/** Whether this server can take patients' requests (the salt is set). Says yes or no, never the value. */
+export function requestsConfigured(salt = process.env.DEVICE_HASH_SALT): boolean {
+  return typeof salt === 'string' && salt.length >= 16;
+}
+
 /** 64 hex characters: HMAC-SHA256 of the device id with DEVICE_HASH_SALT. */
 export function hashDeviceId(deviceId: string, salt = process.env.DEVICE_HASH_SALT): string {
   if (!salt || salt.length < 16) throw new Error('DEVICE_HASH_SALT is missing or too short');

@@ -1,7 +1,7 @@
 'use server';
 
 import { after } from 'next/server';
-import { hashDeviceId, isDeviceId, RATE_LIMITED } from '@/lib/availability/device';
+import { hashDeviceId, isDeviceId, RATE_LIMITED, requestsConfigured } from '@/lib/availability/device';
 import { createServiceClient } from '@/lib/db/server';
 import { GOVERNORATE_CODES } from '@/lib/public/governorates';
 import { getPublicMolecule, isUuid } from '@/lib/public/medicine';
@@ -12,13 +12,14 @@ import { notifyNewRequest } from '@/lib/whatsapp/requests';
 // second request for the same medicine within 24 hours (CLAUDE.md rule 3). No name, no phone
 // number, no position, no free text.
 
-export type RequestResult = { ok: true; id: string } | { ok: false; error: 'invalid' | 'limited' | 'failed' };
+export type RequestResult = { ok: true; id: string } | { ok: false; error: 'invalid' | 'limited' | 'failed' | 'closed' };
 
 export async function createRequest(input: { moleculeId: unknown; governorate: unknown; deviceId: unknown }): Promise<RequestResult> {
   const { moleculeId, governorate, deviceId } = input;
   if (!isUuid(moleculeId) || typeof governorate !== 'string' || !GOVERNORATE_CODES.has(governorate) || !isDeviceId(deviceId)) {
     return { ok: false, error: 'invalid' };
   }
+  if (!requestsConfigured()) return { ok: false, error: 'closed' };
   try {
     const { data, error } = await createServiceClient().rpc('create_availability_request', {
       p_molecule_id: moleculeId,

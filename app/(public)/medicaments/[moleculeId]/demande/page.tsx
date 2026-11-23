@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { Ltr } from '@/components/public/Ltr';
 import { PublicMain } from '@/components/public/PublicChrome';
 import { RequestForm } from '@/components/public/RequestForm';
+import { requestsConfigured } from '@/lib/availability/device';
 import { getTranslator } from '@/lib/i18n-server';
 import { governorates } from '@/lib/public/governorates';
 import { getPublicMolecule } from '@/lib/public/medicine';
@@ -31,7 +32,11 @@ export default async function RequestCreatePage(props: PageProps<'/medicaments/[
         <h1 className="text-2xl leading-tight font-semibold tracking-tight text-ink sm:text-[1.75rem]">{t('public.request.title')}</h1>
         <p className="max-w-prose text-ink-muted">{t('public.request.intro')}</p>
       </header>
-      <RequestForm moleculeId={molecule.id} list={governorates(locale)} locale={locale} />
+      {requestsConfigured() ? (
+        <RequestForm moleculeId={molecule.id} list={governorates(locale)} locale={locale} />
+      ) : (
+        <p className="panel p-5 text-ink">{t('public.request.closed')}</p>
+      )}
     </PublicMain>
   );
 }

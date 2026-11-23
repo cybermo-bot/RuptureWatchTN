@@ -24,7 +24,7 @@ export function RequestForm({ moleculeId, list, locale }: { moleculeId: string; 
   const [code, setCode] = useState('');
   const [locating, setLocating] = useState<Locating>('idle');
   const [located, setLocated] = useState<string | null>(null);
-  const [error, setError] = useState<'invalid' | 'limited' | 'failed' | null>(null);
+  const [error, setError] = useState<'invalid' | 'limited' | 'failed' | 'closed' | null>(null);
   const [openRequest, setOpenRequest] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
@@ -133,6 +133,7 @@ export function RequestForm({ moleculeId, list, locale }: { moleculeId: string; 
       <div aria-live="polite">
         {error === 'invalid' ? <p className="text-ink">{t('public.request.invalid')}</p> : null}
         {error === 'failed' ? <p className="text-ink">{t('public.request.failed')}</p> : null}
+        {error === 'closed' ? <p className="text-ink">{t('public.request.closed')}</p> : null}
         {error === 'limited' ? (
           <div className="panel flex flex-col gap-2 p-4">
             <p className="text-ink">{t('public.request.limited')}</p>
