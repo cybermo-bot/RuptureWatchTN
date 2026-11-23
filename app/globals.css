@@ -219,6 +219,23 @@ path.rw-pulse {
   }
 }
 
+/* The "Note de situation" (/coordination/note): one A4 page, black on white. */
+@page {
+  size: A4;
+  margin: 14mm 15mm;
+}
+
+@media print {
+  .print-note {
+    font-size: 10pt;
+    line-height: 1.35;
+    color: #000;
+  }
+  .print-note .panel {
+    border-color: #999;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

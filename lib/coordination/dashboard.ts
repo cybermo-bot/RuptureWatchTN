@@ -11,6 +11,7 @@ import {
   listEvents,
   listSignals,
   sortSignals,
+  type SignalRow,
 } from '@/lib/signals/views';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -23,12 +24,12 @@ export function selectedParam(value: string | string[] | undefined): string | nu
 export async function loadDashboard(
   client: SupabaseClient,
   selectedId: string | null,
-  { withEventLog }: { withEventLog: boolean },
+  { withEventLog, order }: { withEventLog: boolean; /** Another order for the list (the ministry's). */ order?: (rows: SignalRow[]) => SignalRow[] | Promise<SignalRow[]> },
 ): Promise<DashboardData> {
   // The full history feeds the key figures' 14-day series; the log shows its newest 200 rows.
   const [all, history] = await Promise.all([listSignals(client), listEvents(client, null, 1000)]);
   const events = withEventLog ? history.slice(0, 200) : null;
-  const signals = sortSignals(all);
+  const signals = order ? await order(sortSignals(all)) : sortSignals(all);
   const selected = signals.find((s) => s.molecule_id === selectedId) ?? signals[0] ?? null;
   if (!selected) return { signals, selected, counts: [], demand: [], notices: [], timeline: [], history, events };
 

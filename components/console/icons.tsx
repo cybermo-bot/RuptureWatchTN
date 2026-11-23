@@ -3,13 +3,18 @@ import {
   Bell,
   Download,
   Ellipsis,
+  FileText,
+  Globe,
   Inbox,
   ListChecks,
   Map,
+  Megaphone,
   MessageCircle,
+  PackageCheck,
   Send,
   Split,
   UserPlus,
+  Users,
   type LucideIcon,
 } from 'lucide-react';
 import type { NavIcon } from '@/lib/nav';
@@ -27,4 +32,9 @@ export const NAV_ICONS: Record<NavIcon, LucideIcon> = {
   export: Download,
   invite: UserPlus,
   split: Split,
+  note: FileText,
+  arrivals: PackageCheck,
+  upstream: Globe,
+  network: Users,
+  message: Megaphone,
 };

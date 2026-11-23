@@ -94,9 +94,9 @@ export function ConsoleShell({
 }) {
   const pharmacy = session.organisation.type === 'pharmacy';
   return (
-    <div className="flex min-h-full flex-1 flex-col bg-page lg:grid lg:grid-cols-[16rem_minmax(0,1fr)]">
+    <div className="flex min-h-full flex-1 flex-col bg-page lg:grid lg:grid-cols-[16rem_minmax(0,1fr)] print:block print:bg-white">
       {/* Desktop: the sidebar, a full-height column whose content stays in view. */}
-      <aside className="hidden bg-sidebar lg:block">
+      <aside className="hidden bg-sidebar lg:block print:hidden">
         <div className="sticky top-0 flex h-dvh flex-col overflow-y-auto px-3 pt-4 pb-4">
           <Link href="/" className="mb-6 flex min-h-12 items-center rounded-md px-3 no-underline focus-visible:outline-sidebar-accent">
             <Logo tone="dark" />
@@ -108,7 +108,7 @@ export function ConsoleShell({
 
       {/* Phones and tablets. */}
       {pharmacy ? (
-        <header className="sticky top-0 z-30 border-b border-line bg-surface lg:hidden">
+        <header className="sticky top-0 z-30 border-b border-line bg-surface lg:hidden print:hidden">
           <div className="flex min-h-14 items-center justify-between gap-3 px-4">
             <Link href="/" className="flex min-h-12 min-w-12 shrink-0 items-center no-underline">
               <LogoMark size={26} className="text-brand" />
@@ -121,7 +121,7 @@ export function ConsoleShell({
           </div>
         </header>
       ) : (
-        <header className="sticky top-0 z-30 bg-sidebar lg:hidden">
+        <header className="sticky top-0 z-30 bg-sidebar lg:hidden print:hidden">
           <div className="relative flex min-h-14 items-center justify-between gap-3 ps-4 pe-2">
             <Link href="/" className="flex min-h-12 items-center no-underline focus-visible:outline-sidebar-accent">
               <Logo tone="dark" compact />
@@ -136,7 +136,7 @@ export function ConsoleShell({
 
       <main
         id="contenu"
-        className={`mx-auto w-full max-w-[90rem] flex-1 px-4 py-5 sm:px-6 lg:px-8 lg:py-8 ${pharmacy ? 'pb-28 lg:pb-8' : ''}`}
+        className={`mx-auto w-full max-w-[90rem] flex-1 px-4 py-5 sm:px-6 lg:px-8 lg:py-8 print:max-w-none print:p-0 ${pharmacy ? 'pb-28 lg:pb-8' : ''}`}
       >
         {children}
       </main>

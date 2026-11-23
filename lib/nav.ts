@@ -15,7 +15,12 @@ export type NavIcon =
   | 'signals'
   | 'export'
   | 'invite'
-  | 'split';
+  | 'split'
+  | 'note'
+  | 'arrivals'
+  | 'upstream'
+  | 'network'
+  | 'message';
 
 export interface NavItem {
   href: string;
@@ -45,11 +50,21 @@ export const NAV: Record<OrganisationType, NavItem[]> = {
   hospital_pharmacy: [{ href: '/hopital', label: 'core.nav.items.signals', icon: 'signals' }],
   coordinator: [
     { href: '/coordination', label: 'core.nav.items.national', icon: 'national' },
+    { href: '/coordination/note', label: 'core.nav.items.note', icon: 'note' },
     { href: '/coordination/export', label: 'core.nav.items.export', icon: 'export' },
     { href: '/coordination/invitation', label: 'core.nav.items.invite', icon: 'invite' },
   ],
   // The prescriber's view is one public page (/prescripteurs), outside the console.
   prescriber: [],
+  central_pharmacy: [
+    { href: '/centrale', label: 'core.nav.items.risk', icon: 'arrivals' },
+    { href: '/centrale/amont', label: 'core.nav.items.upstream', icon: 'upstream' },
+  ],
+  pharmacists_order: [
+    { href: '/ordre', label: 'core.nav.items.network', icon: 'network' },
+    { href: '/ordre/message', label: 'core.nav.items.message', icon: 'message' },
+    { href: '/ordre/invitation', label: 'core.nav.items.invite', icon: 'invite' },
+  ],
 };
 
 /** The pharmacy's bottom tab bar on phones: four tabs, the report first. */

@@ -4,6 +4,7 @@ import { LevelBand } from '@/components/charts/LevelBand';
 import { KeyFigures, type KeyFigure } from '@/components/console/KeyFigures';
 import { Panel } from '@/components/console/Panel';
 import { EmptyState } from '@/components/EmptyState';
+import { CatalogueLine } from '@/components/institutions/Lines';
 import { GOVERNORATE_SHAPES, GovernorateMap, type GovernorateValue } from '@/components/GovernorateMap';
 import { LevelBadge, LevelShape } from '@/components/LevelBadge';
 import { LevelExplanation } from '@/components/LevelExplanation';
@@ -11,6 +12,8 @@ import { LevelChangeWatcher } from '@/components/live/LevelChangeWatcher';
 import { Origins } from '@/components/Origins';
 import { OriginBadge } from '@/components/OriginBadge';
 import type { DecisionRow } from '@/lib/allocation/decisions';
+import type { CatalogueFacts } from '@/lib/institutions/catalogue';
+import type { Arrival } from '@/lib/institutions/data';
 import { moleculesAtLevelPerDay } from '@/lib/charts/series';
 import { formatDate, formatTime } from '@/lib/format';
 import { t } from '@/lib/i18n';
@@ -43,6 +46,8 @@ export interface DashboardData {
   events: EventRow[] | null;
   /** Wholesalers' allocation decisions (track D), shown in the event log. Never a wholesaler's name. */
   decisions?: DecisionRow[] | null;
+  /** Arrivals announced by the centrale (part 5), shown in the event log. */
+  arrivals?: (Arrival & { moleculeName: string })[] | null;
 }
 
 const GOV_NAME = new Map(GOVERNORATE_SHAPES.map((g) => [g.code, g.name]));
@@ -260,12 +265,24 @@ export function Timeline({ events }: { events: EventRow[] }) {
   );
 }
 
-type LogItem = { kind: 'event'; at: string; event: EventRow } | { kind: 'decision'; at: string; decision: DecisionRow };
+type LogItem =
+  | { kind: 'event'; at: string; event: EventRow }
+  | { kind: 'decision'; at: string; decision: DecisionRow }
+  | { kind: 'arrival'; at: string; arrival: Arrival & { moleculeName: string } };
 
-export function EventLog({ events, decisions = [] }: { events: EventRow[]; decisions?: DecisionRow[] }) {
+export function EventLog({
+  events,
+  decisions = [],
+  arrivals = [],
+}: {
+  events: EventRow[];
+  decisions?: DecisionRow[];
+  arrivals?: (Arrival & { moleculeName: string })[];
+}) {
   const items: LogItem[] = [
     ...events.map((e) => ({ kind: 'event' as const, at: e.at, event: e })),
     ...decisions.map((d) => ({ kind: 'decision' as const, at: d.decided_at, decision: d })),
+    ...arrivals.map((a) => ({ kind: 'arrival' as const, at: a.announcedAt, arrival: a })),
   ].sort((a, b) => b.at.localeCompare(a.at));
   return (
     <Panel title={t('core.coordination.eventLogTitle')} titleId="journal" description={t('core.coordination.eventLogIntro')} bodyClassName="px-4">
@@ -281,6 +298,24 @@ export function EventLog({ events, decisions = [] }: { events: EventRow[]; decis
                 <span className="flex flex-col gap-1">
                   <Change from={item.event.from_level} to={item.event.to_level} />
                   <span className="font-mono text-xs text-ink-muted">{item.event.rule}</span>
+                </span>
+              </li>
+            ) : item.kind === 'arrival' ? (
+              <li key={`a${item.arrival.id}`} className="grid gap-x-6 gap-y-1 py-3 lg:grid-cols-[12rem_minmax(0,14rem)_minmax(0,1fr)]">
+                <When at={item.at} />
+                <span className="font-medium break-words text-ink">{item.arrival.moleculeName}</span>
+                <span className="flex flex-col gap-1">
+                  <span className="max-w-prose break-words text-ink">
+                    {t('core.arrival.logLine', {
+                      date: formatDate(item.arrival.expectedOn),
+                      quantity: t(`core.arrival.quantity.${item.arrival.quantity}`),
+                      level: t(`core.levels.${item.arrival.level}`),
+                    })}
+                  </span>
+                  <span className="flex flex-wrap items-center gap-2 text-xs text-ink-muted">
+                    <span className="font-mono">{t('core.arrival.logKind')}</span>
+                    <OriginBadge origin={item.arrival.origin} />
+                  </span>
                 </span>
               </li>
             ) : (
@@ -307,7 +342,18 @@ export function EventLog({ events, decisions = [] }: { events: EventRow[]; decis
   );
 }
 
-export function SignalList({ signals, selectedId, basePath }: { signals: SignalRow[]; selectedId: string | null; basePath: string }) {
+export function SignalList({
+  signals,
+  selectedId,
+  basePath,
+  facts,
+}: {
+  signals: SignalRow[];
+  selectedId: string | null;
+  basePath: string;
+  /** CNAM category and other brands, shown under each name (ministry, centrale). */
+  facts?: Map<string, CatalogueFacts>;
+}) {
   return (
     <ul className="hairline-list">
       {signals.map((s) => {
@@ -329,6 +375,11 @@ export function SignalList({ signals, selectedId, basePath }: { signals: SignalR
                 <Origins origins={s.evidence.origins} />
                 {isSelected ? <span className="sr-only">{t('core.coordination.selected')}</span> : null}
               </span>
+              {facts ? (
+                <span className="text-sm text-ink-muted">
+                  <CatalogueLine facts={facts.get(s.molecule_id)} />
+                </span>
+              ) : null}
             </Link>
           </li>
         );
@@ -343,9 +394,20 @@ export function SignalsDashboard({
   figures,
   afterSelected,
   listTitle,
+  extraFigures,
+  overview,
+  facts,
+  detailNote,
 }: {
   data: DashboardData;
   basePath: string;
+  /** A second strip of key figures (the ministry's situation). */
+  extraFigures?: KeyFigure[];
+  /** A panel between the key figures and the list (the ministry's national map). */
+  overview?: ReactNode;
+  facts?: Map<string, CatalogueFacts>;
+  /** A line under the selected molecule's explanation (an arrival announced). */
+  detailNote?: ReactNode;
   /** Key figures shown on top. Default: medicines at each level. */
   figures?: KeyFigure[];
   /** Extra panel under the selected molecule's header (the wholesaler's split). */
@@ -360,6 +422,8 @@ export function SignalsDashboard({
         governorates={data.counts.map((c) => ({ code: c.governorate_code, text: c.pharmacies }))}
       />
       <KeyFigures label={t('core.figures.label')} figures={figures ?? levelFigures(signals, data.history)} />
+      {extraFigures ? <KeyFigures label={t('core.ministry.figuresLabel')} figures={extraFigures} columns={extraFigures.length} /> : null}
+      {overview}
 
       {signals.length === 0 ? (
         <div className="panel px-4">
@@ -374,7 +438,7 @@ export function SignalsDashboard({
             className="self-start xl:col-span-4"
             bodyClassName=""
           >
-            <SignalList signals={signals} selectedId={selected?.molecule_id ?? null} basePath={basePath} />
+            <SignalList signals={signals} selectedId={selected?.molecule_id ?? null} basePath={basePath} facts={facts} />
           </Panel>
 
           {selected ? (
@@ -390,6 +454,12 @@ export function SignalsDashboard({
                     <Origins origins={selected.evidence.origins} />
                   </p>
                   <LevelExplanation rule={selected.rule} evidence={selected.evidence} showRule methodLink />
+                  {facts?.get(selected.molecule_id) ? (
+                    <p className="text-sm text-ink-muted">
+                      <CatalogueLine facts={facts.get(selected.molecule_id)} />
+                    </p>
+                  ) : null}
+                  {detailNote}
                   <p className="text-sm text-ink-muted">{t('core.guidance.disclaimer')}</p>
                 </header>
                 <div className="flex flex-col gap-6 p-4">
@@ -413,7 +483,7 @@ export function SignalsDashboard({
           ) : null}
         </div>
       )}
-      {data.events ? <EventLog events={data.events} decisions={data.decisions ?? []} /> : null}
+      {data.events ? <EventLog events={data.events} decisions={data.decisions ?? []} arrivals={data.arrivals ?? []} /> : null}
     </div>
   );
 }

@@ -19,10 +19,21 @@ export interface KeyFigure {
   note?: string;
 }
 
-export function KeyFigures({ figures, label, days = 14 }: { figures: KeyFigure[]; label: string; days?: number }) {
+export function KeyFigures({
+  figures,
+  label,
+  days = 14,
+  columns = 4,
+}: {
+  figures: KeyFigure[];
+  label: string;
+  days?: number;
+  /** Columns from the small breakpoint: 4 by default, 3 for a strip of three. */
+  columns?: number;
+}) {
   return (
     <section aria-label={label} className="panel">
-      <dl className="grid grid-cols-2 divide-line sm:grid-cols-4 [&>div]:border-line max-sm:[&>div:nth-child(n+3)]:border-t sm:[&>div+div]:border-s max-sm:[&>div:nth-child(even)]:border-s">
+      <dl className={`grid grid-cols-2 divide-line ${columns === 3 ? 'sm:grid-cols-3' : 'sm:grid-cols-4'} [&>div]:border-line max-sm:[&>div:nth-child(n+3)]:border-t sm:[&>div+div]:border-s max-sm:[&>div:nth-child(even)]:border-s`}>
         {figures.map((f) => (
           <div key={f.key} className="flex min-w-0 flex-col gap-1.5 px-4 py-3.5">
             <dt className="text-sm leading-snug text-ink-muted">{f.label}</dt>

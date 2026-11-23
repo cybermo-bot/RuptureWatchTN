@@ -108,8 +108,16 @@
       "hint": "Voir les signaux qui concernent l’hôpital."
     },
     "coordinator": {
-      "label": "Coordination",
-      "hint": "Carte des signaux, explication de chaque niveau, journal des décisions."
+      "label": "Ministère de la Santé",
+      "hint": "Conçu pour la cellule nationale : carte des ruptures, priorités, note de situation."
+    },
+    "central": {
+      "label": "Pharmacie centrale",
+      "hint": "Conçu pour la centrale d’achat : avis étrangers, médicaments à risque, arrivages annoncés."
+    },
+    "order": {
+      "label": "Ordre des pharmaciens",
+      "hint": "Conçu pour les conseils de l’Ordre : le réseau par gouvernorat, messages aux pharmaciens."
     },
     "prescriber": {
       "label": "Médecin prescripteur",
@@ -122,8 +130,10 @@
     "pharmacy": "Pharmacie d’officine",
     "wholesaler": "Grossiste répartiteur",
     "hospital_pharmacy": "Pharmacie hospitalière",
-    "coordinator": "Cellule de coordination",
-    "prescriber": "Cabinet médical"
+    "coordinator": "Espace conçu pour le ministère de la Santé",
+    "prescriber": "Cabinet médical",
+    "central_pharmacy": "Espace conçu pour la Pharmacie centrale",
+    "pharmacists_order": "Espace conçu pour l’Ordre des pharmaciens"
   },
   "levels": {
     "none": "Aucun signal",
@@ -149,8 +159,10 @@
       "pharmacy": "Espace pharmacie",
       "wholesaler": "Espace grossiste",
       "hospital_pharmacy": "Espace pharmacie hospitalière",
-      "coordinator": "Espace coordination",
-      "prescriber": "Vérification rapide pour les prescripteurs"
+      "coordinator": "Cellule nationale de suivi",
+      "prescriber": "Vérification rapide pour les prescripteurs",
+      "central_pharmacy": "Centrale d’achat",
+      "pharmacists_order": "Le réseau des pharmacies"
     }
   },
   "status": {
@@ -440,7 +452,9 @@
     "levelChangeLabel": "Changement de niveau",
     "from": "de",
     "to": "à",
-    "live": "Cette page se met à jour toute seule."
+    "live": "Cette page se met à jour toute seule.",
+    "orderTitle": "Messages de l’Ordre des pharmaciens",
+    "orderFrom": "De : {sender}"
   },
   "tester": {
     "title": "Rejoindre le test",
@@ -461,7 +475,7 @@
     "linkLabel": "Lien d’invitation",
     "qrLabel": "Code QR du lien d’invitation",
     "missing": "Le code d’invitation n’est pas configuré sur le serveur.",
-    "back": "Retour à la coordination"
+    "back": "Retour"
   },
   "coordination": {
     "signalsTitle": "Médicaments avec un signal",
@@ -905,7 +919,9 @@
       "pharmacy": "Pharmacie",
       "wholesaler": "Grossiste",
       "coordination": "Coordination",
-      "public": "Public"
+      "public": "Public",
+      "central": "Pharmacie centrale",
+      "order": "Ordre des pharmaciens"
     },
     "account": "Compte : {account}",
     "publicAccount": "Sans compte, comme un patient sur la page publique",
@@ -951,7 +967,14 @@
     },
     "errorTitle": "Les comptes de démonstration ne répondent pas pour le moment",
     "errorBody": "Réessayez dans une minute. La page n’affiche rien plutôt qu’une vue incomplète.",
-    "demoLine": "Démonstration : comptes et données de démonstration."
+    "demoLine": "Démonstration : comptes et données de démonstration.",
+    "centralSees": "Le niveau, la catégorie CNAM, les autres marques et l’arrivage annoncé. Ni compte par gouvernorat ni signalement.",
+    "orderSees": "Le réseau par gouvernorat et ses propres messages. Aucun signalement, aucun nom de pharmacie, aucun compte par médicament.",
+    "noArrival": "Aucun arrivage annoncé.",
+    "catalogue": "Liste CNAM",
+    "arrival": "Arrivage annoncé",
+    "network": "Le réseau",
+    "orderNetwork": "Des pharmacies membres dans {n} gouvernorats, comptées par gouvernorat (« <3 » sous trois)."
   },
   "whatsappLink": {
     "title": "WhatsApp",
@@ -1038,7 +1061,12 @@
       "scenario": "Scénario",
       "views": "Quatre regards",
       "replay": "Ruptures passées",
-      "status": "État du service"
+      "status": "État du service",
+      "note": "Note de situation",
+      "risk": "Médicaments à risque",
+      "upstream": "Avis étrangers",
+      "network": "Le réseau",
+      "message": "Message aux pharmaciens"
     }
   },
   "toast": {
@@ -1127,5 +1155,123 @@
     "since": "depuis le {date}",
     "noSignal": "Aucun signal pour ce médicament : aucune pharmacie ne le signale, et aucun avis étranger en cours.",
     "substitution": "Note de substitution : en attente de validation clinique."
+  },
+  "catalogue": {
+    "category": {
+      "V": "Vital",
+      "E": "Essentiel",
+      "I": "Intermédiaire"
+    },
+    "categoryLabel": "Catégorie CNAM : {category}",
+    "categoryNone": "Catégorie CNAM non indiquée",
+    "otherBrandsNone": "Aucune autre marque",
+    "otherBrandsOne": "1 autre marque",
+    "otherBrandsMany": "{n} autres marques",
+    "source": "Catégorie et marques : liste des médicaments remboursés par la CNAM."
+  },
+  "arrival": {
+    "line": "Arrivage annoncé par la centrale d’achat pour le {date} ({quantity}).",
+    "quantity": {
+      "under_one_month": "moins d’un mois de besoins",
+      "one_to_three_months": "un à trois mois de besoins",
+      "over_three_months": "plus de trois mois de besoins"
+    },
+    "levelNote": "Un arrivage annoncé ne change pas le niveau.",
+    "logKind": "arrivage annoncé",
+    "logLine": "Arrivage annoncé pour le {date} ({quantity}), le médicament étant « {level} »."
+  },
+  "ministry": {
+    "intro": "Les médicaments sont classés par niveau, puis par catégorie CNAM (vitaux d’abord), puis par nombre d’autres marques (le moins d’abord). Chaque chiffre est calculé ; moins de 3 s’affiche « <3 ».",
+    "figuresLabel": "Situation nationale",
+    "vitalConfirmed": "Médicaments vitaux confirmés",
+    "governorates": "Gouvernorats touchés",
+    "governoratesNote": "Pharmacies signalant sur {days} jours",
+    "unanswered": "Demandes de patients sans réponse, {days} jours",
+    "unansweredNote": "Sur {requests} demandes",
+    "mapTitle": "Carte nationale",
+    "mapIntro": "Chaque gouvernorat prend le niveau le plus grave parmi les médicaments que ses pharmacies signalent sur {days} jours.",
+    "mapFilter": "Niveau affiché sur la carte",
+    "mapAll": "Tous",
+    "mapNone": "Aucun signalement",
+    "mapEmpty": "Aucun gouvernorat à ce niveau.",
+    "chartsTitle": "Activité sur {days} jours",
+    "reportsChart": "Pharmacies signalant une commande non livrée, par jour",
+    "demandChart": "Demandes de patients, par jour",
+    "noteLink": "Note de situation"
+  },
+  "note": {
+    "title": "Note de situation",
+    "print": "Imprimer ou enregistrer en PDF",
+    "printHint": "La note tient sur une page A4. Dans la fenêtre d’impression, choisissez « Enregistrer au format PDF » pour en garder une copie.",
+    "back": "Retour à la vue nationale",
+    "heading": "Note de situation : ruptures de médicaments en Tunisie",
+    "made": "Établie le {date} à {time} à partir des données de RuptureWatch TN.",
+    "levelsTitle": "Médicaments par niveau",
+    "confirmedTitle": "Ruptures confirmées",
+    "colMolecule": "Médicament",
+    "colSince": "Depuis le",
+    "colGovernorates": "Gouvernorats signalant ({days} j)",
+    "colCategory": "Catégorie CNAM",
+    "confirmedNone": "Aucune rupture confirmée à cette date.",
+    "decisionsTitle": "Décisions des grossistes, {days} derniers jours",
+    "decisionApplied": "Répartition appliquée",
+    "decisionNotApplied": "Répartition non appliquée, avec une raison",
+    "colDecision": "Décision",
+    "colDate": "Date",
+    "decisionsNone": "Aucune décision enregistrée sur {days} jours.",
+    "demandTitle": "Demandes de patients, {days} derniers jours",
+    "demandLine": "Demandes : {requests}. Sans réponse d’aucune pharmacie : {unanswered}. Les demandes ne changent jamais un niveau.",
+    "originsTitle": "Origine des données",
+    "method": "Niveaux calculés par les règles publiées sur la page Méthode ; les seuils sont des paramètres de conception, à ajuster pendant un pilote. Moins de 3 s’affiche « <3 ».",
+    "footer": "Note produite automatiquement : chaque valeur est calculée, aucune phrase n’est écrite à la main."
+  },
+  "central": {
+    "intro": "Les médicaments qui ont un niveau en Tunisie, avec leur catégorie CNAM et le nombre d’autres marques. Pour un médicament « probable » ou « confirmée », annoncez un arrivage : les pharmacies le voient, le niveau ne change pas.",
+    "listTitle": "Médicaments à risque",
+    "listIntro": "Classés par niveau, puis catégorie (vitaux d’abord), puis nombre d’autres marques (le moins d’abord).",
+    "empty": "Aucun médicament n’a de niveau aujourd’hui.",
+    "announceTitle": "Annoncer un arrivage",
+    "announceHint": "Les pharmacies le voient sur la page du médicament et dans leurs alertes ; le public le voit si la rupture est confirmée. Le niveau ne change pas.",
+    "dateLabel": "Date d’arrivée prévue",
+    "quantityLabel": "Quantité attendue",
+    "submit": "Annoncer l’arrivage",
+    "sent": "Arrivage annoncé pour {molecule}.",
+    "errorLevel": "Ce médicament n’est plus « probable » ou « confirmée » : l’arrivage n’a pas été annoncé.",
+    "errorDate": "Choisissez une date entre aujourd’hui et dans un an, et une quantité.",
+    "error": "L’annonce n’a pas pu être enregistrée. Réessayez.",
+    "notEligible": "Un arrivage s’annonce pour un médicament « probable » ou « confirmée ».",
+    "upstreamTitle": "Avis des autorités étrangères",
+    "upstreamIntro": "Chaque avis publié par une autorité étrangère, avec sa source, et le niveau du médicament en Tunisie. Un avis étranger seul ne fait jamais dépasser « sous surveillance ».",
+    "inTunisia": "En Tunisie :",
+    "noLevel": "aucun niveau",
+    "upstreamEmpty": "Aucun avis étranger enregistré.",
+    "upstreamCount": "{n} avis, du plus récent au plus ancien."
+  },
+  "order": {
+    "intro": "La participation du réseau, par gouvernorat : jamais une pharmacie, jamais un signalement.",
+    "networkTitle": "Pharmacies membres par gouvernorat",
+    "colMembers": "Membres",
+    "colActive": "Actives ({days} j)",
+    "networkNote": "Une pharmacie est active si elle a signalé ou s’est connectée dans les {days} derniers jours. Moins de 3 s’affiche « <3 ».",
+    "networkEmpty": "Aucune pharmacie membre pour l’instant.",
+    "weeklyTitle": "Signalements par semaine, tout le pays",
+    "weekOf": "Semaine du {date}",
+    "colWeek": "Semaine",
+    "colReports": "Signalements",
+    "colPharmacies": "Pharmacies",
+    "messageTitle": "Message aux pharmaciens",
+    "messageIntro": "Un message professionnel court, par exemple sur une rupture confirmée. Les pharmacies des gouvernorats choisis le reçoivent dans leurs alertes, avec le nom de votre conseil et la mention « Ceci n’est pas une déclaration officielle de rupture. »",
+    "bodyLabel": "Message",
+    "bodyHint": "De 10 à 600 caractères. Pas de nom de patient ni de pharmacie.",
+    "governoratesLabel": "Gouvernorats destinataires",
+    "send": "Envoyer le message",
+    "sent": "Message envoyé.",
+    "errorBody": "Écrivez un message de 10 à 600 caractères.",
+    "errorGovernorates": "Choisissez au moins un gouvernorat.",
+    "error": "Le message n’a pas pu être envoyé. Réessayez.",
+    "sentTitle": "Messages envoyés",
+    "sentEmpty": "Aucun message envoyé pour l’instant.",
+    "sentTo": "À : {governorates}",
+    "inviteIntro": "Invitez des pharmacies à tester RuptureWatch TN depuis l’espace de l’Ordre : le lien ouvre l’inscription au test, qui ne demande que le gouvernorat."
   }
 }
