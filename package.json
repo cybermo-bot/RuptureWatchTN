@@ -18,6 +18,7 @@
     "verify:clean": "tsx scripts/clean-verification.ts",
     "notices:import": "tsx --conditions=react-server scripts/import-notices.ts",
     "demo:shortage": "tsx --conditions=react-server scripts/demo-shortage.ts",
+    "demo:national": "tsx --conditions=react-server scripts/demo-national.ts",
     "demo:clear": "tsx --conditions=react-server scripts/demo-clear.ts",
     "db:fingerprint": "tsx scripts/db-fingerprint.ts",
     "directory:areas": "tsx scripts/build-directory-areas.ts",
