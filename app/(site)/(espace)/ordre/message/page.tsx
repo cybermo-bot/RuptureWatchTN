@@ -46,10 +46,16 @@ export default async function OrderMessagePage({ searchParams }: PageProps<'/ord
       <div className="grid gap-5 xl:grid-cols-2">
         <Panel title={t('core.order.messageTitle')} titleId="ecrire" className="self-start">
           <form action={sendOrderMessage} className="flex flex-col gap-5">
-            <label className="flex flex-col gap-1.5 text-sm font-medium text-ink">
-              {t('core.order.bodyLabel')}
-              <span className="font-normal text-ink-muted">{t('core.order.bodyHint')}</span>
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="ordre-message" className="text-sm font-medium text-ink">
+                {t('core.order.bodyLabel')}
+              </label>
+              <p id="ordre-message-aide" className="text-sm text-ink-muted">
+                {t('core.order.bodyHint')}
+              </p>
               <textarea
+                id="ordre-message"
+                aria-describedby="ordre-message-aide"
                 name="body"
                 required
                 minLength={10}
@@ -57,7 +63,7 @@ export default async function OrderMessagePage({ searchParams }: PageProps<'/ord
                 rows={5}
                 className="w-full rounded-md border border-ink-muted bg-surface p-3 text-base font-normal text-ink"
               />
-            </label>
+            </div>
             <fieldset className="flex flex-col gap-2">
               <legend className="mb-1 text-sm font-medium text-ink">{t('core.order.governoratesLabel')}</legend>
               <div className="grid grid-cols-1 gap-x-4 sm:grid-cols-2">
