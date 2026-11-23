@@ -23,4 +23,4 @@ All of it comes from demo accounts, whose organisations are marked `simulated`:
 | 6. Ordre message | One `order_messages` row to Sfax from "Conseil régional démo, Sfax". |
 | 7. Note de situation | Nothing. |
 
-Note the time before a run. The team lead removes the rows with `npm run verify:clean -- --since <time> --apply`.
+Note the time before a run. The team lead removes the rows with `npm run verify:clean -- --since <time> --apply` (reports, follows, arrival announcements and Ordre messages; a patient request is anonymous demand and expires on its own).
