@@ -2,6 +2,19 @@
 
 Newest first. Each entry: what was decided, and why.
 
+## 2026-11-23, session 5
+
+### Design direction: an operations console and a phone app (part 1)
+- CLAUDE.md and AGENTS.md section 9 replaced with the brief's direction. Two families of screens share one identity: the professional spaces are a console (ink sidebar `--sidebar` #0B1A16 with the logo, the role, its organisation and origin badge, the sections with icons and "Changer de rôle"; a top drawer on phones; light `--page` content with white panels), the pharmacy space and the public pages are a phone app (app header, bottom tab bar, large search, full-width rows, primary action fixed at the bottom of a flow).
+- New mark (`components/brand/Logo.tsx`, `lib/og/mark.tsx`): an open ring broken at one point with the dot that escapes it. It replaces the session 3 mark (the "probable" half-filled circle), which could be read as a level. Favicon, app icons and share cards rebuilt from it with `npm run icons:build`.
+- `lucide-react` added: the one icon set the direction asks for, tree-shaken per icon, icons always next to a word. `d3-scale` (and `@types/d3-scale` in dev) added: scales for the server-rendered SVG charts (sparklines, level band over 30 days, bars per day); no chart library, nothing sent to the browser for the charts.
+- Key figures are computed from the event log (`lib/charts/series.ts`, Tunisian day = UTC+1): number of medicines at a level each day for 14 days, from the level changes. Tested in `tests/series.test.ts`.
+- Live feel on the existing refresh: when the page re-renders after a signal change (`components/LiveRefresh.tsx`), `components/live/LevelChangeWatcher.tsx` compares the new levels with the ones on screen, pulses the row and the governorates that changed once and shows a small toast. Nothing on the first render: only changes seen live. `prefers-reduced-motion` stops the pulse, never the toast.
+- The report confirmation counts up from 0 to the number of pharmacies (only when it is 3 or more), rather than from N-1 to N: a "before" count would claim a figure we did not show, and below 3 the count is not shown at all.
+- Home page: the live national picture first (map filled by the most serious active level per governorate, medicines with their level), read through the demo coordination account, as `/vues` already does (session 4). It therefore shows levels below "confirmée", like `/vues` and the scenario: the home page is the professional showcase, not a public page (rule 10 covers `app/(public)/`). Each level row links to the four views of that medicine. Then "Choisissez un rôle" in three groups (Terrain, Pilotage, Public), each tile with its icon, one line and a preview.
+- Previews of the spaces are screenshots, never drawn: `npm run previews:build` (`scripts/screenshots.ts --previews`) signs in with each demo role and writes `public/previews/<role>.jpg` plus `manifest.json`; a tile shows a preview only when its file is listed. The same script writes the report screenshots (`npm run screenshots`).
+- Public pages: app header with the mark and the language switch, sections as a bottom tab bar on phones (Médicaments, Pharmacies, Ruptures passées). The Library is in the footer, not a tab, so it never sits next to the patient's request flow (rule 12). The tab bar and header sit above the map layers (z-index over Leaflet's).
+
 ## 2026-11-23, session 3
 
 ### Security pass: per-table access tests, rate limits, secret check
