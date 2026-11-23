@@ -34,6 +34,9 @@ function arg(name: string, fallback: string): string {
 const BASE = arg('base', 'http://localhost:3000').replace(/\/$/, '');
 const PREVIEWS = args.includes('--previews');
 
+const AMLODIPINE_ID = '8d2608a4-3287-4dce-9eb9-bb732fd9bb26';
+const TAMOXIFEN_ID = 'e7dc2583-9c34-49e6-bc49-65a3ebcd5665';
+
 export const SHOTS: Shot[] = [
   { name: 'accueil', path: '/' },
   { name: 'pharmacie', path: '/pharmacie', role: 'pharmacie-tunis' },
@@ -56,6 +59,12 @@ export const SHOTS: Shot[] = [
   { name: 'bibliotheque', path: '/bibliotheque' },
   { name: 'ruptures-passees', path: '/ruptures-passees' },
   { name: 'prescripteurs', path: '/prescripteurs' },
+  // Track B. Catalogue ids: AMLODIPINE (the demo's confirmed medicine) and TAMOXIFENE ("probable").
+  { name: 'medicament-statut', path: `/medicaments/${AMLODIPINE_ID}` },
+  { name: 'medicament-statut-ar', path: `/medicaments/${AMLODIPINE_ID}`, locale: 'ar' },
+  { name: 'demande', path: `/medicaments/${AMLODIPINE_ID}/demande` },
+  { name: 'pharmacie-demandes', path: '/pharmacie/demandes', role: 'pharmacie-tunis' },
+  { name: 'prescripteurs-verification', path: `/prescripteurs?m=${TAMOXIFEN_ID}`, role: 'medecin' },
 ];
 
 /** One preview per role tile on the home page (role key: path). */
@@ -65,6 +74,7 @@ export const PREVIEW_SHOTS: Shot[] = [
   { name: 'hopital', path: '/hopital', role: 'hopital' },
   { name: 'grossiste', path: '/grossiste', role: 'grossiste' },
   { name: 'coordination', path: '/coordination', role: 'coordination' },
+  { name: 'medecin', path: `/prescripteurs?m=${TAMOXIFEN_ID}`, role: 'medecin', device: 'phone' },
   { name: 'public', path: '/medicaments', device: 'phone' },
 ];
 
