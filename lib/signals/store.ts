@@ -81,7 +81,7 @@ export function supabaseSignalStore(client: SupabaseClient = createServiceClient
 
       const { data: signal, error: signalError } = await client
         .from('signals')
-        .select('level, since, updated_at')
+        .select('level, since, cleared_at, updated_at')
         .eq('molecule_id', moleculeId)
         .maybeSingle();
       if (signalError) throw new Error(`load signal: ${signalError.message}`);
@@ -90,7 +90,12 @@ export function supabaseSignalStore(client: SupabaseClient = createServiceClient
         reports,
         notices,
         current: signal
-          ? { level: signal.level as Level, since: new Date(signal.since), updatedAt: signal.updated_at as string }
+          ? {
+              level: signal.level as Level,
+              since: new Date(signal.since),
+              clearedAt: signal.cleared_at ? new Date(signal.cleared_at) : null,
+              updatedAt: signal.updated_at as string,
+            }
           : null,
       };
     },
@@ -106,6 +111,7 @@ export function supabaseSignalStore(client: SupabaseClient = createServiceClient
         p_evidence: input.evidence,
         p_at: input.at.toISOString(),
         p_alert: input.alert,
+        p_cleared_at: input.clearedAt ? input.clearedAt.toISOString() : null,
       });
       if (error) throw new Error(`apply_signal_evaluation: ${error.message}`);
       const row = (data as { applied: boolean; event_id: number | null }[] | null)?.[0];

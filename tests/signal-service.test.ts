@@ -39,7 +39,7 @@ class MemoryStore implements SignalStore {
         (r) => r.moleculeId === moleculeId && r.reportedAt > from && r.reportedAt <= to,
       ),
       notices: this.notices.filter((n) => n.moleculeId === moleculeId),
-      current: this.signal ? { level: this.signal.level, since: this.signal.since, updatedAt: this.signal.updatedAt } : null,
+      current: this.signal ? { level: this.signal.level, since: this.signal.since, clearedAt: this.signal.clearedAt, updatedAt: this.signal.updatedAt } : null,
     };
   }
 
@@ -54,6 +54,7 @@ class MemoryStore implements SignalStore {
     this.signal = {
       level: input.level,
       since: input.since,
+      clearedAt: input.clearedAt,
       updatedAt: `v${++this.clock}`,
       rule: input.rule,
       evidence: input.evidence,
@@ -153,9 +154,20 @@ describe('recomputeSignal', () => {
 
   it('logs the fading of "levée" back to none without alerting anyone', async () => {
     const store = new MemoryStore();
-    store.signal = { level: 'cleared', since: T0, updatedAt: 'v0', rule: 'delivered_again_cleared', evidence: {} };
+    store.signal = { level: 'cleared', since: T0, clearedAt: T0, updatedAt: 'v0', rule: 'delivered_again_cleared', evidence: {} };
     await recomputeSignal(store, MOL, new Date(T0.getTime() + 8 * DAY));
     expect(store.events).toEqual([expect.objectContaining({ from: 'cleared', to: 'none', rule: 'cleared_expired', alerted: false })]);
+  });
+
+  it('keeps the levée time after "levée" fades, so a notice from before it stays silent', async () => {
+    const store = new MemoryStore();
+    store.signal = { level: 'cleared', since: T0, clearedAt: T0, updatedAt: 'v0', rule: 'delivered_again_cleared', evidence: {} };
+    store.notices = [{ id: 'n1', moleculeId: MOL, source: 'ANSM', status: 'shortage', publishedAt: new Date(T0.getTime() - 20 * DAY), url: 'https://example.org', origin: 'simulated' }];
+    await recomputeSignal(store, MOL, new Date(T0.getTime() + 8 * DAY));
+    expect(store.signal).toMatchObject({ level: 'none', clearedAt: T0 });
+    const later = await recomputeSignal(store, MOL, new Date(T0.getTime() + 9 * DAY));
+    expect(later.evaluation.level).toBe('none');
+    expect(store.events).toHaveLength(1);
   });
 });
 

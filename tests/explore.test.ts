@@ -16,9 +16,9 @@ describe('replay', () => {
     expect(r.firstDay).toMatchObject({ watch: firstFrame('watch'), likely: firstFrame('likely'), confirmed: firstFrame('confirmed'), cleared: firstFrame('cleared') });
     expect(r.firstDay).toMatchObject({ watch: 0, likely: 2, confirmed: 5, cleared: 22 });
     expect(r.days).toHaveLength(EXPLORER_DAYS + 1);
-    // The ANSM notice is still active (90 days): once cleared, the next evaluation reads
-    // "sous surveillance" again, by the rules as written (cleared is held only without evidence).
-    expect(r.days.at(-1)).toBe('watch');
+    // The ANSM notice is still active (90 days) but was published before the levée: it does
+    // not raise the medicine again, so "levée" stays visible to the end.
+    expect(r.days.at(-1)).toBe('cleared');
   });
 
   it('a higher bar confirms later or never; a longer wait ignores the late orders', () => {

@@ -32,6 +32,12 @@ export interface ForeignNotice {
 export interface PreviousState {
   level: Level;
   since: Date;
+  /**
+   * When the medicine last became "levée", kept after "levée" itself has expired.
+   * A foreign notice published before it does not raise the medicine again on its own.
+   * Missing: the start of a shown "levée", or none.
+   */
+  clearedAt?: Date | null;
 }
 
 export type RuleId =
@@ -75,4 +81,6 @@ export interface Evaluation {
   standDown: boolean;
   /** Start of the current level. */
   since: Date;
+  /** When the medicine last became "levée" (now, if it just did), or null. Store it with the level. */
+  clearedAt: Date | null;
 }

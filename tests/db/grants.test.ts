@@ -44,6 +44,10 @@ const FUNCTIONS: Record<string, { anon: boolean; authenticated: boolean }> = {
     anon: false,
     authenticated: false,
   },
+  'public.apply_signal_evaluation(uuid, signal_level, timestamptz, signal_level, timestamptz, text, jsonb, timestamptz, boolean, timestamptz)': {
+    anon: false,
+    authenticated: false,
+  },
   'public.create_tester_pharmacy(uuid, text, text)': { anon: false, authenticated: false },
   'public.reset_molecule_signal(uuid)': { anon: false, authenticated: false },
   'public.create_availability_request(uuid, uuid, text, text, text, data_origin)': { anon: false, authenticated: false },

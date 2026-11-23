@@ -38,8 +38,8 @@ export function pgliteSignalStore(db: PGlite): SignalStore {
              from public.foreign_notices where molecule_id = $1 and published_at > $2 and published_at <= $3`,
           [moleculeId, from, to],
         );
-        const signal = await tx.query<{ level: Level; since: Date; updated_at: string }>(
-          `select level, since, updated_at::text as updated_at from public.signals where molecule_id = $1`,
+        const signal = await tx.query<{ level: Level; since: Date; cleared_at: Date | null; updated_at: string }>(
+          `select level, since, cleared_at, updated_at::text as updated_at from public.signals where molecule_id = $1`,
           [moleculeId],
         );
         const s = signal.rows[0];
@@ -63,7 +63,7 @@ export function pgliteSignalStore(db: PGlite): SignalStore {
             url: n.url,
             origin: n.origin,
           })),
-          current: s ? { level: s.level, since: s.since, updatedAt: s.updated_at } : null,
+          current: s ? { level: s.level, since: s.since, clearedAt: s.cleared_at, updatedAt: s.updated_at } : null,
         };
       });
     },
@@ -71,7 +71,7 @@ export function pgliteSignalStore(db: PGlite): SignalStore {
     async apply(input) {
       return asCommitted(db, service, async (tx) => {
         const { rows } = await tx.query<{ applied: boolean; event_id: number | null }>(
-          `select * from public.apply_signal_evaluation($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+          `select * from public.apply_signal_evaluation($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
           [
             input.moleculeId,
             input.expected?.level ?? null,
@@ -82,6 +82,7 @@ export function pgliteSignalStore(db: PGlite): SignalStore {
             JSON.stringify(input.evidence),
             input.at,
             input.alert,
+            input.clearedAt,
           ],
         );
         return { applied: rows[0].applied, eventId: rows[0].event_id === null ? null : Number(rows[0].event_id) };

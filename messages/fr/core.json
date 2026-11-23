@@ -585,7 +585,7 @@
       "watch": "Un premier signe : au moins une pharmacie signale une commande non livrée, ou une autorité étrangère publie une pénurie.",
       "likely": "Des signes qui concordent : au moins {likelyMin} pharmacies sur {likelyDays} jours, ou un signalement en Tunisie accompagné d’un avis étranger.",
       "confirmed": "Au moins {confirmMin} pharmacies, ou {sharePct} % des pharmacies membres actives si le réseau est plus grand, dans au moins {confirmGov} gouvernorats, sur {confirmDays} jours.",
-      "cleared": "Le médicament est de nouveau livré : au moins {clearMin} pharmacies le signalent, et aucune commande non livrée n’a été signalée depuis {quietDays} jours. « Levée » reste affiché {clearedDays} jours.",
+      "cleared": "Le médicament est de nouveau livré : au moins {clearMin} pharmacies le signalent, et aucune commande non livrée n’a été signalée depuis {quietDays} jours. « Levée » reste affiché {clearedDays} jours. Un avis étranger publié avant la levée ne fait plus remonter le médicament : seuls un nouvel avis ou de nouveaux signalements tunisiens le peuvent.",
       "none": "Aucun signalement récent et aucun avis étranger en cours."
     },
     "reportTitle": "Ce qui compte comme un signalement",
@@ -609,11 +609,11 @@
     "rules": {
       "no_evidence": {
         "name": "Aucune donnée",
-        "body": "Aucun signalement valide sur {confirmDays} jours et aucun avis étranger en cours : pas de niveau."
+        "body": "Aucun signalement valide sur {confirmDays} jours et aucun avis étranger en cours, ou seulement des avis publiés avant la dernière levée : pas de niveau."
       },
       "foreign_notice_only": {
         "name": "Avis étranger seul",
-        "body": "Une autorité étrangère signale une pénurie et aucune pharmacie tunisienne n’a signalé : « sous surveillance », jamais plus (garde-fou 1)."
+        "body": "Une autorité étrangère signale une pénurie et aucune pharmacie tunisienne n’a signalé : « sous surveillance », jamais plus (garde-fou 1). Après une levée, seul un avis publié depuis compte."
       },
       "local_reports_below_threshold": {
         "name": "Premiers signalements",

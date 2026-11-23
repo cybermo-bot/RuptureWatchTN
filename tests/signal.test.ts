@@ -236,6 +236,63 @@ describe('holding and clearing', () => {
   });
 });
 
+describe('"levée" holds against a foreign notice from before it', () => {
+  // Confirmed from day 1 to 4, with an ANSM notice from day 0 (active 90 days); delivered again
+  // on days 15 and 17; "levée" on day 19.
+  const reports = [
+    nd('p1', 'TUN', 1), nd('p2', 'TUN', 2), nd('p3', 'TUN', 3), nd('p4', 'SFA', 4),
+    back('p1', 'TUN', 15), back('p4', 'SFA', 17),
+  ];
+  const oldNotice = notice('ANSM', 0);
+
+  it('the evaluation that clears records when the levée happened', () => {
+    const e = evaluate({ moleculeId: MOL, reports, notices: [oldNotice], now: at(19), previous: prev('confirmed', 4) });
+    expect(e.level).toBe('cleared');
+    expect(e.clearedAt).toEqual(at(19));
+  });
+
+  it('a notice already active before the levée does not raise it again', () => {
+    const e = evaluate({ moleculeId: MOL, reports, notices: [oldNotice], now: at(20), previous: { level: 'cleared', since: at(19), clearedAt: at(19) } });
+    expect(e.level).toBe('cleared');
+    expect(e.rule).toBe('delivered_again_cleared');
+    expect(e.changed).toBe(false);
+    expect(e.clearedAt).toEqual(at(19));
+  });
+
+  it('without a stored levée time, a shown "levée" counts from its start', () => {
+    const e = evaluate({ moleculeId: MOL, reports, notices: [oldNotice], now: at(20), previous: prev('cleared', 19) });
+    expect(e.level).toBe('cleared');
+    expect(e.clearedAt).toEqual(at(19));
+  });
+
+  it('once "levée" has expired, the old notice still does not count alone', () => {
+    const gone = evaluate({ moleculeId: MOL, reports, notices: [oldNotice], now: at(26), previous: { level: 'cleared', since: at(19), clearedAt: at(19) } });
+    expect(gone.level).toBe('none');
+    expect(gone.rule).toBe('cleared_expired');
+    expect(gone.clearedAt).toEqual(at(19));
+    const later = evaluate({ moleculeId: MOL, reports, notices: [oldNotice], now: at(33), previous: { level: 'none', since: at(26), clearedAt: at(19) } });
+    expect(later.level).toBe('none');
+    expect(later.clearedAt).toEqual(at(19));
+  });
+
+  it('a notice published after the levée raises it to watch, never further (gate one)', () => {
+    const e = evaluate({ moleculeId: MOL, reports, notices: [oldNotice, notice('BfArM', 21)], now: at(21), previous: { level: 'cleared', since: at(19), clearedAt: at(19) } });
+    expect(e.level).toBe('watch');
+    expect(e.rule).toBe('foreign_notice_only');
+  });
+
+  it('a new report from the same regulator after the levée counts again', () => {
+    const e = evaluate({ moleculeId: MOL, reports, notices: [oldNotice, notice('ANSM', 22)], now: at(22), previous: { level: 'cleared', since: at(19), clearedAt: at(19) } });
+    expect(e.level).toBe('watch');
+  });
+
+  it('new Tunisian reports raise the level as before, with the old notice beside them', () => {
+    const e = evaluate({ moleculeId: MOL, reports: [...reports, nd('p9', 'BIZ', 21)], notices: [oldNotice], now: at(21), previous: { level: 'cleared', since: at(19), clearedAt: at(19) } });
+    expect(e.level).toBe('likely');
+    expect(e.rule).toBe('local_report_plus_foreign_notice');
+  });
+});
+
 describe('small-cell suppression on the map', () => {
   it('counts below 3 are shown as <3', () => {
     expect(displayCount(0)).toEqual({ display: '0', suppressed: false });

@@ -28,6 +28,8 @@ export { ACTIVE_MEMBER_DAYS } from './members';
 export interface CurrentSignal {
   level: Level;
   since: Date;
+  /** When the medicine last became "levée" (signals.cleared_at), or null. */
+  clearedAt: Date | null;
   /** Exactly as stored (text, microseconds kept), for the compare-and-set. */
   updatedAt: string;
 }
@@ -52,6 +54,8 @@ export interface ApplyInput {
   since: Date;
   rule: RuleId;
   evidence: StoredEvidence;
+  /** evaluate().clearedAt, stored with the level. */
+  clearedAt: Date | null;
   at: Date;
   /** Create alerts for the organisations concerned (when the level changes). */
   alert: boolean;
@@ -142,7 +146,7 @@ export async function recomputeSignal(
       reports,
       notices,
       now,
-      previous: current ? { level: current.level, since: current.since } : undefined,
+      previous: current ? { level: current.level, since: current.since, clearedAt: current.clearedAt } : undefined,
       params,
       activeMemberPharmacies,
     });
@@ -160,6 +164,7 @@ export async function recomputeSignal(
       since: evaluation.since,
       rule: evaluation.rule,
       evidence: toStoredEvidence(evaluation.evidence, originsOf(reports, notices)),
+      clearedAt: evaluation.clearedAt,
       at: now,
       // A shown "levée" fading back to "none" is logged, but nobody is alerted for it.
       alert: evaluation.changed && evaluation.rule !== 'cleared_expired',

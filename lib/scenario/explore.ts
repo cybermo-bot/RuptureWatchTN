@@ -9,6 +9,7 @@ import {
   type ForeignNotice,
   type Level,
   type PharmacyReport,
+  type PreviousState,
   type ScenarioStep,
   type SignalParams,
 } from '@/lib/signal';
@@ -33,7 +34,7 @@ export function replay(steps: ScenarioStep[], start: Date, lengthDays: number, p
   const reports: PharmacyReport[] = [];
   const notices: ForeignNotice[] = [];
   const moleculeId = steps.find((s) => s.report)?.report?.moleculeId ?? steps[0]?.notice?.moleculeId ?? 'scenario';
-  let previous = { level: 'none' as Level, since: start };
+  let previous: PreviousState = { level: 'none', since: start };
   const days: Level[] = [];
   const firstDay: Partial<Record<Level, number>> = {};
   for (const m of moments) {
@@ -41,7 +42,7 @@ export function replay(steps: ScenarioStep[], start: Date, lengthDays: number, p
     if (m.step?.notice) notices.push(m.step.notice);
     const now = new Date(start.getTime() + m.at);
     const e = evaluate({ moleculeId, reports, notices, now, previous, params: p });
-    previous = { level: e.level, since: e.since };
+    previous = { level: e.level, since: e.since, clearedAt: e.clearedAt };
     const day = Math.floor(m.at / DAY);
     if (e.level !== 'none' && firstDay[e.level] === undefined) firstDay[e.level] = day;
     if (!m.step && day <= lengthDays) days[day] = e.level;

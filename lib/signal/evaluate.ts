@@ -109,8 +109,12 @@ export function activeNotices(
   );
 }
 
-/** The level the current evidence supports, before any hold or clearing rule. */
-function rawLevel(e: Evidence, p: SignalParams, confirmNeeded: number): { level: Level; rule: RuleId } {
+/**
+ * The level the current evidence supports, before any hold or clearing rule.
+ * `clearedAt`: a notice published before the last levée does not count alone (it may still
+ * accompany a new Tunisian report).
+ */
+function rawLevel(e: Evidence, p: SignalParams, confirmNeeded: number, clearedAt: Date | null): { level: Level; rule: RuleId } {
   if (e.pharmacies14d >= confirmNeeded && e.governorates14d >= p.confirmMinGovernorates) {
     return { level: 'confirmed', rule: 'confirmed_threshold' };
   }
@@ -126,7 +130,10 @@ function rawLevel(e: Evidence, p: SignalParams, confirmNeeded: number): { level:
   if (e.pharmacies14d >= 1) {
     return { level: 'watch', rule: 'local_reports_below_threshold' };
   }
-  if (e.activeNotices.length > 0) {
+  const sinceLevee = clearedAt
+    ? e.activeNotices.filter((n) => n.publishedAt.getTime() > clearedAt.getTime())
+    : e.activeNotices;
+  if (sinceLevee.length > 0) {
     return { level: 'watch', rule: 'foreign_notice_only' };
   }
   return { level: 'none', rule: 'no_evidence' };
@@ -138,8 +145,10 @@ export function evaluate(input: EvaluateInput): Evaluation {
   const previous: PreviousState = input.previous ?? { level: 'none', since: new Date(0) };
   const t = now.getTime();
 
+  const previousClearedAt = previous.clearedAt ?? (previous.level === 'cleared' ? previous.since : null);
+
   const evidence = collectEvidence(moleculeId, input.reports, input.notices, now, p);
-  let { level, rule } = rawLevel(evidence, p, confirmPharmaciesNeeded(p, input.activeMemberPharmacies));
+  let { level, rule } = rawLevel(evidence, p, confirmPharmaciesNeeded(p, input.activeMemberPharmacies), previousClearedAt);
 
   // A shown "cleared" stays for a few days, then returns to "none".
   if (previous.level === 'cleared' && level === 'none') {
@@ -186,5 +195,6 @@ export function evaluate(input: EvaluateInput): Evaluation {
     direction,
     standDown,
     since: changed ? now : previous.since,
+    clearedAt: changed && level === 'cleared' ? now : previousClearedAt,
   };
 }

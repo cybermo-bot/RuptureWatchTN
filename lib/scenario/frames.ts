@@ -12,6 +12,7 @@ import {
   type ForeignNotice,
   type Level,
   type PharmacyReport,
+  type PreviousState,
   type RuleId,
 } from '@/lib/signal';
 import { shownEvidence, type ShownEvidence } from '@/lib/signals/shown';
@@ -62,7 +63,7 @@ export function scenarioFrames(noticeSource: string, noticeUrl: string): Scenari
 
   const reports: PharmacyReport[] = [];
   const notices: ForeignNotice[] = [];
-  let previous = { level: 'none' as Level, since: START };
+  let previous: PreviousState = { level: 'none', since: START };
   const frames: ScenarioFrame[] = [
     {
       index: 0,
@@ -104,7 +105,7 @@ export function scenarioFrames(noticeSource: string, noticeUrl: string): Scenari
       })),
       alerted,
     });
-    previous = { level: e.level, since: e.since };
+    previous = { level: e.level, since: e.since, clearedAt: e.clearedAt };
   }
   return frames;
 }
