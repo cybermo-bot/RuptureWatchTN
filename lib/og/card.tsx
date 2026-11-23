@@ -44,19 +44,22 @@ export async function ogCard({ title, body }: { title: string; body: string }): 
   return new ImageResponse(
     (
       <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', background: '#FFFFFF', padding: '64px 72px', fontFamily: 'Plex', color: INK }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
-          <Mark size={56} />
-          <div style={{ display: 'flex', fontSize: 34, fontWeight: 600 }}>
-            {t('core.app.wordmark')}
-            <span style={{ color: MUTED, fontWeight: 400, marginLeft: 10 }}>{t('core.app.wordmarkCountry')}</span>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+            <Mark size={56} />
+            <div style={{ display: 'flex', fontSize: 34, fontWeight: 600 }}>
+              {t('core.app.wordmark')}
+              <span style={{ color: MUTED, fontWeight: 400, marginLeft: 10 }}>{t('core.app.wordmarkCountry')}</span>
+            </div>
           </div>
+          <div style={{ display: 'flex', fontSize: 24, color: MUTED }}>{t('core.app.prototype')}</div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', marginTop: 'auto', gap: 22 }}>
           <div style={{ display: 'flex', fontSize: 64, fontWeight: 600, lineHeight: 1.12, letterSpacing: -1 }}>{title}</div>
           <div style={{ display: 'flex', fontSize: 30, color: MUTED, lineHeight: 1.35, maxWidth: 980 }}>{body}</div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 48, paddingTop: 28, borderTop: `2px solid ${LINE}` }}>
-          <div style={{ display: 'flex', gap: 34 }}>
+        <div style={{ display: 'flex', alignItems: 'center', marginTop: 48, paddingTop: 28, borderTop: `2px solid ${LINE}` }}>
+          <div style={{ display: 'flex', gap: 40 }}>
             {LEVELS.map((l) => (
               <div key={l.key} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 26 }}>
                 <Shape level={l.key} colour={l.colour} />
@@ -64,7 +67,6 @@ export async function ogCard({ title, body }: { title: string; body: string }): 
               </div>
             ))}
           </div>
-          <div style={{ display: 'flex', fontSize: 24, color: MUTED }}>{t('core.app.prototype')}</div>
         </div>
       </div>
     ),
