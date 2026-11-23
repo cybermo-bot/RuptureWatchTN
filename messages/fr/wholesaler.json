@@ -88,6 +88,8 @@
       "targetInvalid": "Indiquez un nombre de jours entier, de 1 à {period}.",
       "targetNote": "Une cible simulée, choisie par vous et calculée sur les chiffres simulés. Ce n’est pas une recommandation.",
       "decisionLinked": "Votre décision porte sur la répartition proposée (selon les jours de couverture), pour {stock} boîtes. Elle enregistre ce que vous faites de la proposition, pas une livraison."
-    }
+    },
+    "simulation": "Simulation",
+    "simulationNeeds": "Besoins par gouvernorat : données de démonstration."
   }
 }

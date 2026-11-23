@@ -39,6 +39,9 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
   ]);
 
   const shown = status.level === 'confirmed' || status.level === 'cleared';
+  // "Simulation" in the heading block whenever the status or the arrival shown comes from demo data.
+  const simulated =
+    (shown && status.origins.includes('simulated')) || (arrival?.origin === 'simulated' && status.level === 'confirmed');
   const headline =
     status.level === 'confirmed' && status.since
       ? t('public.medicine.confirmed', {
@@ -73,6 +76,14 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
         <h1 className="text-2xl leading-tight font-semibold tracking-tight break-words text-ink sm:text-[1.75rem]">
           <Ltr>{molecule.name}</Ltr>
         </h1>
+        {simulated ? (
+          <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-muted">
+            <span className="rounded-sm border border-dashed border-ink-muted px-1.5 font-mono text-xs leading-5 font-medium tracking-wide text-ink uppercase">
+              {t('public.medicine.simulation')}
+            </span>
+            <span>{t('public.medicine.simulationNote')}</span>
+          </p>
+        ) : null}
         {categories.length > 0 ? (
           <p className="text-sm text-ink-muted">
             {t('public.medicine.category', {

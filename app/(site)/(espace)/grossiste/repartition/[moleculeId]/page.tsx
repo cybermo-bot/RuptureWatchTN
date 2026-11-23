@@ -92,8 +92,14 @@ export default async function SplitPage({
         title={signal.molecule_name}
         description={
           <span className="flex flex-col gap-3">
-            <span className="flex flex-wrap items-center gap-x-3">
+            <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
               <LevelBadge level={signal.level} />
+              {(signal.evidence.origins ?? []).includes("simulated") ? (
+                <span className="rounded-sm border border-dashed border-ink-muted px-1.5 font-mono text-xs leading-5 font-medium tracking-wide text-ink uppercase">
+                  {t("wholesaler.split.simulation")}
+                </span>
+              ) : null}
+              <span className="text-sm">{t("wholesaler.split.simulationNeeds")}</span>
             </span>
             <span>{t("wholesaler.split.intro")}</span>
           </span>

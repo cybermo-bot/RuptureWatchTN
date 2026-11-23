@@ -99,7 +99,9 @@
       "I": "intermédiaire"
     },
     "back": "Chercher un autre médicament",
-    "arrival": "Arrivage annoncé par la centrale d’achat pour le {date}."
+    "arrival": "Arrivage annoncé par la centrale d’achat pour le {date}.",
+    "simulation": "Simulation",
+    "simulationNote": "Ce statut vient des données de démonstration, pas de signalements réels."
   },
   "request": {
     "title": "Demander aux pharmacies proches",
