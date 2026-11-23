@@ -2,6 +2,7 @@
 //
 //   npm run verify:clean -- --since 2026-11-22T01:00:00Z            (dry run: lists what would go)
 //   npm run verify:clean -- --since 2026-11-22T01:00:00Z --apply
+//   npm run verify:clean -- --since 2026-11-22T01:00:00Z --requests --apply
 //
 // Removes, for rows created at or after --since:
 //   - tester pharmacies (origin tester), their profiles, follows and auth users;
@@ -9,6 +10,11 @@
 //   - follows added by the demo pharmacies, except those in supabase/seed/demo-follows.json;
 //   - arrival announcements by the demo centrale and messages by the demo Ordre (a level never
 //     depends on them, so nothing needs recomputing);
+//   - availability answers given by the one-click demo pharmacies (demo:national's answers come
+//     from other simulated pharmacies and stay);
+//   - with --requests only: patients' requests of origin tester (an end-to-end run's request from
+//     a browser), with their answers. Requests are anonymous demand and never change a level, so
+//     they stay unless asked: never use --requests once real patients use the site.
 //   - the signal state (alerts, event log, signal row) of every molecule those reports touched,
 //     through reset_molecule_signal(), the only sanctioned way to clear the event log.
 // Then restarts tester numbering at 1 (reset_tester_numbering), which does nothing while any
@@ -28,6 +34,7 @@ function arg(name: string): string | undefined {
 async function main() {
   const since = arg('since');
   const apply = process.argv.includes('--apply');
+  const withRequests = process.argv.includes('--requests');
   if (!since || Number.isNaN(Date.parse(since))) {
     console.error('Usage: npm run verify:clean -- --since <ISO date> [--apply]');
     process.exit(1);
@@ -78,6 +85,26 @@ async function main() {
     console.log(`  arrival announcement: ${(a.molecules as unknown as { name: string } | null)?.name ?? '?'}, ${a.expected_on}`);
   }
   for (const m of messages ?? []) console.log(`  Ordre message: ${String(m.body).slice(0, 60)}`);
+  const { data: answers, error: answerError } = await supabase
+    .from('availability_answers')
+    .select('id, request_id, answer')
+    .in('organisation_id', demoPharmacies)
+    .gte('answered_at', since);
+  if (answerError) throw new Error(`availability answers: ${answerError.message}`);
+  console.log(`  answers by the one-click pharmacies: ${answers?.length ?? 0}`);
+  const { data: requests, error: requestError } = withRequests
+    ? await supabase
+        .from('availability_requests')
+        .select('id, governorate_code, created_at, molecules ( name )')
+        .eq('origin', 'tester')
+        .gte('created_at', since)
+    : { data: [] as { id: string; governorate_code: string; created_at: string; molecules: unknown }[], error: null };
+  if (requestError) throw new Error(`availability requests: ${requestError.message}`);
+  for (const r of requests ?? []) {
+    console.log(
+      `  patient request (tester): ${(r.molecules as { name: string } | null)?.name ?? '?'}, ${r.governorate_code}, ${r.created_at}`,
+    );
+  }
   if (!apply) {
     console.log('Dry run. Add --apply to remove.');
     return;
@@ -99,6 +126,14 @@ async function main() {
   if (messages?.length) {
     const { error } = await supabase.from('order_messages').delete().in('id', messages.map((m) => m.id as string));
     if (error) throw new Error(`delete Ordre messages: ${error.message}`);
+  }
+  if (answers?.length) {
+    const { error } = await supabase.from('availability_answers').delete().in('id', answers.map((a) => a.id as string));
+    if (error) throw new Error(`delete availability answers: ${error.message}`);
+  }
+  if (requests?.length) {
+    const { error } = await supabase.from('availability_requests').delete().in('id', requests.map((r) => r.id));
+    if (error) throw new Error(`delete availability requests: ${error.message}`);
   }
   // Follows added during the run, but never the seeded ones (re-seeding may postdate --since).
   const seeded = (JSON.parse(readFileSync(join(ROOT, 'supabase/seed/demo-follows.json'), 'utf8')) as { molecules: string[] })
