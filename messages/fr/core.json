@@ -75,17 +75,19 @@
     "previewAlt": "Aperçu de l’espace {role}",
     "open": "Ouvrir",
     "national": {
-      "title": "Vue nationale en direct",
-      "source": "Calculée à l’instant à partir des signalements et des avis étrangers, lue avec le compte de démonstration de la cellule nationale.",
+      "title": "Ce que voit la cellule nationale",
+      "source": "Calculée à l’instant à partir des signalements simulés, lue avec le compte de démonstration de la cellule nationale.",
       "mapTitle": "Niveau le plus grave signalé, par gouvernorat",
       "mapNone": "Aucun signalement",
       "listTitle": "Médicaments avec un niveau",
-      "empty": "Aucun médicament n’a de niveau pour l’instant. Lancez le scénario pour voir une rupture simulée de bout en bout.",
+      "empty": "Aucun médicament simulé n’a de niveau pour l’instant. Lancez le scénario pour voir une rupture simulée de bout en bout.",
       "unavailable": "La vue nationale n’est pas disponible pour l’instant. Réessayez dans un instant.",
       "seeViews": "Ce que chaque rôle reçoit pour ce médicament",
       "countsLabel": "Médicaments par niveau",
       "mapLevelText": "{governorate} : {level}",
-      "simulatedNote": "Données de démonstration"
+      "simulatedNote": "Données de démonstration",
+      "demo": "Démonstration · données simulées",
+      "frame": "La vue de la cellule nationale de suivi dans la démonstration : seuls des signaux simulés y figurent. Le public ne voit d’un médicament que la rupture confirmée."
     },
     "scenarioTitle": "Une rupture simulée, du premier signe à la levée",
     "scenarioBody": "Trois semaines jouées pas à pas par les vraies règles, dans votre navigateur. Rien n’est écrit dans la base."

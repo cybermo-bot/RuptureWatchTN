@@ -15,9 +15,10 @@ import { loadNationalPicture, type NationalPicture } from '@/lib/home/national';
 import { t, type MessageKey } from '@/lib/i18n';
 import { LEVEL_ORDER } from '@/lib/signals/views';
 
-// The home page shows the product: the live national picture first (map filled by the most
-// serious level per governorate, the medicines with their level), then the roles, the scenario,
-// and the pages that explain it. Every figure is computed; simulated data carries its badge.
+// The home page shows the product: what the national unit sees in the demonstration first (map
+// filled by the most serious level per governorate, the medicines with their level: simulated
+// signals only, rule 10), then the roles, the scenario, and the pages that explain it. Every
+// figure is computed; simulated data carries its badge.
 
 const EXPLORE: { href: string; icon: LucideIcon; title: MessageKey; body: MessageKey }[] = [
   { href: '/scenario', icon: Play, title: 'core.home.explore.scenario.title', body: 'core.home.explore.scenario.body' },
@@ -71,9 +72,9 @@ function National({ picture }: { picture: NationalPicture | null }) {
       </div>
       <section aria-labelledby="medicaments-niveau" className="panel flex min-w-0 flex-col">
         <header className="panel-header">
-          <h2 id="medicaments-niveau" className="font-semibold text-ink">
+          <h3 id="medicaments-niveau" className="font-semibold text-ink">
             {t('core.home.national.listTitle')}
-          </h2>
+          </h3>
           {simulated ? <OriginBadge origin="simulated" /> : null}
         </header>
         {picture.signals.length === 0 ? (
@@ -120,18 +121,23 @@ export default async function HomePage({ searchParams }: PageProps<'/'>) {
       <main id="contenu" className="flex-1 bg-page">
         <section aria-labelledby="accroche" className="border-b border-line bg-surface">
           <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
-            <div className="flex flex-col gap-3 lg:max-w-3xl">
-              <p className="flex flex-wrap items-center gap-2 text-sm font-medium text-ink">
-                <span className="relative inline-flex size-2.5" aria-hidden="true">
-                  <span className="absolute inset-0 rounded-full bg-level-cleared" />
-                </span>
-                {t('core.home.national.title')}
-              </p>
-              <h1 id="accroche" className="text-[1.75rem] leading-[1.15] font-semibold tracking-tight text-ink sm:text-4xl">
-                {t('core.home.tagline')}
-              </h1>
-            </div>
-            <National picture={picture} />
+            <h1 id="accroche" className="text-[1.75rem] leading-[1.15] font-semibold tracking-tight text-ink sm:text-4xl lg:max-w-3xl">
+              {t('core.home.tagline')}
+            </h1>
+            <section aria-labelledby="vue-cellule" className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                  <h2 id="vue-cellule" className="text-xl font-semibold text-ink">
+                    {t('core.home.national.title')}
+                  </h2>
+                  <span className="rounded-sm border border-dashed border-ink-muted px-1.5 font-mono text-xs leading-5 tracking-wide text-ink-muted uppercase">
+                    {t('core.home.national.demo')}
+                  </span>
+                </div>
+                <p className="max-w-prose text-sm text-ink-muted">{t('core.home.national.frame')}</p>
+              </div>
+              <National picture={picture} />
+            </section>
           </div>
         </section>
 

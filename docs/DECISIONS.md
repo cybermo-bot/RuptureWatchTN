@@ -4,6 +4,10 @@ Newest first. Each entry: what was decided, and why.
 
 ## 2026-11-24, session 6
 
+### The home page shows only simulated signals, as the national unit's view (part 8, item 1)
+
+- The home page is public, and it listed every medicine with a level, "probable" and "sous surveillance" included: rule 10 forbids that for real data. The national picture is now framed as what the national unit sees in the demonstration: title "Ce que voit la cellule nationale", the line "Démonstration · données simulées" beside it, one sentence saying the public only ever sees a confirmed shortage. `loadNationalPicture()` keeps only signals whose evidence is entirely simulated (`isDemonstrationSignal`, tested): a signal with any tester or official evidence never appears there, at any level. Done before the visual pass (part 6), so the `ui-refresh` branch starts from it.
+
 ### "Ce qui manque" beside a level (part 5)
 
 - One line on the coordination, hospital (and wholesaler) medicine panel and the prescriber check says which condition is still missing for the next level: "Pour « Confirmée », il manque un deuxième gouvernorat.", "… des signalements d’autres pharmacies, jusqu’au seuil de « confirmée »", for "confirmée" what "levée" needs. Nothing at "levée".

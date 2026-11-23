@@ -1,7 +1,13 @@
-// The live national picture on the home page: every medicine with an active level, and for each
-// governorate the most serious level among the medicines its pharmacies report. Read through the
-// demo coordination account, the same one a visitor opens in one click (as /vues does), so the
-// database's access rules decide what comes back: counts by governorate only, no pharmacy.
+// The national picture on the home page: what the national unit sees in the demonstration, every
+// medicine with an active level, and for each governorate the most serious level among the
+// medicines its pharmacies report. Read through the demo coordination account, the same one a
+// visitor opens in one click (as /vues does), so the database's access rules decide what comes
+// back: counts by governorate only, no pharmacy.
+//
+// The home page is public, and the public never sees a level below "confirmée" (CLAUDE.md rule
+// 10). So the picture keeps only demonstration signals, whose evidence is entirely simulated, and
+// is framed as the national unit's view of the demonstration: a signal from tester or official
+// data never appears here, at any level.
 
 import 'server-only';
 import { LEVEL_ORDER, governorateCounts, listSignals, sortSignals, type ActiveLevel, type SignalRow } from '@/lib/signals/views';
@@ -16,6 +22,12 @@ export interface NationalPicture {
   counts: Record<ActiveLevel, number>;
   /** Origins of the data behind every level shown. */
   origins: Origin[];
+}
+
+/** A demonstration signal: evidence known and entirely simulated. Only these reach the home page. */
+export function isDemonstrationSignal(s: Pick<SignalRow, 'evidence'>): boolean {
+  const origins = s.evidence?.origins ?? [];
+  return origins.length > 0 && origins.every((o) => o === 'simulated');
 }
 
 /** Most serious first: the lower the index in LEVEL_ORDER, the more serious. */
@@ -34,7 +46,7 @@ export function combineByGovernorate(perMolecule: { level: ActiveLevel; governor
 export async function loadNationalPicture(): Promise<NationalPicture | null> {
   try {
     const client = await demoClient(VIEW_ROLES.coordination);
-    const signals = sortSignals(await listSignals(client));
+    const signals = sortSignals(await listSignals(client)).filter(isDemonstrationSignal);
     const perMolecule = await Promise.all(
       signals.map(async (s) => ({
         level: s.level as ActiveLevel,
