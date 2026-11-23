@@ -4,8 +4,9 @@ import { PageHeader } from '@/components/PageHeader';
 import { ScenarioPlayer } from '@/components/scenario/ScenarioPlayer';
 import { SiteFooter, SiteHeader } from '@/components/SiteChrome';
 import { t } from '@/lib/i18n';
+import { sharedPageMetadata } from '@/lib/og/meta';
 
-export const metadata: Metadata = { title: t('core.scenario.title') };
+export const metadata: Metadata = sharedPageMetadata(t('core.scenario.title'), { title: t('core.og.scenario.title'), body: t('core.og.scenario.body') });
 
 // Public: no sign-in. The scenario runs in the visitor's browser and writes nothing.
 export default function ScenarioPage() {

@@ -1,11 +1,15 @@
 import type { Metadata, Viewport } from 'next';
 import { fontVariables } from '@/lib/fonts';
 import { dir, locale, t } from '@/lib/i18n';
+import { OG_BASE } from '@/lib/og/meta';
+import { siteUrl } from '@/lib/site';
 import '../globals.css';
 
 export const metadata: Metadata = {
   title: { default: t('core.app.title'), template: `%s · ${t('core.app.name')}` },
   description: t('core.app.description'),
+  metadataBase: new URL(siteUrl()),
+  openGraph: { ...OG_BASE, title: t('core.og.home.title'), description: t('core.og.home.body') },
   robots: { index: false, follow: false },
 };
 

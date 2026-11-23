@@ -7,8 +7,9 @@ import { SiteFooter, SiteHeader } from '@/components/SiteChrome';
 import { episodeStats, readEpisodes, type Episode } from '@/lib/content/episodes';
 import { formatDate } from '@/lib/format';
 import { t } from '@/lib/i18n';
+import { sharedPageMetadata } from '@/lib/og/meta';
 
-export const metadata: Metadata = { title: t('core.replay.title') };
+export const metadata: Metadata = sharedPageMetadata(t('core.replay.title'), { title: t('core.og.replay.title'), body: t('core.og.replay.body') });
 
 // The replay of past shortages, from data/reference/episodes.csv. Public, no sign-in.
 // Every figure is computed from the file; every date links to its source.

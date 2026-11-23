@@ -915,5 +915,27 @@
     },
     "alertsWindow": "Tant que le modèle de message d’alerte n’est pas approuvé par Meta, les alertes WhatsApp n’arrivent qu’aux numéros qui ont écrit au service dans les dernières 24 heures. Toutes les alertes restent dans votre espace.",
     "spaceLink": "Signaler par WhatsApp"
+  },
+  "og": {
+    "home": {
+      "title": "Voir venir les ruptures de médicaments",
+      "body": "Les pharmacies signalent « commandé, non livré » ; des règles publiques en font un niveau d’alerte, expliqué à chaque fois.",
+      "alt": "RuptureWatch TN : voir venir les ruptures de médicaments. Les quatre niveaux : sous surveillance, probable, confirmée, levée."
+    },
+    "scenario": {
+      "title": "Une rupture, du premier signal à la levée",
+      "body": "Un scénario simulé, pas à pas : qui signale, quel niveau, quelle règle, qui est prévenu.",
+      "alt": "RuptureWatch TN : le scénario d’une rupture simulée, du premier signal à la levée."
+    },
+    "method": {
+      "title": "Comment les niveaux sont calculés",
+      "body": "Les règles, les seuils et leur raison, et un explorateur pour voir ce que change chaque seuil.",
+      "alt": "RuptureWatch TN : la méthode, les règles et les seuils des niveaux d’alerte."
+    },
+    "replay": {
+      "title": "Retour sur les ruptures passées en Tunisie",
+      "body": "Un avis étranger aurait-il permis de les voir venir ? Chaque date renvoie à sa source.",
+      "alt": "RuptureWatch TN : retour sur les ruptures passées en Tunisie, avec leurs sources."
+    }
   }
 }

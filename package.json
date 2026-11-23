@@ -24,7 +24,8 @@
     "osm:export": "tsx scripts/export-osm-pharmacies.ts",
     "library:import": "tsx scripts/import-library.ts",
     "test:e2e": "playwright test",
-    "dpm:build": "tsx scripts/build-dpm-list.ts"
+    "dpm:build": "tsx scripts/build-dpm-list.ts",
+    "icons:build": "tsx scripts/build-icons.tsx"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

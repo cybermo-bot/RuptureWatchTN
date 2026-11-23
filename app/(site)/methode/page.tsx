@@ -4,13 +4,14 @@ import { LevelBadge } from '@/components/LevelBadge';
 import { OriginBadge } from '@/components/OriginBadge';
 import { PageHeader } from '@/components/PageHeader';
 import { SiteFooter, SiteHeader } from '@/components/SiteChrome';
+import { sharedPageMetadata } from '@/lib/og/meta';
 import { ThresholdExplorer } from '@/components/method/ThresholdExplorer';
 import { readSources } from '@/lib/content/sources';
 import { ACTIVE_MEMBER_DAYS } from '@/lib/signals/members';
 import { t, type MessageKey } from '@/lib/i18n';
 import { DEFAULT_PARAMS, type Level, type Origin, type RuleId, type SignalParams } from '@/lib/signal';
 
-export const metadata: Metadata = { title: t('core.method.title') };
+export const metadata: Metadata = sharedPageMetadata(t('core.method.title'), { title: t('core.og.method.title'), body: t('core.og.method.body') });
 
 // Public, in French. Every threshold on this page is read from lib/signal/params.ts.
 const P = DEFAULT_PARAMS;

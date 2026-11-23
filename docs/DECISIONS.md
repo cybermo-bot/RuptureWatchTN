@@ -4,6 +4,11 @@ Newest first. Each entry: what was decided, and why.
 
 ## 2026-11-23, session 3
 
+### Icons and share cards
+- The mark is the "probable" shape (half-filled circle) in white on the brand colour: the product's own sign, no logo borrowed. `app/icon.svg` for browsers that take SVG; `npm run icons:build` (`scripts/build-icons.tsx`, with next/og already in Next) writes `app/favicon.ico` (PNG entries 16, 32, 48), `app/apple-icon.png` and the manifest icons. No new dependency.
+- Open Graph cards for the home page, `/scenario`, `/methode` and `/retour` (`lib/og/card.tsx`, rendered by next/og at build): white, IBM Plex Sans, title, one sentence, the four levels as shape plus word, "Prototype de démonstration". Texts in `core.og.*`. Each of those pages sets its own og:title and description.
+- IBM Plex Sans Regular and SemiBold TTF are committed in `assets/fonts/` with their licence (SIL OFL 1.1, from IBM's repository): next/og needs the font file, and `next/font` files are not reachable from it.
+
 ### Threshold explorer on the methods page
 - Four sliders (pharmacies for confirmed 2 to 12, governorates 1 to 5, pharmacies for likely 1 to 5, wait 24 to 120 hours). Each change replays two simulated scenarios through `evaluate()` in the browser (`lib/scenario/explore.ts`): evaluation at every step and at the end of every day, carrying the previous level, as the signal service does. Nothing is written; no request is made.
 - Second scenario `buildFalseAlarmScenario` in `lib/signal/scenario.ts`: in one governorate, one pharmacy reporting every day for 14 days plus three other pharmacies on days 4 to 6. With the defaults it stops at "probable" (one count per pharmacy, one governorate); with one governorate enough it confirms. Tested in `tests/explore.test.ts`.

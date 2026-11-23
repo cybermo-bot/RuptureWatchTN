@@ -31,6 +31,6 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     // Skip static files, images and the API routes that do not use the visitor session.
-    '/((?!_next/static|_next/image|favicon.ico|api/whatsapp|api/health|api/cron|api/places|.*\\.(?:svg|png|jpg|jpeg|webp|ico)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|manifest.webmanifest|.*opengraph-image|api/whatsapp|api/health|api/cron|api/places|.*\\.(?:svg|png|jpg|jpeg|webp|ico)$).*)',
   ],
 };
