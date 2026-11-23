@@ -6,7 +6,8 @@
     "title": "RuptureWatch TN, alerte précoce sur les ruptures de médicaments",
     "description": "Prototype de plateforme d’alerte précoce et de coordination sur les ruptures de médicaments en Tunisie.",
     "prototype": "Prototype de démonstration",
-    "skipToContent": "Aller au contenu"
+    "skipToContent": "Aller au contenu",
+    "loading": "Chargement de la page…"
   },
   "home": {
     "tagline": "Repérer les ruptures de médicaments avant qu’elles n’atteignent le comptoir.",
