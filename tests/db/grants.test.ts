@@ -33,17 +33,23 @@ const TABLES: Record<string, { anon?: Priv[]; authenticated?: Priv[]; service_ro
   availability_answers: { authenticated: ['select'], service_role: ALL },
   // Track D: insert is granted on columns only (organisation, time and origin come from the database).
   allocation_decisions: { authenticated: ['select'], service_role: ALL },
+  // Part 5: announcements only through announce_arrival; messages insert on columns only.
+  arrival_announcements: { authenticated: ['select'], service_role: ALL },
+  order_messages: { authenticated: ['select'], service_role: ALL },
 };
 
 const FUNCTIONS: Record<string, { anon: boolean; authenticated: boolean }> = {
+  'public.announce_arrival(uuid, date, arrival_quantity)': { anon: false, authenticated: true },
+  'public.public_arrival(uuid)': { anon: true, authenticated: true },
+  'public.order_messages_for_me(integer)': { anon: false, authenticated: true },
+  'public.pharmacy_network(integer)': { anon: false, authenticated: true },
+  'public.network_weekly(integer)': { anon: false, authenticated: true },
+  'public.daily_activity(uuid, integer, integer)': { anon: false, authenticated: true },
+  'public.demand_totals(integer)': { anon: false, authenticated: true },
   'public.search_medicines(text)': { anon: true, authenticated: true },
   'public.governorate_counts(uuid, integer, integer, timestamptz)': { anon: false, authenticated: true },
   'public.search_molecules(text)': { anon: true, authenticated: true },
   'public.report_impact(uuid, integer, integer, timestamptz)': { anon: false, authenticated: true },
-  'public.apply_signal_evaluation(uuid, signal_level, timestamptz, signal_level, timestamptz, text, jsonb, timestamptz, boolean)': {
-    anon: false,
-    authenticated: false,
-  },
   'public.apply_signal_evaluation(uuid, signal_level, timestamptz, signal_level, timestamptz, text, jsonb, timestamptz, boolean, timestamptz)': {
     anon: false,
     authenticated: false,
@@ -136,6 +142,14 @@ describe.each([
        where has_column_privilege('authenticated', 'public.allocation_decisions', c, 'insert') order by 1`,
     );
     expect(rows.map((r) => r.col)).toEqual(['applied', 'deviation_reason', 'molecule_id', 'recommended', 'stock']);
+  });
+
+  it('a signed-in user may insert into order_messages only the message and its governorates', async () => {
+    const { rows } = await db.query<{ col: string }>(
+      `select c as col from unnest(array['id', 'organisation_id', 'body', 'governorate_codes', 'sent_at', 'origin']) c
+       where has_column_privilege('authenticated', 'public.order_messages', c, 'insert') order by 1`,
+    );
+    expect(rows.map((r) => r.col)).toEqual(['body', 'governorate_codes']);
   });
 });
 

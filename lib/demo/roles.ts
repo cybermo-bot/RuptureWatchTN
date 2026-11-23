@@ -5,8 +5,22 @@
 
 import type { MessageKey } from '@/lib/i18n';
 
-export type OrganisationType = 'pharmacy' | 'wholesaler' | 'hospital_pharmacy' | 'coordinator' | 'prescriber';
-export type ProfileRole = 'pharmacist' | 'wholesaler' | 'hospital_pharmacist' | 'coordinator' | 'prescriber';
+export type OrganisationType =
+  | 'pharmacy'
+  | 'wholesaler'
+  | 'hospital_pharmacy'
+  | 'coordinator'
+  | 'prescriber'
+  | 'central_pharmacy'
+  | 'pharmacists_order';
+export type ProfileRole =
+  | 'pharmacist'
+  | 'wholesaler'
+  | 'hospital_pharmacist'
+  | 'coordinator'
+  | 'prescriber'
+  | 'central_buyer'
+  | 'order_council';
 
 /** The home page groups the roles: in the field, steering, and the public side. */
 export type RoleGroup = 'terrain' | 'pilotage' | 'public';
@@ -83,6 +97,28 @@ export const DEMO_ROLES = [
     hintKey: 'core.roles.coordinator.hint',
   },
   {
+    key: 'centrale',
+    group: 'pilotage',
+    icon: 'central',
+    email: 'demo.centrale@rupturewatch.example',
+    organisationId: '00000000-0000-4000-8000-000000000f01',
+    profileRole: 'central_buyer',
+    home: '/centrale',
+    labelKey: 'core.roles.central.label',
+    hintKey: 'core.roles.central.hint',
+  },
+  {
+    key: 'ordre',
+    group: 'pilotage',
+    icon: 'order',
+    email: 'demo.ordre@rupturewatch.example',
+    organisationId: '00000000-0000-4000-8000-000000000f02',
+    profileRole: 'order_council',
+    home: '/ordre',
+    labelKey: 'core.roles.order.label',
+    hintKey: 'core.roles.order.hint',
+  },
+  {
     key: 'medecin',
     group: 'public',
     icon: 'prescriber',
@@ -108,4 +144,6 @@ export const HOME_BY_TYPE: Record<OrganisationType, string> = {
   hospital_pharmacy: '/hopital',
   coordinator: '/coordination',
   prescriber: '/prescripteurs',
+  central_pharmacy: '/centrale',
+  pharmacists_order: '/ordre',
 };

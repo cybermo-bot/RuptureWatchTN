@@ -132,7 +132,7 @@ describe('the signal service on the real database', () => {
     const before = await db.query<{ n: number }>('select count(*)::int as n from public.signal_events');
     const result = await asCommitted(db, service, (tx) =>
       tx.query<{ applied: boolean }>(
-        `select * from public.apply_signal_evaluation($1, 'likely', now() - interval '1 day', 'watch', now(), 'x', '{}'::jsonb, now(), true)`,
+        `select * from public.apply_signal_evaluation($1, 'likely', now() - interval '1 day', 'watch', now(), 'x', '{}'::jsonb, now(), true, null)`,
         [MOL],
       ),
     );
@@ -169,7 +169,7 @@ describe('the signal service on the real database', () => {
     for (const caller of [user(USER.p1), user(USER.coordinator), { kind: 'anon' as const }]) {
       await expect(
         as(db, caller, (tx) =>
-          tx.query(`select * from public.apply_signal_evaluation($1, null, null, 'confirmed', now(), 'x', '{}'::jsonb, now(), true)`, [MOL_QUIET]),
+          tx.query(`select * from public.apply_signal_evaluation($1, null, null, 'confirmed', now(), 'x', '{}'::jsonb, now(), true, null)`, [MOL_QUIET]),
         ),
       ).rejects.toThrow(/permission denied/);
     }
