@@ -56,6 +56,9 @@ const FUNCTIONS: Record<string, { anon: boolean; authenticated: boolean }> = {
   'public.reset_tester_numbering()': { anon: false, authenticated: false },
   'public.public_status(uuid)': { anon: true, authenticated: true },
   'public.active_member_pharmacies(integer)': { anon: false, authenticated: false },
+  'public.public_molecule_status(uuid)': { anon: true, authenticated: true },
+  'public.requests_for_pharmacy(uuid)': { anon: false, authenticated: false },
+  'public.answer_request_as(uuid, uuid, availability_answer, boolean)': { anon: false, authenticated: false },
 };
 
 const ROLES = ['anon', 'authenticated', 'service_role'] as const;
