@@ -65,6 +65,15 @@ export const SHOTS: Shot[] = [
   { name: 'demande', path: `/medicaments/${AMLODIPINE_ID}/demande` },
   { name: 'pharmacie-demandes', path: '/pharmacie/demandes', role: 'pharmacie-tunis' },
   { name: 'prescripteurs-verification', path: `/prescripteurs?m=${TAMOXIFEN_ID}`, role: 'medecin' },
+  // Part 5: the institutions' spaces, and where their work shows.
+  { name: 'coordination-note', path: '/coordination/note', role: 'coordination' },
+  { name: 'centrale', path: '/centrale', role: 'centrale' },
+  { name: 'centrale-amont', path: '/centrale/amont', role: 'centrale' },
+  { name: 'ordre', path: '/ordre', role: 'ordre' },
+  { name: 'ordre-message', path: '/ordre/message', role: 'ordre' },
+  { name: 'pharmacie-alertes-sfax', path: '/pharmacie/alertes', role: 'pharmacie-sfax' },
+  { name: 'pharmacie-medicament', path: `/pharmacie/molecule/${AMLODIPINE_ID}`, role: 'pharmacie-tunis' },
+  { name: 'vues-amlodipine', path: `/vues/${AMLODIPINE_ID}` },
 ];
 
 /** One preview per role tile on the home page (role key: path). */
@@ -74,6 +83,8 @@ export const PREVIEW_SHOTS: Shot[] = [
   { name: 'hopital', path: '/hopital', role: 'hopital' },
   { name: 'grossiste', path: '/grossiste', role: 'grossiste' },
   { name: 'coordination', path: '/coordination', role: 'coordination' },
+  { name: 'centrale', path: '/centrale', role: 'centrale' },
+  { name: 'ordre', path: '/ordre', role: 'ordre' },
   { name: 'medecin', path: `/prescripteurs?m=${TAMOXIFEN_ID}`, role: 'medecin', device: 'phone' },
   { name: 'public', path: '/medicaments', device: 'phone' },
 ];

@@ -72,7 +72,7 @@ function RoleTile({ role }: { role: DemoRole }) {
   return (
     <li className={chosen && chosen !== role.key ? 'opacity-50' : ''}>
       <button type="submit" name="role" value={role.key} disabled={pending} aria-label={t('core.roles.signInAs', { role: label })} className={TILE}>
-        <Preview name={role.key} label={label} phone={role.icon === 'pharmacy'} />
+        <Preview name={role.key} label={label} phone={role.icon === 'pharmacy' || role.icon === 'prescriber'} />
         <TileBody icon={ICONS[role.icon]} label={label} hint={t(role.hintKey)} />
       </button>
     </li>
