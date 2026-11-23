@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { GOVERNORATE_SHAPES } from "@/components/GovernorateMap";
 import { LevelBadge } from "@/components/LevelBadge";
 import { OriginBadge } from "@/components/OriginBadge";
+import { PlaybookLink } from "@/components/PlaybookLink";
 import { PageHeader } from "@/components/PageHeader";
 import { SplitComparison } from "@/components/wholesaler/SplitComparison";
 import { DEMO_NEEDS, listDecisions, parseStock } from "@/lib/allocation/decisions";
@@ -118,6 +119,9 @@ export default async function SplitPage({
         initialStock={stock === null ? (stockParam ?? "") : String(stock)}
         initialShowAll={first(sp.gouvernorats) === "tous"}
         initialTarget={first(sp.cible) ?? "14"}
+        protocolLink={
+          <PlaybookLink molecule={signal.molecule_name} context="repartition" />
+        }
       />
 
       <section

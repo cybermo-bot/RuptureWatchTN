@@ -8,6 +8,7 @@ import { CatalogueLine } from '@/components/institutions/Lines';
 import { GOVERNORATE_SHAPES, GovernorateMap, type GovernorateValue } from '@/components/GovernorateMap';
 import { LevelBadge, LevelShape } from '@/components/LevelBadge';
 import { LevelExplanation } from '@/components/LevelExplanation';
+import { PlaybookLink } from '@/components/PlaybookLink';
 import { LevelChangeWatcher } from '@/components/live/LevelChangeWatcher';
 import { Origins } from '@/components/Origins';
 import { OriginBadge } from '@/components/OriginBadge';
@@ -460,6 +461,7 @@ export function SignalsDashboard({
                     </p>
                   ) : null}
                   {detailNote}
+                  <PlaybookLink molecule={selected.molecule_name} context="evenement" />
                   <p className="text-sm text-ink-muted">{t('core.guidance.disclaimer')}</p>
                 </header>
                 <div className="flex flex-col gap-6 p-4">

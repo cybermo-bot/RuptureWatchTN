@@ -12,6 +12,7 @@ import { formatDate, formatTime } from '@/lib/format';
 import { t } from '@/lib/i18n';
 import { ArrivalLine } from '@/components/institutions/Lines';
 import { OriginBadge } from '@/components/OriginBadge';
+import { PlaybookLink } from '@/components/PlaybookLink';
 import { createUserClient } from '@/lib/db/server';
 import { orderMessagesForMe, upcomingArrivals, type Arrival, type OrderMessage } from '@/lib/institutions/data';
 import { getAlerts, type AlertView } from '@/lib/pharmacy/data';
@@ -57,6 +58,7 @@ function AlertItem({ alert, arrival }: { alert: AlertView; arrival: Arrival | nu
 
         <LevelExplanation rule={alert.rule} evidence={alert.evidence} />
         {arrival && !standDown ? <ArrivalLine arrival={arrival} /> : null}
+        <PlaybookLink molecule={alert.moleculeName} context="alerte" />
 
         {standDown ? (
           <div className="flex flex-col gap-3">

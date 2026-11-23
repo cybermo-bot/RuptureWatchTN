@@ -4,6 +4,14 @@ Newest first. Each entry: what was decided, and why.
 
 ## 2026-11-24, session 6
 
+### A draft playbook for LEVETIRACETAM (part 4)
+
+- The playbook is a typed, versioned file in `lib/playbooks/` (`levetiracetam.ts`, version 0.1, status "Brouillon"), keyed by the exact CNAM molecule name. Its `signal` and `allocation` are the very objects `evaluate()` and `fairSplit()` use (`DEFAULT_PARAMS`, `ALLOCATION_PARAMS`), so a threshold changed in `params.ts` changes the playbook too; a test checks they are the same objects and that the file types no number besides its version and date. Its words are in `messages/fr/core.json` under `core.playbook`.
+- It shows its scope (the molecule, every CNAM presentation together for now, the count read from the catalogue), when it triggers (from "probable", with the thresholds and both gates), the hospital reserve and the split rule, and who can act at each level. "Who can act" lists only what the platform lets each role do today (the split from "probable", an arrival announced at "probable" or "confirmée", the public status at "confirmée" and after, and so on).
+- Three clauses wait for their reviewers, named by role only: "Priorité de continuité" (hospital pharmacy and a clinical reviewer), "Plafond de commande" (wholesaler and supply coordination), "Clause de substitution" (qualified clinical reviewers). Each says "En attente de validation" and has no content: we write none of it (rule 11). No signatory is named.
+- Read at `/methode/protocoles/levetiracetam`, from a "Protocoles par médicament" section of `/methode`. "Voir le protocole appliqué" sits on the coordination and hospital medicine panel, the wholesaler's split (next to the decision) and the pharmacy's alert, for that molecule only. No event records a playbook version yet, so the link reads "Paramètres actuels" and the page opens with that notice. Recording the version with every event and decision, and the approval itself, need a migration: after the jury build.
+- The page is public, like `/methode`: it shows rules and roles, never the medicine's current level, a count or a stock.
+
 ### Allocation comparison on the wholesaler's split page (part 3)
 
 - The split page now shows the same stock shared two ways, side by side: "Répartition proportionnelle à l'usage", labelled "Modèle de référence" (a point of comparison, not a claim about any wholesaler's practice), and "Répartition selon les jours de couverture" (`fairSplit()`), labelled "Répartition proposée". The decision is recorded on the proposed split, as before; the action recomputes it on the server.

@@ -8,6 +8,7 @@ import { sharedPageMetadata } from '@/lib/og/meta';
 import { ThresholdExplorer } from '@/components/method/ThresholdExplorer';
 import { readSources } from '@/lib/content/sources';
 import { ACTIVE_MEMBER_DAYS } from '@/lib/signals/members';
+import { PLAYBOOKS, playbookPath } from '@/lib/playbooks';
 import { t, type MessageKey } from '@/lib/i18n';
 import { DEFAULT_PARAMS, type Level, type Origin, type RuleId, type SignalParams } from '@/lib/signal';
 
@@ -83,6 +84,7 @@ const SECTIONS = [
   ['garde-fous', 'core.method.gatesTitle'],
   ['regles', 'core.method.rulesTitle'],
   ['seuils', 'core.method.paramsTitle'],
+  ['protocoles', 'core.playbook.sectionTitle'],
   ['jamais', 'core.method.neverTitle'],
   ['origine', 'core.method.originsTitle'],
   ['sources', 'core.method.sourcesTitle'],
@@ -216,6 +218,19 @@ export default function MethodPage() {
             <ThresholdExplorer noticeSource={t('core.scenario.noticeSource')} />
             <h3 className="font-semibold text-ink">{t('core.method.smallCountsTitle')}</h3>
             <p className="text-ink">{t('core.method.smallCounts')}</p>
+          </Section>
+
+          <Section id="protocoles" title={t('core.playbook.sectionTitle')}>
+            <p className="text-ink">{t('core.playbook.sectionBody')}</p>
+            <ul className="flex flex-col gap-1">
+              {PLAYBOOKS.map((p) => (
+                <li key={p.id}>
+                  <Link href={playbookPath(p)} className="inline-flex min-h-12 items-center font-medium">
+                    {t('core.playbook.open', { molecule: p.molecule, status: t('core.playbook.statusDraft').toLowerCase(), version: p.version })}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </Section>
 
           <Section id="jamais" title={t('core.method.neverTitle')}>
