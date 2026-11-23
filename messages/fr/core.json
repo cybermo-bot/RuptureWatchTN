@@ -111,6 +111,10 @@
       "label": "Coordination",
       "hint": "Carte des signaux, explication de chaque niveau, journal des décisions."
     },
+    "prescriber": {
+      "label": "Médecin prescripteur",
+      "hint": "Vérifier le niveau d’un médicament avant de prescrire, avec son explication."
+    },
     "signInAs": "Se connecter en tant que {role}",
     "switch": "Changer de rôle"
   },
@@ -118,7 +122,8 @@
     "pharmacy": "Pharmacie d’officine",
     "wholesaler": "Grossiste répartiteur",
     "hospital_pharmacy": "Pharmacie hospitalière",
-    "coordinator": "Cellule de coordination"
+    "coordinator": "Cellule de coordination",
+    "prescriber": "Cabinet médical"
   },
   "levels": {
     "none": "Aucun signal",
@@ -144,7 +149,8 @@
       "pharmacy": "Espace pharmacie",
       "wholesaler": "Espace grossiste",
       "hospital_pharmacy": "Espace pharmacie hospitalière",
-      "coordinator": "Espace coordination"
+      "coordinator": "Espace coordination",
+      "prescriber": "Vérification rapide pour les prescripteurs"
     }
   },
   "status": {
@@ -1115,5 +1121,11 @@
     "moreHint": "Répondre aux patients qui cherchent un médicament près de chez vous.",
     "hours": "{h} h",
     "noOther": "Aucune autre demande en attente."
+  },
+  "prescribers": {
+    "levelTitle": "Niveau d’alerte",
+    "since": "depuis le {date}",
+    "noSignal": "Aucun signal pour ce médicament : aucune pharmacie ne le signale, et aucun avis étranger en cours.",
+    "substitution": "Note de substitution : en attente de validation clinique."
   }
 }

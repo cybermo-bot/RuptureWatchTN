@@ -16,7 +16,8 @@
     { "id": "00000000-0000-4000-8000-000000000b01", "type": "wholesaler", "display_name": "Grossiste démo 1, Ben Arous", "governorate_code": "TN-13" },
     { "id": "00000000-0000-4000-8000-000000000b02", "type": "wholesaler", "display_name": "Grossiste démo 2, Sfax", "governorate_code": "TN-61" },
     { "id": "00000000-0000-4000-8000-000000000c01", "type": "hospital_pharmacy", "display_name": "Pharmacie hospitalière démo, Sousse", "governorate_code": "TN-51" },
-    { "id": "00000000-0000-4000-8000-000000000d01", "type": "coordinator", "display_name": "Cellule de coordination démo, Tunis", "governorate_code": "TN-11" }
+    { "id": "00000000-0000-4000-8000-000000000d01", "type": "coordinator", "display_name": "Cellule de coordination démo, Tunis", "governorate_code": "TN-11" },
+    { "id": "00000000-0000-4000-8000-000000000e01", "type": "prescriber", "display_name": "Cabinet médical démo, Tunis", "governorate_code": "TN-11" }
   ],
   "positionsNote": "Demo pharmacies only: fictional points near the centre of their governorate, a few hundred metres apart, each checked to be at least 150 m from any pharmacy listed in OpenStreetMap on 2026-11-22. public_address is deliberately not a street address."
 }

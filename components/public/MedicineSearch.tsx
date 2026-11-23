@@ -55,7 +55,8 @@ function ResultRow({ href, title, lines }: { href: string; title: string; lines:
   );
 }
 
-export function MedicineSearch({ locale }: { locale: Locale }) {
+/** linkPrefix: where a row leads, followed by the molecule id (the public status page by default). */
+export function MedicineSearch({ locale, linkPrefix = '/medicaments/', label }: { locale: Locale; linkPrefix?: string; label?: string }) {
   const t = translator(locale);
   const [q, setQ] = useState('');
   const [state, setState] = useState<State>({ kind: 'idle' });
@@ -98,7 +99,7 @@ export function MedicineSearch({ locale }: { locale: Locale }) {
   return (
     <div className="flex flex-col gap-4">
       <Input
-        label={t('public.medicines.searchLabel')}
+        label={label ?? t('public.medicines.searchLabel')}
         large
         icon={<Search size={20} />}
         type="search"
@@ -138,7 +139,7 @@ export function MedicineSearch({ locale }: { locale: Locale }) {
                     {state.molecules.map((m) => (
                       <ResultRow
                         key={m.id}
-                        href={`/medicaments/${m.id}`}
+                        href={`${linkPrefix}${m.id}`}
                         title={m.name}
                         lines={[
                           m.medicines === 1
@@ -159,7 +160,7 @@ export function MedicineSearch({ locale }: { locale: Locale }) {
                   </h2>
                   <ul className="panel hairline-list overflow-hidden">
                     {state.results.map((m) => (
-                      <ResultRow key={m.id} href={`/medicaments/${m.molecule_id}`} title={m.brand} lines={[m.label, m.molecule_name]} />
+                      <ResultRow key={m.id} href={`${linkPrefix}${m.molecule_id}`} title={m.brand} lines={[m.label, m.molecule_name]} />
                     ))}
                   </ul>
                 </section>

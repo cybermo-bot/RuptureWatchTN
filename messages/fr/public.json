@@ -179,13 +179,6 @@
     "demoButton": "Entrer comme médecin prescripteur (démo)",
     "demoNote": "Organisation de démonstration fictive, sans mot de passe.",
     "searchLabel": "Médicament à vérifier",
-    "levelTitle": "Niveau d’alerte",
-    "noSignal": "Aucun signal pour ce médicament.",
-    "rule": "Règle appliquée : {rule}",
-    "countsTitle": "Pharmacies qui signalent, par gouvernorat",
-    "countsNote": "Commandes non livrées depuis plus de 72 heures, sur les 14 derniers jours. Moins de 3 s’écrit « <3 ».",
-    "countsNone": "Aucune pharmacie ne signale ce médicament sur les 14 derniers jours.",
-    "substitution": "Note de substitution : en attente de validation clinique.",
     "method": "Comment les niveaux sont calculés",
     "signedInAs": "Connecté comme {organisation}",
     "changeRole": "Changer de rôle"

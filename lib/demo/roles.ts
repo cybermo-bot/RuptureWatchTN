@@ -5,8 +5,8 @@
 
 import type { MessageKey } from '@/lib/i18n';
 
-export type OrganisationType = 'pharmacy' | 'wholesaler' | 'hospital_pharmacy' | 'coordinator';
-export type ProfileRole = 'pharmacist' | 'wholesaler' | 'hospital_pharmacist' | 'coordinator';
+export type OrganisationType = 'pharmacy' | 'wholesaler' | 'hospital_pharmacy' | 'coordinator' | 'prescriber';
+export type ProfileRole = 'pharmacist' | 'wholesaler' | 'hospital_pharmacist' | 'coordinator' | 'prescriber';
 
 /** The home page groups the roles: in the field, steering, and the public side. */
 export type RoleGroup = 'terrain' | 'pilotage' | 'public';
@@ -82,6 +82,17 @@ export const DEMO_ROLES = [
     labelKey: 'core.roles.coordinator.label',
     hintKey: 'core.roles.coordinator.hint',
   },
+  {
+    key: 'medecin',
+    group: 'public',
+    icon: 'prescriber',
+    email: 'demo.prescripteur@rupturewatch.example',
+    organisationId: '00000000-0000-4000-8000-000000000e01',
+    profileRole: 'prescriber',
+    home: '/prescripteurs',
+    labelKey: 'core.roles.prescriber.label',
+    hintKey: 'core.roles.prescriber.hint',
+  },
 ] as const satisfies readonly DemoRole[];
 
 export type DemoRoleKey = (typeof DEMO_ROLES)[number]['key'];
@@ -96,4 +107,5 @@ export const HOME_BY_TYPE: Record<OrganisationType, string> = {
   wholesaler: '/grossiste',
   hospital_pharmacy: '/hopital',
   coordinator: '/coordination',
+  prescriber: '/prescripteurs',
 };

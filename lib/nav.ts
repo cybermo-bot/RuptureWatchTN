@@ -48,6 +48,8 @@ export const NAV: Record<OrganisationType, NavItem[]> = {
     { href: '/coordination/export', label: 'core.nav.items.export', icon: 'export' },
     { href: '/coordination/invitation', label: 'core.nav.items.invite', icon: 'invite' },
   ],
+  // The prescriber's view is one public page (/prescripteurs), outside the console.
+  prescriber: [],
 };
 
 /** The pharmacy's bottom tab bar on phones: four tabs, the report first. */
