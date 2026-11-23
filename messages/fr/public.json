@@ -53,5 +53,12 @@
   },
   "dpm": {
     "notFollowed": "Ce médicament est enregistré en Tunisie (liste DPM). Il n’est pas encore suivi par RuptureWatch, qui suit les médicaments vitaux, essentiels et intermédiaires de la liste CNAM."
+  },
+  "nav": {
+    "label": "Navigation",
+    "medicines": "Médicaments",
+    "pharmacies": "Pharmacies",
+    "past": "Ruptures passées",
+    "library": "Bibliothèque"
   }
 }
