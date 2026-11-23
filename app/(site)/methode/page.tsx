@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { LevelBadge } from '@/components/LevelBadge';
 import { OriginBadge } from '@/components/OriginBadge';
 import { PageHeader } from '@/components/PageHeader';
-import { SiteFooter, SiteHeader } from '@/components/SiteChrome';
+import { SiteFooter, SiteHeader, SiteMain } from '@/components/SiteChrome';
 import { sharedPageMetadata } from '@/lib/og/meta';
 import { ThresholdExplorer } from '@/components/method/ThresholdExplorer';
 import { readSources } from '@/lib/content/sources';
@@ -90,7 +90,7 @@ const SECTIONS = [
 
 function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   return (
-    <section id={id} aria-labelledby={`${id}-titre`} className="flex scroll-mt-4 flex-col gap-4">
+    <section id={id} aria-labelledby={`${id}-titre`} className="panel flex scroll-mt-20 flex-col gap-4 p-5 sm:p-6">
       <h2 id={`${id}-titre`} className="text-xl font-semibold text-ink">
         {title}
       </h2>
@@ -104,7 +104,7 @@ export default function MethodPage() {
   return (
     <>
       <SiteHeader />
-      <main id="contenu" className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-12 px-5 py-8 sm:px-8 sm:py-12">
+      <SiteMain>
         <PageHeader
           title={t('core.method.title')}
           description={
@@ -132,7 +132,7 @@ export default function MethodPage() {
 
         <div className="flex max-w-3xl flex-col gap-14">
           <Section id="niveaux" title={t('core.method.levelsTitle')}>
-            <dl className="hairline-list border-y border-line">
+            <dl className="hairline-list">
               {LEVELS.map((level) => (
                 <div key={level} className="grid gap-1 py-4 sm:grid-cols-[12rem_minmax(0,1fr)] sm:gap-6">
                   <dt>
@@ -169,7 +169,7 @@ export default function MethodPage() {
 
           <Section id="regles" title={t('core.method.rulesTitle')}>
             <p className="text-ink-muted">{t('core.method.rulesIntro')}</p>
-            <dl className="hairline-list border-y border-line">
+            <dl className="hairline-list">
               {RULES.map((rule) => (
                 <div key={rule} id={rule} className="flex scroll-mt-4 flex-col gap-1 py-4 target:bg-surface-subtle">
                   <dt className="flex flex-wrap items-baseline gap-x-3">
@@ -219,7 +219,7 @@ export default function MethodPage() {
           </Section>
 
           <Section id="jamais" title={t('core.method.neverTitle')}>
-            <ul className="hairline-list border-y border-line">
+            <ul className="hairline-list">
               {NEVER.map((k) => (
                 <li key={k} className="py-3 text-ink">
                   {tv(`core.method.never.${k}`)}
@@ -230,7 +230,7 @@ export default function MethodPage() {
 
           <Section id="origine" title={t('core.method.originsTitle')}>
             <p className="text-ink-muted">{t('core.method.originsIntro')}</p>
-            <dl className="hairline-list border-y border-line">
+            <dl className="hairline-list">
               {ORIGINS.map((o) => (
                 <div key={o} className="grid gap-1 py-4 sm:grid-cols-[12rem_minmax(0,1fr)] sm:gap-6">
                   <dt>
@@ -244,7 +244,7 @@ export default function MethodPage() {
 
           <Section id="sources" title={t('core.method.sourcesTitle')}>
             <p className="text-ink-muted">{t('core.method.sourcesIntro')}</p>
-            <ul className="hairline-list border-y border-line">
+            <ul className="hairline-list">
               {sources.map((s) => {
                 const slug = isKnown(s.slug) ? s.slug : null;
                 return (
@@ -273,7 +273,7 @@ export default function MethodPage() {
         <Link href="/" className="flex min-h-12 w-fit items-center">
           {t('core.method.backHome')}
         </Link>
-      </main>
+      </SiteMain>
       <SiteFooter />
     </>
   );

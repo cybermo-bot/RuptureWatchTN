@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { connection } from 'next/server';
 import { EmptyState } from '@/components/EmptyState';
 import { PageHeader } from '@/components/PageHeader';
-import { SiteFooter, SiteHeader } from '@/components/SiteChrome';
+import { SiteFooter, SiteHeader, SiteMain } from '@/components/SiteChrome';
 import { FourViewsPanels } from '@/components/views/FourViewsPanels';
 import { selectedParam } from '@/lib/coordination/dashboard';
 import { findDemoRole } from '@/lib/demo/roles';
@@ -38,7 +38,7 @@ export default async function FourViewsPage({ params }: PageProps<'/vues/[molecu
   return (
     <>
       <SiteHeader />
-      <main id="contenu" className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-8 px-5 py-8 sm:px-8 sm:py-12">
+      <SiteMain>
         {failed || !data ? (
           <EmptyState title={t('core.views.errorTitle')} body={t('core.views.errorBody')} />
         ) : (
@@ -55,7 +55,7 @@ export default async function FourViewsPage({ params }: PageProps<'/vues/[molecu
         <Link href="/vues" className="flex min-h-12 w-fit items-center">
           {t('core.views.otherMolecule')}
         </Link>
-      </main>
+      </SiteMain>
       <SiteFooter />
     </>
   );

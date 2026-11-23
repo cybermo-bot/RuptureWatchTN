@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { EmptyState } from '@/components/EmptyState';
 import { PageHeader } from '@/components/PageHeader';
 import { EpisodeCursor, type CursorEpisode } from '@/components/replay/EpisodeCursor';
-import { SiteFooter, SiteHeader } from '@/components/SiteChrome';
+import { SiteFooter, SiteHeader, SiteMain } from '@/components/SiteChrome';
 import { episodeStats, readEpisodes, type Episode } from '@/lib/content/episodes';
 import { formatDate } from '@/lib/format';
 import { t } from '@/lib/i18n';
@@ -98,7 +98,7 @@ export default function ReplayPage() {
   return (
     <>
       <SiteHeader />
-      <main id="contenu" className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-12 px-5 py-8 sm:px-8 sm:py-12">
+      <SiteMain>
         <PageHeader title={t('core.replay.title')} description={t('core.replay.intro')} />
 
         {file.status === 'absent' ? (
@@ -109,11 +109,11 @@ export default function ReplayPage() {
           <EmptyState title={t('core.replay.emptyTitle')} body={t('core.replay.emptyBody')} />
         ) : (
           <>
-            <section aria-labelledby="resume" className="flex flex-col gap-3">
+            <section aria-labelledby="resume" className="panel flex flex-col gap-3 p-5">
               <h2 id="resume" className="text-lg font-semibold text-ink">
                 {t('core.replay.statsTitle')}
               </h2>
-              <dl className="hairline-list max-w-2xl border-y border-line">
+              <dl className="hairline-list max-w-2xl">
                 <div className="flex justify-between gap-6 py-3">
                   <dt className="text-ink-muted">{t('core.replay.statEpisodes')}</dt>
                   <dd className="font-mono text-ink">{stats.episodes}</dd>
@@ -148,7 +148,7 @@ export default function ReplayPage() {
               ) : null}
             </section>
 
-            <section aria-labelledby="machine" className="flex max-w-2xl flex-col gap-4">
+            <section aria-labelledby="machine" className="panel flex flex-col gap-4 p-5">
               <div className="flex flex-col gap-1">
                 <h2 id="machine" className="text-lg font-semibold text-ink">
                   {t('core.replay.cursorTitle')}
@@ -158,11 +158,11 @@ export default function ReplayPage() {
               <EpisodeCursor episodes={cursorEpisodes} />
             </section>
 
-            <section aria-labelledby="episodes" className="flex flex-col gap-3">
+            <section aria-labelledby="episodes" className="panel flex flex-col gap-3 p-5">
               <h2 id="episodes" className="text-lg font-semibold text-ink">
                 {t('core.replay.episodesTitle')}
               </h2>
-              <ol className="hairline-list border-y border-line">
+              <ol className="hairline-list">
                 {file.episodes.map((e) => (
                   <li key={e.line} className="flex flex-col gap-3 py-6">
                     <div className="flex flex-col gap-1">
@@ -199,7 +199,7 @@ export default function ReplayPage() {
         <Link href="/methode#garde-fous" className="flex min-h-12 w-fit items-center">
           {t('core.explanation.methodLink')}
         </Link>
-      </main>
+      </SiteMain>
       <SiteFooter />
     </>
   );

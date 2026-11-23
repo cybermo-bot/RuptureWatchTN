@@ -4,7 +4,7 @@ import { connection } from 'next/server';
 import { EmptyState } from '@/components/EmptyState';
 import { LevelBadge } from '@/components/LevelBadge';
 import { PageHeader } from '@/components/PageHeader';
-import { SiteFooter, SiteHeader } from '@/components/SiteChrome';
+import { SiteFooter, SiteHeader, SiteMain } from '@/components/SiteChrome';
 import { t } from '@/lib/i18n';
 import { getFollowed } from '@/lib/pharmacy/data';
 import { listSignals, sortSignals } from '@/lib/signals/views';
@@ -33,9 +33,9 @@ export default async function ViewsIndex() {
   return (
     <>
       <SiteHeader />
-      <main id="contenu" className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-10 px-5 py-8 sm:px-8 sm:py-12">
+      <SiteMain>
         <PageHeader title={t('core.views.indexTitle')} description={t('core.views.indexIntro')} />
-        <p className="-mt-6 text-sm text-ink-muted">{t('core.views.demoLine')}</p>
+        <p className="-mt-3 text-sm text-ink-muted">{t('core.views.demoLine')}</p>
         {failed ? (
           <EmptyState title={t('core.views.errorTitle')} body={t('core.views.errorBody')} />
         ) : withSignal.length === 0 && others.length === 0 ? (
@@ -45,13 +45,13 @@ export default async function ViewsIndex() {
             action={<Link href="/scenario">{t('core.views.scenarioLink')}</Link>}
           />
         ) : (
-          <div className="flex max-w-2xl flex-col gap-10">
+          <div className="flex max-w-2xl flex-col gap-5">
             {withSignal.length ? (
-              <section aria-labelledby="avec-niveau" className="flex flex-col gap-3">
+              <section aria-labelledby="avec-niveau" className="panel flex flex-col gap-3 p-5">
                 <h2 id="avec-niveau" className="text-lg font-semibold text-ink">
                   {t('core.views.withSignal')}
                 </h2>
-                <ul className="hairline-list border-y border-line">
+                <ul className="hairline-list">
                   {withSignal.map((s) => (
                     <li key={s.molecule_id}>
                       <Link href={`/vues/${s.molecule_id}`} className="flex min-h-12 flex-wrap items-center justify-between gap-3 py-2">
@@ -64,11 +64,11 @@ export default async function ViewsIndex() {
               </section>
             ) : null}
             {others.length ? (
-              <section aria-labelledby="suivis" className="flex flex-col gap-3">
+              <section aria-labelledby="suivis" className="panel flex flex-col gap-3 p-5">
                 <h2 id="suivis" className="text-lg font-semibold text-ink">
                   {t('core.views.followed')}
                 </h2>
-                <ul className="hairline-list border-y border-line">
+                <ul className="hairline-list">
                   {others.map((f) => (
                     <li key={f.moleculeId}>
                       <Link href={`/vues/${f.moleculeId}`} className="flex min-h-12 items-center py-2 font-medium break-words">
@@ -81,7 +81,7 @@ export default async function ViewsIndex() {
             ) : null}
           </div>
         )}
-      </main>
+      </SiteMain>
       <SiteFooter />
     </>
   );

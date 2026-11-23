@@ -105,7 +105,7 @@ export function EpisodeCursor({ episodes }: { episodes: CursorEpisode[] }) {
           className="h-12 w-full accent-[var(--brand)]"
         />
       </div>
-      <div className="flex flex-col gap-2 border-y border-line py-4" aria-live="polite">
+      <div className="flex flex-col gap-2 rounded-lg bg-surface-subtle p-4" aria-live="polite">
         <p className="text-sm text-ink-muted">{t('core.replay.cursorLevel', { date: formatDate(date) })}</p>
         <LevelBadge level={result.level} className="text-base" />
         {episode.foreign ? (

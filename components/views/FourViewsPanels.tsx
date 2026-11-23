@@ -20,7 +20,7 @@ const GOV_NAME = new Map(GOVERNORATE_SHAPES.map((g) => [g.code, g.name]));
 function Panel({ panel, account, children }: { panel: PanelKey; account: ReactNode; children: ReactNode }) {
   const id = `panneau-${panel}`;
   return (
-    <section aria-labelledby={id} data-panel={panel} className="flex min-w-0 flex-col gap-5 border-t-2 border-ink pt-4">
+    <section aria-labelledby={id} data-panel={panel} className="panel flex min-w-0 flex-col gap-5 border-t-4 border-t-ink p-4">
       <div className="flex flex-col gap-1">
         <h2 id={id} className="text-lg font-semibold text-ink">
           {t(`core.views.panels.${panel}`)}

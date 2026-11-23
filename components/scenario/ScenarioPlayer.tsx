@@ -97,8 +97,8 @@ export function ScenarioPlayer() {
         </span>
       </div>
 
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-12">
-        <section aria-labelledby="etape" aria-live="polite" className="flex flex-col gap-6">
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
+        <section aria-labelledby="etape" aria-live="polite" className="panel flex flex-col gap-6 p-5">
           <div className="flex flex-col gap-2 border-b border-line pb-5">
             <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink-muted">
               <span className="font-mono">{t('core.scenario.day', { day: frame.day })}</span>
@@ -149,13 +149,13 @@ export function ScenarioPlayer() {
           {done ? <p className="border-s-2 border-level-cleared ps-3 font-medium text-ink">{t('core.scenario.end')}</p> : null}
         </section>
 
-        <div className="flex flex-col gap-8">
-          <section aria-labelledby="scenario-carte" className="flex flex-col gap-3">
+        <div className="flex flex-col gap-5">
+          <section aria-labelledby="scenario-carte" className="panel flex flex-col gap-3 p-5">
             <h2 id="scenario-carte" className="flex flex-wrap items-center gap-2 text-sm font-medium text-ink-muted">
               {t('core.coordination.mapTitle')}
               <OriginBadge origin="simulated" />
             </h2>
-            <GovernorateMap values={mapValues(frame)} title={t('core.coordination.mapTitle')} className="mx-auto w-full max-w-[16rem]" />
+            <GovernorateMap values={mapValues(frame)} title={t('core.coordination.mapTitle')} className="mx-auto w-full max-w-[18rem]" />
             {frame.counts.length > 0 ? (
               <ul className="text-sm text-ink">
                 {frame.counts.map((c) => (
@@ -168,7 +168,7 @@ export function ScenarioPlayer() {
             ) : null}
           </section>
 
-          <section aria-labelledby="scenario-historique" className="flex flex-col gap-3">
+          <section aria-labelledby="scenario-historique" className="panel flex flex-col gap-3 p-5">
             <h2 id="scenario-historique" className="flex flex-wrap items-center gap-2 text-sm font-medium text-ink-muted">
               {t('core.scenario.historyTitle')}
               <OriginBadge origin="simulated" />
@@ -176,7 +176,7 @@ export function ScenarioPlayer() {
             {changes.length === 0 ? (
               <p className="text-sm text-ink-muted">{t('core.scenario.historyEmpty')}</p>
             ) : (
-              <ol className="hairline-list border-y border-line">
+              <ol className="hairline-list">
                 {changes.map((f) => (
                   <li key={f.index} className="flex flex-wrap items-center gap-x-3 gap-y-1 py-2 text-sm">
                     <span className="font-mono text-ink-muted">{t('core.scenario.day', { day: f.day })}</span>

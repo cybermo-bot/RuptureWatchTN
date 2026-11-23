@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { GOVERNORATE_MAP_LICENCE, GOVERNORATE_SHAPES, GovernorateMap } from '@/components/GovernorateMap';
 import { PageHeader } from '@/components/PageHeader';
-import { SiteFooter, SiteHeader } from '@/components/SiteChrome';
+import { SiteFooter, SiteHeader, SiteMain } from '@/components/SiteChrome';
 import { checkHealth } from '@/lib/db/health';
 import { t } from '@/lib/i18n';
 
@@ -20,10 +20,10 @@ export default async function StatusPage() {
   return (
     <>
       <SiteHeader />
-      <main id="contenu" className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-12 px-5 py-8 sm:px-8 sm:py-12">
+      <SiteMain>
         <PageHeader title={t('core.status.title')} description={t('core.status.intro')} />
 
-        <dl className="hairline-list max-w-xl border-y border-line">
+        <dl className="panel hairline-list max-w-xl px-5">
           <div className="flex justify-between gap-6 py-3">
             <dt className="text-ink-muted">{t('core.status.database')}</dt>
             <dd className="flex items-center gap-2 font-medium text-ink">
@@ -53,7 +53,7 @@ export default async function StatusPage() {
           </div>
         </dl>
 
-        <section aria-labelledby="carte" className="flex flex-col gap-6">
+        <section aria-labelledby="carte" className="panel flex flex-col gap-6 p-5">
           <div className="flex flex-col gap-1">
             <h2 id="carte" className="text-xl font-semibold tracking-tight">
               {t('core.status.mapTitle')}
@@ -73,7 +73,7 @@ export default async function StatusPage() {
           </div>
           <p className="text-sm text-ink-muted">{t('core.status.mapSource', { source: GOVERNORATE_MAP_LICENCE })}</p>
         </section>
-      </main>
+      </SiteMain>
       <SiteFooter />
     </>
   );

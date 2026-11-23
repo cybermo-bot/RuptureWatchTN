@@ -8,8 +8,15 @@ import type { MessageKey } from '@/lib/i18n';
 export type OrganisationType = 'pharmacy' | 'wholesaler' | 'hospital_pharmacy' | 'coordinator';
 export type ProfileRole = 'pharmacist' | 'wholesaler' | 'hospital_pharmacist' | 'coordinator';
 
+/** The home page groups the roles: in the field, steering, and the public side. */
+export type RoleGroup = 'terrain' | 'pilotage' | 'public';
+/** Icon of the role's tile (Lucide, mapped in components/RolePicker.tsx). */
+export type RoleIcon = 'pharmacy' | 'hospital' | 'wholesaler' | 'ministry' | 'central' | 'order' | 'prescriber';
+
 export interface DemoRole {
   key: string;
+  group: RoleGroup;
+  icon: RoleIcon;
   email: string;
   organisationId: string;
   profileRole: ProfileRole;
@@ -22,6 +29,8 @@ export interface DemoRole {
 export const DEMO_ROLES = [
   {
     key: 'pharmacie-tunis',
+    group: 'terrain',
+    icon: 'pharmacy',
     email: 'demo.pharmacie.tunis@rupturewatch.example',
     organisationId: '00000000-0000-4000-8000-000000000a01',
     profileRole: 'pharmacist',
@@ -31,6 +40,8 @@ export const DEMO_ROLES = [
   },
   {
     key: 'pharmacie-sfax',
+    group: 'terrain',
+    icon: 'pharmacy',
     email: 'demo.pharmacie.sfax@rupturewatch.example',
     organisationId: '00000000-0000-4000-8000-000000000a06',
     profileRole: 'pharmacist',
@@ -40,6 +51,8 @@ export const DEMO_ROLES = [
   },
   {
     key: 'grossiste',
+    group: 'terrain',
+    icon: 'wholesaler',
     email: 'demo.grossiste@rupturewatch.example',
     organisationId: '00000000-0000-4000-8000-000000000b01',
     profileRole: 'wholesaler',
@@ -49,6 +62,8 @@ export const DEMO_ROLES = [
   },
   {
     key: 'hopital',
+    group: 'terrain',
+    icon: 'hospital',
     email: 'demo.hopital@rupturewatch.example',
     organisationId: '00000000-0000-4000-8000-000000000c01',
     profileRole: 'hospital_pharmacist',
@@ -58,6 +73,8 @@ export const DEMO_ROLES = [
   },
   {
     key: 'coordination',
+    group: 'pilotage',
+    icon: 'ministry',
     email: 'demo.coordination@rupturewatch.example',
     organisationId: '00000000-0000-4000-8000-000000000d01',
     profileRole: 'coordinator',

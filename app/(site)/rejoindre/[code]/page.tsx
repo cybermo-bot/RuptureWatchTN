@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { joinAsTester } from '@/app/actions/tester';
 import { Button } from '@/components/Button';
 import { OriginBadge } from '@/components/OriginBadge';
-import { SiteFooter, SiteHeader } from '@/components/SiteChrome';
+import { SiteFooter, SiteHeader, SiteMain } from '@/components/SiteChrome';
 import { createAnonClient } from '@/lib/db/server';
 import { t } from '@/lib/i18n';
 import { isValidInviteCode } from '@/lib/tester';
@@ -20,8 +20,8 @@ export default async function JoinPage({ params, searchParams }: PageProps<'/rej
   return (
     <>
       <SiteHeader />
-      <main id="contenu" className="mx-auto w-full max-w-xl flex-1 px-5 py-10 sm:px-8 sm:py-16">
-        <div className="flex flex-col gap-8">
+      <SiteMain narrow>
+        <div className="flex flex-col gap-6">
           <header className="flex flex-col gap-3">
             <h1 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">{t('core.tester.title')}</h1>
             <p className="text-ink">{t('core.tester.intro')}</p>
@@ -37,7 +37,7 @@ export default async function JoinPage({ params, searchParams }: PageProps<'/rej
             </p>
           ) : null}
 
-          <form action={joinAsTester} className="flex flex-col gap-6">
+          <form action={joinAsTester} className="panel flex flex-col gap-6 p-5">
             <input type="hidden" name="code" value={decodeURIComponent(code)} />
             <div className="flex flex-col gap-1.5">
               <label htmlFor="governorate" className="text-sm font-medium text-ink">
@@ -65,7 +65,7 @@ export default async function JoinPage({ params, searchParams }: PageProps<'/rej
             </Button>
           </form>
 
-          <div className="flex flex-col gap-2 border-t border-line pt-6 text-sm text-ink-muted">
+          <div className="flex flex-col gap-2 text-sm text-ink-muted">
             <p className="flex flex-wrap items-center gap-2">
               <span>{t('core.tester.originNote')}</span>
               <OriginBadge origin="tester" />
@@ -73,7 +73,7 @@ export default async function JoinPage({ params, searchParams }: PageProps<'/rej
             <p>{t('core.tester.deviceNote')}</p>
           </div>
         </div>
-      </main>
+      </SiteMain>
       <SiteFooter />
     </>
   );

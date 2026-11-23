@@ -27,8 +27,8 @@
       }
     },
     "levelsLabel": "Les quatre niveaux",
-    "rolesTitle": "Essayer le prototype",
-    "rolesIntro": "Choisissez un rôle. La connexion se fait en un clic, sans mot de passe.",
+    "rolesTitle": "Choisissez un rôle",
+    "rolesIntro": "Chaque rôle s’ouvre en un clic, sans mot de passe, sur son propre espace.",
     "rolesNote": "Les organisations de démonstration sont fictives. Leurs données portent la mention",
     "signedInAs": "Vous êtes connecté en tant que {role}.",
     "continue": "Continuer dans cet espace",
@@ -57,7 +57,38 @@
         "title": "Retour sur les ruptures passées",
         "body": "Des ruptures documentées en Tunisie, et ce qu’un avis étranger aurait permis de voir venir."
       }
-    }
+    },
+    "roleGroups": {
+      "terrain": "Terrain",
+      "pilotage": "Pilotage",
+      "public": "Public"
+    },
+    "roleGroupHints": {
+      "terrain": "Ceux qui voient la rupture arriver au comptoir et dans les stocks.",
+      "pilotage": "Ceux qui décident à l’échelle du pays.",
+      "public": "Sans compte, ou pour le médecin qui prescrit."
+    },
+    "publicRole": {
+      "label": "Je cherche un médicament",
+      "hint": "Côté patient, sans compte : le statut vérifié d’un médicament et les pharmacies proches."
+    },
+    "previewAlt": "Aperçu de l’espace {role}",
+    "open": "Ouvrir",
+    "national": {
+      "title": "Vue nationale en direct",
+      "source": "Calculée à l’instant à partir des signalements et des avis étrangers, lue avec le compte de démonstration de la cellule nationale.",
+      "mapTitle": "Niveau le plus grave signalé, par gouvernorat",
+      "mapNone": "Aucun signalement",
+      "listTitle": "Médicaments avec un niveau",
+      "empty": "Aucun médicament n’a de niveau pour l’instant. Lancez le scénario pour voir une rupture simulée de bout en bout.",
+      "unavailable": "La vue nationale n’est pas disponible pour l’instant. Réessayez dans un instant.",
+      "seeViews": "Ce que chaque rôle reçoit pour ce médicament",
+      "countsLabel": "Médicaments par niveau",
+      "mapLevelText": "{governorate} : {level}",
+      "simulatedNote": "Données de démonstration"
+    },
+    "scenarioTitle": "Une rupture simulée, du premier signe à la levée",
+    "scenarioBody": "Trois semaines jouées pas à pas par les vraies règles, dans votre navigateur. Rien n’est écrit dans la base."
   },
   "roles": {
     "pharmacyTunis": {
@@ -264,7 +295,12 @@
     "followedEmptyBody": "Cherchez un médicament par son nom commercial ou sa DCI, puis suivez sa molécule pour voir son niveau ici et recevoir ses alertes.",
     "since": "depuis le {date}",
     "addTitle": "Suivre un médicament",
-    "openMolecule": "Ouvrir la fiche de {molecule}"
+    "openMolecule": "Ouvrir la fiche de {molecule}",
+    "homeTitle": "Mes médicaments",
+    "followedCount": "{count} médicaments suivis",
+    "followedCountOne": "1 médicament suivi",
+    "levelsCount": "dont {count} avec un niveau",
+    "searchTitle": "Suivre un autre médicament"
   },
   "follow": {
     "searchLabel": "Rechercher un médicament",
@@ -299,7 +335,13 @@
     "deliveredAgain": "Livré à nouveau",
     "deliveredAgainHint": "Vous aviez signalé ce médicament. Dites-nous quand il vous est livré de nouveau.",
     "backToMolecule": "Retour à la fiche",
-    "rateLimited": "Beaucoup de signalements en quelques minutes depuis cette pharmacie. Rien n’a été enregistré. Réessayez dans quelques minutes."
+    "rateLimited": "Beaucoup de signalements en quelques minutes depuis cette pharmacie. Rien n’a été enregistré. Réessayez dans quelques minutes.",
+    "progressLabel": "Étape {n} sur 2",
+    "steps": {
+      "pick": "Le médicament",
+      "when": "La date de commande"
+    },
+    "changeMedicine": "Changer de médicament"
   },
   "result": {
     "title": "Signalement enregistré",
@@ -316,7 +358,13 @@
     "impactDelivered": "Votre signalement de livraison compte pour lever l’alerte quand d’autres pharmacies le confirment.",
     "impactUnavailable": "Le décompte national n’est pas disponible pour l’instant.",
     "toMolecule": "Voir la fiche du médicament",
-    "toHome": "Retour à mes médicaments"
+    "toHome": "Retour à mes médicaments",
+    "countLabelMany": "pharmacies signalent ce médicament",
+    "countLabelFew": "Moins de 3 pharmacies signalent ce médicament",
+    "countGovernorates": "dans {count} gouvernorats",
+    "countOneGovernorate": "dans un seul gouvernorat",
+    "countWindow": "sur les {days} derniers jours, la vôtre comprise",
+    "newReport": "Signaler un autre médicament"
   },
   "guidanceBlock": {
     "title": "Conduite à tenir",
@@ -940,5 +988,81 @@
       "body": "Un avis étranger aurait-il permis de les voir venir ? Chaque date renvoie à sa source.",
       "alt": "RuptureWatch TN : retour sur les ruptures passées en Tunisie, avec leurs sources."
     }
+  },
+  "nav": {
+    "label": "Navigation de l’espace",
+    "menu": "Menu",
+    "closeMenu": "Fermer le menu",
+    "tabsLabel": "Onglets de l’espace pharmacie",
+    "you": "Vous êtes",
+    "home": "Accueil du prototype",
+    "understand": "Comprendre",
+    "items": {
+      "report": "Signaler",
+      "followed": "Mes médicaments",
+      "alerts": "Alertes",
+      "more": "Plus",
+      "whatsapp": "WhatsApp",
+      "requests": "Demandes de patients",
+      "national": "Vue nationale",
+      "signals": "Signaux",
+      "export": "Export",
+      "invite": "Inviter des pharmacies",
+      "method": "Méthode",
+      "scenario": "Scénario",
+      "views": "Quatre regards",
+      "replay": "Ruptures passées",
+      "status": "État du service"
+    }
+  },
+  "toast": {
+    "region": "Changements de niveau",
+    "changed": "{molecule} : {from} → {to}",
+    "close": "Fermer"
+  },
+  "charts": {
+    "today": "aujourd’hui",
+    "fromDate": "depuis le {date}",
+    "beforeWindow": "avant le {date}",
+    "noLevel": "Aucun niveau sur les {days} derniers jours.",
+    "levelTimeline": "Niveaux sur les {days} derniers jours",
+    "reportsPerDay": "Pharmacies qui signalent, par jour",
+    "demandPerDay": "Demandes de patients, par jour",
+    "suppressed": "moins de 3",
+    "tableDay": "Jour",
+    "tableValue": "Valeur",
+    "max": "max. {value}",
+    "noData": "Aucune donnée sur les {days} derniers jours."
+  },
+  "figures": {
+    "label": "Chiffres clés",
+    "seriesText": "Sur les {days} derniers jours, du plus ancien au plus récent : {values}.",
+    "levelCount": "Médicaments « {level} »",
+    "trend14": "Courbe : 14 derniers jours"
+  },
+  "install": {
+    "title": "Ajouter à l’écran d’accueil",
+    "body": "Ouvrez RuptureWatch comme une application, en un geste, depuis l’écran d’accueil du téléphone.",
+    "action": "Ajouter à l’écran d’accueil",
+    "ios": "Sur iPhone : touchez Partager, puis « Sur l’écran d’accueil ».",
+    "other": "Dans le menu du navigateur, choisissez « Ajouter à l’écran d’accueil » ou « Installer l’application ».",
+    "dismiss": "Masquer",
+    "installed": "RuptureWatch est sur votre écran d’accueil."
+  },
+  "more": {
+    "title": "Plus",
+    "intro": "Les autres outils de la pharmacie, et le prototype.",
+    "whatsapp": "Signaler par WhatsApp",
+    "whatsappHint": "Relier un numéro, signaler en quatre gestes.",
+    "method": "Comment les niveaux sont calculés",
+    "methodHint": "Les règles, les seuils, ce que la plateforme ne fait jamais.",
+    "home": "Accueil du prototype",
+    "homeHint": "La vue nationale, les autres rôles, le scénario."
+  },
+  "site": {
+    "navLabel": "Comprendre le prototype",
+    "chooseRole": "Choisir un rôle",
+    "public": "Je cherche un médicament",
+    "footerLogo": "RuptureWatch TN"
   }
 }

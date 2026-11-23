@@ -99,7 +99,7 @@ export function ThresholdExplorer({ noticeSource }: { noticeSource: string }) {
   const changed = SETTINGS.some((k) => values[k] !== EXPLORER_DEFAULTS[k]);
 
   return (
-    <section aria-labelledby="explorer" className="flex flex-col gap-6 border-t border-line pt-6">
+    <section aria-labelledby="explorer" className="flex flex-col gap-6 rounded-lg bg-surface-subtle p-4 sm:p-5">
       <div className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center gap-3">
           <h3 id="explorer" className="font-semibold text-ink">
