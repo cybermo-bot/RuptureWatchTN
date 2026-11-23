@@ -35,6 +35,7 @@ export default async function ViewsIndex() {
       <SiteHeader />
       <main id="contenu" className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-10 px-5 py-8 sm:px-8 sm:py-12">
         <PageHeader title={t('core.views.indexTitle')} description={t('core.views.indexIntro')} />
+        <p className="-mt-6 text-sm text-ink-muted">{t('core.views.demoLine')}</p>
         {failed ? (
           <EmptyState title={t('core.views.errorTitle')} body={t('core.views.errorBody')} />
         ) : withSignal.length === 0 && others.length === 0 ? (

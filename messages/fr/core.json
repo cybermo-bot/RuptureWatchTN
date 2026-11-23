@@ -766,6 +766,7 @@
       "returned": "renvoyé"
     },
     "errorTitle": "Les comptes de démonstration ne répondent pas pour le moment",
-    "errorBody": "Réessayez dans une minute. La page n’affiche rien plutôt qu’une vue incomplète."
+    "errorBody": "Réessayez dans une minute. La page n’affiche rien plutôt qu’une vue incomplète.",
+    "demoLine": "Démonstration : comptes et données de démonstration."
   }
 }

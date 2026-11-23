@@ -45,6 +45,7 @@ export default async function FourViewsPage({ params }: PageProps<'/vues/[molecu
           <>
             <PageHeader title={t('core.views.title', { molecule: data.molecule.name })} description={t('core.views.line')} />
             <div className="flex max-w-prose flex-col gap-2 text-sm text-ink-muted">
+              <p>{t('core.views.demoLine')}</p>
               <p>{t('core.views.how')}</p>
               <p>{t('core.views.demoNote')}</p>
             </div>

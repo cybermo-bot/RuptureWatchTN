@@ -4,6 +4,12 @@ Newest first. Each entry: what was decided, and why.
 
 ## 2026-11-23, session 3
 
+### Demo shortage: amlodipine, fixed ids, undone exactly
+- `npm run demo:shortage` simulates a shortage of AMLODIPINE: 13 brands on the CNAM list, no tester reports or follows, no past episode in `episodes.csv` and no foreign notice. Amoxicillin with clavulanic acid was the first choice and was dropped because the archive holds its real 2022 episode: a simulated shortage of it would blur real and simulated data.
+- 23 not_delivered reports from 23 simulated pharmacies (10 of the seed, 13 created as "Pharmacie démo 13, Bizerte" and so on) in 13 governorates over 11 days, plus 8 patient requests. Sfax and Tunis end with 4 reporters and Sousse with 3, so the coordination map shows counts there and "<3" elsewhere. The one-click pharmacies (Tunis A, Sfax F) are not used, so a live report during the demo adds to the count.
+- The signal service is replayed at each report's time, so the level history shows the climb on the days it happened (watch, likely on day 1, confirmed on day 2, then still spreading).
+- Every row has a fixed id. `npm run demo:clear` resets the molecule's signal (`reset_molecule_signal`), then deletes those ids only, then recomputes from any other report. The run refuses to start if anyone else reported the molecule or it already has a signal, so clearing returns the database to where it was. Tested on PGlite (every public table compared row by row) and on the live project with `npm run db:fingerprint` (row count and SHA-256 per table, no new dependency).
+
 ### The "confirmed" bar scales with the network (`confirmMemberShare`)
 - The thresholds stay as they were (72 hours; likely with 2 pharmacies in 7 days; confirmed with 4 pharmacies in 2 governorates within 14 days; 2 deliveries to clear). They are design values for a pilot, and the methods page says so.
 - New parameter `confirmMemberShare: 0.02`. Pharmacies needed for "confirmée" = max(`confirmMinPharmacies`, ceil(0.02 x active member pharmacies)). Why: 4 pharmacies is a meaningful bar for a pilot of a few dozen members, but with 1,500 members four reports would be noise; the share keeps the bar proportional, and 4 stays the floor. With today's network the floor always wins, so no current level changes.
