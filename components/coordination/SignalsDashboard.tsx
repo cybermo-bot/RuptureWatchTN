@@ -5,6 +5,7 @@ import { LevelBadge } from '@/components/LevelBadge';
 import { LevelExplanation } from '@/components/LevelExplanation';
 import { Origins } from '@/components/Origins';
 import { OriginBadge } from '@/components/OriginBadge';
+import type { DecisionRow } from '@/lib/allocation/decisions';
 import { formatDate, formatTime } from '@/lib/format';
 import { t } from '@/lib/i18n';
 import { DEFAULT_PARAMS, type ForeignNotice, type Level } from '@/lib/signal';
@@ -30,6 +31,8 @@ export interface DashboardData {
   timeline: EventRow[];
   /** The whole event log, newest first. Null: not shown (hospital space). */
   events: EventRow[] | null;
+  /** Wholesalers' allocation decisions (track D), shown in the event log. Never a wholesaler's name. */
+  decisions?: DecisionRow[] | null;
 }
 
 const GOV_NAME = new Map(GOVERNORATE_SHAPES.map((g) => [g.code, g.name]));
@@ -218,7 +221,13 @@ export function Timeline({ events }: { events: EventRow[] }) {
   );
 }
 
-export function EventLog({ events }: { events: EventRow[] }) {
+type LogItem = { kind: 'event'; at: string; event: EventRow } | { kind: 'decision'; at: string; decision: DecisionRow };
+
+export function EventLog({ events, decisions = [] }: { events: EventRow[]; decisions?: DecisionRow[] }) {
+  const items: LogItem[] = [
+    ...events.map((e) => ({ kind: 'event' as const, at: e.at, event: e })),
+    ...decisions.map((d) => ({ kind: 'decision' as const, at: d.decided_at, decision: d })),
+  ].sort((a, b) => b.at.localeCompare(a.at));
   return (
     <section aria-labelledby="journal" className="flex flex-col gap-3">
       <div className="flex flex-col gap-1">
@@ -227,20 +236,38 @@ export function EventLog({ events }: { events: EventRow[] }) {
         </h2>
         <p className="text-sm text-ink-muted">{t('core.coordination.eventLogIntro')}</p>
       </div>
-      {events.length === 0 ? (
+      {items.length === 0 ? (
         <EmptyState title={t('core.coordination.eventLogEmpty')} />
       ) : (
         <ol className="hairline-list border-y border-line">
-          {events.map((e) => (
-            <li key={e.id} className="grid gap-x-6 gap-y-1 py-3 lg:grid-cols-[12rem_minmax(0,14rem)_minmax(0,1fr)]">
-              <When at={e.at} />
-              <span className="font-medium break-words text-ink">{e.molecule_name}</span>
-              <span className="flex flex-col gap-1">
-                <Change from={e.from_level} to={e.to_level} />
-                <span className="font-mono text-xs text-ink-muted">{e.rule}</span>
-              </span>
-            </li>
-          ))}
+          {items.map((item) =>
+            item.kind === 'event' ? (
+              <li key={`e${item.event.id}`} className="grid gap-x-6 gap-y-1 py-3 lg:grid-cols-[12rem_minmax(0,14rem)_minmax(0,1fr)]">
+                <When at={item.at} />
+                <span className="font-medium break-words text-ink">{item.event.molecule_name}</span>
+                <span className="flex flex-col gap-1">
+                  <Change from={item.event.from_level} to={item.event.to_level} />
+                  <span className="font-mono text-xs text-ink-muted">{item.event.rule}</span>
+                </span>
+              </li>
+            ) : (
+              <li key={`d${item.decision.id}`} className="grid gap-x-6 gap-y-1 py-3 lg:grid-cols-[12rem_minmax(0,14rem)_minmax(0,1fr)]">
+                <When at={item.at} />
+                <span className="font-medium break-words text-ink">{item.decision.molecule_name}</span>
+                <span className="flex flex-col gap-1">
+                  <span className="max-w-prose break-words text-ink">
+                    {item.decision.applied
+                      ? t('core.coordination.decisionApplied', { stock: item.decision.stock })
+                      : t('core.coordination.decisionNotApplied', { stock: item.decision.stock, reason: item.decision.deviation_reason ?? '' })}
+                  </span>
+                  <span className="flex flex-wrap items-center gap-2 text-xs text-ink-muted">
+                    <span className="font-mono">{t('core.coordination.decisionKind')}</span>
+                    <OriginBadge origin={item.decision.origin} />
+                  </span>
+                </span>
+              </li>
+            ),
+          )}
         </ol>
       )}
     </section>
@@ -310,7 +337,7 @@ export function SignalsDashboard({ data, basePath }: { data: DashboardData; base
           ) : null}
         </div>
       )}
-      {data.events ? <EventLog events={data.events} /> : null}
+      {data.events ? <EventLog events={data.events} decisions={data.decisions ?? []} /> : null}
     </div>
   );
 }

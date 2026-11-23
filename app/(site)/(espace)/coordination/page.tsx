@@ -4,6 +4,7 @@ import { SignalsDashboard } from '@/components/coordination/SignalsDashboard';
 import { LiveRefresh } from '@/components/LiveRefresh';
 import { PageHeader } from '@/components/PageHeader';
 import { getCurrentSession } from '@/lib/auth/session';
+import { listDecisions } from '@/lib/allocation/decisions';
 import { loadDashboard, selectedParam } from '@/lib/coordination/dashboard';
 import { HOME_BY_TYPE } from '@/lib/demo/roles';
 import { createUserClient } from '@/lib/db/server';
@@ -19,7 +20,14 @@ export default async function CoordinationHome({ searchParams }: PageProps<'/coo
 
   const { m } = await searchParams;
   const supabase = await createUserClient();
-  const data = await loadDashboard(supabase, selectedParam(m), { withEventLog: true });
+  const [data, decisions] = await Promise.all([
+    loadDashboard(supabase, selectedParam(m), { withEventLog: true }),
+    // Wholesalers' decisions: a coordinator reads all of them (row-level security). A failure hides them only.
+    listDecisions(supabase, null, 50).catch((error) => {
+      console.error('allocation decisions failed', error instanceof Error ? error.message : error);
+      return null;
+    }),
+  ]);
 
   return (
     <div className="flex flex-col gap-8">
@@ -39,7 +47,7 @@ export default async function CoordinationHome({ searchParams }: PageProps<'/coo
         }
       />
       <LiveRefresh table="signals" fallbackMs={4_000} />
-      <SignalsDashboard data={data} basePath="/coordination" />
+      <SignalsDashboard data={{ ...data, decisions }} basePath="/coordination" />
     </div>
   );
 }

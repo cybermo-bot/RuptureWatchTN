@@ -419,7 +419,7 @@
     "timelineTitle": "Historique des niveaux",
     "timelineEmpty": "Aucun changement de niveau enregistré pour ce médicament.",
     "eventLogTitle": "Journal des décisions",
-    "eventLogIntro": "Chaque changement de niveau, le plus récent en premier, avec la règle qui l’a décidé.",
+    "eventLogIntro": "Chaque changement de niveau avec la règle qui l’a décidé, et chaque décision de répartition d’un grossiste. Le plus récent en premier.",
     "eventLogEmpty": "Aucun changement de niveau pour l’instant.",
     "colDate": "Date",
     "colMolecule": "Médicament",
@@ -430,7 +430,10 @@
       "realtime": "Mise à jour en direct.",
       "polling": "Mise à jour toutes les quelques secondes."
     },
-    "changeTo": "devient"
+    "changeTo": "devient",
+    "decisionApplied": "Un grossiste a appliqué la répartition proposée, pour un stock de {stock} boîtes.",
+    "decisionNotApplied": "Un grossiste n’a pas appliqué la répartition proposée, pour un stock de {stock} boîtes. Raison donnée : {reason}",
+    "decisionKind": "décision de répartition"
   },
   "export": {
     "title": "Exporter les données",
