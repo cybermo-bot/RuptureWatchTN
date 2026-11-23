@@ -1,5 +1,56 @@
 {
   "page": {
-    "title": "Pharmacies ouvertes près de moi"
+    "title": "Pharmacies ouvertes près de moi",
+    "intro": "Les pharmacies autour de vous, avec leurs horaires du jour. Appuyez sur « Près de moi », ou choisissez un gouvernorat.",
+    "garde": "Pharmacies de garde : nous n’avons pas encore de source officielle. Renseignez-vous auprès de votre pharmacie ou du Conseil de l’Ordre."
+  },
+  "source": {
+    "google": "Liste issue de Google Maps. Ces pharmacies ne participent pas forcément à RuptureWatch.",
+    "osm": "Liste issue d’OpenStreetMap. Ces pharmacies ne participent pas forcément à RuptureWatch.",
+    "osmHours": "Horaires saisis dans OpenStreetMap, pour une semaine ordinaire : les jours fériés ne sont pas pris en compte. Données du {date}.",
+    "osmAttribution": "© les contributeurs d’OpenStreetMap",
+    "osmLicence": "Données sous licence ODbL"
+  },
+  "where": {
+    "or": "Ou choisissez un gouvernorat",
+    "choose": "Choisir…",
+    "positionHint": "Votre position sert à la recherche sur votre téléphone. Elle n’est jamais envoyée à RuptureWatch."
+  },
+  "filters": {
+    "legend": "Filtrer selon les horaires",
+    "now": "Ouvert maintenant",
+    "tonight": "Ouvert ce soir après 22 h",
+    "weekend": "Ouvert le week-end",
+    "weekendHint": "Le week-end : le samedi à partir de 14 h, ou le dimanche.",
+    "clear": "Retirer les filtres"
+  },
+  "list": {
+    "heading": "Pharmacies",
+    "aroundYou": "Les {count} pharmacies les plus proches de vous.",
+    "aroundGovernorate": "{count} pharmacies dans le gouvernorat de {name}.",
+    "aroundGovernorateCentre": "Les {count} pharmacies les plus proches du centre du gouvernorat de {name}. Utilisez « Près de moi » pour votre quartier.",
+    "shown": "{shown} sur {total} correspondent aux filtres.",
+    "noMatch": "Aucune pharmacie de cette liste ne correspond aux filtres.",
+    "none": "Aucune pharmacie trouvée ici.",
+    "noneBody": "Essayez « Près de moi » depuis un autre endroit, ou un autre gouvernorat.",
+    "start": "Appuyez sur « Près de moi » ou choisissez un gouvernorat pour voir les pharmacies.",
+    "loading": "Recherche des pharmacies…",
+    "error": "La recherche n’a pas abouti. Réessayez dans un instant.",
+    "unnamed": "Pharmacie (nom non renseigné)",
+    "openNow": "Ouvert maintenant",
+    "closedNow": "Fermé maintenant",
+    "noHours": "Horaires non renseignés",
+    "alwaysOpen": "Ouvert 24 h/24",
+    "today": "Aujourd’hui :",
+    "closedToday": "Fermé aujourd’hui",
+    "distanceM": "à {n} m",
+    "distanceKm": "à {n} km",
+    "call": "Appeler",
+    "directions": "Itinéraire",
+    "mapLabel": "Carte des pharmacies"
+  },
+  "osm": {
+    "unavailableTitle": "La liste de secours n’est pas encore chargée.",
+    "unavailableBody": "Google Maps n’est pas disponible pour le moment et la liste des pharmacies d’OpenStreetMap n’a pas encore été exportée. Aucune pharmacie n’est affichée plutôt qu’une liste incomplète."
   }
 }

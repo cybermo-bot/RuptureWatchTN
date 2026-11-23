@@ -29,6 +29,8 @@ const TABLES: Record<string, { anon?: Priv[]; authenticated?: Priv[]; service_ro
   availability_requests: { service_role: ALL },
   // Answers: insert is granted on columns only (id and answered_at are set by the database).
   availability_answers: { authenticated: ['select'], service_role: ALL },
+  // Track D: insert is granted on columns only (organisation, time and origin come from the database).
+  allocation_decisions: { authenticated: ['select'], service_role: ALL },
 };
 
 const FUNCTIONS: Record<string, { anon: boolean; authenticated: boolean }> = {
@@ -116,5 +118,13 @@ describe.each([
        where has_column_privilege('authenticated', 'public.availability_answers', c, 'insert') order by 1`,
     );
     expect(rows.map((r) => r.col)).toEqual(['answer', 'organisation_id', 'origin', 'request_id', 'show_identity']);
+  });
+
+  it('a signed-in user may insert into allocation_decisions only the decision itself', async () => {
+    const { rows } = await db.query<{ col: string }>(
+      `select c as col from unnest(array['id', 'molecule_id', 'organisation_id', 'stock', 'recommended', 'applied', 'deviation_reason', 'decided_at', 'origin']) c
+       where has_column_privilege('authenticated', 'public.allocation_decisions', c, 'insert') order by 1`,
+    );
+    expect(rows.map((r) => r.col)).toEqual(['applied', 'deviation_reason', 'molecule_id', 'recommended', 'stock']);
   });
 });

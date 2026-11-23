@@ -16,7 +16,11 @@
     "catalogue:import": "tsx scripts/import-catalogue.ts",
     "map:build": "tsx scripts/build-governorate-map.ts",
     "verify:clean": "tsx scripts/clean-verification.ts",
-    "notices:import": "tsx --conditions=react-server scripts/import-notices.ts"
+    "notices:import": "tsx --conditions=react-server scripts/import-notices.ts",
+    "directory:areas": "tsx scripts/build-directory-areas.ts",
+    "osm:export": "tsx scripts/export-osm-pharmacies.ts",
+    "library:import": "tsx scripts/import-library.ts",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
@@ -30,6 +34,7 @@
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.17",
+    "@playwright/test": "^1.65.1",
     "@tailwindcss/turbopack": "4.3.3",
     "@types/google.maps": "^3.67.0",
     "@types/leaflet": "^1.9.22",
@@ -40,6 +45,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.4.6",
     "exceljs": "^4.4.0",
+    "opening_hours": "^3.16.0",
     "supabase": "^3.2.0",
     "tailwindcss": "4.3.3",
     "tsx": "^4.23.15",
