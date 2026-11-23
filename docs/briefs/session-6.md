@@ -71,3 +71,20 @@ Never, as before: cream or beige, orange-and-blue pairings, decorative gradients
 7. `npm run check` passes on `main` and on the branch.
 
 Write `docs/reports/session-6.md`, with the preview link of `ui-refresh` at the top and the screenshots, so the lead can decide the merge in the morning.
+
+## 8. Small additions, after part 6 (each one small; skip any that grows)
+
+On `main` unless it is purely visual (then on `ui-refresh`). Same rules as everywhere: no pharmacy name, no level below "confirmée" on public pages, "Simulé" on simulated data, texts in the message files.
+
+1. **Fix first: the home page shows levels below "confirmée" to the public** (probable, sous surveillance), which rule 10 forbids. Keep the national picture, but frame it as what the national unit sees: title "Ce que voit la cellule nationale", the "Démonstration · données simulées" line next to it, and only simulated signals in it. A signal from tester or official data below "confirmée" never appears on a public page. Test it.
+2. **A hint strip per role.** A one-line, dismissible strip at the top of each professional space for a demo account: what to try first ("Essayez : signaler un médicament", "Essayez : changer le stock et comparer les deux répartitions", "Essayez : annoncer un arrivage"). A jury clicks around without instructions; this is their instruction. Dismissal kept in the browser only.
+3. **"Ouvrir sur votre téléphone".** On the home page (desktop only), a QR code to the public medicine search, so a judge on a laptop tries the patient side on their phone in five seconds. In the Ordre and coordination invitation screens, the same QR for the tester invitation link. One small QR library, recorded in `DECISIONS.md`.
+4. **Share a verified status.** On the public medicine page: "Partager ce statut" (Web Share API, with a WhatsApp link and copy-link as fallback). The shared text is the status sentence, the "Simulé" mention when simulated, and "Ceci n'est pas une déclaration officielle de rupture." Give each medicine page its own Open Graph card (medicine name, status, badge) with the existing share-card setup. This is the rumour check travelling into the WhatsApp groups where rumours start.
+5. **Freshness.** On the public status and the professional panels: "Mis à jour il y a 4 min", computed from the signal's last evaluation.
+6. **Status history strip on the public page.** A thin 90-day strip under the status, showing only the periods that were "confirmée" and "levée" (nothing below confirmed), like a service status page. Text equivalent. Reuse `LevelBand`.
+7. **Latest changes feed.** In the coordination space and in the home page's national picture (framed as in item 1): the last five level changes, "il y a 2 h · AMLODIPINE · Probable → Confirmée · 13 gouvernorats", from the event log. No pharmacy, `<3` rule kept.
+8. **Skeleton loading** instead of spinners or blank panels on the consoles and the patient answers page.
+9. **Keyboard in the scenario**: left and right arrows step, space plays or pauses, shown in a small "Raccourcis" line.
+10. **Optional, only if everything else is done**: a Ctrl+K quick search in the professional consoles to jump to any medicine (reuses `search_medicines`).
+
+Add each one to the done checks in the report with its result.
