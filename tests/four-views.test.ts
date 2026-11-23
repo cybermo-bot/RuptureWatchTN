@@ -20,6 +20,8 @@ const SINCE: Record<PanelKey, string> = {
   pharmacy: '2026-11-01T00:00:00.000Z',
   wholesaler: '2026-11-02T00:00:00.000Z',
   coordination: '2026-11-03T00:00:00.000Z',
+  central: '2026-11-04T00:00:00.000Z',
+  order: '2026-11-05T00:00:00.000Z',
   public: '',
 };
 
@@ -59,6 +61,10 @@ function answer(role: PanelKey, call: { rpc?: string; table?: string; ops: strin
         return signed ? ok([{ id: `event-${role}`, molecule_id: MOLECULE, from_level: 'watch', to_level: 'likely', rule: 'two_pharmacies_7d', at: SINCE[role] }]) : refused;
       case 'public_status':
         return ok([{ confirmed: false, since: null, origins: [] }]);
+      case 'pharmacy_network':
+        return role === 'order' || role === 'coordination'
+          ? ok([{ governorate_code: 'TN-61', governorate_name: 'Sfax', members: '<3', active: '<3', origins: ['simulated'] }])
+          : refused;
     }
     throw new Error(`unexpected rpc ${call.rpc}`);
   }
@@ -72,6 +78,12 @@ function answer(role: PanelKey, call: { rpc?: string; table?: string; ops: strin
       return ok(role === 'pharmacy' ? { molecule_id: MOLECULE } : null);
     case 'foreign_notices':
       return ok([]);
+    case 'medicines':
+      return ok(role === 'central' ? [{ molecule_id: MOLECULE, brand: 'BRAND A', vei_category: 'V' }] : []);
+    case 'arrival_announcements':
+      return signed
+        ? ok(role === 'central' ? [{ id: 'arrival-central', molecule_id: MOLECULE, expected_on: '2026-12-01', quantity: 'one_to_three_months', level_at_announcement: 'likely', announced_at: SINCE.central, origin: 'simulated' }] : [])
+        : refused;
     case 'reports': {
       if (!signed) return refused;
       const own = role === 'pharmacy' ? [{ id: 'report-own', kind: 'not_delivered', ordered_at: null, reported_at: SINCE.pharmacy, channel: 'web', origin: 'simulated' }] : [];
@@ -123,11 +135,20 @@ async function load() {
     pharmacy: fakeClient('pharmacy'),
     wholesaler: fakeClient('wholesaler'),
     coordination: fakeClient('coordination'),
+    central: fakeClient('central'),
+    order: fakeClient('order'),
     public: fakeClient('public'),
   };
   const data = await loadFourViews(
     MOLECULE,
-    { pharmacy: fakes.pharmacy.client, wholesaler: fakes.wholesaler.client, coordination: fakes.coordination.client, public: fakes.public.client },
+    {
+      pharmacy: fakes.pharmacy.client,
+      wholesaler: fakes.wholesaler.client,
+      coordination: fakes.coordination.client,
+      central: fakes.central.client,
+      order: fakes.order.client,
+      public: fakes.public.client,
+    },
     PHARMACY_ORG,
   );
   return { data: data!, fakes };
@@ -148,6 +169,10 @@ describe('/vues loads each panel through its own role', () => {
     expect(data.coordination.timeline.map((e) => e.id)).toEqual(['event-coordination']);
     expect(data.pharmacy.view.reports.map((r) => r.id)).toEqual(['report-own']);
     expect(data.public.status).toEqual({ confirmed: false, since: null, origins: [] });
+    expect(data.central.signal?.since).toBe(SINCE.central);
+    expect(data.central.facts).toEqual({ category: 'V', brands: 1, otherBrands: 0 });
+    expect(data.central.arrival?.id).toBe('arrival-central');
+    expect(data.order.governorates).toBe(1);
   });
 
   it('each client receives exactly the reads of its own panel', async () => {
@@ -161,6 +186,10 @@ describe('/vues loads each panel through its own role', () => {
     // The public panel has no session: its only data read is public_status (the rest are the probes).
     expect(uniq(fakes.public.recorded.rpc)).toEqual(['demand_by_governorate', 'governorate_counts', 'my_alerts', 'public_status', 'signals_view']);
     expect(uniq(fakes.public.recorded.tables)).toEqual(['molecules', 'reports']);
+    expect(uniq(fakes.central.recorded.rpc)).toEqual(['demand_by_governorate', 'governorate_counts', 'signals_view']);
+    expect(uniq(fakes.central.recorded.tables)).toEqual(['arrival_announcements', 'medicines', 'reports']);
+    expect(uniq(fakes.order.recorded.rpc)).toEqual(['demand_by_governorate', 'governorate_counts', 'pharmacy_network']);
+    expect(uniq(fakes.order.recorded.tables)).toEqual(['reports']);
   });
 
   it('shows what the database refused to each role, as tried with that role', async () => {
@@ -169,13 +198,15 @@ describe('/vues loads each panel through its own role', () => {
     expect(data.wholesaler.probes).toEqual({ reports: 'empty' });
     expect(data.coordination.probes).toEqual({ reports: 'empty' });
     expect(data.public.probes).toEqual({ signals: 'refused', counts: 'refused', demand: 'refused', alerts: 'refused', reports: 'refused' });
+    expect(data.central.probes).toEqual({ counts: 'refused', demand: 'refused', reports: 'empty' });
+    expect(data.order.probes).toEqual({ counts: 'refused', demand: 'refused', reports: 'empty' });
     for (const panel of Object.keys(PROBES) as PanelKey[]) expect(Object.keys(data[panel].probes)).toEqual(PROBES[panel]);
   });
 
   it('names a pharmacy only in its own panel', async () => {
     const { data } = await load();
     expect(data.pharmacy.organisationName).toBe(PHARMACY_NAME);
-    for (const panel of ['wholesaler', 'coordination', 'public'] as const) {
+    for (const panel of ['wholesaler', 'coordination', 'central', 'order', 'public'] as const) {
       const json = JSON.stringify(data[panel]);
       expect(json).not.toContain(PHARMACY_NAME);
       expect(json).not.toMatch(/Pharmacie (démo|testeuse)/i);
@@ -186,6 +217,8 @@ describe('/vues loads each panel through its own role', () => {
     const pub = fakeClient('public');
     pub.client.from = () => ({ select: () => ({ eq: () => ({ maybeSingle: async () => ok(null) }) }) }) as never;
     const other = fakeClient('pharmacy').client;
-    expect(await loadFourViews(MOLECULE, { pharmacy: other, wholesaler: other, coordination: other, public: pub.client }, PHARMACY_ORG)).toBeNull();
+    expect(
+      await loadFourViews(MOLECULE, { pharmacy: other, wholesaler: other, coordination: other, central: other, order: other, public: pub.client }, PHARMACY_ORG),
+    ).toBeNull();
   });
 });

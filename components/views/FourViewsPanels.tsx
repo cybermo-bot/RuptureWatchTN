@@ -1,3 +1,4 @@
+import { ArrivalLine, CatalogueLine } from '@/components/institutions/Lines';
 import type { ReactNode } from 'react';
 import { Origins } from '@/components/Origins';
 import { GOVERNORATE_SHAPES } from '@/components/GovernorateMap';
@@ -143,11 +144,17 @@ function Withheld({ probes }: { probes: Probes }) {
   );
 }
 
-export function FourViewsPanels({ data, accounts }: { data: FourViews; accounts: Record<'wholesaler' | 'coordination', string> }) {
-  const { pharmacy, wholesaler, coordination } = data;
+export function FourViewsPanels({
+  data,
+  accounts,
+}: {
+  data: FourViews;
+  accounts: Record<'wholesaler' | 'coordination' | 'central' | 'order', string>;
+}) {
+  const { pharmacy, wholesaler, coordination, central, order } = data;
   const pub = data.public;
   return (
-    <div className="grid gap-10 md:grid-cols-2 md:gap-8 xl:grid-cols-4 xl:gap-6">
+    <div className="grid gap-10 md:grid-cols-2 md:gap-8 xl:grid-cols-3 xl:gap-6">
       <Panel
         panel="pharmacy"
         account={
@@ -228,6 +235,32 @@ export function FourViewsPanels({ data, accounts }: { data: FourViews; accounts:
           )}
         </Block>
         <Withheld probes={coordination.probes} />
+      </Panel>
+
+      <Panel panel="central" account={<p>{t('core.views.account', { account: accounts.central })}</p>}>
+        <SignalBlock signal={central.signal} />
+        <Block title={t('core.views.catalogue')}>
+          {central.facts ? (
+            <p className="text-sm text-ink">
+              <CatalogueLine facts={central.facts} />
+            </p>
+          ) : (
+            <Muted>{t('core.catalogue.categoryNone')}</Muted>
+          )}
+        </Block>
+        <Block title={t('core.views.arrival')}>
+          {central.arrival ? <ArrivalLine arrival={central.arrival} /> : <Muted>{t('core.views.noArrival')}</Muted>}
+        </Block>
+        <Muted>{t('core.views.centralSees')}</Muted>
+        <Withheld probes={central.probes} />
+      </Panel>
+
+      <Panel panel="order" account={<p>{t('core.views.account', { account: accounts.order })}</p>}>
+        <Block title={t('core.views.network')}>
+          <p className="text-sm text-ink">{t('core.views.orderNetwork', { n: order.governorates })}</p>
+        </Block>
+        <Muted>{t('core.views.orderSees')}</Muted>
+        <Withheld probes={order.probes} />
       </Panel>
 
       <Panel panel="public" account={<p>{t('core.views.publicAccount')}</p>}>

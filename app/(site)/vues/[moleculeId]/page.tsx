@@ -33,6 +33,8 @@ export default async function FourViewsPage({ params }: PageProps<'/vues/[molecu
   const accounts = {
     wholesaler: t(findDemoRole(VIEW_ROLES.wholesaler)!.labelKey),
     coordination: t(findDemoRole(VIEW_ROLES.coordination)!.labelKey),
+    central: t(findDemoRole(VIEW_ROLES.central)!.labelKey),
+    order: t(findDemoRole(VIEW_ROLES.order)!.labelKey),
   };
 
   return (

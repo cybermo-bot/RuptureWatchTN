@@ -10,6 +10,8 @@
 import 'server-only';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { loadDashboard } from '@/lib/coordination/dashboard';
+import type { CatalogueFacts } from '@/lib/institutions/catalogue';
+import { loadCatalogueFacts, pharmacyNetwork, upcomingArrivals, type Arrival } from '@/lib/institutions/data';
 import { getAlerts, getMoleculeView, type AlertView, type MoleculeView } from '@/lib/pharmacy/data';
 import type { ForeignNotice } from '@/lib/signal';
 import { countingParams } from '@/lib/signals/recompute';
@@ -26,7 +28,7 @@ import {
   type SignalRow,
 } from '@/lib/signals/views';
 
-export type PanelKey = 'pharmacy' | 'wholesaler' | 'coordination' | 'public';
+export type PanelKey = 'pharmacy' | 'wholesaler' | 'coordination' | 'central' | 'order' | 'public';
 export type ViewClients = Record<PanelKey, SupabaseClient>;
 
 /** Reads tried on a role's behalf to show what the database withholds from it. */
@@ -40,6 +42,8 @@ export const PROBES: Record<PanelKey, ProbeKey[]> = {
   pharmacy: ['counts', 'demand'],
   wholesaler: ['reports'],
   coordination: ['reports'],
+  central: ['counts', 'demand', 'reports'],
+  order: ['counts', 'demand', 'reports'],
   public: ['signals', 'counts', 'demand', 'alerts', 'reports'],
 };
 
@@ -93,6 +97,19 @@ export interface CoordinationPanel {
   probes: Probes;
 }
 
+export interface CentralPanel {
+  signal: SignalRow | null;
+  facts: CatalogueFacts | null;
+  arrival: Arrival | null;
+  probes: Probes;
+}
+
+export interface OrderPanel {
+  /** Governorates with member pharmacies (counts only, from pharmacy_network). */
+  governorates: number;
+  probes: Probes;
+}
+
 export interface PublicPanel {
   status: PublicStatus;
   probes: Probes;
@@ -103,6 +120,8 @@ export interface FourViews {
   pharmacy: PharmacyPanel;
   wholesaler: WholesalerPanel;
   coordination: CoordinationPanel;
+  central: CentralPanel;
+  order: OrderPanel;
   public: PublicPanel;
 }
 
@@ -155,6 +174,26 @@ async function coordinationPanel(client: SupabaseClient, moleculeId: string): Pr
   return { signal: null, counts, demand, notices: [], timeline, probes: p };
 }
 
+async function centralPanel(client: SupabaseClient, moleculeId: string): Promise<CentralPanel> {
+  const [signals, facts, arrivals, p] = await Promise.all([
+    listSignals(client, [moleculeId]),
+    loadCatalogueFacts(client, [moleculeId]),
+    upcomingArrivals(client, [moleculeId]),
+    probes(client, 'central', moleculeId),
+  ]);
+  return {
+    signal: signals.find((s) => s.molecule_id === moleculeId) ?? null,
+    facts: facts.get(moleculeId) ?? null,
+    arrival: arrivals.get(moleculeId) ?? null,
+    probes: p,
+  };
+}
+
+async function orderPanel(client: SupabaseClient, moleculeId: string): Promise<OrderPanel> {
+  const [network, p] = await Promise.all([pharmacyNetwork(client), probes(client, 'order', moleculeId)]);
+  return { governorates: network.length, probes: p };
+}
+
 async function publicPanel(client: SupabaseClient, moleculeId: string): Promise<PublicPanel> {
   const [status, p] = await Promise.all([publicStatus(client, moleculeId), probes(client, 'public', moleculeId)]);
   return { status, probes: p };
@@ -171,12 +210,22 @@ export async function loadFourViews(
 ): Promise<FourViews | null> {
   const { data: molecule } = await clients.public.from('molecules').select('id, name').eq('id', moleculeId).maybeSingle();
   if (!molecule) return null;
-  const [pharmacy, wholesaler, coordination, pub] = await Promise.all([
+  const [pharmacy, wholesaler, coordination, central, order, pub] = await Promise.all([
     pharmacyPanel(clients.pharmacy, moleculeId, pharmacyOrganisationId),
     wholesalerPanel(clients.wholesaler, moleculeId),
     coordinationPanel(clients.coordination, moleculeId),
+    centralPanel(clients.central, moleculeId),
+    orderPanel(clients.order, moleculeId),
     publicPanel(clients.public, moleculeId),
   ]);
   if (!pharmacy) return null;
-  return { molecule: { id: molecule.id as string, name: molecule.name as string }, pharmacy, wholesaler, coordination, public: pub };
+  return {
+    molecule: { id: molecule.id as string, name: molecule.name as string },
+    pharmacy,
+    wholesaler,
+    coordination,
+    central,
+    order,
+    public: pub,
+  };
 }

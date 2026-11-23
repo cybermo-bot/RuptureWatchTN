@@ -56,16 +56,20 @@ export const VIEW_ROLES = {
   pharmacy: 'pharmacie-tunis',
   wholesaler: 'grossiste',
   coordination: 'coordination',
+  central: 'centrale',
+  order: 'ordre',
 } as const satisfies Record<Exclude<PanelKey, 'public'>, DemoRoleKey>;
 
 /** One client per panel: each signed-in panel as its own demo account, the public as nobody. */
 export async function viewClients(): Promise<ViewClients> {
-  const [pharmacy, wholesaler, coordination] = await Promise.all([
+  const [pharmacy, wholesaler, coordination, central, order] = await Promise.all([
     demoClient(VIEW_ROLES.pharmacy),
     demoClient(VIEW_ROLES.wholesaler),
     demoClient(VIEW_ROLES.coordination),
+    demoClient(VIEW_ROLES.central),
+    demoClient(VIEW_ROLES.order),
   ]);
-  return { pharmacy, wholesaler, coordination, public: anonClient() };
+  return { pharmacy, wholesaler, coordination, central, order, public: anonClient() };
 }
 
 /** The demo pharmacy's organisation, whose own name its panel may show. */
