@@ -298,7 +298,8 @@
     "failed": "Le signalement n’a pas pu être enregistré. Réessayez.",
     "deliveredAgain": "Livré à nouveau",
     "deliveredAgainHint": "Vous aviez signalé ce médicament. Dites-nous quand il vous est livré de nouveau.",
-    "backToMolecule": "Retour à la fiche"
+    "backToMolecule": "Retour à la fiche",
+    "rateLimited": "Beaucoup de signalements en quelques minutes depuis cette pharmacie. Rien n’a été enregistré. Réessayez dans quelques minutes."
   },
   "result": {
     "title": "Signalement enregistré",
@@ -378,7 +379,8 @@
     "originNote": "Vos signalements porteront la mention",
     "deviceNote": "Votre accès de testeur est lié à ce navigateur. Gardez-le pour toute la durée du test.",
     "failed": "L’inscription n’a pas abouti. Réessayez dans un instant.",
-    "invalidGovernorate": "Choisissez un gouvernorat dans la liste."
+    "invalidGovernorate": "Choisissez un gouvernorat dans la liste.",
+    "rateLimited": "Trop d’inscriptions de pharmacies testeuses dans l’heure. Rien n’a été créé. Réessayez plus tard."
   },
   "invitation": {
     "title": "Inviter des pharmaciens testeurs",

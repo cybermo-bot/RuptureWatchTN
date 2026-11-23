@@ -10,13 +10,24 @@ import { DELAY_DAYS, type DelayChoice } from '@/lib/pharmacy/delay';
 import type { Level } from '@/lib/signal';
 import { recomputeSignal } from '@/lib/signals/recompute';
 import { supabaseSignalStore } from '@/lib/signals/store';
+import { REPORTS_PER_10_MIN, TEN_MINUTES_MS } from '@/lib/limits';
 import { notifyLevelChange } from '@/lib/whatsapp/notify';
 
 const DAY = 86_400_000;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 
-export type ReportState = { status: 'idle' } | { status: 'too_early' } | { status: 'error' };
+export type ReportState = { status: 'idle' } | { status: 'too_early' } | { status: 'error' } | { status: 'rate_limited' };
+
+/** Reports filed by the signed-in pharmacy in the last ten minutes (row-level security: its own only). */
+async function recentReports(supabase: Awaited<ReturnType<typeof createUserClient>>, now: Date): Promise<number> {
+  const { count, error } = await supabase
+    .from('reports')
+    .select('id', { count: 'exact', head: true })
+    .gte('reported_at', new Date(now.getTime() - TEN_MINUTES_MS).toISOString());
+  if (error) throw new Error(`recent reports: ${error.code}`);
+  return count ?? 0;
+}
 
 async function requirePharmacy(): Promise<CurrentSession | null> {
   const session = await getCurrentSession();
@@ -76,6 +87,7 @@ export async function submitReport(_prev: ReportState, formData: FormData): Prom
 
   const now = new Date();
   const supabase = await createUserClient();
+  if ((await recentReports(supabase, now)) >= REPORTS_PER_10_MIN) return { status: 'rate_limited' };
   const { error } = await supabase.from('reports').insert({
     organisation_id: session.organisation.id,
     governorate_code: session.organisation.governorateCode,
@@ -114,6 +126,7 @@ export async function reportDeliveredAgain(formData: FormData): Promise<void> {
 
   const now = new Date();
   const supabase = await createUserClient();
+  if ((await recentReports(supabase, now)) >= REPORTS_PER_10_MIN) redirect(`/pharmacie/molecule/${moleculeId}?erreur=limite`);
   const { error } = await supabase.from('reports').insert({
     organisation_id: session.organisation.id,
     governorate_code: session.organisation.governorateCode,

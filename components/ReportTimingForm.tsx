@@ -61,6 +61,11 @@ export function ReportTimingForm({ moleculeId, headingId }: { moleculeId: string
             <p className="max-w-prose text-ink">{t('core.guidance.tooEarly.body')}</p>
           </div>
         ) : null}
+        {state.status === 'rate_limited' ? (
+          <p role="alert" className="border-s-2 border-level-confirmed ps-4 text-ink">
+            {t('core.report.rateLimited')}
+          </p>
+        ) : null}
         {state.status === 'error' ? (
           <p role="alert" className="border-s-2 border-level-confirmed ps-4 text-ink">
             {t('core.report.failed')}

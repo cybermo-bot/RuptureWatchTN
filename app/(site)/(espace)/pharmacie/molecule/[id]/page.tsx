@@ -14,8 +14,9 @@ import { getMoleculeView } from '@/lib/pharmacy/data';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-export default async function MoleculePage({ params }: PageProps<'/pharmacie/molecule/[id]'>) {
+export default async function MoleculePage({ params, searchParams }: PageProps<'/pharmacie/molecule/[id]'>) {
   const { id } = await params;
+  const { erreur } = await searchParams;
   if (!UUID.test(id)) notFound();
   const view = await getMoleculeView(id);
   if (!view) notFound();
@@ -31,6 +32,11 @@ export default async function MoleculePage({ params }: PageProps<'/pharmacie/mol
           {t('core.molecule.backHome')}
         </Link>
         <h1 className="text-2xl font-semibold tracking-tight break-words text-ink sm:text-3xl">{view.name}</h1>
+        {erreur ? (
+          <p role="alert" className="border-s-2 border-level-confirmed ps-4 text-ink">
+            {erreur === 'limite' ? t('core.report.rateLimited') : t('core.report.failed')}
+          </p>
+        ) : null}
         <form action={view.followed ? unfollowMolecule : followMolecule}>
           <input type="hidden" name="molecule_id" value={view.id} />
           <button

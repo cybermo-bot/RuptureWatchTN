@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { getCurrentSession } from '@/lib/auth/session';
 import { createServiceClient, createUserClient } from '@/lib/db/server';
 import { t } from '@/lib/i18n';
+import { HOUR_MS, TESTERS_PER_HOUR } from '@/lib/limits';
 import { isValidInviteCode } from '@/lib/tester';
 
 const GOVERNORATE = /^TN-\d{2}$/;
@@ -27,6 +28,15 @@ export async function joinAsTester(formData: FormData): Promise<void> {
   if (current?.organisation.origin === 'tester' && current.organisation.type === 'pharmacy') redirect('/pharmacie');
 
   const admin = createServiceClient();
+  const { count, error: countError } = await admin
+    .from('organisations')
+    .select('id', { count: 'exact', head: true })
+    .eq('origin', 'tester')
+    .gte('created_at', new Date(Date.now() - HOUR_MS).toISOString());
+  if (countError || (count ?? 0) >= TESTERS_PER_HOUR) {
+    if (countError) console.error('tester: count failed', { code: countError.code });
+    redirect(`${back}?erreur=limite`);
+  }
   const email = `testeur-${randomUUID()}@rupturewatch.example`;
   const password = randomBytes(32).toString('base64url');
 

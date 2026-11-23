@@ -4,6 +4,12 @@ Newest first. Each entry: what was decided, and why.
 
 ## 2026-11-23, session 3
 
+### Security pass: per-table access tests, rate limits, secret check
+- `tests/db/grants.test.ts` adds one behavioural test per table (18), on real rows: what a visitor, a pharmacy, another pharmacy, a coordinator and a wholesaler can read or write. The privilege matrix above it stays.
+- Rate limits, counted in the database (no address or device stored): 30 reports per pharmacy in 10 minutes on the web (`lib/limits.ts`; the WhatsApp webhook keeps its own, 20 messages per sender in 10 minutes); 20 new tester pharmacies per hour for the whole site, so a leaked invitation link cannot flood the network. Each limit has a plain French message; nothing is saved when it applies.
+- The pharmacy's molecule page now shows the error when "Livré à nouveau" fails (it used to redirect with `?erreur=1` and show nothing).
+- `npm run check:bundle` reads what the browser receives (local build, or `--url` for the deployed site) and looks for every server-only value of the environment and for Supabase secret-key and service_role JWT patterns; it prints names only. Not in CI, which does not build (a build needs the project's public variables); run it after a build and before a release.
+
 ### Icons and share cards
 - The mark is the "probable" shape (half-filled circle) in white on the brand colour: the product's own sign, no logo borrowed. `app/icon.svg` for browsers that take SVG; `npm run icons:build` (`scripts/build-icons.tsx`, with next/og already in Next) writes `app/favicon.ico` (PNG entries 16, 32, 48), `app/apple-icon.png` and the manifest icons. No new dependency.
 - Open Graph cards for the home page, `/scenario`, `/methode` and `/retour` (`lib/og/card.tsx`, rendered by next/og at build): white, IBM Plex Sans, title, one sentence, the four levels as shape plus word, "Prototype de démonstration". Texts in `core.og.*`. Each of those pages sets its own og:title and description.

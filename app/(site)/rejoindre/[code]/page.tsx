@@ -29,7 +29,11 @@ export default async function JoinPage({ params, searchParams }: PageProps<'/rej
 
           {erreur ? (
             <p role="alert" className="border-s-2 border-level-confirmed ps-3 text-ink">
-              {erreur === 'gouvernorat' ? t('core.tester.invalidGovernorate') : t('core.tester.failed')}
+              {erreur === 'gouvernorat'
+                ? t('core.tester.invalidGovernorate')
+                : erreur === 'limite'
+                  ? t('core.tester.rateLimited')
+                  : t('core.tester.failed')}
             </p>
           ) : null}
 
