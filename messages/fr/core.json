@@ -712,16 +712,22 @@
       "reached": "{level} au jour {day}",
       "nothing": "Aucun niveau",
       "separator": " · ",
-      "onDay": "au jour {day}",
-      "never": "jamais",
       "lines": {
-        "confirmMinPharmacies": "Avec {value} pharmacies : confirmée {when}.",
-        "confirmMinGovernorates": "Avec {value} gouvernorats : confirmée {when}.",
-        "likelyMinPharmacies": "Avec {value} pharmacies pour « probable » : probable {when}.",
-        "minUndeliveredHours": "Avec {value} heures d’attente : confirmée {when}."
+        "confirmMinPharmacies": "Avec {value} pharmacies : {outcome}.",
+        "confirmMinGovernorates": "Avec {value} gouvernorats : {outcome}.",
+        "likelyMinPharmacies": "Avec {value} pharmacies pour « probable » : {outcome}.",
+        "minUndeliveredHours": "Avec {value} heures d’attente : {outcome}.",
+        "confirmMinGovernoratesOne": "Avec un seul gouvernorat : {outcome}.",
+        "likelyMinPharmaciesOne": "Avec une seule pharmacie pour « probable » : {outcome}."
       },
       "linesTitle": "Une vraie rupture, réglage par réglage",
-      "falseLine": "Fausses alertes : confirmées {defaultWhen} avec les valeurs par défaut, {yoursWhen} avec vos réglages."
+      "falseLine": "Fausses alertes : {defaultOutcome} avec les valeurs par défaut ; {yoursOutcome} avec vos réglages.",
+      "outcome": {
+        "confirmed": "confirmée au jour {day}",
+        "confirmedNever": "jamais confirmée",
+        "likely": "probable au jour {day}",
+        "likelyNever": "jamais probable"
+      }
     }
   },
   "scenario": {

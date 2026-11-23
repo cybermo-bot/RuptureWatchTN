@@ -24,7 +24,7 @@ import type { Level } from '@/lib/signal';
 const SETTINGS = Object.keys(EXPLORER_SETTINGS) as ExplorerSetting[];
 const ORDER: Level[] = ['watch', 'likely', 'confirmed', 'cleared'];
 /** Which level each setting's line follows. */
-const LINE_LEVEL: Record<ExplorerSetting, Level> = {
+const LINE_LEVEL: Record<ExplorerSetting, 'confirmed' | 'likely'> = {
   confirmMinPharmacies: 'confirmed',
   confirmMinGovernorates: 'confirmed',
   likelyMinPharmacies: 'likely',
@@ -34,8 +34,17 @@ const LINE_LEVEL: Record<ExplorerSetting, Level> = {
 type Steps = ReturnType<typeof explorerScenarios>['real'];
 const run = (steps: Steps, v: ExplorerValues) => replay(steps, EXPLORER_START, EXPLORER_DAYS, v);
 
-const when = (r: Replay, level: Level) =>
-  r.firstDay[level] === undefined ? t('core.method.explorer.never') : t('core.method.explorer.onDay', { day: r.firstDay[level]! });
+/** "confirmée au jour 5" or "jamais confirmée", from the replay. */
+const outcome = (r: Replay, level: 'confirmed' | 'likely') =>
+  r.firstDay[level] === undefined ? t(`core.method.explorer.outcome.${level}Never`) : t(`core.method.explorer.outcome.${level}`, { day: r.firstDay[level]! });
+
+/** One sentence for one setting at one value (singular form for one). */
+function line(k: ExplorerSetting, value: number, r: Replay): string {
+  const vars = { value, outcome: outcome(r, LINE_LEVEL[k]) };
+  if (value === 1 && k === 'confirmMinGovernorates') return t('core.method.explorer.lines.confirmMinGovernoratesOne', vars);
+  if (value === 1 && k === 'likelyMinPharmacies') return t('core.method.explorer.lines.likelyMinPharmaciesOne', vars);
+  return t(`core.method.explorer.lines.${k}`, vars);
+}
 
 function milestones(r: Replay): string {
   const parts = ORDER.filter((l) => r.firstDay[l] !== undefined).map((l) =>
@@ -81,12 +90,8 @@ export function ThresholdExplorer({ noticeSource }: { noticeSource: string }) {
   const lines = useMemo(
     () =>
       SETTINGS.map((k) => {
-        const level = LINE_LEVEL[k];
-        const text = [t(`core.method.explorer.lines.${k}`, { value: EXPLORER_DEFAULTS[k], when: when(base.real, level) })];
-        if (values[k] !== EXPLORER_DEFAULTS[k]) {
-          const alone = run(scenarios.real, { ...EXPLORER_DEFAULTS, [k]: values[k] });
-          text.push(t(`core.method.explorer.lines.${k}`, { value: values[k], when: when(alone, level) }));
-        }
+        const text = [line(k, EXPLORER_DEFAULTS[k], base.real)];
+        if (values[k] !== EXPLORER_DEFAULTS[k]) text.push(line(k, values[k], run(scenarios.real, { ...EXPLORER_DEFAULTS, [k]: values[k] })));
         return { k, text: text.join(' ') };
       }),
     [base, scenarios, values],
@@ -162,7 +167,7 @@ export function ThresholdExplorer({ noticeSource }: { noticeSource: string }) {
           ))}
         </ul>
         <p className="max-w-prose text-ink">
-          {t('core.method.explorer.falseLine', { defaultWhen: when(base.falseAlarm, 'confirmed'), yoursWhen: when(yours.falseAlarm, 'confirmed') })}
+          {t('core.method.explorer.falseLine', { defaultOutcome: outcome(base.falseAlarm, 'confirmed'), yoursOutcome: outcome(yours.falseAlarm, 'confirmed') })}
         </p>
       </div>
     </section>
