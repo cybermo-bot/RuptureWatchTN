@@ -43,6 +43,8 @@ interface PatientMapProps {
   zoom?: number;
   /** Show the "Près de moi" button. */
   nearMe?: boolean;
+  /** Frame the markers each time they change (one marker: centred, street level). */
+  fitToMarkers?: boolean;
   onPosition?: (position: LatLng) => void;
   onProvider?: (provider: MapProvider) => void;
   className?: string;
@@ -57,7 +59,7 @@ const INK = '#10201B';
 type Status = 'loading' | MapProvider;
 
 interface MapHandle {
-  setMarkers(markers: MapMarker[]): void;
+  setMarkers(markers: MapMarker[], fit?: boolean): void;
   showPosition(p: LatLng, label: string): void;
   destroy(): void;
 }
@@ -131,7 +133,7 @@ async function createGoogleMap(el: HTMLElement, center: LatLng, zoom: number, ma
   let pins: google.maps.marker.AdvancedMarkerElement[] = [];
   let you: google.maps.marker.AdvancedMarkerElement | null = null;
   return {
-    setMarkers(markers) {
+    setMarkers(markers, fit = false) {
       for (const p of pins) p.map = null;
       pins = markers.map((m) => {
         const pin = new PinElement({ background: BRAND, borderColor: INK, glyphColor: '#FFFFFF' });
@@ -142,6 +144,14 @@ async function createGoogleMap(el: HTMLElement, center: LatLng, zoom: number, ma
         });
         return marker;
       });
+      if (fit && markers.length === 1) {
+        map.setCenter(markers[0]);
+        map.setZoom(15);
+      } else if (fit && markers.length > 1) {
+        const bounds = new google.maps.LatLngBounds();
+        for (const m of markers) bounds.extend(m);
+        map.fitBounds(bounds, 48);
+      }
     },
     showPosition(p, label) {
       if (you) you.map = null;
@@ -171,13 +181,16 @@ async function createOsmMap(el: HTMLElement, center: LatLng, zoom: number, isCan
   const layer = L.layerGroup().addTo(map);
   let you: L.CircleMarker | null = null;
   return {
-    setMarkers(markers) {
+    setMarkers(markers, fit = false) {
       layer.clearLayers();
       for (const m of markers) {
         L.circleMarker([m.lat, m.lng], { radius: 9, color: INK, weight: 2, fillColor: BRAND, fillOpacity: 0.9 })
           .bindTooltip(m.label)
           .bindPopup(popupNode(m))
           .addTo(layer);
+      }
+      if (fit && markers.length > 0) {
+        map.fitBounds(L.latLngBounds(markers.map((m) => [m.lat, m.lng] as [number, number])), { padding: [32, 32], maxZoom: 15 });
       }
     },
     showPosition(p, label) {
@@ -200,6 +213,7 @@ export function PatientMap({
   center = TUNISIA,
   zoom = 6,
   nearMe = true,
+  fitToMarkers = false,
   onPosition,
   onProvider,
   className = 'h-80 sm:h-96',
@@ -227,7 +241,7 @@ export function PatientMap({
       if (!h) return;
       if (cancelled) return h.destroy();
       handle.current = h;
-      h.setMarkers(markersRef.current);
+      h.setMarkers(markersRef.current, fitToMarkers);
       setStatus('osm');
       onProvider?.('osm');
     };
@@ -241,7 +255,7 @@ export function PatientMap({
         const h = await createGoogleMap(el, center, zoom, mapId);
         if (cancelled) return h.destroy();
         handle.current = h;
-        h.setMarkers(markersRef.current);
+        h.setMarkers(markersRef.current, fitToMarkers);
         setStatus('google');
         onProvider?.('google');
       } catch {
@@ -260,8 +274,8 @@ export function PatientMap({
 
   useEffect(() => {
     markersRef.current = markers;
-    handle.current?.setMarkers(markers);
-  }, [markers]);
+    handle.current?.setMarkers(markers, fitToMarkers);
+  }, [markers, fitToMarkers]);
 
   const locate = useCallback(() => {
     if (!('geolocation' in navigator)) {

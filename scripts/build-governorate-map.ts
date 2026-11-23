@@ -152,6 +152,9 @@ function main() {
     source: 'geoBoundaries gbOpen TUN ADM1 (2017), OpenStreetMap',
     licence: 'ODbL 1.0, © OpenStreetMap contributors, via geoBoundaries (www.geoboundaries.org)',
     viewBox: `0 0 ${width} ${HEIGHT}`,
+    // How a position (degrees) becomes map units: x = (lon - minLon) * k * scale,
+    // y = (maxLat - lat) * scale. Lets a phone find its governorate without sending its position.
+    projection: { minLon, maxLat, k, scale },
     governorates,
   };
   const json = `${JSON.stringify(out)}\n`;
