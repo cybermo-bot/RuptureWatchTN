@@ -158,8 +158,10 @@ async function createGoogleMap(el: HTMLElement, center: LatLng, zoom: number, ma
   };
 }
 
-async function createOsmMap(el: HTMLElement, center: LatLng, zoom: number): Promise<MapHandle> {
+async function createOsmMap(el: HTMLElement, center: LatLng, zoom: number, isCancelled: () => boolean): Promise<MapHandle | null> {
   const L = (await import('leaflet')).default;
+  // In development React runs effects twice: the first run must not create a map on the element.
+  if (isCancelled()) return null;
   const map = L.map(el, { center: [center.lat, center.lng], zoom, scrollWheelZoom: false });
   map.attributionControl.setPrefix('<a href="https://leafletjs.com">Leaflet</a>');
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -221,7 +223,8 @@ export function PatientMap({
       if (cancelled) return;
       handle.current?.destroy();
       el.replaceChildren();
-      const h = await createOsmMap(el, center, zoom);
+      const h = await createOsmMap(el, center, zoom, () => cancelled);
+      if (!h) return;
       if (cancelled) return h.destroy();
       handle.current = h;
       h.setMarkers(markersRef.current);
