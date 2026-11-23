@@ -7,6 +7,8 @@
 //   - tester pharmacies (origin tester), their profiles, follows and auth users;
 //   - reports by the demo pharmacies and by those testers;
 //   - follows added by the demo pharmacies, except those in supabase/seed/demo-follows.json;
+//   - arrival announcements by the demo centrale and messages by the demo Ordre (a level never
+//     depends on them, so nothing needs recomputing);
 //   - the signal state (alerts, event log, signal row) of every molecule those reports touched,
 //     through reset_molecule_signal(), the only sanctioned way to clear the event log.
 // Then restarts tester numbering at 1 (reset_tester_numbering), which does nothing while any
@@ -32,6 +34,8 @@ async function main() {
   }
   const supabase = serviceClient();
   const demoPharmacies = DEMO_ROLES.filter((r) => r.home === '/pharmacie').map((r) => r.organisationId);
+  const demoCentral = DEMO_ROLES.filter((r) => r.home === '/centrale').map((r) => r.organisationId);
+  const demoOrder = DEMO_ROLES.filter((r) => r.home === '/ordre').map((r) => r.organisationId);
 
   const { data: testers, error: testerError } = await supabase
     .from('organisations')
@@ -58,6 +62,22 @@ async function main() {
   console.log(`  tester pharmacies: ${testers?.map((o) => o.display_name).join('; ') || 'none'}`);
   console.log(`  reports: ${reports?.length ?? 0}`);
   console.log(`  molecules to reset: ${molecules.length}`);
+  const { data: arrivals, error: arrivalError } = await supabase
+    .from('arrival_announcements')
+    .select('id, expected_on, molecules ( name )')
+    .in('organisation_id', demoCentral)
+    .gte('announced_at', since);
+  if (arrivalError) throw new Error(`arrival announcements: ${arrivalError.message}`);
+  const { data: messages, error: messageError } = await supabase
+    .from('order_messages')
+    .select('id, body')
+    .in('organisation_id', demoOrder)
+    .gte('sent_at', since);
+  if (messageError) throw new Error(`order messages: ${messageError.message}`);
+  for (const a of arrivals ?? []) {
+    console.log(`  arrival announcement: ${(a.molecules as unknown as { name: string } | null)?.name ?? '?'}, ${a.expected_on}`);
+  }
+  for (const m of messages ?? []) console.log(`  Ordre message: ${String(m.body).slice(0, 60)}`);
   if (!apply) {
     console.log('Dry run. Add --apply to remove.');
     return;
@@ -71,6 +91,14 @@ async function main() {
   if (reports?.length) {
     const { error } = await supabase.from('reports').delete().in('id', reports.map((r) => r.id as string));
     if (error) throw new Error(`delete reports: ${error.message}`);
+  }
+  if (arrivals?.length) {
+    const { error } = await supabase.from('arrival_announcements').delete().in('id', arrivals.map((a) => a.id as string));
+    if (error) throw new Error(`delete arrival announcements: ${error.message}`);
+  }
+  if (messages?.length) {
+    const { error } = await supabase.from('order_messages').delete().in('id', messages.map((m) => m.id as string));
+    if (error) throw new Error(`delete Ordre messages: ${error.message}`);
   }
   // Follows added during the run, but never the seeded ones (re-seeding may postdate --since).
   const seeded = (JSON.parse(readFileSync(join(ROOT, 'supabase/seed/demo-follows.json'), 'utf8')) as { molecules: string[] })
