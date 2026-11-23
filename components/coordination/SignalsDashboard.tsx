@@ -8,6 +8,7 @@ import { CatalogueLine } from '@/components/institutions/Lines';
 import { GOVERNORATE_SHAPES, GovernorateMap, type GovernorateValue } from '@/components/GovernorateMap';
 import { LevelBadge, LevelShape } from '@/components/LevelBadge';
 import { LevelExplanation } from '@/components/LevelExplanation';
+import { MissingLine } from '@/components/MissingLine';
 import { PlaybookLink } from '@/components/PlaybookLink';
 import { LevelChangeWatcher } from '@/components/live/LevelChangeWatcher';
 import { Origins } from '@/components/Origins';
@@ -455,6 +456,7 @@ export function SignalsDashboard({
                     <Origins origins={selected.evidence.origins} />
                   </p>
                   <LevelExplanation rule={selected.rule} evidence={selected.evidence} showRule methodLink />
+                  <MissingLine level={selected.level} rule={selected.rule} evidence={selected.evidence} />
                   {facts?.get(selected.molecule_id) ? (
                     <p className="text-sm text-ink-muted">
                       <CatalogueLine facts={facts.get(selected.molecule_id)} />

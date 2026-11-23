@@ -4,6 +4,13 @@ Newest first. Each entry: what was decided, and why.
 
 ## 2026-11-24, session 6
 
+### "Ce qui manque" beside a level (part 5)
+
+- One line on the coordination, hospital (and wholesaler) medicine panel and the prescriber check says which condition is still missing for the next level: "Pour « Confirmée », il manque un deuxième gouvernorat.", "… des signalements d’autres pharmacies, jusqu’au seuil de « confirmée »", for "confirmée" what "levée" needs. Nothing at "levée".
+- Computed by `missingForNextLevel()` (`lib/signals/missing.ts`) from the evaluator's own output: the level, the rule that fired and the evidence, against `DEFAULT_PARAMS` and `confirmPharmaciesNeeded()` from `lib/signal`. No threshold is typed there. Tests in `tests/missing.test.ts` run `evaluate()` and check the line against its result (four pharmacies in one governorate: only the second governorate is missing; moved to two governorates: the evaluator confirms).
+- On real data the line names the condition and never prints a computed count of pharmacies (a test runs every small case and allows only days and design parameters). When the shown evidence reads "<3" "livré à nouveau" reports and the bar is 2, the count may already be enough: the line then says "s’il n’y en a pas encore assez" rather than claim it is missing. The scenario can pass `exact: true` and get exact counts.
+- The confirm bar uses the floor (`confirmMinPharmacies`) on screens, where the active member count is not loaded; it only decides whether "more pharmacies" is listed, and no number is printed on real data.
+
 ### A draft playbook for LEVETIRACETAM (part 4)
 
 - The playbook is a typed, versioned file in `lib/playbooks/` (`levetiracetam.ts`, version 0.1, status "Brouillon"), keyed by the exact CNAM molecule name. Its `signal` and `allocation` are the very objects `evaluate()` and `fairSplit()` use (`DEFAULT_PARAMS`, `ALLOCATION_PARAMS`), so a threshold changed in `params.ts` changes the playbook too; a test checks they are the same objects and that the file types no number besides its version and date. Its words are in `messages/fr/core.json` under `core.playbook`.

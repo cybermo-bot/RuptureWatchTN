@@ -6,6 +6,7 @@ import { buttonClass } from '@/components/Button';
 import { GovernoratePanel } from '@/components/coordination/SignalsDashboard';
 import { LevelBadge } from '@/components/LevelBadge';
 import { LevelExplanation } from '@/components/LevelExplanation';
+import { MissingLine } from '@/components/MissingLine';
 import { Origins } from '@/components/Origins';
 import { PageHeader } from '@/components/PageHeader';
 import { MedicineSearch } from '@/components/public/MedicineSearch';
@@ -54,7 +55,10 @@ async function MoleculeCheck({ moleculeId }: { moleculeId: string }) {
           </p>
         </div>
         {signal && level !== 'none' ? (
-          <LevelExplanation rule={signal.rule} evidence={signal.evidence} showRule />
+          <>
+            <LevelExplanation rule={signal.rule} evidence={signal.evidence} showRule />
+            <MissingLine level={level} rule={signal.rule} evidence={signal.evidence} />
+          </>
         ) : (
           <p className="text-ink">{french('core.prescribers.noSignal')}</p>
         )}

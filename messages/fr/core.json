@@ -317,7 +317,8 @@
     "fewerThan3": "moins de 3",
     "back": "Retour",
     "dateAt": "{date} à {time}",
-    "sending": "Envoi…"
+    "sending": "Envoi…",
+    "colon": " : "
   },
   "pharmacy": {
     "reportCta": "Signaler une commande non livrée",
@@ -1308,7 +1309,7 @@
     "approvalBody": "Trois clauses restent à écrire et à valider par les rôles proposés. Leur contenu ne vient pas de l’équipe du prototype : il sera rédigé et signé par des professionnels qualifiés. Aucun signataire n’est désigné.",
     "reviewersLabel": "Relecture proposée",
     "stateLabel": "État",
-    "clauseEmpty": "Contenu : en attente de validation clinique.",
+    "clauseEmpty": "Contenu : à rédiger par les rôles proposés, en attente de validation.",
     "clauses": {
       "continuity": "Priorité de continuité",
       "orderCap": "Plafond de commande",
@@ -1350,5 +1351,27 @@
     "showcaseNote": "{molecule} est aussi le médicament « confirmée » de la démonstration nationale, avec des données simulées.",
     "linkMeta": "{status} v{version} · {current}",
     "currentParamsLead": "Paramètres actuels."
+  },
+  "missing": {
+    "label": "Ce qui manque",
+    "line": "Pour « {level} », il manque {items}.",
+    "and": "et",
+    "firstEvidence": "un premier signalement de pharmacie ou un avis d’un régulateur étranger",
+    "localReports": "des signalements de pharmacies en Tunisie : un avis étranger seul reste à « sous surveillance »",
+    "likelyPharmacies": "des signalements d’autres pharmacies dans les {days} jours, ou un avis d’un régulateur étranger",
+    "likelyPharmaciesOne": "{n} pharmacie de plus dans les {days} jours, ou un avis d’un régulateur étranger",
+    "likelyPharmaciesMany": "{n} pharmacies de plus dans les {days} jours, ou un avis d’un régulateur étranger",
+    "confirmPharmacies": "des signalements d’autres pharmacies, jusqu’au seuil de « confirmée »",
+    "confirmPharmaciesWithGovernorates": "des signalements d’autres pharmacies, jusqu’au seuil de « confirmée », dans au moins {gov} gouvernorats",
+    "confirmPharmaciesOne": "{n} pharmacie de plus sur {days} jours",
+    "confirmPharmaciesMany": "{n} pharmacies de plus sur {days} jours",
+    "secondGovernorate": "un deuxième gouvernorat",
+    "governorates": "{n} gouvernorats de plus",
+    "delivered": "des signalements « livré à nouveau » d’au moins {n} pharmacies",
+    "deliveredOne": "{n} pharmacie de plus qui signale le médicament livré à nouveau",
+    "deliveredMany": "{n} pharmacies de plus qui signalent le médicament livré à nouveau",
+    "quietOne": "encore {n} jour sans nouvelle commande non livrée",
+    "quietMany": "encore {n} jours sans nouvelle commande non livrée",
+    "deliveredIfNotYet": "des signalements « livré à nouveau » d’au moins {n} pharmacies, s’il n’y en a pas encore assez"
   }
 }
