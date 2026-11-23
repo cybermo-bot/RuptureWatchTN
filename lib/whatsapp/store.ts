@@ -4,6 +4,7 @@
 
 import 'server-only';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { matchesDpm } from '@/lib/dpm/match';
 import { DELAY_DAYS, type CountedDelay } from '@/lib/pharmacy/delay';
 import type { Level, RuleId } from '@/lib/signal';
 import { recomputeSignal, type RecomputeResult } from '@/lib/signals/recompute';
@@ -90,9 +91,8 @@ export function supabaseBotDeps(client: SupabaseClient, hooks: ReportHooks = {})
       return out;
     },
 
-    // Wired to the DPM list in lib/dpm (session 3, section 5).
-    async dpmMatch() {
-      return false;
+    async dpmMatch(query) {
+      return matchesDpm(query);
     },
 
     async molecule(moleculeId): Promise<MoleculeStatus | null> {

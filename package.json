@@ -23,7 +23,8 @@
     "directory:areas": "tsx scripts/build-directory-areas.ts",
     "osm:export": "tsx scripts/export-osm-pharmacies.ts",
     "library:import": "tsx scripts/import-library.ts",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "dpm:build": "tsx scripts/build-dpm-list.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

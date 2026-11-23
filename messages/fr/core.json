@@ -656,6 +656,21 @@
       },
       "unknown": {
         "use": "Voir data/SOURCES.md."
+      },
+      "dpm": {
+        "name": "Liste des DCI enregistrées en Tunisie (DPM)",
+        "use": "Les noms seulement : quand une recherche ne trouve rien dans le catalogue mais correspond à un nom de cette liste, la réponse dit que le médicament est enregistré en Tunisie mais pas suivi par RuptureWatch.",
+        "licence": "Page publique de la Direction de la Pharmacie et du Médicament ; aucune licence de réutilisation indiquée. Citée par son nom et son lien."
+      },
+      "episodes": {
+        "name": "Ruptures passées en Tunisie",
+        "use": "Le retour sur les ruptures passées et leur archive : chaque date vient d’une source publique citée.",
+        "licence": "Compilé par l’équipe à partir de sources publiques (articles de presse, communiqués), un lien par fait."
+      },
+      "foreign": {
+        "name": "Avis de pénurie d’autorités étrangères",
+        "use": "Les avis étrangers dans les règles d’alerte. Seuls, ils ne font jamais dépasser « sous surveillance ».",
+        "licence": "Compilé par l’équipe à partir des pages publiques des autorités ; chaque avis nomme son autorité et son lien."
       }
     },
     "backHome": "Retour à l’accueil",

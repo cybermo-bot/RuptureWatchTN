@@ -33,7 +33,7 @@ describe('methods page', () => {
 
   it('has a French name, use and licence for every source in data/SOURCES.md', () => {
     const sources = readSources(ROOT);
-    expect(sources.map((s) => s.slug)).toEqual(['cnam', 'geoboundaries', 'iso', 'meta', 'openstreetmap', 'bdpm']);
+    expect(sources.map((s) => s.slug)).toEqual(['cnam', 'geoboundaries', 'iso', 'meta', 'openstreetmap', 'bdpm', 'dpm', 'episodes', 'foreign']);
     for (const s of sources) {
       const fr = core.method.sources[s.slug];
       expect(fr?.name && fr.use && fr.licence, s.slug).toBeTruthy();

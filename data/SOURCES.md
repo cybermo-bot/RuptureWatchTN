@@ -63,3 +63,26 @@ Test fixtures in `tests/fixtures/whatsapp/` follow the documented example payloa
   - 15,845 products, 15,843 compositions, 12,550 products with at least one condition. 303 of the 548 CNAM molecules matched, 4,182 French products kept.
 - **Licence:** Licence Ouverte under article L. 161-40-1 of the code de la sécurité sociale (https://base-donnees-publique.medicaments.gouv.fr/docs/telechargement/licence_bdpm.pdf): data not altered and its meaning not distorted, source and update date cited, no endorsement by the ANSM, the HAS or the UNCAM implied. The Library page cites the source and the download date.
 - **Produced:** `data/reference/library-fr.json` by `scripts/import-library.ts`: for each CNAM molecule, the active French products with exactly the same substances (normalised names, no fuzzy matching), and their French conditions of prescription, word for word. French status only, labelled "Statut en France, pas en Tunisie".
+
+## DPM: liste des DCI enregistrées en Tunisie
+
+- **Publisher:** Direction de la Pharmacie et du Médicament (DPM), Ministry of Health, Tunisia.
+- **Page:** https://dpm.tn/index.php/medicaments-a-usage-humain/liste-des-dci
+- **Saved as:** `data/reference/dpm-dci.raw.txt`, the list as copied from the page by the team.
+- **Cleaned:** `npm run dpm:build` (`scripts/build-dpm-list.ts`) writes `data/reference/dpm-dci.csv` and `dpm-dci.json`: names deduplicated, with an `in_cnam_vei` flag (the name, salts removed, is a CNAM VEI molecule or a component of one). The list also holds excipients, homeopathic stocks and old registrations, kept as published.
+- **Use:** names only. When a search finds nothing in the catalogue but matches a name outside the CNAM list, the answer says the medicine is registered in Tunisia but not followed. Never added to `molecules`: these names cannot be reported or followed.
+- **Terms:** public page; no reuse licence stated. Cited by name and link.
+
+## Episodes: past shortages in Tunisia
+
+- **Compiled by:** the team, from public sources (press articles, official statements), one link per fact in the file. The episodes and their links are shown on https://rupturewatch-tn.vercel.app/retour
+- **File:** `data/reference/episodes.csv`: for each episode, the first public report in Tunisia with its link, the end when known with its link, and the first foreign notice with its regulator and link.
+- **Use:** the replay on `/retour` and the archive of past shortages.
+- **Terms:** facts with their sources; each source keeps its own terms.
+
+## Foreign notices: shortage notices of foreign regulators
+
+- **Compiled by:** the team, from the regulators' public shortage pages (for the ANSM: https://ansm.sante.fr/disponibilites-des-produits-de-sante/medicaments), one link per notice in the file.
+- **File:** `data/reference/foreign_notices.csv`, imported with `npm run notices:import` (dry run first, then `--apply`).
+- **Use:** foreign notices in the warning logic (alone they never raise a medicine above "sous surveillance"). Each notice names its regulator.
+- **Terms:** each notice keeps its regulator's terms; cited by regulator and link.
