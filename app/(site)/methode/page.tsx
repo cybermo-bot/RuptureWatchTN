@@ -5,6 +5,7 @@ import { OriginBadge } from '@/components/OriginBadge';
 import { PageHeader } from '@/components/PageHeader';
 import { SiteFooter, SiteHeader } from '@/components/SiteChrome';
 import { readSources } from '@/lib/content/sources';
+import { ACTIVE_MEMBER_DAYS } from '@/lib/signals/members';
 import { t, type MessageKey } from '@/lib/i18n';
 import { DEFAULT_PARAMS, type Level, type Origin, type RuleId, type SignalParams } from '@/lib/signal';
 
@@ -20,6 +21,8 @@ const VARS = {
   likelyMin: P.likelyMinPharmacies,
   confirmMin: P.confirmMinPharmacies,
   confirmGov: P.confirmMinGovernorates,
+  sharePct: Math.round(P.confirmMemberShare * 1000) / 10,
+  activeDays: ACTIVE_MEMBER_DAYS,
   noticeDays: P.noticeActiveDays,
   quietDays: P.quietDays,
   clearMin: P.clearMinDeliveredPharmacies,
@@ -27,6 +30,11 @@ const VARS = {
   clearedDays: P.clearedDisplayDays,
 };
 const tv = (key: MessageKey) => t(key, VARS);
+
+/** A parameter's value as shown: shares as a percentage, everything else as it is. */
+function paramValue(k: keyof SignalParams): string {
+  return k === 'confirmMemberShare' ? t('core.method.shareValue', { pct: VARS.sharePct }) : String(P[k]);
+}
 
 const LEVELS: Level[] = ['watch', 'likely', 'confirmed', 'cleared', 'none'];
 const RULES: RuleId[] = [
@@ -184,8 +192,8 @@ export default function MethodPage() {
                   {(Object.keys(P) as (keyof SignalParams)[]).map((k) => (
                     <tr key={k}>
                       <td className="font-mono text-xs text-ink">{k}</td>
-                      <td className="text-end font-mono">{P[k]}</td>
-                      <td>{t(`core.method.params.${k}`)}</td>
+                      <td className="text-end font-mono">{paramValue(k)}</td>
+                      <td>{tv(`core.method.params.${k}`)}</td>
                     </tr>
                   ))}
                 </tbody>

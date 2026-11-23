@@ -28,6 +28,22 @@ export interface EvaluateInput {
   now: Date;
   previous?: PreviousState;
   params?: Partial<SignalParams>;
+  /**
+   * Member pharmacies active recently (a report or a sign-in), simulated accounts excluded.
+   * Raises the "confirmed" bar on a large network. Missing: the floor applies.
+   */
+  activeMemberPharmacies?: number | null;
+}
+
+/**
+ * Distinct pharmacies needed for "confirmed": confirmMinPharmacies, or the network share of
+ * the active member pharmacies when that is larger. Without a member count, the floor.
+ */
+export function confirmPharmaciesNeeded(params: SignalParams, activeMemberPharmacies?: number | null): number {
+  const floor = params.confirmMinPharmacies;
+  if (activeMemberPharmacies === undefined || activeMemberPharmacies === null) return floor;
+  if (!Number.isFinite(activeMemberPharmacies) || activeMemberPharmacies <= 0) return floor;
+  return Math.max(floor, Math.ceil(params.confirmMemberShare * activeMemberPharmacies));
 }
 
 /** Collects the facts the rules need. Exported so screens can explain a level. */
@@ -94,11 +110,11 @@ export function activeNotices(
 }
 
 /** The level the current evidence supports, before any hold or clearing rule. */
-function rawLevel(e: Evidence, p: SignalParams): { level: Level; rule: RuleId } {
-  if (e.pharmacies14d >= p.confirmMinPharmacies && e.governorates14d >= p.confirmMinGovernorates) {
+function rawLevel(e: Evidence, p: SignalParams, confirmNeeded: number): { level: Level; rule: RuleId } {
+  if (e.pharmacies14d >= confirmNeeded && e.governorates14d >= p.confirmMinGovernorates) {
     return { level: 'confirmed', rule: 'confirmed_threshold' };
   }
-  if (e.pharmacies14d >= p.confirmMinPharmacies) {
+  if (e.pharmacies14d >= confirmNeeded) {
     return { level: 'likely', rule: 'single_governorate_cap' };
   }
   if (e.pharmacies7d >= p.likelyMinPharmacies) {
@@ -123,7 +139,7 @@ export function evaluate(input: EvaluateInput): Evaluation {
   const t = now.getTime();
 
   const evidence = collectEvidence(moleculeId, input.reports, input.notices, now, p);
-  let { level, rule } = rawLevel(evidence, p);
+  let { level, rule } = rawLevel(evidence, p, confirmPharmaciesNeeded(p, input.activeMemberPharmacies));
 
   // A shown "cleared" stays for a few days, then returns to "none".
   if (previous.level === 'cleared' && level === 'none') {

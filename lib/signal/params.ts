@@ -11,8 +11,14 @@ export interface SignalParams {
   likelyWindowDays: number;
   /** Distinct pharmacies in the likely window needed for "likely". */
   likelyMinPharmacies: number;
-  /** Distinct pharmacies in the confirm window needed for "confirmed". */
+  /** Distinct pharmacies in the confirm window needed for "confirmed": the floor (see confirmMemberShare). */
   confirmMinPharmacies: number;
+  /**
+   * Share of active member pharmacies needed for "confirmed" when the network is large:
+   * the bar is max(confirmMinPharmacies, ceil(confirmMemberShare x active members)).
+   * With a pilot-sized network the floor wins.
+   */
+  confirmMemberShare: number;
   /** Distinct governorates needed for "confirmed" (gate two). */
   confirmMinGovernorates: number;
   /** A foreign notice older than this no longer counts, in days. */
@@ -33,6 +39,7 @@ export const DEFAULT_PARAMS: SignalParams = {
   likelyWindowDays: 7,
   likelyMinPharmacies: 2,
   confirmMinPharmacies: 4,
+  confirmMemberShare: 0.02,
   confirmMinGovernorates: 2,
   noticeActiveDays: 90,
   quietDays: 14,

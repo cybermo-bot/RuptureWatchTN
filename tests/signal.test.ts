@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
   buildScenario,
+  confirmPharmaciesNeeded,
   countByGovernorate,
+  DEFAULT_PARAMS,
   displayCount,
   evaluate,
   type ForeignNotice,
@@ -281,5 +283,56 @@ describe('the simulated scenario tells the intended story', () => {
       levels.push(e.level);
     }
     expect(levels).toEqual(['watch', 'likely', 'likely', 'likely', 'confirmed', 'confirmed', 'confirmed', 'cleared']);
+  });
+});
+
+describe('the confirmed bar scales with the network', () => {
+  const P = DEFAULT_PARAMS;
+  // Enough pharmacies for the floor, in enough governorates, within the likely window.
+  const floorReports = () =>
+    Array.from({ length: P.confirmMinPharmacies }, (_, i) =>
+      nd(`f${i}`, i < P.confirmMinGovernorates ? `G${i}` : 'G0', 1 + i * 0.25),
+    );
+
+  it('the floor wins on a pilot-sized network (100 active members)', () => {
+    expect(confirmPharmaciesNeeded(P, 100)).toBe(P.confirmMinPharmacies);
+    const e = evaluate({ moleculeId: MOL, reports: floorReports(), notices: [], now: at(3), activeMemberPharmacies: 100 });
+    expect(e.level).toBe('confirmed');
+    expect(e.rule).toBe('confirmed_threshold');
+  });
+
+  it('the share wins on a large network (1,500 active members): 30 pharmacies needed', () => {
+    const needed = Math.ceil(P.confirmMemberShare * 1500);
+    expect(needed).toBe(30);
+    expect(confirmPharmaciesNeeded(P, 1500)).toBe(needed);
+    const few = evaluate({ moleculeId: MOL, reports: floorReports(), notices: [], now: at(3), activeMemberPharmacies: 1500 });
+    expect(few.level).toBe('likely');
+    expect(few.rule).toBe('two_pharmacies_7d');
+
+    const many = Array.from({ length: needed }, (_, i) => nd(`m${i}`, `G${i % P.confirmMinGovernorates}`, 1 + (i % 5) * 0.2));
+    const justBelow = many.slice(0, needed - 1);
+    expect(evaluate({ moleculeId: MOL, reports: justBelow, notices: [], now: at(3), activeMemberPharmacies: 1500 }).level).toBe('likely');
+    const e = evaluate({ moleculeId: MOL, reports: many, notices: [], now: at(3), activeMemberPharmacies: 1500 });
+    expect(e.level).toBe('confirmed');
+  });
+
+  it('on a large network, enough pharmacies in one governorate still stop at likely (gate two)', () => {
+    const oneGov = Array.from({ length: 30 }, (_, i) => nd(`o${i}`, 'TUN', 1 + (i % 5) * 0.2));
+    const e = evaluate({ moleculeId: MOL, reports: oneGov, notices: [], now: at(3), activeMemberPharmacies: 1500 });
+    expect(e.level).toBe('likely');
+    expect(e.rule).toBe('single_governorate_cap');
+  });
+
+  it('a missing, zero or invalid member count means the floor', () => {
+    for (const n of [undefined, null, 0, -5, Number.NaN, Number.POSITIVE_INFINITY]) {
+      expect(confirmPharmaciesNeeded(P, n)).toBe(P.confirmMinPharmacies);
+    }
+    const without = evaluate({ moleculeId: MOL, reports: floorReports(), notices: [], now: at(3) });
+    expect(without.level).toBe('confirmed');
+  });
+
+  it('the share follows the parameters, never a typed number', () => {
+    expect(confirmPharmaciesNeeded({ ...P, confirmMemberShare: 0.1 }, 100)).toBe(Math.max(P.confirmMinPharmacies, 10));
+    expect(confirmPharmaciesNeeded({ ...P, confirmMinPharmacies: 50 }, 1500)).toBe(50);
   });
 });

@@ -23,6 +23,8 @@ const DAY = 86_400_000;
 /** How far back reports and notices are loaded. Covers every window in params.ts. */
 export const LOOKBACK_DAYS = 120;
 
+export { ACTIVE_MEMBER_DAYS } from './members';
+
 export interface CurrentSignal {
   level: Level;
   since: Date;
@@ -65,6 +67,11 @@ export interface SignalStore {
   apply(input: ApplyInput): Promise<{ applied: boolean; eventId: number | null }>;
   /** Molecules that have a signal row, for the daily re-evaluation. */
   moleculesWithSignal(): Promise<string[]>;
+  /**
+   * Member pharmacies active in the last ACTIVE_MEMBER_DAYS days, simulated accounts excluded.
+   * Optional: without it, or when it returns null, the floor of the "confirmed" bar applies.
+   */
+  activeMemberPharmacies?(): Promise<number | null>;
 }
 
 export interface RecomputeResult {
@@ -126,6 +133,8 @@ export async function recomputeSignal(
   const maxAttempts = options.maxAttempts ?? 5;
   const from = new Date(now.getTime() - LOOKBACK_DAYS * DAY);
 
+  const activeMemberPharmacies = store.activeMemberPharmacies ? await store.activeMemberPharmacies() : null;
+
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     const { reports, notices, current } = await store.load(moleculeId, from, now);
     const evaluation = evaluate({
@@ -135,6 +144,7 @@ export async function recomputeSignal(
       now,
       previous: current ? { level: current.level, since: current.since } : undefined,
       params,
+      activeMemberPharmacies,
     });
     const previous = current?.level ?? 'none';
 

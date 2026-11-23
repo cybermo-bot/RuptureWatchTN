@@ -6,7 +6,7 @@ import 'server-only';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createServiceClient } from '@/lib/db/server';
 import type { ForeignNotice, Level, Origin, PharmacyReport } from '@/lib/signal';
-import type { SignalStore } from './recompute';
+import { ACTIVE_MEMBER_DAYS, type SignalStore } from './recompute';
 
 // PostgREST returns at most 1000 rows per request; page through to be safe.
 const PAGE = 1000;
@@ -116,6 +116,16 @@ export function supabaseSignalStore(client: SupabaseClient = createServiceClient
       const { data, error } = await client.from('signals').select('molecule_id');
       if (error) throw new Error(`list signals: ${error.message}`);
       return (data ?? []).map((r) => r.molecule_id as string);
+    },
+
+    async activeMemberPharmacies() {
+      // A failure here must not block a report: the floor of the bar applies instead.
+      const { data, error } = await client.rpc('active_member_pharmacies', { p_days: ACTIVE_MEMBER_DAYS });
+      if (error) {
+        console.error('active_member_pharmacies failed, using the floor', error.message);
+        return null;
+      }
+      return typeof data === 'number' ? data : null;
     },
   };
 }

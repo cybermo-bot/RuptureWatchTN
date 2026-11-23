@@ -184,7 +184,7 @@
       },
       "confirmed": {
         "title": "Confirmée",
-        "summary": "Des pharmacies d'au moins deux gouvernorats signalent des commandes non livrées.",
+        "summary": "Au moins 4 pharmacies, ou 2 % des pharmacies membres actives si le réseau est plus grand, dans au moins 2 gouvernorats, signalent des commandes non livrées.",
         "guidance": [
           "Ne constituez pas de stock au-delà de votre consommation habituelle.",
           "Toute décision de changer de traitement revient au prescripteur. Orientez le patient vers lui.",
@@ -473,13 +473,13 @@
   "method": {
     "title": "Méthode : comment un niveau est décidé",
     "intro": "RuptureWatch TN donne à chaque médicament un niveau à partir de deux sources : les signalements des pharmacies et les avis publiés par des autorités de santé étrangères. Les mêmes règles s’appliquent partout : sur le web, sur WhatsApp, dans le scénario et dans le retour sur les ruptures passées.",
-    "paramsNote": "Les seuils sont des paramètres de conception, proposés pour démarrer et faits pour être ajustés pendant un pilote. Les valeurs de cette page sont lues dans le code des règles lui-même : elles ne peuvent pas le contredire.",
+    "paramsNote": "Les seuils sont des paramètres de conception, proposés pour démarrer et faits pour être ajustés pendant un pilote. Ils fixent la barre du niveau le plus haut, « confirmée » : « sous surveillance » et « probable » apparaissent plus tôt, dès les premiers signalements. Les valeurs de cette page sont lues dans le code des règles lui-même : elles ne peuvent pas le contredire.",
     "toc": "Sur cette page",
     "levelsTitle": "Les niveaux",
     "levels": {
       "watch": "Un premier signe : au moins une pharmacie signale une commande non livrée, ou une autorité étrangère publie une pénurie.",
       "likely": "Des signes qui concordent : au moins {likelyMin} pharmacies sur {likelyDays} jours, ou un signalement en Tunisie accompagné d’un avis étranger.",
-      "confirmed": "Au moins {confirmMin} pharmacies, dans au moins {confirmGov} gouvernorats, sur {confirmDays} jours.",
+      "confirmed": "Au moins {confirmMin} pharmacies, ou {sharePct} % des pharmacies membres actives si le réseau est plus grand, dans au moins {confirmGov} gouvernorats, sur {confirmDays} jours.",
       "cleared": "Le médicament est de nouveau livré : au moins {clearMin} pharmacies le signalent, et aucune commande non livrée n’a été signalée depuis {quietDays} jours. « Levée » reste affiché {clearedDays} jours.",
       "none": "Aucun signalement récent et aucun avis étranger en cours."
     },
@@ -496,7 +496,7 @@
     "gate1Title": "Garde-fou 1 : un avis étranger seul ne suffit pas",
     "gate1": "Un avis étranger seul ne fait jamais monter un médicament au-delà de « sous surveillance ». Une pénurie en France ou en Allemagne n’est pas une pénurie en Tunisie : il faut au moins un signalement d’une pharmacie tunisienne pour aller plus loin.",
     "gate2Title": "Garde-fou 2 : un seul gouvernorat ne suffit pas",
-    "gate2": "« Confirmée » demande au moins {confirmMin} pharmacies dans au moins {confirmGov} gouvernorats. Un problème de distribution limité à une seule région reste « probable ».",
+    "gate2": "« Confirmée » demande au moins {confirmMin} pharmacies, ou {sharePct} % des pharmacies membres actives si le réseau est plus grand, dans au moins {confirmGov} gouvernorats. Un problème de distribution limité à une seule région reste « probable ».",
     "holdTitle": "Pourquoi un niveau ne redescend pas tout seul",
     "hold": "Un niveau « probable » ou « confirmée » ne baisse pas parce que les signalements ralentissent : les pharmacies ont peut-être simplement cessé de commander. Il prend fin quand au moins {clearMin} pharmacies signalent une nouvelle livraison et qu’aucune commande non livrée n’a été signalée depuis {quietDays} jours. Sans nouvelle livraison signalée, il redescend après {staleDays} jours sans aucun signalement.",
     "rulesTitle": "Les règles, une par une",
@@ -524,11 +524,11 @@
       },
       "single_governorate_cap": {
         "name": "Un seul gouvernorat",
-        "body": "Au moins {confirmMin} pharmacies signalent, mais dans moins de {confirmGov} gouvernorats : le niveau reste « probable » (garde-fou 2)."
+        "body": "Assez de pharmacies signalent pour confirmer (au moins {confirmMin}, ou {sharePct} % des pharmacies membres actives si le réseau est plus grand), mais dans moins de {confirmGov} gouvernorats : le niveau reste « probable » (garde-fou 2)."
       },
       "confirmed_threshold": {
         "name": "Seuil de confirmation",
-        "body": "Au moins {confirmMin} pharmacies dans au moins {confirmGov} gouvernorats sur {confirmDays} jours : « confirmée »."
+        "body": "Au moins {confirmMin} pharmacies, ou {sharePct} % des pharmacies membres actives si le réseau est plus grand, dans au moins {confirmGov} gouvernorats sur {confirmDays} jours : « confirmée »."
       },
       "hold_until_delivered": {
         "name": "Maintien jusqu’à la livraison",
@@ -556,13 +556,14 @@
       "confirmWindowDays": "Fenêtre de confirmation, en jours : période sur laquelle on compte les pharmacies et les gouvernorats.",
       "likelyWindowDays": "Fenêtre courte, en jours, pour « probable ».",
       "likelyMinPharmacies": "Pharmacies différentes dans la fenêtre courte pour « probable ».",
-      "confirmMinPharmacies": "Pharmacies différentes dans la fenêtre de confirmation pour « confirmée ».",
+      "confirmMinPharmacies": "Pharmacies différentes dans la fenêtre de confirmation pour « confirmée ». C’est un plancher : sur un grand réseau, la part ci-dessous l’emporte.",
       "confirmMinGovernorates": "Gouvernorats différents pour « confirmée » (garde-fou 2).",
       "noticeActiveDays": "Jours pendant lesquels un avis étranger compte.",
       "quietDays": "Jours sans nouveau signalement avant qu’un niveau puisse être levé.",
       "clearMinDeliveredPharmacies": "Pharmacies qui signalent une nouvelle livraison pour lever un niveau.",
       "staleDays": "Jours sans aucun signalement après lesquels un niveau redescend, même sans nouvelle livraison signalée.",
-      "clearedDisplayDays": "Jours pendant lesquels « levée » reste affiché."
+      "clearedDisplayDays": "Jours pendant lesquels « levée » reste affiché.",
+      "confirmMemberShare": "Part des pharmacies membres actives nécessaire pour « confirmée » quand le réseau est grand. La barre est la plus haute des deux : {confirmMin} pharmacies, ou cette part. Une pharmacie membre est active si elle a signalé ou s’est connectée dans les {activeDays} derniers jours, comptes de démonstration exclus."
     },
     "smallCountsTitle": "Les petits nombres",
     "smallCounts": "Partout où un nombre de pharmacies est montré, 1 et 2 s’affichent « moins de 3 » ou « <3 » : avec un si petit nombre, on pourrait reconnaître une pharmacie. Ce masquage est fait par la base de données elle-même, pas seulement par l’affichage.",
@@ -623,7 +624,8 @@
         "use": "Voir data/SOURCES.md."
       }
     },
-    "backHome": "Retour à l’accueil"
+    "backHome": "Retour à l’accueil",
+    "shareValue": "{pct} %"
   },
   "scenario": {
     "title": "Le scénario : une rupture simulée, du premier signe à la levée",

@@ -2,6 +2,15 @@
 
 Newest first. Each entry: what was decided, and why.
 
+## 2026-11-23, session 3
+
+### The "confirmed" bar scales with the network (`confirmMemberShare`)
+- The thresholds stay as they were (72 hours; likely with 2 pharmacies in 7 days; confirmed with 4 pharmacies in 2 governorates within 14 days; 2 deliveries to clear). They are design values for a pilot, and the methods page says so.
+- New parameter `confirmMemberShare: 0.02`. Pharmacies needed for "confirmée" = max(`confirmMinPharmacies`, ceil(0.02 x active member pharmacies)). Why: 4 pharmacies is a meaningful bar for a pilot of a few dozen members, but with 1,500 members four reports would be noise; the share keeps the bar proportional, and 4 stays the floor. With today's network the floor always wins, so no current level changes.
+- `evaluate()` stays pure: it takes the count as an optional input (`activeMemberPharmacies`); without it the floor applies. Only the signal service passes it, from `active_member_pharmacies()` (migration 0014, service role only): participating pharmacies, simulated accounts excluded, with a report or a sign-in in the last 90 days (`ACTIVE_MEMBER_DAYS`). If the count cannot be read, the floor applies rather than blocking a report. The scenario, the time machine and the explorer run without a count, so they use the floor.
+- The same pharmacy count decides gate two's "enough pharmacies, but one governorate" (`single_governorate_cap`), so the two rules never disagree about what "enough" means.
+- Tests: the floor wins at 100 members, the share wins at 1,500 (30 needed), a missing or invalid count means the floor (`tests/signal.test.ts`); the count and its effect through the signal service on the real migrations (`tests/db/active-members.test.ts`). The 31 earlier tests are unchanged.
+
 ## 2026-11-22, session 4
 
 ### Fixes from session 2's questions

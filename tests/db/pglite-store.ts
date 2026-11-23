@@ -2,7 +2,7 @@
 
 import type { PGlite } from '@electric-sql/pglite';
 import type { ForeignNotice, Level, Origin, PharmacyReport } from '@/lib/signal';
-import type { SignalStore } from '@/lib/signals/recompute';
+import { ACTIVE_MEMBER_DAYS, type SignalStore } from '@/lib/signals/recompute';
 import { asCommitted } from './harness';
 
 const service = { kind: 'service' as const };
@@ -86,6 +86,12 @@ export function pgliteSignalStore(db: PGlite): SignalStore {
         );
         return { applied: rows[0].applied, eventId: rows[0].event_id === null ? null : Number(rows[0].event_id) };
       });
+    },
+
+    async activeMemberPharmacies() {
+      return asCommitted(db, service, async (tx) =>
+        (await tx.query<{ n: number }>('select public.active_member_pharmacies($1) as n', [ACTIVE_MEMBER_DAYS])).rows[0].n,
+      );
     },
 
     async moleculesWithSignal() {

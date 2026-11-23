@@ -21,7 +21,7 @@
     },
     "confirmed": {
       "title": "Confirmée",
-      "summary": "Des pharmacies d'au moins deux gouvernorats signalent des commandes non livrées.",
+      "summary": "Au moins 4 pharmacies, ou 2 % des pharmacies membres actives si le réseau est plus grand, dans au moins 2 gouvernorats, signalent des commandes non livrées.",
       "guidance": [
         "Ne constituez pas de stock au-delà de votre consommation habituelle.",
         "Toute décision de changer de traitement revient au prescripteur. Orientez le patient vers lui.",
