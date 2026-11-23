@@ -7,7 +7,8 @@
     "splitNotYet": "Une répartition se propose à partir du niveau « probable ». {molecule} est au niveau « {level} ».",
     "decisionsTitle": "Vos dernières décisions",
     "decisionsEmpty": "Aucune décision enregistrée pour l’instant.",
-    "decisionsUnavailable": "Le journal des décisions n’est pas encore en service : la table des décisions sera créée à la mise en ligne. La répartition se calcule déjà ; l’enregistrement d’une décision échouera d’ici là."
+    "decisionsUnavailable": "Le journal des décisions n’est pas encore en service : la table des décisions sera créée à la mise en ligne. La répartition se calcule déjà ; l’enregistrement d’une décision échouera d’ici là.",
+    "figureDecisions": "Mes décisions de répartition, {days} jours"
   },
   "split": {
     "title": "Répartition équitable",

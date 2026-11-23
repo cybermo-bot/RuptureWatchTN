@@ -17,3 +17,10 @@ export function formatDate(d: Date | string): string {
 export function formatTime(d: Date | string): string {
   return timeFormat.format(toDate(d));
 }
+
+const dayMonthFormat = new Intl.DateTimeFormat('fr', { day: 'numeric', month: 'short', timeZone: TIME_ZONE });
+
+/** "9 nov." */
+export function formatDayMonth(d: Date | string): string {
+  return dayMonthFormat.format(toDate(d)).replace(/^1 /, '1er ');
+}

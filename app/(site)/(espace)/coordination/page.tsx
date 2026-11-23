@@ -1,13 +1,14 @@
-import Link from 'next/link';
+import { Download, UserPlus } from 'lucide-react';
 import { redirect } from 'next/navigation';
+import { ButtonLink } from '@/components/Button';
 import { SignalsDashboard } from '@/components/coordination/SignalsDashboard';
 import { LiveRefresh } from '@/components/LiveRefresh';
 import { PageHeader } from '@/components/PageHeader';
-import { getCurrentSession } from '@/lib/auth/session';
 import { listDecisions } from '@/lib/allocation/decisions';
+import { getCurrentSession } from '@/lib/auth/session';
 import { loadDashboard, selectedParam } from '@/lib/coordination/dashboard';
-import { HOME_BY_TYPE } from '@/lib/demo/roles';
 import { createUserClient } from '@/lib/db/server';
+import { HOME_BY_TYPE } from '@/lib/demo/roles';
 import { t } from '@/lib/i18n';
 
 // The coordination space: every molecule with an active level, most serious first; for the
@@ -30,19 +31,20 @@ export default async function CoordinationHome({ searchParams }: PageProps<'/coo
   ]);
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-6">
       <PageHeader
-        meta={t('core.orgTypes.coordinator')}
         title={t('core.space.titles.coordinator')}
         description={t('core.coordination.intro')}
         actions={
           <>
-            <Link href="/coordination/export" className="flex min-h-12 items-center text-sm font-medium">
+            <ButtonLink href="/coordination/export" variant="secondary" className="min-h-11 px-4 text-sm">
+              <Download size={16} aria-hidden="true" />
               {t('core.coordination.exportLink')}
-            </Link>
-            <Link href="/coordination/invitation" className="flex min-h-12 items-center text-sm font-medium">
+            </ButtonLink>
+            <ButtonLink href="/coordination/invitation" variant="secondary" className="min-h-11 px-4 text-sm">
+              <UserPlus size={16} aria-hidden="true" />
               {t('core.coordination.invite')}
-            </Link>
+            </ButtonLink>
           </>
         }
       />

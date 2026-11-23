@@ -1,26 +1,34 @@
 import Link from 'next/link';
+import type { ReactNode } from 'react';
+import { LevelBand } from '@/components/charts/LevelBand';
+import { KeyFigures, type KeyFigure } from '@/components/console/KeyFigures';
+import { Panel } from '@/components/console/Panel';
 import { EmptyState } from '@/components/EmptyState';
 import { GOVERNORATE_SHAPES, GovernorateMap, type GovernorateValue } from '@/components/GovernorateMap';
-import { LevelBadge } from '@/components/LevelBadge';
+import { LevelBadge, LevelShape } from '@/components/LevelBadge';
 import { LevelExplanation } from '@/components/LevelExplanation';
+import { LevelChangeWatcher } from '@/components/live/LevelChangeWatcher';
 import { Origins } from '@/components/Origins';
 import { OriginBadge } from '@/components/OriginBadge';
 import type { DecisionRow } from '@/lib/allocation/decisions';
+import { moleculesAtLevelPerDay } from '@/lib/charts/series';
 import { formatDate, formatTime } from '@/lib/format';
 import { t } from '@/lib/i18n';
 import { DEFAULT_PARAMS, type ForeignNotice, type Level } from '@/lib/signal';
 import {
   DEMAND_WINDOW_DAYS,
+  LEVEL_ORDER,
+  type ActiveLevel,
   type DemandRow,
   type EventRow,
   type GovernorateCount,
   type SignalRow,
 } from '@/lib/signals/views';
 
-// The coordination view (and the hospital pharmacy's, without the export): molecules with an
-// active level, most serious first; for the selected one, the governorate map, the patients'
-// demand, the active foreign notices and the timeline of its levels; then the event log.
-// Server component: every number arrives already suppressed by the database ('<3').
+// The signals dashboard of the coordination, hospital and wholesaler spaces: key figures, the
+// molecules with an active level (most serious first), and for the selected one its map, the
+// patients' demand, the active foreign notices and the timeline of its levels; then the event
+// log. Server component: every number arrives already suppressed by the database ('<3').
 
 export interface DashboardData {
   signals: SignalRow[];
@@ -29,13 +37,16 @@ export interface DashboardData {
   demand: DemandRow[];
   notices: ForeignNotice[];
   timeline: EventRow[];
-  /** The whole event log, newest first. Null: not shown (hospital space). */
+  /** Every level change readable by the caller, newest first: the key figures' series. */
+  history: EventRow[];
+  /** The whole event log, newest first. Null: not shown (hospital and wholesaler spaces). */
   events: EventRow[] | null;
   /** Wholesalers' allocation decisions (track D), shown in the event log. Never a wholesaler's name. */
   decisions?: DecisionRow[] | null;
 }
 
 const GOV_NAME = new Map(GOVERNORATE_SHAPES.map((g) => [g.code, g.name]));
+export const FIGURE_DAYS = 14;
 
 /** Map band for a suppressed count: '<3', 3 or 4, 5 and more. */
 export function countBand(pharmacies: string): 'few' | 'some' | 'many' {
@@ -45,12 +56,24 @@ export function countBand(pharmacies: string): 'few' | 'some' | 'many' {
 
 const BAND_MIX: Record<'few' | 'some' | 'many', number> = { few: 28, some: 58, many: 92 };
 
-function bandFill(level: Level, band: 'few' | 'some' | 'many'): string {
+export function bandFill(level: Level, band: 'few' | 'some' | 'many'): string {
   const colour = level === 'none' ? 'var(--ink-muted)' : `var(--level-${level})`;
   return `color-mix(in srgb, ${colour} ${BAND_MIX[band]}%, white)`;
 }
 
 export { Origins } from '@/components/Origins';
+
+/** Key figures: medicines at each level now, with the 14-day series computed from the event log. */
+export function levelFigures(signals: SignalRow[], history: EventRow[], levels: ActiveLevel[] = LEVEL_ORDER): KeyFigure[] {
+  return levels.map((level) => ({
+    key: level,
+    label: t('core.figures.levelCount', { level: t(`core.levels.${level}`) }),
+    value: String(signals.filter((s) => s.level === level).length),
+    marker: <LevelShape level={level} size={16} />,
+    series: moleculesAtLevelPerDay(history, level, FIGURE_DAYS),
+    colour: `var(--level-${level})`,
+  }));
+}
 
 function Change({ from, to }: { from: Level; to: Level }) {
   return (
@@ -67,13 +90,13 @@ function Change({ from, to }: { from: Level; to: Level }) {
 
 function When({ at }: { at: string }) {
   return (
-    <time dateTime={at} className="whitespace-nowrap text-sm text-ink-muted tabular-nums">
+    <time dateTime={at} className="text-sm whitespace-nowrap text-ink-muted tabular-nums">
       {t('core.common.dateAt', { date: formatDate(at), time: formatTime(at) })}
     </time>
   );
 }
 
-export function GovernoratePanel({ level, counts }: { level: Level; counts: GovernorateCount[] }) {
+export function GovernoratePanel({ level, counts, headingLevel = 3 }: { level: Level; counts: GovernorateCount[]; headingLevel?: 2 | 3 }) {
   const values: Partial<Record<string, GovernorateValue>> = {};
   for (const c of counts) {
     values[c.governorate_code] = { text: c.pharmacies, fill: bandFill(level, countBand(c.pharmacies)) };
@@ -84,18 +107,19 @@ export function GovernoratePanel({ level, counts }: { level: Level; counts: Gove
     { key: 'some', label: t('core.coordination.legendSome'), fill: bandFill(level, 'some') },
     { key: 'many', label: t('core.coordination.legendMany'), fill: bandFill(level, 'many') },
   ];
+  const H = headingLevel === 2 ? 'h2' : 'h3';
   return (
     <section aria-labelledby="carte" className="flex flex-col gap-3">
       <div className="flex flex-col gap-1">
-        <h3 id="carte" className="font-semibold text-ink">
+        <H id="carte" className="font-semibold text-ink">
           {t('core.coordination.mapTitle')}
-        </h3>
+        </H>
         <p className="text-sm text-ink-muted">
           {t('core.coordination.mapWindow', { hours: DEFAULT_PARAMS.minUndeliveredHours, days: DEFAULT_PARAMS.confirmWindowDays })}
         </p>
       </div>
-      <div className="grid gap-4 sm:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] sm:items-start">
-        <GovernorateMap values={values} title={t('core.coordination.mapTitle')} className="mx-auto w-full max-w-[15rem]" />
+      <div className="grid gap-5 sm:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] sm:items-start">
+        <GovernorateMap values={values} title={t('core.coordination.mapTitle')} className="mx-auto w-full max-w-[17rem]" />
         <div className="flex flex-col gap-4">
           <ul aria-label={t('core.coordination.legendTitle')} className="flex flex-col gap-1.5 text-sm text-ink">
             {legend.map((l) => (
@@ -134,12 +158,9 @@ export function GovernoratePanel({ level, counts }: { level: Level; counts: Gove
   );
 }
 
-export function DemandPanel({ demand }: { demand: DemandRow[] }) {
+export function DemandTable({ demand }: { demand: DemandRow[] }) {
   return (
-    <section aria-labelledby="demande" className="flex flex-col gap-3">
-      <h3 id="demande" className="font-semibold text-ink">
-        {t('core.coordination.demandTitle', { days: DEMAND_WINDOW_DAYS })}
-      </h3>
+    <div className="flex flex-col gap-3">
       {demand.length === 0 ? (
         <p className="text-sm text-ink-muted">{t('core.coordination.demandEmpty', { days: DEMAND_WINDOW_DAYS })}</p>
       ) : (
@@ -167,7 +188,38 @@ export function DemandPanel({ demand }: { demand: DemandRow[] }) {
         </table>
       )}
       <p className="border-s-2 border-line ps-3 text-sm text-ink">{t('core.coordination.demandNote')}</p>
+    </div>
+  );
+}
+
+/** Kept for /vues and other callers: the demand table under its own heading. */
+export function DemandPanel({ demand }: { demand: DemandRow[] }) {
+  return (
+    <section aria-labelledby="demande" className="flex flex-col gap-3">
+      <h3 id="demande" className="font-semibold text-ink">
+        {t('core.coordination.demandTitle', { days: DEMAND_WINDOW_DAYS })}
+      </h3>
+      <DemandTable demand={demand} />
     </section>
+  );
+}
+
+export function NoticesList({ notices }: { notices: ForeignNotice[] }) {
+  if (notices.length === 0) return <p className="text-sm text-ink-muted">{t('core.molecule.noticesEmpty')}</p>;
+  return (
+    <ul className="hairline-list text-sm">
+      {notices.map((n) => (
+        <li key={n.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 py-3 first:pt-0">
+          <span className="font-medium text-ink">{n.source}</span>
+          <span>{t(`core.molecule.noticeStatus.${n.status}`)}</span>
+          <span className="text-ink-muted">{t('core.molecule.noticePublished', { date: formatDate(n.publishedAt) })}</span>
+          <OriginBadge origin={n.origin} />
+          <a href={n.url} target="_blank" rel="noopener noreferrer" className="min-h-12 content-center underline">
+            {t('core.molecule.noticeLink', { source: n.source })}
+          </a>
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -177,24 +229,23 @@ export function NoticesPanel({ notices }: { notices: ForeignNotice[] }) {
       <h3 id="avis" className="font-semibold text-ink">
         {t('core.coordination.noticesTitle')}
       </h3>
-      {notices.length === 0 ? (
-        <p className="text-sm text-ink-muted">{t('core.molecule.noticesEmpty')}</p>
-      ) : (
-        <ul className="hairline-list border-y border-line text-sm">
-          {notices.map((n) => (
-            <li key={n.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 py-3">
-              <span className="font-medium text-ink">{n.source}</span>
-              <span>{t(`core.molecule.noticeStatus.${n.status}`)}</span>
-              <span className="text-ink-muted">{t('core.molecule.noticePublished', { date: formatDate(n.publishedAt) })}</span>
-              <OriginBadge origin={n.origin} />
-              <a href={n.url} target="_blank" rel="noopener noreferrer" className="min-h-12 content-center underline">
-                {t('core.molecule.noticeLink', { source: n.source })}
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
+      <NoticesList notices={notices} />
     </section>
+  );
+}
+
+export function TimelineList({ events }: { events: EventRow[] }) {
+  if (events.length === 0) return <p className="text-sm text-ink-muted">{t('core.coordination.timelineEmpty')}</p>;
+  return (
+    <ol className="hairline-list">
+      {events.map((e) => (
+        <li key={e.id} className="flex flex-col gap-1 py-3 first:pt-0">
+          <When at={e.at} />
+          <Change from={e.from_level} to={e.to_level} />
+          <span className="font-mono text-xs text-ink-muted">{e.rule}</span>
+        </li>
+      ))}
+    </ol>
   );
 }
 
@@ -204,19 +255,7 @@ export function Timeline({ events }: { events: EventRow[] }) {
       <h3 id="historique" className="font-semibold text-ink">
         {t('core.coordination.timelineTitle')}
       </h3>
-      {events.length === 0 ? (
-        <p className="text-sm text-ink-muted">{t('core.coordination.timelineEmpty')}</p>
-      ) : (
-        <ol className="hairline-list border-y border-line">
-          {events.map((e) => (
-            <li key={e.id} className="flex flex-col gap-1 py-3">
-              <When at={e.at} />
-              <Change from={e.from_level} to={e.to_level} />
-              <span className="font-mono text-xs text-ink-muted">{e.rule}</span>
-            </li>
-          ))}
-        </ol>
-      )}
+      <TimelineList events={events} />
     </section>
   );
 }
@@ -229,17 +268,11 @@ export function EventLog({ events, decisions = [] }: { events: EventRow[]; decis
     ...decisions.map((d) => ({ kind: 'decision' as const, at: d.decided_at, decision: d })),
   ].sort((a, b) => b.at.localeCompare(a.at));
   return (
-    <section aria-labelledby="journal" className="flex flex-col gap-3">
-      <div className="flex flex-col gap-1">
-        <h2 id="journal" className="text-lg font-semibold text-ink">
-          {t('core.coordination.eventLogTitle')}
-        </h2>
-        <p className="text-sm text-ink-muted">{t('core.coordination.eventLogIntro')}</p>
-      </div>
+    <Panel title={t('core.coordination.eventLogTitle')} titleId="journal" description={t('core.coordination.eventLogIntro')} bodyClassName="px-4">
       {items.length === 0 ? (
-        <EmptyState title={t('core.coordination.eventLogEmpty')} />
+        <p className="py-6 text-sm text-ink-muted">{t('core.coordination.eventLogEmpty')}</p>
       ) : (
-        <ol className="hairline-list border-y border-line">
+        <ol className="hairline-list">
           {items.map((item) =>
             item.kind === 'event' ? (
               <li key={`e${item.event.id}`} className="grid gap-x-6 gap-y-1 py-3 lg:grid-cols-[12rem_minmax(0,14rem)_minmax(0,1fr)]">
@@ -270,70 +303,113 @@ export function EventLog({ events, decisions = [] }: { events: EventRow[]; decis
           )}
         </ol>
       )}
-    </section>
+    </Panel>
   );
 }
 
-export function SignalsDashboard({ data, basePath }: { data: DashboardData; basePath: string }) {
+export function SignalList({ signals, selectedId, basePath }: { signals: SignalRow[]; selectedId: string | null; basePath: string }) {
+  return (
+    <ul className="hairline-list">
+      {signals.map((s) => {
+        const isSelected = s.molecule_id === selectedId;
+        return (
+          <li key={s.molecule_id}>
+            <Link
+              href={`${basePath}?m=${s.molecule_id}#detail`}
+              aria-current={isSelected ? 'true' : undefined}
+              data-pulse={s.molecule_id}
+              className={`relative flex min-h-14 flex-col gap-1 px-4 py-3 no-underline transition-colors duration-150 hover:bg-surface-subtle ${
+                isSelected ? 'bg-surface-subtle before:absolute before:inset-y-0 before:start-0 before:w-0.5 before:bg-brand' : ''
+              }`}
+            >
+              <span className="font-medium break-words text-ink">{s.molecule_name}</span>
+              <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink-muted">
+                <LevelBadge level={s.level} />
+                <span>{t('core.pharmacy.since', { date: formatDate(s.since) })}</span>
+                <Origins origins={s.evidence.origins} />
+                {isSelected ? <span className="sr-only">{t('core.coordination.selected')}</span> : null}
+              </span>
+            </Link>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+export function SignalsDashboard({
+  data,
+  basePath,
+  figures,
+  afterSelected,
+  listTitle,
+}: {
+  data: DashboardData;
+  basePath: string;
+  /** Key figures shown on top. Default: medicines at each level. */
+  figures?: KeyFigure[];
+  /** Extra panel under the selected molecule's header (the wholesaler's split). */
+  afterSelected?: ReactNode;
+  listTitle?: string;
+}) {
   const { signals, selected } = data;
   return (
-    <div className="flex flex-col gap-12">
+    <div className="flex flex-col gap-5">
+      <LevelChangeWatcher
+        items={signals.map((s) => ({ key: s.molecule_id, name: s.molecule_name, level: s.level }))}
+        governorates={data.counts.map((c) => ({ code: c.governorate_code, text: c.pharmacies }))}
+      />
+      <KeyFigures label={t('core.figures.label')} figures={figures ?? levelFigures(signals, data.history)} />
+
       {signals.length === 0 ? (
-        <EmptyState title={t('core.coordination.emptyTitle')} body={t('core.coordination.emptyBody')} />
+        <div className="panel px-4">
+          <EmptyState afterRule title={t('core.coordination.emptyTitle')} body={t('core.coordination.emptyBody')} />
+        </div>
       ) : (
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-12">
-          <section aria-labelledby="signaux" className="flex flex-col gap-3">
-            <div className="flex flex-col gap-1">
-              <h2 id="signaux" className="text-lg font-semibold text-ink">
-                {t('core.coordination.signalsTitle')}
-              </h2>
-              <p className="text-sm text-ink-muted">{t('core.coordination.live')}</p>
-            </div>
-            <ul className="hairline-list border-y border-line">
-              {signals.map((s) => {
-                const isSelected = s.molecule_id === selected?.molecule_id;
-                return (
-                  <li key={s.molecule_id}>
-                    <Link
-                      href={`${basePath}?m=${s.molecule_id}#detail`}
-                      aria-current={isSelected ? 'true' : undefined}
-                      className={`flex min-h-12 flex-col gap-1 py-3 ps-3 no-underline hover:bg-surface-subtle ${
-                        isSelected ? 'border-s-2 border-brand bg-surface-subtle' : 'border-s-2 border-transparent'
-                      }`}
-                    >
-                      <span className="font-medium break-words text-ink">{s.molecule_name}</span>
-                      <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink-muted">
-                        <LevelBadge level={s.level} />
-                        <span>{t('core.pharmacy.since', { date: formatDate(s.since) })}</span>
-                        <Origins origins={s.evidence.origins} />
-                        {isSelected ? <span className="sr-only">{t('core.coordination.selected')}</span> : null}
-                      </span>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </section>
+        <div className="grid gap-5 xl:grid-cols-12">
+          <Panel
+            title={listTitle ?? t('core.coordination.signalsTitle')}
+            titleId="signaux"
+            description={t('core.coordination.live')}
+            className="self-start xl:col-span-4"
+            bodyClassName=""
+          >
+            <SignalList signals={signals} selectedId={selected?.molecule_id ?? null} basePath={basePath} />
+          </Panel>
 
           {selected ? (
-            <section id="detail" aria-labelledby="detail-titre" className="flex scroll-mt-4 flex-col gap-10">
-              <header className="flex flex-col gap-3 border-b border-line pb-6">
-                <h2 id="detail-titre" className="text-xl font-semibold break-words text-ink">
-                  {selected.molecule_name}
-                </h2>
-                <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink-muted">
-                  <LevelBadge level={selected.level} />
-                  <span>{t('core.pharmacy.since', { date: formatDate(selected.since) })}</span>
-                  <Origins origins={selected.evidence.origins} />
-                </p>
-                <LevelExplanation rule={selected.rule} evidence={selected.evidence} showRule methodLink />
-                <p className="text-sm text-ink-muted">{t('core.guidance.disclaimer')}</p>
-              </header>
-              <GovernoratePanel level={selected.level} counts={data.counts} />
-              <DemandPanel demand={data.demand} />
-              <NoticesPanel notices={data.notices} />
-              <Timeline events={data.timeline} />
-            </section>
+            <div id="detail" className="flex scroll-mt-20 flex-col gap-5 xl:col-span-8">
+              <section aria-labelledby="detail-titre" className="panel">
+                <header className="flex flex-col gap-3 border-b border-line p-4">
+                  <h2 id="detail-titre" className="text-xl font-semibold break-words text-ink">
+                    {selected.molecule_name}
+                  </h2>
+                  <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink-muted">
+                    <LevelBadge level={selected.level} />
+                    <span>{t('core.pharmacy.since', { date: formatDate(selected.since) })}</span>
+                    <Origins origins={selected.evidence.origins} />
+                  </p>
+                  <LevelExplanation rule={selected.rule} evidence={selected.evidence} showRule methodLink />
+                  <p className="text-sm text-ink-muted">{t('core.guidance.disclaimer')}</p>
+                </header>
+                <div className="flex flex-col gap-6 p-4">
+                  <LevelBand events={data.timeline} title={t('core.charts.levelTimeline', { days: 30 })} />
+                  <GovernoratePanel level={selected.level} counts={data.counts} />
+                </div>
+              </section>
+              {afterSelected}
+              <div className="grid gap-5 lg:grid-cols-2">
+                <Panel title={t('core.coordination.demandTitle', { days: DEMAND_WINDOW_DAYS })} titleId="demande" headingLevel={3}>
+                  <DemandTable demand={data.demand} />
+                </Panel>
+                <Panel title={t('core.coordination.noticesTitle')} titleId="avis" headingLevel={3}>
+                  <NoticesList notices={data.notices} />
+                </Panel>
+              </div>
+              <Panel title={t('core.coordination.timelineTitle')} titleId="historique" headingLevel={3}>
+                <TimelineList events={data.timeline} />
+              </Panel>
+            </div>
           ) : null}
         </div>
       )}

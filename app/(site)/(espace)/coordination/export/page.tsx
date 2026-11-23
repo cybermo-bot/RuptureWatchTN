@@ -16,9 +16,9 @@ export default async function ExportPage() {
   if (session.organisation.type !== 'coordinator') redirect(HOME_BY_TYPE[session.organisation.type]);
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-6">
       <PageHeader meta={t('core.orgTypes.coordinator')} title={t('core.export.title')} description={t('core.export.intro')} />
-      <div className="flex flex-col gap-3">
+      <div className="panel flex flex-col gap-3 p-5">
         <div className="flex flex-wrap gap-3">
           {/* Plain links: the route answers with a file download. */}
           <a
@@ -36,7 +36,7 @@ export default async function ExportPage() {
         </div>
         <p className="max-w-prose text-sm text-ink-muted">{t('core.export.formatNote')}</p>
       </div>
-      <section aria-labelledby="colonnes" className="flex flex-col gap-3">
+      <section aria-labelledby="colonnes" className="panel flex flex-col gap-3 p-5">
         <h2 id="colonnes" className="text-lg font-semibold text-ink">
           {t('core.export.columnsTitle')}
         </h2>

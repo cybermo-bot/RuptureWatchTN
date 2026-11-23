@@ -31,15 +31,15 @@ export default async function InvitationPage() {
   const svg = await QRCode.toString(url, { type: 'svg', errorCorrectionLevel: 'M', margin: 2, color: { dark: '#10201b', light: '#ffffff' } });
 
   return (
-    <div className="flex flex-col gap-8">
-      <header className="flex flex-col gap-2 border-b border-line pb-6">
+    <div className="flex flex-col gap-6">
+      <header className="flex flex-col gap-2">
         <Link href="/coordination" className="text-sm text-ink-muted">
           {t('core.invitation.back')}
         </Link>
         <h1 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">{t('core.invitation.title')}</h1>
         <p className="max-w-prose text-ink-muted">{t('core.invitation.intro')}</p>
       </header>
-      <figure className="flex flex-col items-start gap-4">
+      <figure className="panel m-0 flex max-w-md flex-col items-start gap-4 p-5">
         <div
           role="img"
           aria-label={t('core.invitation.qrLabel')}

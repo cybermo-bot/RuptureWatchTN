@@ -1,14 +1,18 @@
+import { Split } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { SignalsDashboard } from '@/components/coordination/SignalsDashboard';
+import { ButtonLink } from '@/components/Button';
+import { Panel } from '@/components/console/Panel';
+import { FIGURE_DAYS, levelFigures, SignalsDashboard } from '@/components/coordination/SignalsDashboard';
 import { LiveRefresh } from '@/components/LiveRefresh';
 import { OriginBadge } from '@/components/OriginBadge';
 import { PageHeader } from '@/components/PageHeader';
 import { listDecisions } from '@/lib/allocation/decisions';
 import { getCurrentSession } from '@/lib/auth/session';
+import { lastDays } from '@/lib/charts/series';
 import { loadDashboard, selectedParam } from '@/lib/coordination/dashboard';
-import { HOME_BY_TYPE } from '@/lib/demo/roles';
 import { createUserClient } from '@/lib/db/server';
+import { HOME_BY_TYPE } from '@/lib/demo/roles';
 import { formatDate } from '@/lib/format';
 import { t } from '@/lib/i18n';
 
@@ -24,7 +28,7 @@ export default async function WholesalerHome({ searchParams }: PageProps<'/gross
   const supabase = await createUserClient();
   const [loaded, decisions] = await Promise.all([
     loadDashboard(supabase, selectedParam(m), { withEventLog: false }),
-    listDecisions(supabase, null, 5),
+    listDecisions(supabase, null, 100),
   ]);
   // "Levée" is no longer a shortage to act on: the wholesaler sees watch, likely and confirmed.
   const signals = loaded.signals.filter((s) => s.level !== 'cleared');
@@ -32,53 +36,56 @@ export default async function WholesalerHome({ searchParams }: PageProps<'/gross
   const selected = data.selected;
   const canSplit = selected?.level === 'likely' || selected?.level === 'confirmed';
 
+  // Key figures: the three levels a wholesaler acts on, and its own split decisions per day.
+  const days = lastDays(FIGURE_DAYS);
+  const decisionSeries = days.map(
+    ({ start, end }) => (decisions ?? []).filter((d) => new Date(d.decided_at) >= start && new Date(d.decided_at) < end).length,
+  );
+  const figures = [
+    ...levelFigures(signals, data.history, ['confirmed', 'likely', 'watch']),
+    {
+      key: 'decisions',
+      label: t('wholesaler.home.figureDecisions', { days: FIGURE_DAYS }),
+      value: String(decisionSeries.reduce((a, b) => a + b, 0)),
+      series: decisionSeries,
+    },
+  ];
+
+  const splitPanel = selected ? (
+    <Panel title={t('wholesaler.home.splitTitle')} titleId="repartition-equitable" headingLevel={3}>
+      {canSplit ? (
+        <div className="flex flex-col gap-3">
+          <p className="text-ink">
+            {t('wholesaler.home.splitFor', { molecule: selected.molecule_name, level: t(`core.levels.${selected.level}`) })}
+          </p>
+          <ButtonLink href={`/grossiste/repartition/${selected.molecule_id}`} className="w-fit">
+            <Split size={18} aria-hidden="true" />
+            {t('wholesaler.home.splitAction')}
+          </ButtonLink>
+        </div>
+      ) : (
+        <p className="text-ink-muted">
+          {t('wholesaler.home.splitNotYet', { molecule: selected.molecule_name, level: t(`core.levels.${selected.level}`) })}
+        </p>
+      )}
+    </Panel>
+  ) : null;
+
   return (
-    <div className="flex flex-col gap-8">
-      <PageHeader
-        meta={session.organisation.displayName}
-        title={t('core.space.titles.wholesaler')}
-        description={t('wholesaler.home.intro')}
-      />
+    <div className="flex flex-col gap-6">
+      <PageHeader title={t('core.space.titles.wholesaler')} description={t('wholesaler.home.intro')} />
       <LiveRefresh table="signals" fallbackMs={4_000} />
 
-      {selected ? (
-        <section aria-labelledby="repartition-equitable" className="flex flex-col gap-3 border-y border-line bg-surface-subtle px-4 py-5">
-          <h2 id="repartition-equitable" className="font-semibold text-ink">
-            {t('wholesaler.home.splitTitle')}
-          </h2>
-          {canSplit ? (
-            <>
-              <p className="text-ink">
-                {t('wholesaler.home.splitFor', { molecule: selected.molecule_name, level: t(`core.levels.${selected.level}`) })}
-              </p>
-              <Link
-                href={`/grossiste/repartition/${selected.molecule_id}`}
-                className="inline-flex min-h-12 w-fit items-center rounded-md bg-brand px-5 font-medium text-white no-underline hover:opacity-90"
-              >
-                {t('wholesaler.home.splitAction')}
-              </Link>
-            </>
-          ) : (
-            <p className="text-ink-muted">
-              {t('wholesaler.home.splitNotYet', { molecule: selected.molecule_name, level: t(`core.levels.${selected.level}`) })}
-            </p>
-          )}
-        </section>
-      ) : null}
+      <SignalsDashboard data={data} basePath="/grossiste" figures={figures} afterSelected={splitPanel} />
 
-      <SignalsDashboard data={data} basePath="/grossiste" />
-
-      <section aria-labelledby="mes-decisions" className="flex flex-col gap-3">
-        <h2 id="mes-decisions" className="text-lg font-semibold text-ink">
-          {t('wholesaler.home.decisionsTitle')}
-        </h2>
+      <Panel title={t('wholesaler.home.decisionsTitle')} titleId="mes-decisions" bodyClassName="px-4">
         {decisions === null ? (
-          <p className="text-sm text-ink-muted">{t('wholesaler.home.decisionsUnavailable')}</p>
+          <p className="py-4 text-sm text-ink-muted">{t('wholesaler.home.decisionsUnavailable')}</p>
         ) : decisions.length === 0 ? (
-          <p className="text-sm text-ink-muted">{t('wholesaler.home.decisionsEmpty')}</p>
+          <p className="py-4 text-sm text-ink-muted">{t('wholesaler.home.decisionsEmpty')}</p>
         ) : (
-          <ul className="hairline-list border-y border-line text-sm">
-            {decisions.map((d) => (
+          <ul className="hairline-list text-sm">
+            {decisions.slice(0, 5).map((d) => (
               <li key={d.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 py-3">
                 <span className="text-ink-muted tabular-nums">{formatDate(d.decided_at)}</span>
                 <Link href={`/grossiste/repartition/${d.molecule_id}`} className="font-medium">
@@ -92,7 +99,7 @@ export default async function WholesalerHome({ searchParams }: PageProps<'/gross
             ))}
           </ul>
         )}
-      </section>
+      </Panel>
     </div>
   );
 }
