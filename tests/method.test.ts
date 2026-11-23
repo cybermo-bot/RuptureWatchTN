@@ -22,6 +22,9 @@ describe('methods page', () => {
       gate2: method.gate2,
       hold: method.hold,
       never: method.never,
+      reasons: method.reasons,
+      explorer: method.explorer,
+      caseDefinition: method.caseDefinition,
     });
     expect(texts.length).toBeGreaterThan(30);
     // "garde-fou 1" and "garde-fou 2" are names, not thresholds.

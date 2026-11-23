@@ -108,3 +108,43 @@ export function buildScenario(opts: ScenarioOptions): ScenarioStep[] {
 
 export const SCENARIO_LENGTH_DAYS = 22;
 export { DAY as SCENARIO_DAY_MS };
+
+export interface FalseAlarmOptions {
+  moleculeId: string;
+  start: Date;
+  /** At least 4 demo pharmacies, all in the same governorate. */
+  pharmacies: DemoPharmacy[];
+}
+
+/**
+ * The false alarms the thresholds are there to stop, both in one governorate:
+ * one confused pharmacy reports the same medicine every day from day 1 to day 14,
+ * and on days 4 to 6 three other pharmacies of the same governorate report (one wholesaler late).
+ * With the default values neither confirms: one pharmacy counts once, one governorate stops at
+ * "probable". With low settings (one governorate, or fewer pharmacies) they do.
+ */
+export function buildFalseAlarmScenario(opts: FalseAlarmOptions): ScenarioStep[] {
+  const { moleculeId, start, pharmacies } = opts;
+  const gov = pharmacies[0]?.governorateCode;
+  if (pharmacies.length < 4 || pharmacies.some((p) => p.governorateCode !== gov)) {
+    throw new Error('buildFalseAlarmScenario needs at least 4 demo pharmacies in one governorate');
+  }
+  const at = (h: number) => new Date(start.getTime() + h * HOUR);
+  let n = 0;
+  const report = (p: DemoPharmacy, h: number): PharmacyReport => ({
+    id: `sim-fa-${moleculeId}-${++n}`,
+    pharmacyId: p.id,
+    governorateCode: p.governorateCode,
+    moleculeId,
+    kind: 'not_delivered',
+    orderedAt: at(h - 80), // past the 72-hour rule, like the main scenario
+    reportedAt: at(h),
+    origin: 'simulated',
+  });
+  const steps: ScenarioStep[] = [];
+  for (let day = 1; day <= 14; day++) steps.push({ atHours: day * 24 + 9, labelKey: 'scenario.dailyReport', report: report(pharmacies[0], day * 24 + 9) });
+  for (const [i, day] of [4, 5, 6].entries()) {
+    steps.push({ atHours: day * 24 + 15, labelKey: 'scenario.regionalReport', report: report(pharmacies[i + 1], day * 24 + 15) });
+  }
+  return steps.sort((a, b) => a.atHours - b.atHours);
+}

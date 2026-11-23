@@ -4,6 +4,7 @@ import { LevelBadge } from '@/components/LevelBadge';
 import { OriginBadge } from '@/components/OriginBadge';
 import { PageHeader } from '@/components/PageHeader';
 import { SiteFooter, SiteHeader } from '@/components/SiteChrome';
+import { ThresholdExplorer } from '@/components/method/ThresholdExplorer';
 import { readSources } from '@/lib/content/sources';
 import { ACTIVE_MEMBER_DAYS } from '@/lib/signals/members';
 import { t, type MessageKey } from '@/lib/i18n';
@@ -30,6 +31,10 @@ const VARS = {
   clearedDays: P.clearedDisplayDays,
 };
 const tv = (key: MessageKey) => t(key, VARS);
+
+/** The parameters with a reason next to them (session 3 brief, section 6). */
+const REASONED = ['minUndeliveredHours', 'confirmMinPharmacies', 'confirmMinGovernorates', 'confirmMemberShare', 'confirmWindowDays', 'quietDays', 'staleDays'] as const;
+const isReasoned = (k: keyof SignalParams): k is (typeof REASONED)[number] => (REASONED as readonly string[]).includes(k);
 
 /** A parameter's value as shown: shares as a percentage, everything else as it is. */
 function paramValue(k: keyof SignalParams): string {
@@ -177,6 +182,7 @@ export default function MethodPage() {
           </Section>
 
           <Section id="seuils" title={t('core.method.paramsTitle')}>
+            <p className="text-ink">{t('core.method.caseDefinition')}</p>
             <div className="overflow-x-auto">
               <table className="hairline-table min-w-[32rem] text-sm">
                 <thead>
@@ -193,12 +199,20 @@ export default function MethodPage() {
                     <tr key={k}>
                       <td className="font-mono text-xs text-ink">{k}</td>
                       <td className="text-end font-mono">{paramValue(k)}</td>
-                      <td>{tv(`core.method.params.${k}`)}</td>
+                      <td>
+                        <span className="block">{tv(`core.method.params.${k}`)}</span>
+                        {isReasoned(k) ? (
+                          <span className="mt-1 block text-ink-muted">
+                            {t('core.method.reasonLabel')} {tv(`core.method.reasons.${k}`)}
+                          </span>
+                        ) : null}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
+            <ThresholdExplorer noticeSource={t('core.scenario.noticeSource')} />
             <h3 className="font-semibold text-ink">{t('core.method.smallCountsTitle')}</h3>
             <p className="text-ink">{t('core.method.smallCounts')}</p>
           </Section>

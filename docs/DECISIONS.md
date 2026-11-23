@@ -4,6 +4,13 @@ Newest first. Each entry: what was decided, and why.
 
 ## 2026-11-23, session 3
 
+### Threshold explorer on the methods page
+- Four sliders (pharmacies for confirmed 2 to 12, governorates 1 to 5, pharmacies for likely 1 to 5, wait 24 to 120 hours). Each change replays two simulated scenarios through `evaluate()` in the browser (`lib/scenario/explore.ts`): evaluation at every step and at the end of every day, carrying the previous level, as the signal service does. Nothing is written; no request is made.
+- Second scenario `buildFalseAlarmScenario` in `lib/signal/scenario.ts`: in one governorate, one pharmacy reporting every day for 14 days plus three other pharmacies on days 4 to 6. With the defaults it stops at "probable" (one count per pharmacy, one governorate); with one governorate enough it confirms. Tested in `tests/explore.test.ts`.
+- Every sentence under the timelines is computed from the replay ("Avec 4 pharmacies : confirmée au jour 5."). Each line changes that setting alone, so its effect reads on its own; the timelines show all settings together.
+- Each threshold has its reason under its value, and the section opens with the case-definition reading (suspect, probable, confirmé). No digit is typed in these texts (tested).
+- Seen while building it, not changed: once "levée", a molecule with a foreign notice still active goes back to "sous surveillance" at the next evaluation, because "levée" is held only when no evidence remains. In the real scenario that happens the evening of day 22. A question for the team (section "Questions" of the session 3 report), since changing it is a rule change.
+
 ### DPM list: names only, flag rebuilt by script
 - `scripts/build-dpm-list.ts` (`npm run dpm:build`) rebuilds `dpm-dci.csv` and `dpm-dci.json` from the raw copy and the CNAM file. The name key (`lib/dpm/key.ts`) drops accents, articles ("DE"), salt and hydrate words (when another word remains, so "CALCIUM" stays calcium but "ROSUVASTATINE CALCIUM" is rosuvastatin), and a final E on long words, so English forms match French ones ("METFORMIN HYDROCHLORIDE" = METFORMINE). A name counts as in the CNAM VEI list when it is a CNAM molecule or a component of a combination. Result: 599 of 2,227 names flagged, 48 flags changed against the first pass (mostly English salt forms now matched; "CHLORURE DE CALCIUM" now "no", since CNAM lists calcium only as CALCIUM and in combinations).
 - The "registered in Tunisia, not followed" answer (`lib/dpm/match.ts`) uses only names outside the CNAM list, and only when the catalogue search found nothing. It accepts a start of a name (5 letters or more) and one or two typos. Used by the WhatsApp search now; `/medicaments` belongs to track B and gets it when track B merges.

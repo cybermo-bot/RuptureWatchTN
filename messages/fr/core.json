@@ -674,7 +674,55 @@
       }
     },
     "backHome": "Retour à l’accueil",
-    "shareValue": "{pct} %"
+    "shareValue": "{pct} %",
+    "caseDefinition": "Ces règles se lisent comme une définition de cas en épidémiologie : un cas suspect (« sous surveillance »), un cas probable (« probable »), un cas confirmé (« confirmée »). Chaque seuil a sa raison, écrite sous sa valeur.",
+    "reasonLabel": "Pourquoi :",
+    "reasons": {
+      "minUndeliveredHours": "une commande ne compte qu’après un délai normal de livraison. Une livraison lente n’est pas une rupture.",
+      "confirmMinPharmacies": "des signalements indépendants. Chaque pharmacie compte une fois : une seule pharmacie ne fait pas monter un niveau, même en signalant chaque jour.",
+      "confirmMinGovernorates": "un problème limité à une région vient souvent de la distribution d’un grossiste, pas d’une rupture nationale. Un seul gouvernorat s’arrête à « probable ».",
+      "confirmMemberShare": "la barre monte avec le réseau : {confirmMin} pharmacies est le plancher d’un pilote, pas la règle nationale.",
+      "confirmWindowDays": "un niveau doit garder ses preuves : seuls les signalements récents comptent.",
+      "quietDays": "un niveau est levé quand les livraisons reprennent et que plus personne ne signale.",
+      "staleDays": "un niveau est abaissé quand les signalements s’arrêtent longtemps, même sans livraison signalée."
+    },
+    "explorer": {
+      "title": "Explorer les seuils",
+      "intro": "Changez un seuil : deux scénarios simulés sont rejoués dans votre navigateur, avec les mêmes règles, à côté des valeurs par défaut. Rien n’est enregistré.",
+      "simulated": "Données simulées",
+      "reset": "Valeurs par défaut",
+      "settings": {
+        "confirmMinPharmacies": "Pharmacies pour « confirmée »",
+        "confirmMinGovernorates": "Gouvernorats pour « confirmée »",
+        "likelyMinPharmacies": "Pharmacies pour « probable »",
+        "minUndeliveredHours": "Attente avant qu’une commande compte, en heures"
+      },
+      "defaultValue": "par défaut {value}",
+      "real": {
+        "title": "Une vraie rupture",
+        "body": "Un avis étranger, puis des pharmacies de trois gouvernorats qui signalent, puis des livraisons qui reprennent."
+      },
+      "falseAlarm": {
+        "title": "Deux fausses alertes",
+        "body": "Dans un seul gouvernorat : une pharmacie qui signale le même médicament chaque jour, et trois autres pharmacies livrées en retard par le même grossiste."
+      },
+      "rowDefault": "Par défaut",
+      "rowYours": "Vos réglages",
+      "dayAxis": "Jours {first} à {last}",
+      "reached": "{level} au jour {day}",
+      "nothing": "Aucun niveau",
+      "separator": " · ",
+      "onDay": "au jour {day}",
+      "never": "jamais",
+      "lines": {
+        "confirmMinPharmacies": "Avec {value} pharmacies : confirmée {when}.",
+        "confirmMinGovernorates": "Avec {value} gouvernorats : confirmée {when}.",
+        "likelyMinPharmacies": "Avec {value} pharmacies pour « probable » : probable {when}.",
+        "minUndeliveredHours": "Avec {value} heures d’attente : confirmée {when}."
+      },
+      "linesTitle": "Une vraie rupture, réglage par réglage",
+      "falseLine": "Fausses alertes : confirmées {defaultWhen} avec les valeurs par défaut, {yoursWhen} avec vos réglages."
+    }
   },
   "scenario": {
     "title": "Le scénario : une rupture simulée, du premier signe à la levée",
@@ -713,7 +761,9 @@
     "historyEmpty": "Aucun changement pour l’instant.",
     "end": "Fin du scénario : le médicament est de nouveau livré, l’alerte est levée.",
     "memoryNote": "Rien n’est enregistré : « Recommencer » remet tout à zéro.",
-    "controls": "Commandes du scénario"
+    "controls": "Commandes du scénario",
+    "dailyReport": "La même pharmacie signale encore le même médicament",
+    "regionalReport": "Une autre pharmacie du même gouvernorat signale"
   },
   "replay": {
     "title": "Retour sur les ruptures passées",
