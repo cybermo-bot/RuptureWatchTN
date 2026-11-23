@@ -27,6 +27,56 @@ Newest first. Each entry: what was decided, and why.
 - The same pharmacy count decides gate two's "enough pharmacies, but one governorate" (`single_governorate_cap`), so the two rules never disagree about what "enough" means.
 - Tests: the floor wins at 100 members, the share wins at 1,500 (30 needed), a missing or invalid count means the floor (`tests/signal.test.ts`); the count and its effect through the signal service on the real migrations (`tests/db/active-members.test.ts`). The 31 earlier tests are unchanged.
 
+## 2026-11-23, track D (wholesaler)
+
+### The wholesaler space reuses the coordination view
+- `/grossiste` calls `loadDashboard` and `SignalsDashboard` (track A) with the wholesaler's own client: the database already gives a wholesaler `signals_view`, `governorate_counts` (counts under 3 as "<3") and `demand_by_governorate`, and nothing that names a pharmacy. "Levée" is left out: the brief asks for "sous surveillance" and above. Above the dashboard, a band offers the split when the selected molecule is "probable" or "confirmée", and says why not otherwise. No change to the shared component.
+
+### The fair split
+- `lib/allocation/split.ts`, pure: the hospital reserve first (rounded down), then water filling: the governorates with the fewest days of cover are raised first until all reach the same level, capped at the need for the period (enough for `periodDays` of cover). Whole boxes: the continuous split is rounded down and the few boxes left go one at a time to the lowest cover after, ties by governorate code, so the result is deterministic. What no governorate needs stays "non attribué"; reserve + allocated + unallocated always equals the stock (tested for stocks from 0 to 1,000,000).
+- `lib/allocation/params.ts`: reserve 10 %, period 30 days. Design parameters proposed for a pilot, shown on screen as such; nothing in the Phase 2.1 notes in this repository fixes their values.
+- Monthly use and days of cover by governorate: `supabase/seed/allocation-demo.json`, invented for the demonstration, every value marked `simulated`, one set for every molecule. The screen shows the "Simulé" badge and says a pilot would take them from the wholesaler's own sales.
+- The page computes the split on the server from the typed stock (a GET form, so it works before JavaScript loads). The server action computes it again before storing: what is recorded is always the platform's proposal, never figures sent by the browser.
+
+### The decision log (migration `20261123003000_track_d_allocation_decisions.sql`)
+- `allocation_decisions`: molecule, organisation (set by the database), stock, `recommended` (reserve, boxes and cover by governorate, parameters, origin of the figures), applied, reason, time, origin (the deciding organisation's, set by the database). Insert granted on the decision's own columns only. A wholesaler inserts and reads its own; coordinators read all; nobody updates or deletes. "Ne pas appliquer" needs a reason of at least 15 characters, checked in the form, the server action and a table constraint.
+- The migration does not bump `system_meta.schema_version`, to avoid colliding with the other tracks' migrations: the team lead sets it when merging.
+- For the coordination log (track A): read `allocation_decisions` with the coordinator's client, joined to `molecules (name)`; the wholesaler's name is in `organisations` but a coordinator cannot read other organisations, so show "un grossiste" or add a view.
+
+### End-to-end tests
+- New dev dependency `@playwright/test`: the brief asks for Playwright. `playwright.config.ts`, `tests/e2e/*.spec.ts` (Vitest only runs `*.test.ts`), `npm run test:e2e`, against `E2E_BASE_URL`; skipped when it is not set, so CI is unchanged. Tests 1 and 2 run in order (2 looks for the medicine reported in 1); test 3 is independent; test 4 waits for track B.
+
+## 2026-11-23, track C (directory and Library)
+
+### The Google search runs in the browser; the server route is gone
+- Rule 3: the visitor's position never reaches our server. `components/directory/PharmacyFinder.tsx` calls the Places library of the Maps JavaScript API that `PatientMap` already loads (`Place.searchNearby`, 3 km, 20 results, `includedPrimaryTypes: ["pharmacy"]`, ranked by distance). `app/api/places/nearby/route.ts` and its test are deleted, and `GOOGLE_PLACES_API_KEY` is no longer used. The browser key must now allow "Places API (New)" as well as "Maps JavaScript API" (`.env.example`).
+- Fields asked: id, display name, formatted address, location, regular and current opening hours, national phone number, Google Maps link (`GOOGLE_FIELDS`, tested). Results live in the component's memory only: never stored, cached, logged or sent to our server. When the map falls back to OpenStreetMap, Google results are dropped and the search runs again on the OpenStreetMap list.
+
+### A governorate picked from the list: search inside its outline, not around its centre
+- The centroid of a large governorate falls far from its towns (Sfax's is 35 km from the city, Tataouine's is in the desert), so a 3 km search around it finds nothing. With Google, `Place.searchByText` ("pharmacie", type pharmacy, strict) restricted to the governorate's bounding box. With OpenStreetMap, the pharmacies whose point falls inside the governorate's outline (computed at export), the 20 nearest to the mean position of that governorate's pharmacies, which sits in its main town.
+- `data/reference/governorate-areas.json` (`npm run directory:areas`): names from the governorates migration, centroid and bounding box from the geoBoundaries file. A test recomputes it from the source.
+- `PatientMap` takes its centre only when it mounts, so the page remounts it (a `key` per governorate) instead of changing the shared component.
+
+### One representation of opening hours, computed on the phone
+- `lib/directory/hours.ts`: a week of intervals in minutes from Sunday 00:00, Tunis time (`Intl`, Africa/Tunis, whatever the phone's zone). Google periods are converted in the browser; OpenStreetMap's `opening_hours` tag is converted at export time.
+- "Ouvert maintenant": the current minute is inside an interval (Google's current hours, which include special days, when given). "Ouvert ce soir après 22 h": open at some moment between 22:00 and 06:00. "Ouvert le week-end": open on Saturday from 14:00 or on Sunday, because nearly every Tunisian pharmacy opens on Saturday morning and the filter would mean nothing otherwise; the page says so under the filters. A pharmacy without hours shows "Horaires non renseignés" and only when no filter is on.
+
+### OpenStreetMap fallback: parsed at export, not on the phone
+- New dev dependency `opening_hours` (opening_hours.js, maintained, LGPL-3.0): the reference parser for the OSM tag. Used only by `scripts/export-osm-pharmacies.ts`, so nothing heavy is sent to phones: the export stores each pharmacy's regular week, computed over the week after the export date.
+- The library has no Tunisian public holidays: a value with `PH` or `SH` rules is read again without those rules, and the count is printed. A value it cannot read gives no hours, never a guess. The page says the hours are for an ordinary week without public holidays, and gives the data date.
+- `/api/places/osm` serves the whole file (static, cached an hour); the phone sorts by distance, so no position is sent. 404 and an honest empty state until `npm run osm:export` has been run.
+
+### The Library
+- `npm run library:import` downloads `CIS_bdpm.txt`, `CIS_COMPO_bdpm.txt` and `CIS_CPD_bdpm.txt` into `data/raw/bdpm/` and writes `data/reference/library-fr.json`, for the CNAM molecules only. Text decoded as UTF-8, or Windows-1252 when it is not valid UTF-8. A line with too few columns stops the import instead of being skipped.
+- Matching: a CNAM molecule matches a French product when its components, normalised (upper case, no accents, every word and salt kept, order ignored), equal the product's active substances, or the same with each substance replaced by its therapeutic fraction (FT) where the BDPM gives one ("VALPROATE DE SODIUM" → "ACIDE VALPROÏQUE"). Exact names only: no fuzzy matching, since a wrong match shows the status of another medicine. Only products with an active authorisation; marketed first.
+- Reading the conditions: "liste I", "liste II", "stupéfiant" and any other prescription condition read as "Sur ordonnance en France". A condition that says in words that no prescription is needed reads "Sans ordonnance en France". No condition at all reads "Sans ordonnance en France" only if all ten known products of the check agree (`KNOWN_PRODUCTS` in `scripts/lib/library.ts`, result stored in the file); otherwise it reads "Statut non déterminé", with a line explaining why. The conditions are shown word for word under each product.
+- The page reads the molecule by id with the public key, and the file on the server. No link to or from the request flow, no alternative, no suggestion (rule 12). The banner is a full band with heavy rules and bold ink text, no alarm colour.
+
+### Files outside track C changed, to be reviewed by the team lead
+- `messages/fr/core.json` (`method.sources.bdpm`, and the OpenStreetMap use sentence) and `tests/method.test.ts` (the new source heading), because every `data/SOURCES.md` heading needs its methods-page text.
+- `next.config.ts`: file tracing for `library-fr.json` and `osm-pharmacies.json`.
+- `.env.example`: the browser key's restrictions; `GOOGLE_PLACES_API_KEY` removed. `docs/CONTRIBUTING.md` still mentions it.
+
 ## 2026-11-22, session 4
 
 ### Fixes from session 2's questions

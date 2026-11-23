@@ -1,0 +1,367 @@
+{
+  "source": "geoBoundaries gbOpen TUN ADM1 (2017), OpenStreetMap",
+  "licence": "ODbL 1.0, © OpenStreetMap contributors, via geoBoundaries (www.geoboundaries.org)",
+  "method": "centre: area-weighted centroid of the outline; bounds: bounding box of the outline",
+  "governorates": [
+    {
+      "code": "TN-11",
+      "nameFr": "Tunis",
+      "nameAr": "تونس",
+      "centre": {
+        "lat": 36.80098,
+        "lng": 10.17874
+      },
+      "bounds": {
+        "south": 36.69255,
+        "west": 10.00379,
+        "north": 36.94316,
+        "east": 10.35478
+      }
+    },
+    {
+      "code": "TN-12",
+      "nameFr": "Ariana",
+      "nameAr": "أريانة",
+      "centre": {
+        "lat": 36.95027,
+        "lng": 10.13287
+      },
+      "bounds": {
+        "south": 36.82197,
+        "west": 9.96329,
+        "north": 37.11516,
+        "east": 10.28864
+      }
+    },
+    {
+      "code": "TN-13",
+      "nameFr": "Ben Arous",
+      "nameAr": "بن عروس",
+      "centre": {
+        "lat": 36.63204,
+        "lng": 10.24585
+      },
+      "bounds": {
+        "south": 36.44671,
+        "west": 10.04295,
+        "north": 36.81236,
+        "east": 10.41789
+      }
+    },
+    {
+      "code": "TN-14",
+      "nameFr": "La Manouba",
+      "nameAr": "منوبة",
+      "centre": {
+        "lat": 36.77987,
+        "lng": 9.86646
+      },
+      "bounds": {
+        "south": 36.55297,
+        "west": 9.56626,
+        "north": 36.97166,
+        "east": 10.11917
+      }
+    },
+    {
+      "code": "TN-21",
+      "nameFr": "Nabeul",
+      "nameAr": "نابل",
+      "centre": {
+        "lat": 36.6927,
+        "lng": 10.71824
+      },
+      "bounds": {
+        "south": 36.35275,
+        "west": 10.3323,
+        "north": 37.14315,
+        "east": 11.13673
+      }
+    },
+    {
+      "code": "TN-22",
+      "nameFr": "Zaghouan",
+      "nameAr": "زغوان",
+      "centre": {
+        "lat": 36.3244,
+        "lng": 10.01444
+      },
+      "bounds": {
+        "south": 36.00057,
+        "west": 9.59453,
+        "north": 36.66277,
+        "east": 10.39089
+      }
+    },
+    {
+      "code": "TN-23",
+      "nameFr": "Bizerte",
+      "nameAr": "بنزرت",
+      "centre": {
+        "lat": 37.07947,
+        "lng": 9.6152
+      },
+      "bounds": {
+        "south": 36.7234,
+        "west": 8.89859,
+        "north": 37.54203,
+        "east": 10.28125
+      }
+    },
+    {
+      "code": "TN-31",
+      "nameFr": "Béja",
+      "nameAr": "باجة",
+      "centre": {
+        "lat": 36.68676,
+        "lng": 9.31892
+      },
+      "bounds": {
+        "south": 36.33545,
+        "west": 8.88456,
+        "north": 37.15702,
+        "east": 9.86402
+      }
+    },
+    {
+      "code": "TN-32",
+      "nameFr": "Jendouba",
+      "nameAr": "جندوبة",
+      "centre": {
+        "lat": 36.6334,
+        "lng": 8.70214
+      },
+      "bounds": {
+        "south": 36.34722,
+        "west": 8.15365,
+        "north": 37.00862,
+        "east": 9.07677
+      }
+    },
+    {
+      "code": "TN-33",
+      "nameFr": "Le Kef",
+      "nameAr": "الكاف",
+      "centre": {
+        "lat": 36.03408,
+        "lng": 8.67979
+      },
+      "bounds": {
+        "south": 35.61594,
+        "west": 8.25346,
+        "north": 36.45343,
+        "east": 9.17076
+      }
+    },
+    {
+      "code": "TN-34",
+      "nameFr": "Siliana",
+      "nameAr": "سليانة",
+      "centre": {
+        "lat": 36.05281,
+        "lng": 9.33735
+      },
+      "bounds": {
+        "south": 35.47725,
+        "west": 8.92446,
+        "north": 36.46526,
+        "east": 9.76969
+      }
+    },
+    {
+      "code": "TN-41",
+      "nameFr": "Kairouan",
+      "nameAr": "القيروان",
+      "centre": {
+        "lat": 35.61569,
+        "lng": 9.86298
+      },
+      "bounds": {
+        "south": 35.02023,
+        "west": 9.26956,
+        "north": 36.13833,
+        "east": 10.30727
+      }
+    },
+    {
+      "code": "TN-42",
+      "nameFr": "Kasserine",
+      "nameAr": "القصرين",
+      "centre": {
+        "lat": 35.21863,
+        "lng": 8.75327
+      },
+      "bounds": {
+        "south": 34.62741,
+        "west": 8.24521,
+        "north": 35.79088,
+        "east": 9.33936
+      }
+    },
+    {
+      "code": "TN-43",
+      "nameFr": "Sidi Bouzid",
+      "nameAr": "سيدي بوزيد",
+      "centre": {
+        "lat": 34.86605,
+        "lng": 9.5501
+      },
+      "bounds": {
+        "south": 34.26474,
+        "west": 8.92088,
+        "north": 35.49549,
+        "east": 10.06361
+      }
+    },
+    {
+      "code": "TN-51",
+      "nameFr": "Sousse",
+      "nameAr": "سوسة",
+      "centre": {
+        "lat": 35.86797,
+        "lng": 10.40823
+      },
+      "bounds": {
+        "south": 35.39664,
+        "west": 10.15884,
+        "north": 36.39177,
+        "east": 10.68671
+      }
+    },
+    {
+      "code": "TN-52",
+      "nameFr": "Monastir",
+      "nameAr": "المنستير",
+      "centre": {
+        "lat": 35.59889,
+        "lng": 10.7598
+      },
+      "bounds": {
+        "south": 35.42302,
+        "west": 10.4932,
+        "north": 35.80545,
+        "east": 11.04986
+      }
+    },
+    {
+      "code": "TN-53",
+      "nameFr": "Mahdia",
+      "nameAr": "المهدية",
+      "centre": {
+        "lat": 35.32219,
+        "lng": 10.62871
+      },
+      "bounds": {
+        "south": 35.08891,
+        "west": 10.16056,
+        "north": 35.5949,
+        "east": 11.16643
+      }
+    },
+    {
+      "code": "TN-61",
+      "nameFr": "Sfax",
+      "nameAr": "صفاقس",
+      "centre": {
+        "lat": 34.76778,
+        "lng": 10.38108
+      },
+      "bounds": {
+        "south": 34.168,
+        "west": 9.7111,
+        "north": 35.27851,
+        "east": 11.34309
+      }
+    },
+    {
+      "code": "TN-71",
+      "nameFr": "Gafsa",
+      "nameAr": "قفصة",
+      "centre": {
+        "lat": 34.40188,
+        "lng": 8.77125
+      },
+      "bounds": {
+        "south": 34.05264,
+        "west": 8.04168,
+        "north": 34.81023,
+        "east": 9.56073
+      }
+    },
+    {
+      "code": "TN-72",
+      "nameFr": "Tozeur",
+      "nameAr": "توزر",
+      "centre": {
+        "lat": 33.9309,
+        "lng": 7.97506
+      },
+      "bounds": {
+        "south": 33.42466,
+        "west": 7.52198,
+        "north": 34.53235,
+        "east": 8.64814
+      }
+    },
+    {
+      "code": "TN-73",
+      "nameFr": "Kébili",
+      "nameAr": "قبلي",
+      "centre": {
+        "lat": 33.27705,
+        "lng": 8.88613
+      },
+      "bounds": {
+        "south": 32.5026,
+        "west": 7.73256,
+        "north": 34.18543,
+        "east": 10.01166
+      }
+    },
+    {
+      "code": "TN-81",
+      "nameFr": "Gabès",
+      "nameAr": "قابس",
+      "centre": {
+        "lat": 33.78086,
+        "lng": 9.79299
+      },
+      "bounds": {
+        "south": 33.26988,
+        "west": 9.24739,
+        "north": 34.28262,
+        "east": 10.48034
+      }
+    },
+    {
+      "code": "TN-82",
+      "nameFr": "Médenine",
+      "nameAr": "مدنين",
+      "centre": {
+        "lat": 33.14538,
+        "lng": 10.88254
+      },
+      "bounds": {
+        "south": 32.24992,
+        "west": 9.70964,
+        "north": 33.91508,
+        "east": 11.59994
+      }
+    },
+    {
+      "code": "TN-83",
+      "nameFr": "Tataouine",
+      "nameAr": "تطاوين",
+      "centre": {
+        "lat": 31.97284,
+        "lng": 9.94987
+      },
+      "bounds": {
+        "south": 30.23024,
+        "west": 8.35683,
+        "north": 33.23475,
+        "east": 11.34198
+      }
+    }
+  ]
+}

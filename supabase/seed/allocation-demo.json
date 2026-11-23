@@ -1,0 +1,150 @@
+{
+  "origin": "simulated",
+  "note": "Demonstration figures, invented for the prototype: estimated monthly use (boxes) and current days of cover for one medicine, per governorate. Nobody publishes these. A real pilot would take them from the wholesaler's own sales.",
+  "governorates": [
+    {
+      "code": "TN-11",
+      "monthlyUse": 620,
+      "coverDays": 6,
+      "origin": "simulated"
+    },
+    {
+      "code": "TN-12",
+      "monthlyUse": 380,
+      "coverDays": 12,
+      "origin": "simulated"
+    },
+    {
+      "code": "TN-13",
+      "monthlyUse": 420,
+      "coverDays": 9,
+      "origin": "simulated"
+    },
+    {
+      "code": "TN-14",
+      "monthlyUse": 260,
+      "coverDays": 4,
+      "origin": "simulated"
+    },
+    {
+      "code": "TN-21",
+      "monthlyUse": 520,
+      "coverDays": 14,
+      "origin": "simulated"
+    },
+    {
+      "code": "TN-22",
+      "monthlyUse": 130,
+      "coverDays": 3,
+      "origin": "simulated"
+    },
+    {
+      "code": "TN-23",
+      "monthlyUse": 390,
+      "coverDays": 8,
+      "origin": "simulated"
+    },
+    {
+      "code": "TN-31",
+      "monthlyUse": 210,
+      "coverDays": 11,
+      "origin": "simulated"
+    },
+    {
+      "code": "TN-32",
+      "monthlyUse": 280,
+      "coverDays": 5,
+      "origin": "simulated"
+    },
+    {
+      "code": "TN-33",
+      "monthlyUse": 170,
+      "coverDays": 7,
+      "origin": "simulated"
+    },
+    {
+      "code": "TN-34",
+      "monthlyUse": 150,
+      "coverDays": 2,
+      "origin": "simulated"
+    },
+    {
+      "code": "TN-41",
+      "monthlyUse": 400,
+      "coverDays": 6,
+      "origin": "simulated"
+    },
+    {
+      "code": "TN-42",
+      "monthlyUse": 300,
+      "coverDays": 3,
+      "origin": "simulated"
+    },
+    {
+      "code": "TN-43",
+      "monthlyUse": 300,
+      "coverDays": 10,
+      "origin": "simulated"
+    },
+    {
+      "code": "TN-51",
+      "monthlyUse": 480,
+      "coverDays": 16,
+      "origin": "simulated"
+    },
+    {
+      "code": "TN-52",
+      "monthlyUse": 380,
+      "coverDays": 13,
+      "origin": "simulated"
+    },
+    {
+      "code": "TN-53",
+      "monthlyUse": 290,
+      "coverDays": 5,
+      "origin": "simulated"
+    },
+    {
+      "code": "TN-61",
+      "monthlyUse": 650,
+      "coverDays": 7,
+      "origin": "simulated"
+    },
+    {
+      "code": "TN-71",
+      "monthlyUse": 240,
+      "coverDays": 4,
+      "origin": "simulated"
+    },
+    {
+      "code": "TN-72",
+      "monthlyUse": 80,
+      "coverDays": 9,
+      "origin": "simulated"
+    },
+    {
+      "code": "TN-73",
+      "monthlyUse": 110,
+      "coverDays": 6,
+      "origin": "simulated"
+    },
+    {
+      "code": "TN-81",
+      "monthlyUse": 270,
+      "coverDays": 8,
+      "origin": "simulated"
+    },
+    {
+      "code": "TN-82",
+      "monthlyUse": 330,
+      "coverDays": 11,
+      "origin": "simulated"
+    },
+    {
+      "code": "TN-83",
+      "monthlyUse": 110,
+      "coverDays": 2,
+      "origin": "simulated"
+    }
+  ]
+}

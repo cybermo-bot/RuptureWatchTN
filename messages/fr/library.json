@@ -1,8 +1,47 @@
 {
+  "banner": "Statut en France, pas en Tunisie. Ne l’utilisez pas pour décider d’un traitement.",
   "page": {
-    "title": "Bibliothèque"
+    "title": "Bibliothèque",
+    "intro": "Une démonstration : ce que la plateforme pourrait montrer avec une liste officielle des médicaments sans ordonnance. Faute de liste tunisienne publiée, elle montre le statut en France, tiré de la base publique française des médicaments.",
+    "searchLabel": "Rechercher une molécule ou une marque",
+    "searchPlaceholder": "Ex. : paracétamol, Doliprane",
+    "tooShort": "Tapez au moins deux lettres.",
+    "noResult": "Aucun résultat pour « {q} ».",
+    "error": "La recherche n’a pas abouti. Réessayez dans un instant.",
+    "moleculesHeading": "Molécules",
+    "medicinesHeading": "Marques en Tunisie, et leur molécule",
+    "moleculeMeta": "Voir le statut en France",
+    "medicineMeta": "Molécule : {molecule}"
   },
   "detail": {
-    "title": "Statut en France"
+    "title": "Statut en France",
+    "back": "Revenir à la Bibliothèque",
+    "notFound": "Cette molécule n’existe pas dans le catalogue.",
+    "noData": "Les données françaises ne sont pas encore chargées.",
+    "noDataBody": "Cette page s’affichera quand le fichier de la base française aura été importé. Rien n’est montré d’ici là.",
+    "unmatched": "Pas de correspondance dans la base française.",
+    "unmatchedBody": "Aucun produit français ne contient exactement les mêmes substances, sous le même nom. Nous ne rapprochons jamais deux noms différents.",
+    "summary": "{count} produits en France contiennent exactement cette molécule.",
+    "countPrescription": "Sur ordonnance en France : {n}",
+    "countNoPrescription": "Sans ordonnance en France : {n}",
+    "countUndetermined": "Statut non déterminé : {n}",
+    "productsHeading": "Produits en France",
+    "notCommercialised": "Non commercialisé en France",
+    "conditions": "Conditions inscrites :",
+    "noConditions": "Aucune condition de prescription inscrite dans la base française.",
+    "source": "Source : Base de données publique des médicaments (France), fichiers téléchargés le {date}. Licence Ouverte. Données non modifiées, sans aucun soutien de l’ANSM, de la HAS ou de l’UNCAM.",
+    "sourceLink": "Base de données publique des médicaments",
+    "cautious": "Pour les produits sans condition inscrite, la base française ne dit pas en toutes lettres qu’ils sont sans ordonnance : nous affichons « Statut non déterminé »."
+  },
+  "status": {
+    "prescription": "Sur ordonnance en France",
+    "no_prescription": "Sans ordonnance en France",
+    "undetermined": "Statut non déterminé"
+  },
+  "kind": {
+    "liste_i": "liste I",
+    "liste_ii": "liste II",
+    "stupefiant": "stupéfiant",
+    "other": "autre condition de prescription"
   }
 }

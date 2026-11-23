@@ -643,8 +643,13 @@
       },
       "openstreetmap": {
         "name": "OpenStreetMap",
-        "use": "La carte de secours des patients, quand Google Maps n’est pas disponible, et la vérification que les positions des pharmacies de démonstration ne tombent sur aucune vraie pharmacie.",
+        "use": "La carte de secours des patients et la liste de secours des pharmacies, quand Google Maps n’est pas disponible, et la vérification que les positions des pharmacies de démonstration ne tombent sur aucune vraie pharmacie.",
         "licence": "Open Database License (ODbL) 1.0. © les contributeurs d’OpenStreetMap, attribution affichée sous la carte."
+      },
+      "bdpm": {
+        "name": "Base de données publique des médicaments (France)",
+        "use": "La Bibliothèque : le statut en France des produits de même molécule, présenté comme une démonstration. Jamais un statut tunisien.",
+        "licence": "Licence Ouverte (article L. 161-40-1 du code de la sécurité sociale). Source et date de mise à jour citées, données non modifiées, sans aucun soutien de l’ANSM, de la HAS ou de l’UNCAM."
       },
       "unknown": {
         "use": "Voir data/SOURCES.md."
