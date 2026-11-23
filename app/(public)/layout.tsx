@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { FollowBanner } from '@/components/public/FollowBanner';
 import { PublicFooter, PublicHeader } from '@/components/public/PublicChrome';
 import { fontVariables, plexArabic } from '@/lib/fonts';
 import { getTranslator } from '@/lib/i18n-server';
@@ -35,6 +36,7 @@ export default async function PublicLayout({ children }: { children: React.React
           {t('public.shell.skipToContent')}
         </a>
         <PublicHeader locale={locale} />
+        <FollowBanner locale={locale} />
         {children}
         <PublicFooter locale={locale} />
       </body>
