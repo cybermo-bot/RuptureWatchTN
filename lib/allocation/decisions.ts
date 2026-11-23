@@ -59,7 +59,16 @@ export interface DecisionRow {
   origin: 'official_source' | 'tester' | 'simulated';
 }
 
-export async function listDecisions(client: SupabaseClient, moleculeId: string | null, limit = 20): Promise<DecisionRow[]> {
+/** The table does not exist yet (migration not applied): PostgREST PGRST205, Postgres 42P01. */
+function isMissingTable(error: { code?: string; message: string }): boolean {
+  return error.code === 'PGRST205' || error.code === '42P01' || (/allocation_decisions/.test(error.message) && /not find|does not exist/.test(error.message));
+}
+
+/**
+ * The caller's decisions (a coordinator's: all of them), newest first. Null when the table does not
+ * exist yet: the rest of the wholesaler space keeps working until the migration is applied.
+ */
+export async function listDecisions(client: SupabaseClient, moleculeId: string | null, limit = 20): Promise<DecisionRow[] | null> {
   let q = client
     .from('allocation_decisions')
     .select('id, molecule_id, stock, applied, deviation_reason, decided_at, origin, molecules ( name )')
@@ -67,7 +76,10 @@ export async function listDecisions(client: SupabaseClient, moleculeId: string |
     .limit(limit);
   if (moleculeId) q = q.eq('molecule_id', moleculeId);
   const { data, error } = await q;
-  if (error) throw new Error(`allocation_decisions: ${error.message}`);
+  if (error) {
+    if (isMissingTable(error)) return null;
+    throw new Error(`allocation_decisions: ${error.message}`);
+  }
   return (data ?? []).map((r) => {
     const mol = (r as { molecules?: { name: string } | { name: string }[] | null }).molecules;
     return {

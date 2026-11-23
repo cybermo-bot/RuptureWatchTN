@@ -200,7 +200,9 @@ export default async function SplitPage({ params, searchParams }: PageProps<'/gr
         <h2 id="historique-decisions" className="font-semibold text-ink">
           {t('wholesaler.split.historyTitle')}
         </h2>
-        {decisions.length === 0 ? (
+        {decisions === null ? (
+          <p className="text-sm text-ink-muted">{t('wholesaler.home.decisionsUnavailable')}</p>
+        ) : decisions.length === 0 ? (
           <p className="text-sm text-ink-muted">{t('wholesaler.split.historyEmpty')}</p>
         ) : (
           <ol className="hairline-list border-y border-line text-sm">

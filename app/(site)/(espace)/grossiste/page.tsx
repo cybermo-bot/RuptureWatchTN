@@ -72,7 +72,9 @@ export default async function WholesalerHome({ searchParams }: PageProps<'/gross
         <h2 id="mes-decisions" className="text-lg font-semibold text-ink">
           {t('wholesaler.home.decisionsTitle')}
         </h2>
-        {decisions.length === 0 ? (
+        {decisions === null ? (
+          <p className="text-sm text-ink-muted">{t('wholesaler.home.decisionsUnavailable')}</p>
+        ) : decisions.length === 0 ? (
           <p className="text-sm text-ink-muted">{t('wholesaler.home.decisionsEmpty')}</p>
         ) : (
           <ul className="hairline-list border-y border-line text-sm">
