@@ -84,6 +84,7 @@ describe('demo:national then demo:clear', () => {
         `select count(*)::int as n from (
            select origin from public.reports union all select origin from public.foreign_notices
            union all select origin from public.availability_requests union all select origin from public.allocation_decisions
+           union all select origin from public.availability_answers
            union all select origin from public.organisations where id = any($1::uuid[])) x
          where origin <> 'simulated'`,
         [NATIONAL_IDS.organisations],
@@ -95,6 +96,23 @@ describe('demo:national then demo:clear', () => {
     const decisions = (await db.query<{ applied: boolean; deviation_reason: string | null }>('select applied, deviation_reason from public.allocation_decisions order by applied')).rows;
     expect(decisions.map((d) => d.applied)).toEqual([false, true]);
     expect(decisions[0].deviation_reason?.length).toBeGreaterThanOrEqual(15);
+    // Answers come from pharmacies of the request's own governorate, never a one-click pharmacy.
+    const answers = (
+      await db.query<{ organisation_id: string; same: boolean; shown: boolean }>(
+        `select a.organisation_id, o.governorate_code = r.governorate_code as same, a.show_identity as shown
+         from public.availability_answers a
+         join public.availability_requests r on r.id = a.request_id
+         join public.organisations o on o.id = a.organisation_id
+         where a.request_id = any($1::uuid[])`,
+        [NATIONAL_IDS.requests],
+      )
+    ).rows;
+    expect(answers).toHaveLength(4);
+    for (const a of answers) {
+      expect(a.same).toBe(true);
+      expect(ONE_CLICK).not.toContain(a.organisation_id);
+    }
+    expect(answers.filter((a) => a.shown)).toHaveLength(1);
     const notice = (await db.query<{ source: string }>('select source from public.foreign_notices')).rows;
     expect(notice).toEqual([{ source: 'Régulateur fictif (démonstration)' }]);
   });
@@ -109,6 +127,7 @@ describe('demo:national then demo:clear', () => {
       reports: NATIONAL_IDS.reports.length,
       organisations: NATIONAL_IDS.organisations.length,
       requests: NATIONAL_IDS.requests.length,
+      answers: 4,
       notices: 1,
       decisions: 2,
     });

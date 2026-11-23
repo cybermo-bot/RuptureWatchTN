@@ -148,6 +148,13 @@ export function pgliteNationalStore(db: PGlite): NationalStore {
             [r.id, r.molecule_id, r.governorate_code, r.created_at, r.expires_at, r.device_hash, r.origin],
           );
         }
+        for (const a of plan.answers) {
+          await tx.query(
+            `insert into public.availability_answers (request_id, organisation_id, answer, show_identity, answered_at, origin)
+             values ($1, $2, $3, $4, $5, $6)`,
+            [a.request_id, a.organisation_id, a.answer, a.show_identity, a.answered_at, a.origin],
+          );
+        }
         for (const d of plan.decisions) {
           await tx.query(
             `insert into public.allocation_decisions (id, molecule_id, organisation_id, stock, recommended, applied, deviation_reason, decided_at, origin)

@@ -93,6 +93,19 @@ const REQUESTS: [string, number][] = [
   ['TN-51', 2.1],
 ];
 
+/**
+ * Answers from demo pharmacies of the request's own governorate (never a one-click pharmacy,
+ * so the video's answer stays free): request index, pharmacy, answer, shows itself, minutes
+ * after the request. Tunis: one shows itself, one stays anonymous. Sousse and Sfax: no.
+ * The other Sfax requests stay unanswered, as the coordination unit's demand figures show.
+ */
+const ANSWERS: [number, string, 'available' | 'unavailable', boolean, number][] = [
+  [4, SEED.tunis2, 'available', true, 20],
+  [4, SEED.tunis3, 'available', false, 45],
+  [5, SEED.sousse1, 'unavailable', false, 30],
+  [1, SEED.sfax1, 'unavailable', false, 50],
+];
+
 /** The foreign notice: a fictional regulator, linked to the page that says what simulated data is. */
 export const DEMO_NOTICE_SOURCE = 'Régulateur fictif (démonstration)';
 export const DEMO_NOTICE_URL = 'https://rupturewatch-tn.vercel.app/methode#origine';
@@ -121,6 +134,14 @@ export interface NationalPlan {
     created_at: string;
     expires_at: string;
     device_hash: string;
+    origin: 'simulated';
+  }[];
+  answers: {
+    request_id: string;
+    organisation_id: string;
+    answer: 'available' | 'unavailable';
+    show_identity: boolean;
+    answered_at: string;
     origin: 'simulated';
   }[];
   notices: { id: string; molecule_id: string; source: string; status: 'shortage'; published_at: string; url: string; origin: 'simulated' }[];
@@ -178,6 +199,14 @@ export function buildDemoNational(
       origin: 'simulated' as const,
     };
   });
+  const answers = ANSWERS.map(([index, organisation, answer, show, minutes]) => ({
+    request_id: requests[index].id,
+    organisation_id: organisation,
+    answer,
+    show_identity: show,
+    answered_at: new Date(Date.parse(requests[index].created_at) + minutes * 60_000).toISOString(),
+    origin: 'simulated' as const,
+  }));
   const notices = [
     {
       id: NATIONAL_IDS.notices[0],
@@ -203,7 +232,7 @@ export function buildDemoNational(
     decided_at: iso(now, d.daysAgo),
     origin: 'simulated' as const,
   }));
-  return { organisations, reports, requests, notices, decisions };
+  return { organisations, reports, requests, answers, notices, decisions };
 }
 
 export interface NationalStore {

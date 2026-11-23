@@ -57,6 +57,7 @@ export function supabaseNationalStore(client: SupabaseClient): NationalStore {
       must('insert reports', await client.from('reports').insert(plan.reports));
       must('insert notices', await client.from('foreign_notices').insert(plan.notices));
       must('insert requests', await client.from('availability_requests').insert(plan.requests));
+      must('insert answers', await client.from('availability_answers').insert(plan.answers));
       must('insert decisions', await client.from('allocation_decisions').insert(plan.decisions));
     },
 

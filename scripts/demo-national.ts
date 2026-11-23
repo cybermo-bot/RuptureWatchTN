@@ -35,7 +35,7 @@ async function main() {
   }
   const p = result.plan;
   console.log(
-    `Created: ${p.organisations.length} simulated pharmacies, ${p.reports.length} reports, ${p.notices.length} foreign notice, ${p.requests.length} patient requests, ${p.decisions.length} wholesaler decisions.`,
+    `Created: ${p.organisations.length} simulated pharmacies, ${p.reports.length} reports, ${p.notices.length} foreign notice, ${p.requests.length} patient requests (${p.answers.length} answers from demo pharmacies), ${p.decisions.length} wholesaler decisions.`,
   );
   for (const [situation, name] of Object.entries(NATIONAL_MOLECULES) as [keyof typeof NATIONAL_MOLECULES, string][]) {
     const e = result.final[situation].evaluation;
