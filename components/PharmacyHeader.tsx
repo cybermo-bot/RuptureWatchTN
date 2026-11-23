@@ -4,14 +4,16 @@ import type { CurrentSession } from '@/lib/auth/session';
 import { t } from '@/lib/i18n';
 import { countUnreadAlerts } from '@/lib/pharmacy/data';
 
-// Top of the pharmacy space: the primary action, then two tabs (followed medicines, alerts).
-export async function PharmacyHeader({ session, active }: { session: CurrentSession; active: 'followed' | 'alerts' }) {
+// Top of the pharmacy space: the primary action, then three tabs (followed medicines, alerts, WhatsApp).
+type Tab = 'followed' | 'alerts' | 'whatsapp';
+
+export async function PharmacyHeader({ session, active }: { session: CurrentSession; active: Tab }) {
   const unread = await countUnreadAlerts();
-  const tab = (key: 'followed' | 'alerts', href: string, label: string, extra?: React.ReactNode) => (
+  const tab = (key: Tab, href: string, label: string, extra?: React.ReactNode) => (
     <Link
       href={href}
       aria-current={active === key ? 'page' : undefined}
-      className={`flex min-h-12 items-center gap-2 border-b-2 px-1 font-medium no-underline ${
+      className={`flex min-h-12 shrink-0 items-center gap-2 border-b-2 px-1 font-medium whitespace-nowrap no-underline ${
         active === key ? 'border-brand text-ink' : 'border-transparent text-ink-muted hover:text-ink'
       }`}
     >
@@ -33,7 +35,7 @@ export async function PharmacyHeader({ session, active }: { session: CurrentSess
       <ButtonLink href="/pharmacie/signaler" className="w-full sm:w-auto sm:self-start">
         {t('core.pharmacy.reportCta')}
       </ButtonLink>
-      <nav aria-label={t('core.pharmacy.tabsLabel')} className="flex gap-6 border-b border-line">
+      <nav aria-label={t('core.pharmacy.tabsLabel')} className="flex gap-x-5 overflow-x-auto border-b border-line sm:gap-x-6">
         {tab('followed', '/pharmacie', t('core.pharmacy.tabs.followed'))}
         {tab(
           'alerts',
@@ -48,6 +50,7 @@ export async function PharmacyHeader({ session, active }: { session: CurrentSess
             </span>
           ) : null,
         )}
+        {tab('whatsapp', '/pharmacie/whatsapp', t('core.whatsappLink.title'))}
       </nav>
     </header>
   );

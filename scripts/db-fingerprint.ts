@@ -25,6 +25,8 @@ const TABLES = [
   'signals',
   'system_meta',
   'wa_inbound',
+  'wa_link_codes',
+  'wa_links',
 ];
 
 type Fingerprint = Record<string, { rows: number; sha256: string }>;

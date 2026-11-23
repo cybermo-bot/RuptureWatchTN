@@ -175,15 +175,26 @@ export async function recomputeSignal(
 export async function recomputeAll(
   store: SignalStore,
   now: Date,
-  options: { params?: Partial<SignalParams> } = {},
+  options: {
+    params?: Partial<SignalParams>;
+    /** Called after each level change that wrote an event (the WhatsApp alerts). Errors are logged, not thrown. */
+    onLevelChange?: (result: RecomputeResult) => Promise<void> | void;
+  } = {},
 ): Promise<{ checked: number; changed: number; failed: number }> {
   const ids = await store.moleculesWithSignal();
   let changed = 0;
   let failed = 0;
   for (const id of ids) {
     try {
-      const result = await recomputeSignal(store, id, now, options);
+      const result = await recomputeSignal(store, id, now, { params: options.params });
       if (result.evaluation.changed) changed++;
+      if (result.eventId !== null && options.onLevelChange) {
+        try {
+          await options.onLevelChange(result);
+        } catch (error) {
+          console.error('recomputeAll: level change hook failed', id, error instanceof Error ? error.message : error);
+        }
+      }
     } catch (error) {
       failed++;
       console.error('recomputeAll: molecule failed', id, error instanceof Error ? error.message : error);

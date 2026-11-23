@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { safeEqual } from '@/lib/whatsapp/inbound';
 import { recomputeAll } from '@/lib/signals/recompute';
 import { supabaseSignalStore } from '@/lib/signals/store';
+import { notifyLevelChange } from '@/lib/whatsapp/notify';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
@@ -18,7 +19,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }
   try {
-    const summary = await recomputeAll(supabaseSignalStore(), new Date());
+    const summary = await recomputeAll(supabaseSignalStore(), new Date(), { onLevelChange: (result) => notifyLevelChange(result) });
     console.info('cron recompute', summary);
     return NextResponse.json(summary, { status: summary.failed ? 500 : 200 });
   } catch (error) {

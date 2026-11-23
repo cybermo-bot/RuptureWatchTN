@@ -1,20 +1,20 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { after } from 'next/server';
 import { redirect } from 'next/navigation';
 import { getCurrentSession, type CurrentSession } from '@/lib/auth/session';
 import { createUserClient } from '@/lib/db/server';
 import { hasReportedNotDelivered, signalsFor } from '@/lib/pharmacy/data';
+import { DELAY_DAYS, type DelayChoice } from '@/lib/pharmacy/delay';
 import type { Level } from '@/lib/signal';
 import { recomputeSignal } from '@/lib/signals/recompute';
 import { supabaseSignalStore } from '@/lib/signals/store';
+import { notifyLevelChange } from '@/lib/whatsapp/notify';
 
 const DAY = 86_400_000;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-/** "Il y a 3 jours", "4 à 7 jours", "Plus d'une semaine": ordered_at = now minus 3, 5 or 8 days. */
-const DELAY_DAYS = { d3: 3, d5: 5, d8: 8 } as const;
-export type DelayChoice = keyof typeof DELAY_DAYS | 'lt3';
 
 export type ReportState = { status: 'idle' } | { status: 'too_early' } | { status: 'error' };
 
@@ -28,10 +28,14 @@ function moleculeIdFrom(formData: FormData): string | null {
   return UUID.test(id) ? id : null;
 }
 
-/** Recomputes after a report; the report is saved even if this fails (the daily run catches up). */
-async function recompute(moleculeId: string, now: Date): Promise<{ before: Level; after: Level } | null> {
+/**
+ * Recomputes after a report; the report is saved even if this fails (the daily run catches up).
+ * A level change also goes to the linked pharmacies on WhatsApp, after the response.
+ */
+async function recompute(moleculeId: string, now: Date, reporterId: string): Promise<{ before: Level; after: Level } | null> {
   try {
     const result = await recomputeSignal(supabaseSignalStore(), moleculeId, now);
+    if (result.eventId !== null) after(() => notifyLevelChange(result, reporterId));
     return { before: result.previous, after: result.evaluation.level };
   } catch (error) {
     console.error('recompute after report failed', moleculeId, error instanceof Error ? error.message : error);
@@ -92,7 +96,7 @@ export async function submitReport(_prev: ReportState, formData: FormData): Prom
   } catch (followError) {
     console.error(followError instanceof Error ? followError.message : followError);
   }
-  const levels = await recompute(moleculeId, now);
+  const levels = await recompute(moleculeId, now, session.organisation.id);
   revalidatePath('/pharmacie', 'layout');
   redirect(resultUrl(moleculeId, 'nd', levels));
 }
@@ -124,7 +128,7 @@ export async function reportDeliveredAgain(formData: FormData): Promise<void> {
     console.error('delivered_again insert failed', { code: error.code });
     redirect(`/pharmacie/molecule/${moleculeId}?erreur=1`);
   }
-  const levels = await recompute(moleculeId, now);
+  const levels = await recompute(moleculeId, now, session.organisation.id);
   revalidatePath('/pharmacie', 'layout');
   redirect(resultUrl(moleculeId, 'da', levels));
 }

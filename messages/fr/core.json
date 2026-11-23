@@ -160,7 +160,33 @@
     "reference": "Référence de l’erreur : {digest}"
   },
   "whatsapp": {
-    "ack": "Bien reçu : « {text} ». RuptureWatch TN, prototype."
+    "ack": "Bien reçu : « {text} ». RuptureWatch TN, prototype.",
+    "unlinked": "Ce numéro n’est relié à aucune pharmacie RuptureWatch TN. Pour signaler par WhatsApp, reliez-le depuis votre espace pharmacie : {url}",
+    "help": "RuptureWatch TN, prototype. Tapez « Signaler » pour signaler une commande non livrée, ou le nom d’un médicament pour le chercher.",
+    "reportButton": "Signaler",
+    "followedBody": "Quel médicament n’a pas été livré ?",
+    "followedButton": "Vos médicaments",
+    "followedSection": "Médicaments suivis",
+    "followedMore": "Un autre médicament ? Tapez son nom.",
+    "followedNone": "Vous ne suivez encore aucun médicament. Tapez le nom du médicament non livré pour le chercher.",
+    "moleculeBody": "{name}\nNiveau actuel : {level}.\n{explanation}\n{disclaimer}\n\nQuand l’avez-vous commandé ?",
+    "moleculeBodyNone": "{name}\nAucun signal pour ce médicament.\n\nQuand l’avez-vous commandé ?",
+    "moleculeUnknown": "Ce médicament n’est plus dans le catalogue. Tapez son nom pour le chercher.",
+    "delayButton": "Choisir le délai",
+    "delaySection": "Commandé",
+    "reported": "Signalement enregistré, merci.\n{name} : {level} (avant : {before}).\n{explanation}\nComment ce niveau est décidé : {methodUrl}\n{disclaimer}",
+    "reportedUnchanged": "Signalement enregistré, merci.\n{name} : {level}, inchangé.\n{explanation}\nComment ce niveau est décidé : {methodUrl}\n{disclaimer}",
+    "reportedNoLevel": "Signalement enregistré, merci. Le niveau de {name} sera recalculé dans la journée.",
+    "reportAnother": "Signaler un autre",
+    "failed": "Le signalement n’a pas pu être enregistré. Réessayez dans un instant.",
+    "searchBody": "Médicaments du catalogue pour « {q} » :",
+    "searchButton": "Voir les résultats",
+    "searchSection": "Catalogue CNAM",
+    "searchNone": "Aucun médicament du catalogue ne correspond à « {q} ». Essayez la marque ou la molécule, ou tapez « Signaler ».",
+    "dpm": "Ce médicament est enregistré en Tunisie (liste DPM). Il n'est pas encore suivi par RuptureWatch, qui suit les médicaments vitaux, essentiels et intermédiaires de la liste CNAM.",
+    "alert": "RuptureWatch TN : {name} passe à « {level} » (avant : {before}).\n{explanation}\nVotre espace : {url}\n{disclaimer}",
+    "linkCode": "RuptureWatch TN : votre code pour relier ce numéro à votre pharmacie est {code}. Il expire dans 10 minutes. Si vous n’avez rien demandé, ignorez ce message.",
+    "linkedWelcome": "Ce numéro est relié à votre pharmacie. Tapez « Signaler » pour signaler une commande non livrée, ou le nom d’un médicament pour le chercher."
   },
   "guidance": {
     "disclaimer": "Ceci n'est pas une déclaration officielle de rupture.",
@@ -768,5 +794,44 @@
     "errorTitle": "Les comptes de démonstration ne répondent pas pour le moment",
     "errorBody": "Réessayez dans une minute. La page n’affiche rien plutôt qu’une vue incomplète.",
     "demoLine": "Démonstration : comptes et données de démonstration."
+  },
+  "whatsappLink": {
+    "title": "WhatsApp",
+    "intro": "Reliez le numéro WhatsApp de l’officine pour signaler en quatre touches et recevoir les alertes sur WhatsApp. Le numéro sert seulement à vous répondre : il n’est montré à personne.",
+    "unavailable": "WhatsApp n’est pas encore activé sur ce site de démonstration. Le signalement sur le web fonctionne normalement.",
+    "linkedTitle": "Numéros reliés",
+    "linkedNone": "Aucun numéro relié.",
+    "linkedSince": "relié le {date}",
+    "unlink": "Délier",
+    "addTitle": "Relier un numéro",
+    "phoneLabel": "Numéro WhatsApp",
+    "phoneHint": "Par exemple 98 123 456 ou +216 98 123 456.",
+    "send": "Recevoir le code",
+    "codeLabel": "Code reçu sur WhatsApp",
+    "codeHint": "6 chiffres, valable 10 minutes.",
+    "confirm": "Relier ce numéro",
+    "otherNumber": "Un autre numéro",
+    "states": {
+      "sent": "Code envoyé au {masked}.",
+      "invalid": "Ce numéro n’est pas valide. Tapez-le avec l’indicatif, par exemple +216 98 123 456.",
+      "unavailable": "WhatsApp n’est pas encore activé sur ce site de démonstration.",
+      "wait": "Un code vient d’être envoyé. Attendez une minute avant d’en demander un autre.",
+      "taken": "Ce numéro est déjà relié à une pharmacie.",
+      "limit": "Trois numéros au plus par pharmacie. Déliez-en un pour en relier un autre.",
+      "send_failed": "Le code n’a pas pu être envoyé. Depuis ce téléphone, écrivez d’abord « Bonjour » au numéro RuptureWatch TN sur WhatsApp, puis réessayez.",
+      "wrong": "Ce code ne correspond pas. Vérifiez-le et réessayez.",
+      "expired": "Ce code a expiré. Demandez-en un nouveau.",
+      "locked": "Trop d’essais. Demandez un nouveau code.",
+      "linked": "Numéro relié. Écrivez « Signaler » au numéro RuptureWatch TN sur WhatsApp pour essayer.",
+      "error": "Une erreur est survenue. Réessayez."
+    },
+    "howTitle": "Sur WhatsApp",
+    "how": {
+      "report": "« Signaler » : la liste de vos médicaments suivis, puis le délai de la commande. Quatre touches.",
+      "search": "Le nom d’un médicament : les médicaments du catalogue qui correspondent.",
+      "alerts": "Les alertes de vos médicaments suivis arrivent sur ce numéro."
+    },
+    "alertsWindow": "Tant que le modèle de message d’alerte n’est pas approuvé par Meta, les alertes WhatsApp n’arrivent qu’aux numéros qui ont écrit au service dans les dernières 24 heures. Toutes les alertes restent dans votre espace.",
+    "spaceLink": "Signaler par WhatsApp"
   }
 }

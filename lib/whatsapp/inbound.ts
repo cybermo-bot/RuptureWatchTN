@@ -36,6 +36,11 @@ export interface InboundText {
   phoneNumberId: string | null;
 }
 
+/** A text, or a tap on a list row or a button we sent: replyId is the id we gave that row or button. */
+export interface InboundMessage extends InboundText {
+  replyId: string | null;
+}
+
 interface RawMessage {
   id?: unknown;
   from?: unknown;
@@ -43,16 +48,45 @@ interface RawMessage {
   timestamp?: unknown;
   type?: unknown;
   text?: { body?: unknown };
+  interactive?: {
+    type?: unknown;
+    list_reply?: { id?: unknown; title?: unknown };
+    button_reply?: { id?: unknown; title?: unknown };
+  };
+  /** Quick-reply button of a template message. */
+  button?: { payload?: unknown; text?: unknown };
 }
 
 const str = (v: unknown): string | null => (typeof v === 'string' && v.length > 0 ? v : null);
 
-/**
- * Extracts incoming text messages. Status updates, reactions, media and anything
- * malformed are skipped, never thrown on: Meta must still get its 200.
- */
+/** Text and reply of one raw message: a text body, or a list row, reply button or template button. */
+function contentOf(raw: RawMessage): { body: string; replyId: string | null } | null {
+  if (raw.type === 'text') return typeof raw.text?.body === 'string' ? { body: raw.text.body, replyId: null } : null;
+  if (raw.type === 'interactive') {
+    const r = raw.interactive?.type === 'list_reply' ? raw.interactive.list_reply : raw.interactive?.type === 'button_reply' ? raw.interactive.button_reply : null;
+    const id = str(r?.id);
+    return id ? { body: typeof r?.title === 'string' ? r.title : '', replyId: id } : null;
+  }
+  if (raw.type === 'button') {
+    const id = str(raw.button?.payload);
+    return id ? { body: typeof raw.button?.text === 'string' ? raw.button.text : '', replyId: id } : null;
+  }
+  return null;
+}
+
+/** Incoming text messages only (kept for the acknowledgement tests). */
 export function parseInboundTexts(payload: unknown): InboundText[] {
-  const out: InboundText[] = [];
+  return parseInbound(payload)
+    .filter((m) => m.replyId === null)
+    .map((m) => ({ messageId: m.messageId, phone: m.phone, userId: m.userId, body: m.body, timestamp: m.timestamp, phoneNumberId: m.phoneNumberId }));
+}
+
+/**
+ * Extracts incoming texts and taps on our lists and buttons. Status updates, reactions,
+ * media and anything malformed are skipped, never thrown on: Meta must still get its 200.
+ */
+export function parseInbound(payload: unknown): InboundMessage[] {
+  const out: InboundMessage[] = [];
   if (!payload || typeof payload !== 'object') return out;
   const p = payload as { object?: unknown; entry?: unknown };
   if (p.object !== 'whatsapp_business_account' || !Array.isArray(p.entry)) return out;
@@ -67,18 +101,19 @@ export function parseInboundTexts(payload: unknown): InboundText[] {
       if (value.messaging_product !== 'whatsapp' || !Array.isArray(value.messages)) continue;
       const phoneNumberId = str(value.metadata?.phone_number_id);
       for (const raw of value.messages as RawMessage[]) {
-        if (!raw || raw.type !== 'text') continue;
+        if (!raw || typeof raw !== 'object') continue;
+        const content = contentOf(raw);
         const messageId = str(raw.id);
-        const body = typeof raw.text?.body === 'string' ? raw.text.body : null;
         const phone = str(raw.from);
         const userId = str(raw.from_user_id);
-        if (!messageId || body === null || (!phone && !userId)) continue;
+        if (!messageId || !content || (!phone && !userId)) continue;
         const ts = Number(raw.timestamp);
         out.push({
           messageId,
           phone,
           userId,
-          body: body.slice(0, 4096),
+          body: content.body.slice(0, 4096),
+          replyId: content.replyId ? content.replyId.slice(0, 200) : null,
           timestamp: Number.isFinite(ts) ? ts : null,
           phoneNumberId,
         });
@@ -88,13 +123,27 @@ export function parseInboundTexts(payload: unknown): InboundText[] {
   return out;
 }
 
+/** Salted SHA-256 of a sender key ("phone:<digits>" or "bsuid:<id>"). The raw value is never stored. */
+function saltedHash(key: string, salt: string): string {
+  return createHash('sha256').update(`${salt}\u0000${key}`).digest('hex');
+}
+
+/** Salted hash of a phone number, digits only: how a linked number is found again. */
+export function hashPhone(digits: string, salt: string): string {
+  return saltedHash(`phone:${digits}`, salt);
+}
+
+/** Salted hash of a business-scoped user id. */
+export function hashUserId(userId: string, salt: string): string {
+  return saltedHash(`bsuid:${userId}`, salt);
+}
+
 /**
  * Salted hash of the sender. Uses the business-scoped user id when present (stable even
  * for users who hide their number), otherwise the phone number. The raw value is never stored.
  */
 export function hashSender(message: Pick<InboundText, 'phone' | 'userId'>, salt: string): string {
-  const key = message.userId ? `bsuid:${message.userId}` : `phone:${message.phone}`;
-  return createHash('sha256').update(`${salt}\u0000${key}`).digest('hex');
+  return message.userId ? hashUserId(message.userId, salt) : hashPhone(message.phone ?? '', salt);
 }
 
 /** The acknowledgement, with the quoted text shortened to keep the reply readable. */

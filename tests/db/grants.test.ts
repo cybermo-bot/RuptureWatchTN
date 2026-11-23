@@ -25,6 +25,8 @@ const TABLES: Record<string, { anon?: Priv[]; authenticated?: Priv[]; service_ro
   signal_events: { service_role: ['select', 'insert', 'delete'] },
   alerts: { authenticated: ['select'], service_role: ALL },
   wa_inbound: { service_role: ALL },
+  wa_links: { service_role: ALL },
+  wa_link_codes: { service_role: ALL },
   // Requests: no direct access but the service role (functions only).
   availability_requests: { service_role: ALL },
   // Answers: insert is granted on columns only (id and answered_at are set by the database).
