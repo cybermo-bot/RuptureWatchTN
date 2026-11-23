@@ -38,6 +38,7 @@ export const NAV: Record<OrganisationType, NavItem[]> = {
     { href: '/pharmacie', label: 'core.nav.items.followed', icon: 'followed', match: PHARMACY_HOME },
     { href: '/pharmacie/signaler', label: 'core.nav.items.report', icon: 'report', match: PHARMACY_REPORT },
     { href: '/pharmacie/alertes', label: 'core.nav.items.alerts', icon: 'alerts', badge: 'alerts' },
+    { href: '/pharmacie/demandes', label: 'core.nav.items.requests', icon: 'requests', badge: 'requests' },
     { href: '/pharmacie/whatsapp', label: 'core.nav.items.whatsapp', icon: 'whatsapp' },
   ],
   wholesaler: [{ href: '/grossiste', label: 'core.nav.items.signals', icon: 'signals', match: '^/grossiste' }],
@@ -54,7 +55,13 @@ export const PHARMACY_TABS: NavItem[] = [
   { href: '/pharmacie/signaler', label: 'core.nav.items.report', icon: 'report', match: PHARMACY_REPORT },
   { href: '/pharmacie', label: 'core.nav.items.followed', icon: 'followed', match: PHARMACY_HOME },
   { href: '/pharmacie/alertes', label: 'core.nav.items.alerts', icon: 'alerts', badge: 'alerts' },
-  { href: '/pharmacie/plus', label: 'core.nav.items.more', icon: 'more', match: '^/pharmacie/(plus|whatsapp|demandes)' },
+  {
+    href: '/pharmacie/plus',
+    label: 'core.nav.items.more',
+    icon: 'more',
+    match: '^/pharmacie/(plus|whatsapp|demandes)',
+    badge: 'requests',
+  },
 ];
 
 /** Showcase pages, listed under "Comprendre" in every sidebar. */

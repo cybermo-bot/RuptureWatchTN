@@ -1,4 +1,5 @@
-import { Send } from 'lucide-react';
+import { ChevronRight, Inbox, Send } from 'lucide-react';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { ButtonLink } from '@/components/Button';
 import { EmptyState } from '@/components/EmptyState';
@@ -10,12 +11,13 @@ import { MoleculeRow } from '@/components/pharmacy/MoleculeRow';
 import { getCurrentSession } from '@/lib/auth/session';
 import { t } from '@/lib/i18n';
 import { getFollowed } from '@/lib/pharmacy/data';
+import { countOpenRequests } from '@/lib/pharmacy/requests';
 
 // "Mes médicaments": the followed medicines with their level, the report action first.
 export default async function PharmacyHome() {
   const session = await getCurrentSession();
   if (!session) redirect('/#roles');
-  const followed = await getFollowed();
+  const [followed, openRequests] = await Promise.all([getFollowed(), countOpenRequests().catch(() => 0)]);
   const withLevel = followed.filter((m) => m.signal && m.signal.level !== 'none').length;
 
   return (
@@ -27,6 +29,22 @@ export default async function PharmacyHome() {
         <Send size={20} aria-hidden="true" />
         {t('core.pharmacy.reportCta')}
       </ButtonLink>
+
+      {openRequests > 0 ? (
+        <Link
+          href="/pharmacie/demandes"
+          className="panel flex min-h-14 items-center gap-3 border-brand px-4 py-3 no-underline hover:bg-surface-subtle"
+        >
+          <Inbox size={20} aria-hidden="true" className="shrink-0 text-brand" />
+          <span className="flex-1 text-ink">
+            {openRequests === 1 ? t('core.requests.homeStripOne') : t('core.requests.homeStrip', { count: openRequests })}
+          </span>
+          <span className="inline-flex items-center gap-1 font-medium text-brand">
+            {t('core.requests.answerNow')}
+            <ChevronRight size={18} aria-hidden="true" />
+          </span>
+        </Link>
+      ) : null}
 
       <InstallHint />
 
