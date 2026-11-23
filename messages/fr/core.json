@@ -1347,6 +1347,8 @@
     },
     "versionNote": "Ce brouillon n’est pas encore attaché à chaque décision : la prochaine étape enregistrera la version du protocole avec chaque événement et chaque répartition, puis l’approbation par les rôles proposés.",
     "back": "Revenir à la méthode",
-    "showcaseNote": "{molecule} est aussi le médicament « confirmée » de la démonstration nationale, avec des données simulées."
+    "showcaseNote": "{molecule} est aussi le médicament « confirmée » de la démonstration nationale, avec des données simulées.",
+    "linkMeta": "{status} v{version} · {current}",
+    "currentParamsLead": "Paramètres actuels."
   }
 }

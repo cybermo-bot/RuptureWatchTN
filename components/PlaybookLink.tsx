@@ -17,7 +17,7 @@ export function PlaybookLink({ molecule, context, className = '' }: { molecule: 
         {t('core.playbook.link')}
       </Link>
       <span className="text-ink-muted">
-        {t('core.playbook.statusDraft')} v{p.version} · {t('core.playbook.currentParams')}
+        {t('core.playbook.linkMeta', { status: t('core.playbook.statusDraft'), version: p.version, current: t('core.playbook.currentParams') })}
       </span>
     </p>
   );

@@ -98,7 +98,7 @@ export default async function PlaybookPage({ params, searchParams }: PageProps<'
 
         {fromEvent ? (
           <p role="note" className="panel max-w-3xl border-s-4 border-s-brand p-4 text-ink">
-            <span className="font-semibold">{t('core.playbook.currentParams')}.</span> {t('core.playbook.currentParamsNote')}
+            <span className="font-semibold">{t('core.playbook.currentParamsLead')}</span> {t('core.playbook.currentParamsNote')}
           </p>
         ) : null}
 
