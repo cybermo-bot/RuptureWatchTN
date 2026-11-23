@@ -11,6 +11,7 @@ import { serviceClient } from './lib/script-env';
 /** Every table created in supabase/migrations. A new table must be added here. */
 const TABLES = [
   'alerts',
+  'allocation_decisions',
   'availability_answers',
   'availability_requests',
   'followed_molecules',
