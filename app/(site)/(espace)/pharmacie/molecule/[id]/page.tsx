@@ -11,6 +11,9 @@ import { OriginBadge } from '@/components/OriginBadge';
 import { ReportTimingForm } from '@/components/ReportTimingForm';
 import { formatDate } from '@/lib/format';
 import { t } from '@/lib/i18n';
+import { ArrivalLine } from '@/components/institutions/Lines';
+import { createUserClient } from '@/lib/db/server';
+import { upcomingArrivals } from '@/lib/institutions/data';
 import { getMoleculeView } from '@/lib/pharmacy/data';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -20,6 +23,12 @@ export default async function MoleculePage({ params, searchParams }: PageProps<'
   const { erreur } = await searchParams;
   if (!UUID.test(id)) notFound();
   const view = await getMoleculeView(id);
+  // An arrival announced by the centrale (shown beside the level, never changing it).
+  const arrival = view
+    ? await upcomingArrivals(await createUserClient(), [view.id])
+        .then((m) => m.get(view.id) ?? null)
+        .catch(() => null)
+    : null;
   if (!view) notFound();
 
   const level = view.signal?.level ?? 'none';
@@ -66,6 +75,7 @@ export default async function MoleculePage({ params, searchParams }: PageProps<'
         ) : (
           <p className="text-ink-muted">{t('core.molecule.noSignal')}</p>
         )}
+        {arrival ? <ArrivalLine arrival={arrival} /> : null}
       </section>
 
       <section aria-labelledby="signaler" className="panel flex flex-col gap-4 p-4">

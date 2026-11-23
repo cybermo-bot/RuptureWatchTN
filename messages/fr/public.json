@@ -98,7 +98,8 @@
       "E": "essentiel",
       "I": "intermédiaire"
     },
-    "back": "Chercher un autre médicament"
+    "back": "Chercher un autre médicament",
+    "arrival": "Arrivage annoncé par la centrale d’achat pour le {date}."
   },
   "request": {
     "title": "Demander aux pharmacies proches",

@@ -1,4 +1,4 @@
-import { ArrowLeft, ChevronDown, MapPin } from 'lucide-react';
+import { ArrowLeft, ChevronDown, MapPin, PackageCheck } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -10,6 +10,8 @@ import { Ltr } from '@/components/public/Ltr';
 import { PublicMain } from '@/components/public/PublicChrome';
 import { getTranslator } from '@/lib/i18n-server';
 import { formatPublicDate } from '@/lib/public/format';
+import { createAnonClient } from '@/lib/db/server';
+import { publicArrival } from '@/lib/institutions/data';
 import { getBrands, getPublicMolecule, getPublicStatus } from '@/lib/public/medicine';
 
 // Track B: the rumour check. What the public may know about a medicine (CLAUDE.md rule 10):
@@ -29,7 +31,12 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
   const { t, locale } = await getTranslator();
   const molecule = await getPublicMolecule((await props.params).moleculeId);
   if (!molecule) notFound();
-  const [status, brands] = await Promise.all([getPublicStatus(molecule.id), getBrands(molecule.id)]);
+  const [status, brands, arrival] = await Promise.all([
+    getPublicStatus(molecule.id),
+    getBrands(molecule.id),
+    // Only while "confirmée" (public_arrival): the date and its origin, never a level change.
+    publicArrival(createAnonClient(), molecule.id).catch(() => null),
+  ]);
 
   const shown = status.level === 'confirmed' || status.level === 'cleared';
   const headline =
@@ -93,6 +100,13 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
             {status.origins.map((o) => (
               <OriginBadge key={o} origin={o} locale={locale} />
             ))}
+          </p>
+        ) : null}
+        {arrival && status.level === 'confirmed' ? (
+          <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-ink">
+            <PackageCheck size={18} aria-hidden="true" className="shrink-0 text-brand" />
+            <span>{t('public.medicine.arrival', { date: formatPublicDate(arrival.expectedOn, locale) })}</span>
+            <OriginBadge origin={arrival.origin} locale={locale} />
           </p>
         ) : null}
         <p className="border-t border-line pt-3 text-sm text-ink-muted">{t('public.medicine.disclaimer')}</p>
