@@ -104,4 +104,8 @@ All new Arabic texts are in `messages/ar/public.json` under `public.medicines`, 
 
 ## Parts 4 and 5
 
-In progress.
+Not done in this session: the usage limit was reached after part 3.
+
+Part 4, where to start. In `lib/signal/evaluate.ts`, a "levée" moves back to "sous surveillance" whenever `rawLevel` finds an active foreign notice (`foreign_notice_only`), even one published long before the levée (notices stay active 90 days). Reports are not a problem: `quietDays` (14) equals `confirmWindowDays` (14), so no old report is still counted at a levée. The fix needs the levée time after "levée" itself has expired to "aucun signal": `previous.since` is no longer the levée then, so a notice from before the levée would raise the level 7 days later. Proposed: an optional `clearedAt` in `PreviousState`, carried by `evaluate()` and stored with the signal (one migration), and a notice published before `clearedAt` does not count alone; new Tunisian reports raise the level as today. Test first in `tests/signal.test.ts`, then `docs/DECISIONS.md`, the scenario and the methods page.
+
+Part 5 (Ministère, Pharmacie centrale, Ordre des pharmaciens): not started.
