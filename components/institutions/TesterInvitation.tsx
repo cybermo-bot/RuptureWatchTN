@@ -21,7 +21,7 @@ export async function TesterInvitation({ backHref, intro }: { backHref: string; 
   const proto = h.get('x-forwarded-proto') ?? (host.startsWith('localhost') ? 'http' : 'https');
   const url = `${proto}://${host}/rejoindre/${encodeURIComponent(code)}`;
   // Generated on the server from a trusted library; the SVG holds only the QR modules.
-  const svg = await QRCode.toString(url, { type: 'svg', errorCorrectionLevel: 'M', margin: 2, color: { dark: '#10201b', light: '#ffffff' } });
+  const svg = await QRCode.toString(url, { type: 'svg', errorCorrectionLevel: 'M', margin: 2, color: { dark: '#241834', light: '#ffffff' } });
 
   return (
     <div className="flex flex-col gap-6">

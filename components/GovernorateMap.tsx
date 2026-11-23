@@ -19,6 +19,8 @@ interface GovernorateMapProps {
   /** Draw names on the map. Governorates too small to hold a name keep their <title> label. */
   showLabels?: boolean;
   className?: string;
+  /** "stage": drawn on the plum stage (home, scenario). */
+  tone?: 'light' | 'stage';
 }
 
 // Greater Tunis: too small at phone size to carry a visible name.
@@ -34,7 +36,8 @@ export interface GovernorateShape {
 export const GOVERNORATE_SHAPES = map.governorates as GovernorateShape[];
 export const GOVERNORATE_MAP_LICENCE = map.licence;
 
-export function GovernorateMap({ values = {}, title, showLabels = false, className = '' }: GovernorateMapProps) {
+export function GovernorateMap({ values = {}, title, showLabels = false, className = '', tone = 'light' }: GovernorateMapProps) {
+  const stage = tone === 'stage';
   const name = title ?? t('core.map.label');
   return (
     <figure className={`m-0 ${className}`}>
@@ -52,8 +55,9 @@ export function GovernorateMap({ values = {}, title, showLabels = false, classNa
               <path
                 key={g.code}
                 d={g.d}
-                fill={value?.fill ?? 'var(--surface-subtle)'}
-                stroke="var(--ink-muted)"
+                fill={value?.fill ?? (stage ? 'var(--stage-raised)' : 'var(--surface-subtle)')}
+                stroke={stage ? 'var(--on-stage-muted)' : 'var(--ink-muted)'}
+                strokeOpacity={stage ? 0.55 : 1}
                 strokeWidth={0.75}
                 vectorEffect="non-scaling-stroke"
                 data-code={g.code}

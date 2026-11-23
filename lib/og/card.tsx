@@ -11,14 +11,14 @@ import { Mark } from './mark';
 export const OG_SIZE = { width: 1200, height: 630 };
 export const OG_CONTENT_TYPE = 'image/png';
 
-const INK = '#10201B';
-const MUTED = '#55635E';
-const LINE = '#DCE3E0';
+const INK = '#241834';
+const MUTED = '#665775';
+const LINE = '#DDD4EA';
 const LEVELS = [
-  { key: 'watch', colour: '#B58A00' },
-  { key: 'likely', colour: '#C95A14' },
-  { key: 'confirmed', colour: '#B42318' },
-  { key: 'cleared', colour: '#2F7D4F' },
+  { key: 'watch', colour: '#8B5900' },
+  { key: 'likely', colour: '#A94412' },
+  { key: 'confirmed', colour: '#AE233A' },
+  { key: 'cleared', colour: '#216D54' },
 ] as const;
 
 function Shape({ level, colour }: { level: (typeof LEVELS)[number]['key']; colour: string }) {

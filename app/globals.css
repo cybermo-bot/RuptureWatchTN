@@ -1,25 +1,43 @@
 @import "tailwindcss";
 
-/* Design tokens. Source: CLAUDE.md section 9. Adjust only for contrast (see docs/DECISIONS.md). */
+/* Design tokens. Source: CLAUDE.md section 9 (session 6 palette: plum stage, lavender paper,
+   violet action, citron accent on the presentation surfaces only). Adjust only for contrast
+   (see docs/DECISIONS.md). Ratios checked: ink 16.7:1 and ink-muted 6.6:1 on white, 5.4:1 on
+   surface-subtle; brand 7.8:1 on white; level colours 5.5:1 or more on page; on-stage 15.5:1 and
+   on-stage-muted 10.5:1 on stage; stage on citron 13.9:1. */
 :root {
-  --ink: #10201b;
-  --page: #f5f7f6;
-  --sidebar: #0b1a16;
-  --sidebar-raised: #132823;
-  --sidebar-line: #1f3831;
-  --sidebar-text: #e6eeeb;
-  --sidebar-muted: #9db0a9;
-  --sidebar-accent: #5cc2a3;
-  --ink-muted: #55635e;
+  --ink: #241834;
+  --ink-muted: #665775;
   --surface: #ffffff;
-  --surface-subtle: #f3f6f5;
-  --line: #dce3e0;
-  --brand: #0e6b57;
-  --brand-strong: #0a5444;
-  --level-watch: #9a7500;
-  --level-likely: #c95a14;
-  --level-confirmed: #b42318;
-  --level-cleared: #2f7d4f;
+  --page: #f7f4fc;
+  --surface-subtle: #ece6f7;
+  --line: #ddd4ea;
+  --brand: #4d36c8;
+  --brand-strong: #38249c;
+  /* The console rail and the presentation stage share the plum. */
+  --sidebar: #261638;
+  --sidebar-raised: #35204c;
+  --sidebar-line: #47325f;
+  --sidebar-text: #f9f4ff;
+  --sidebar-muted: #d5c7e4;
+  --sidebar-accent: #c7b6ff;
+  --stage: #261638;
+  --stage-raised: #35204c;
+  --stage-line: #4b3566;
+  --on-stage: #f9f4ff;
+  --on-stage-muted: #d5c7e4;
+  /* One accent on plum: the current scenario position or the primary launch button. */
+  --citron: #dff576;
+  --level-watch: #8b5900;
+  --level-likely: #a94412;
+  --level-confirmed: #ae233a;
+  --level-cleared: #216d54;
+  /* The same four levels on the plum stage (7:1 or more on stage), always with their shape and word. */
+  --level-watch-on-stage: #e9c46a;
+  --level-likely-on-stage: #f4a06b;
+  --level-confirmed-on-stage: #ff8fa3;
+  --level-cleared-on-stage: #6fd3ae;
+  --level-none-on-stage: #7e6a96;
 }
 
 @theme inline {
@@ -37,6 +55,16 @@
   --color-line: var(--line);
   --color-brand: var(--brand);
   --color-brand-strong: var(--brand-strong);
+  --color-stage: var(--stage);
+  --color-stage-raised: var(--stage-raised);
+  --color-stage-line: var(--stage-line);
+  --color-on-stage: var(--on-stage);
+  --color-on-stage-muted: var(--on-stage-muted);
+  --color-citron: var(--citron);
+  --color-level-watch-on-stage: var(--level-watch-on-stage);
+  --color-level-likely-on-stage: var(--level-likely-on-stage);
+  --color-level-confirmed-on-stage: var(--level-confirmed-on-stage);
+  --color-level-cleared-on-stage: var(--level-cleared-on-stage);
   --color-level-watch: var(--level-watch);
   --color-level-likely: var(--level-likely);
   --color-level-confirmed: var(--level-confirmed);
@@ -74,6 +102,19 @@
     outline: 2px solid var(--brand);
     outline-offset: 2px;
     border-radius: 2px;
+  }
+
+  /* On the plum stage the focus ring turns light (citron, 13.9:1 on plum). */
+  .stage :focus-visible {
+    outline-color: var(--citron);
+  }
+
+  .stage a:not([data-button]) {
+    color: var(--on-stage);
+  }
+
+  .stage a:not([data-button]):hover {
+    color: #ffffff;
   }
 
   ::selection {
@@ -234,6 +275,20 @@ path.rw-pulse {
   .print-note .panel {
     border-color: #999;
   }
+}
+
+/* A level change on the plum stage: the line pulses once (motion off under reduced motion). */
+@keyframes rw-stage-pulse {
+  0% {
+    background-color: color-mix(in srgb, var(--citron) 22%, transparent);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+.rw-stage-pulse {
+  border-radius: 0.375rem;
+  animation: rw-stage-pulse 900ms ease-out 1;
 }
 
 @media (prefers-reduced-motion: reduce) {

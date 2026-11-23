@@ -53,8 +53,8 @@ interface PatientMapProps {
 // Centre of Tunisia, zoomed to show the whole country on a phone.
 const TUNISIA: LatLng = { lat: 34.2, lng: 9.6 };
 const GOOGLE_TIMEOUT_MS = 8000;
-const BRAND = '#0E6B57';
-const INK = '#10201B';
+const BRAND = '#4D36C8';
+const INK = '#241834';
 
 type Status = 'loading' | MapProvider;
 

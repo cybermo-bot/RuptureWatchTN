@@ -3,7 +3,7 @@
 // drawing: no cross, no pill, no institution's symbol. One source for every use:
 // components/brand/Logo.tsx (sidebar, headers), app/icon.svg, the PNG icons and the share cards.
 
-export const BRAND = '#0E6B57';
+export const BRAND = '#4D36C8';
 
 /** The ring, centred at (14.5, 17.5), radius 7.5, open between -75 and -15 degrees. */
 export const MARK_RING = 'M21.744 15.559A7.5 7.5 0 1 1 16.441 10.256';

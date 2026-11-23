@@ -12,14 +12,25 @@ const COLOR: Record<Level, string> = {
   cleared: 'text-level-cleared',
 };
 
-export function LevelShape({ level, size = 14 }: { level: Level; size?: number }) {
+/** On the plum stage (home, scenario): lighter tints, 7:1 or more on plum. */
+const COLOR_ON_STAGE: Record<Level, string> = {
+  none: 'text-on-stage-muted',
+  watch: 'text-level-watch-on-stage',
+  likely: 'text-level-likely-on-stage',
+  confirmed: 'text-level-confirmed-on-stage',
+  cleared: 'text-level-cleared-on-stage',
+};
+
+export type LevelTone = 'light' | 'stage';
+
+export function LevelShape({ level, size = 14, tone = 'light' }: { level: Level; size?: number; tone?: LevelTone }) {
   const common = {
     width: size,
     height: size,
     viewBox: '0 0 16 16',
     'aria-hidden': true as const,
     focusable: false as const,
-    className: `shrink-0 ${COLOR[level]}`,
+    className: `shrink-0 ${tone === 'stage' ? COLOR_ON_STAGE[level] : COLOR[level]}`,
   };
   switch (level) {
     case 'watch':
@@ -64,12 +75,12 @@ export function LevelShape({ level, size = 14 }: { level: Level; size?: number }
   }
 }
 
-export function LevelBadge({ level, className = '' }: { level: Level; className?: string }) {
+export function LevelBadge({ level, className = '', tone = 'light' }: { level: Level; className?: string; tone?: LevelTone }) {
   return (
     <span
-      className={`inline-flex items-center gap-1.5 whitespace-nowrap text-sm font-medium text-ink ${className}`}
+      className={`inline-flex items-center gap-1.5 whitespace-nowrap text-sm font-medium ${tone === 'stage' ? 'text-on-stage' : 'text-ink'} ${className}`}
     >
-      <LevelShape level={level} />
+      <LevelShape level={level} tone={tone} />
       <span>{t(`core.levels.${level}`)}</span>
     </span>
   );
