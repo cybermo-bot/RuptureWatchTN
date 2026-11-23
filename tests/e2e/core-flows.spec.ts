@@ -23,7 +23,8 @@ test.describe('pharmacy report, then coordination', () => {
     await expect(page).toHaveURL(/\/pharmacie$/);
 
     await page.goto('/pharmacie/signaler');
-    const followed = page.locator('section[aria-labelledby="choix-suivis"] a').first();
+    // Never the showcase medicine (followed too): its simulated history stays untouched.
+    const followed = page.locator('section[aria-labelledby="choix-suivis"] a').filter({ hasNotText: SHOWCASE_NAME }).first();
     await expect(followed).toBeVisible();
     reported = (await followed.locator('span.text-lg').first().innerText()).trim();
 
@@ -59,8 +60,9 @@ test.describe('scenario', () => {
   });
 });
 
-// AMLODIPINE: the demo shortage, "confirmée" on the live site (scripts/demo-shortage.ts).
-const AMLODIPINE = '8d2608a4-3287-4dce-9eb9-bb732fd9bb26';
+// LEVETIRACETAM: the demo shortage, "confirmée" on the live site (lib/demo/shortage.ts).
+const SHOWCASE = '75077225-938d-4278-9e21-51de44d88a9f';
+const SHOWCASE_NAME = 'LEVETIRACETAM';
 const ARRIVAL_LINE = 'Arrivage annoncé par la centrale d’achat pour le';
 
 /** A Tunis date `days` ahead, as YYYY-MM-DD. */
@@ -74,17 +76,17 @@ test.describe('patient request', () => {
   test('4. a patient request, a pharmacy answer, the pharmacy on the map', async ({ browser }) => {
     // The patient: no account, a fresh browser (a new random device id).
     const patient = await (await browser.newContext()).newPage();
-    await patient.goto(`/medicaments/${AMLODIPINE}/demande`);
+    await patient.goto(`/medicaments/${SHOWCASE}/demande`);
     await patient.getByLabel('Ou choisissez votre gouvernorat').selectOption({ label: 'Tunis' });
     await patient.getByRole('button', { name: 'Envoyer la demande' }).click();
     await expect(patient).toHaveURL(/\/demandes\/[0-9a-f-]+$/, { timeout: 30_000 });
     await expect(patient.getByText('Pharmacie démo A, Tunis')).toHaveCount(0);
 
-    // The pharmacy answers the newest AMLODIPINE request, showing its name.
+    // The pharmacy answers the newest request for the showcase medicine, showing its name.
     const pharmacy = await (await browser.newContext()).newPage();
     await signInAs(pharmacy, 'Pharmacie (Tunis)');
     await pharmacy.goto('/pharmacie/demandes');
-    const row = pharmacy.locator('li').filter({ hasText: 'AMLODIPINE' }).last();
+    const row = pharmacy.locator('li').filter({ hasText: SHOWCASE_NAME }).last();
     await row.getByRole('button', { name: 'Disponible, me montrer au patient' }).click();
     await expect(pharmacy.getByText('Réponse envoyée : le patient voit votre pharmacie sur sa carte.')).toBeVisible();
 
@@ -101,23 +103,23 @@ test.describe('institutions', () => {
     const central = await (await browser.newContext()).newPage();
     await signInAs(central, 'Pharmacie centrale');
     await expect(central).toHaveURL(/\/centrale/);
-    const item = central.locator(`#m-${AMLODIPINE}`);
+    const item = central.locator(`#m-${SHOWCASE}`);
     await expect(item.getByText('Confirmée', { exact: true })).toBeVisible();
     await item.getByText('Annoncer un arrivage').click();
     await item.getByLabel('Date d’arrivée prévue').fill(tunisDay(10));
     await item.getByLabel('un à trois mois de besoins').check();
     await item.getByRole('button', { name: 'Annoncer l’arrivage' }).click();
     await expect(central).toHaveURL(/annonce=ok/);
-    await expect(central.getByText('Arrivage annoncé pour AMLODIPINE.')).toBeVisible();
-    await expect(central.locator(`#m-${AMLODIPINE}`).getByText('Confirmée', { exact: true })).toBeVisible();
+    await expect(central.getByText(`Arrivage annoncé pour ${SHOWCASE_NAME}.`)).toBeVisible();
+    await expect(central.locator(`#m-${SHOWCASE}`).getByText('Confirmée', { exact: true })).toBeVisible();
 
     const pharmacy = await (await browser.newContext()).newPage();
     await signInAs(pharmacy, 'Pharmacie (Tunis)');
-    await pharmacy.goto(`/pharmacie/molecule/${AMLODIPINE}`);
+    await pharmacy.goto(`/pharmacie/molecule/${SHOWCASE}`);
     await expect(pharmacy.getByText(ARRIVAL_LINE, { exact: false })).toBeVisible();
 
     const visitor = await (await browser.newContext()).newPage();
-    await visitor.goto(`/medicaments/${AMLODIPINE}`);
+    await visitor.goto(`/medicaments/${SHOWCASE}`);
     await expect(visitor.getByText(ARRIVAL_LINE, { exact: false })).toBeVisible();
     await expect(visitor.getByText('Rupture confirmée', { exact: false }).first()).toBeVisible();
   });

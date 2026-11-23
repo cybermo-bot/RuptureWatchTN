@@ -1,4 +1,4 @@
-// The national demo picture: around the demo shortage (amlodipine, "confirmée"), four more
+// The national demo picture: around the demo shortage (levetiracetam, "confirmée"), four more
 // simulated situations, each showing one rule at work, with their history over the last 30 days:
 //
 //   TAMOXIFENE      "probable"            five pharmacies, all in Sfax: gate two holds it below

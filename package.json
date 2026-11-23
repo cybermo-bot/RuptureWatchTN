@@ -15,7 +15,7 @@
     "seed:demo": "tsx scripts/seed-demo.ts",
     "catalogue:import": "tsx scripts/import-catalogue.ts",
     "map:build": "tsx scripts/build-governorate-map.ts",
-    "verify:clean": "tsx scripts/clean-verification.ts",
+    "verify:clean": "tsx --conditions=react-server scripts/clean-verification.ts",
     "notices:import": "tsx --conditions=react-server scripts/import-notices.ts",
     "demo:shortage": "tsx --conditions=react-server scripts/demo-shortage.ts",
     "demo:national": "tsx --conditions=react-server scripts/demo-national.ts",

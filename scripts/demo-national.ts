@@ -1,5 +1,5 @@
 // npm run demo:national
-// Builds the national demo picture (lib/demo/national.ts): the demo shortage (amlodipine,
+// Builds the national demo picture (lib/demo/national.ts): the demo shortage (levetiracetam,
 // "confirmée") if it is not in place yet, then one "probable" held by gate two, two "sous
 // surveillance" (local reports; a foreign notice alone), one "levée", patient requests and two
 // wholesaler decisions, with their history over the last 30 days. Every row is

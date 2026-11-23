@@ -3,9 +3,11 @@
 // other tracks' screens. Every row is origin = simulated and has a fixed id, so
 // `npm run demo:clear` removes exactly what `npm run demo:shortage` created and nothing else.
 //
-// The molecule is amlodipine: thirteen brands on the CNAM list, no tester reports or follows,
-// no past episode in data/reference/episodes.csv and no foreign notice, so the simulated
-// shortage cannot be mistaken for, or mixed with, real data. The run
+// The molecule is levetiracetam, an antiepileptic (session 6: the pilot starts with
+// antiepileptics, as Phase 2.2 says; it was amlodipine before). Six brands on the CNAM list,
+// no tester report, no past episode in data/reference/episodes.csv and no foreign notice, so the
+// simulated shortage cannot be mistaken for, or mixed with, real data. The two one-click
+// pharmacies follow it (supabase/seed/demo-follows.json), so their alerts show it. The run
 // refuses to start if anyone else has reported it or it already has a signal, so clearing
 // returns the database to exactly where it was.
 //
@@ -14,7 +16,7 @@
 import { createHash } from 'node:crypto';
 import { recomputeSignal, type RecomputeResult, type SignalStore } from '@/lib/signals/recompute';
 
-export const DEMO_SHORTAGE_MOLECULE = 'AMLODIPINE';
+export const DEMO_SHORTAGE_MOLECULE = 'LEVETIRACETAM';
 
 const HOUR = 3_600_000;
 const DAY = 24 * HOUR;

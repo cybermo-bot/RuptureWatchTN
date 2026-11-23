@@ -2,6 +2,15 @@
 
 Newest first. Each entry: what was decided, and why.
 
+## 2026-11-24, session 6
+
+### The showcase's "confirmée" medicine is an antiepileptic: LEVETIRACETAM (part 2)
+
+- Everything we submitted says the pilot starts with antiepileptics (Phase 2.2 names carbamazepine and levetiracetam); the national picture confirmed amlodipine. `DEMO_SHORTAGE_MOLECULE` is now `LEVETIRACETAM`: six brands on the CNAM list (Antiomal, Epilepta, Epitam, Epixx, Levet, Vetira), no report, notice, request or past episode of its own on the live project. The 23 simulated reports, 13 governorates, 8 patient requests and the applied wholesaler split are unchanged; only the molecule moved. The four other showcase medicines are unchanged.
+- Not carbamazepine: it has a real past episode (Tégrétol LP, December 2022) in `data/reference/episodes.csv`, shown on `/ruptures-passees`. A simulated "confirmée" next to a real archived shortage on the same medicine would mix the two. The handoff also keys the draft playbook to levetiracetam.
+- The two one-click pharmacies follow levetiracetam (seed), so their alerts show the showcase. Two consequences, both handled: end-to-end test 1 now reports the first followed medicine other than the showcase, and `verify:clean` never resets a showcase molecule (that would erase its simulated history): it deletes the test reports, recomputes the signal and says to rebuild with `demo:clear` then `demo:national` if the level moved.
+- `verify:clean` also removes answers by the one-click pharmacies, and with `--requests` the patient requests of origin `tester` made by an end-to-end run (never to use once real patients use the site).
+
 ## 2026-11-23, session 5
 
 ### Three institutions' spaces: Ministère, Pharmacie centrale, Ordre des pharmaciens (part 5)

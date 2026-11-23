@@ -34,7 +34,7 @@ function arg(name: string, fallback: string): string {
 const BASE = arg('base', 'http://localhost:3000').replace(/\/$/, '');
 const PREVIEWS = args.includes('--previews');
 
-const AMLODIPINE_ID = '8d2608a4-3287-4dce-9eb9-bb732fd9bb26';
+const SHOWCASE_ID = '75077225-938d-4278-9e21-51de44d88a9f'; // LEVETIRACETAM
 const TAMOXIFEN_ID = 'e7dc2583-9c34-49e6-bc49-65a3ebcd5665';
 
 export const SHOTS: Shot[] = [
@@ -59,10 +59,10 @@ export const SHOTS: Shot[] = [
   { name: 'bibliotheque', path: '/bibliotheque' },
   { name: 'ruptures-passees', path: '/ruptures-passees' },
   { name: 'prescripteurs', path: '/prescripteurs' },
-  // Track B. Catalogue ids: AMLODIPINE (the demo's confirmed medicine) and TAMOXIFENE ("probable").
-  { name: 'medicament-statut', path: `/medicaments/${AMLODIPINE_ID}` },
-  { name: 'medicament-statut-ar', path: `/medicaments/${AMLODIPINE_ID}`, locale: 'ar' },
-  { name: 'demande', path: `/medicaments/${AMLODIPINE_ID}/demande` },
+  // Track B. Catalogue ids: LEVETIRACETAM (the demo's confirmed medicine) and TAMOXIFENE ("probable").
+  { name: 'medicament-statut', path: `/medicaments/${SHOWCASE_ID}` },
+  { name: 'medicament-statut-ar', path: `/medicaments/${SHOWCASE_ID}`, locale: 'ar' },
+  { name: 'demande', path: `/medicaments/${SHOWCASE_ID}/demande` },
   { name: 'pharmacie-demandes', path: '/pharmacie/demandes', role: 'pharmacie-tunis' },
   { name: 'prescripteurs-verification', path: `/prescripteurs?m=${TAMOXIFEN_ID}`, role: 'medecin' },
   // Part 5: the institutions' spaces, and where their work shows.
@@ -72,8 +72,8 @@ export const SHOTS: Shot[] = [
   { name: 'ordre', path: '/ordre', role: 'ordre' },
   { name: 'ordre-message', path: '/ordre/message', role: 'ordre' },
   { name: 'pharmacie-alertes-sfax', path: '/pharmacie/alertes', role: 'pharmacie-sfax' },
-  { name: 'pharmacie-medicament', path: `/pharmacie/molecule/${AMLODIPINE_ID}`, role: 'pharmacie-tunis' },
-  { name: 'vues-amlodipine', path: `/vues/${AMLODIPINE_ID}` },
+  { name: 'pharmacie-medicament', path: `/pharmacie/molecule/${SHOWCASE_ID}`, role: 'pharmacie-tunis' },
+  { name: 'vues-showcase', path: `/vues/${SHOWCASE_ID}` },
 ];
 
 /** One preview per role tile on the home page (role key: path). */

@@ -17,13 +17,21 @@
 //     they stay unless asked: never use --requests once real patients use the site.
 //   - the signal state (alerts, event log, signal row) of every molecule those reports touched,
 //     through reset_molecule_signal(), the only sanctioned way to clear the event log.
+// A showcase molecule of demo:national (the confirmed antiepileptic, which the one-click pharmacies
+// follow, and the four others) is never reset: that would erase its simulated history. Its test
+// reports are deleted and its signal recomputed; if the level moved, the run says to rebuild the
+// picture with demo:clear then demo:national.
 // Then restarts tester numbering at 1 (reset_tester_numbering), which does nothing while any
 // tester pharmacy remains.
 // Never run it after real testers have joined: it would remove their pharmacies too.
 
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { NATIONAL_MOLECULES } from '../lib/demo/national';
 import { DEMO_ROLES } from '../lib/demo/roles';
+import { DEMO_SHORTAGE_MOLECULE } from '../lib/demo/shortage';
+import { recomputeSignal } from '../lib/signals/recompute';
+import { supabaseSignalStore } from '../lib/signals/store';
 import { ROOT, serviceClient } from './lib/script-env';
 
 function arg(name: string): string | undefined {
@@ -58,7 +66,13 @@ async function main() {
     .in('organisation_id', [...demoPharmacies, ...testerIds])
     .gte('reported_at', since);
   if (reportError) throw new Error(reportError.message);
-  const molecules = [...new Set((reports ?? []).map((r) => r.molecule_id as string))];
+  const touched = [...new Set((reports ?? []).map((r) => r.molecule_id as string))];
+  const showcaseNames: string[] = [DEMO_SHORTAGE_MOLECULE, ...Object.values(NATIONAL_MOLECULES)];
+  const { data: showcaseRows, error: showcaseError } = await supabase.from('molecules').select('id, name').in('name', showcaseNames);
+  if (showcaseError) throw new Error(`showcase molecules: ${showcaseError.message}`);
+  const showcaseIds = new Set((showcaseRows ?? []).map((m) => m.id as string));
+  const molecules = touched.filter((id) => !showcaseIds.has(id));
+  const showcaseTouched = (showcaseRows ?? []).filter((m) => touched.includes(m.id as string));
 
   const { data: profiles } = testerIds.length
     ? await supabase.from('profiles').select('user_id').in('organisation_id', testerIds)
@@ -69,6 +83,7 @@ async function main() {
   console.log(`  tester pharmacies: ${testers?.map((o) => o.display_name).join('; ') || 'none'}`);
   console.log(`  reports: ${reports?.length ?? 0}`);
   console.log(`  molecules to reset: ${molecules.length}`);
+  for (const m of showcaseTouched) console.log(`  showcase molecule, recomputed instead of reset: ${m.name}`);
   const { data: arrivals, error: arrivalError } = await supabase
     .from('arrival_announcements')
     .select('id, expected_on, molecules ( name )')
@@ -118,6 +133,16 @@ async function main() {
   if (reports?.length) {
     const { error } = await supabase.from('reports').delete().in('id', reports.map((r) => r.id as string));
     if (error) throw new Error(`delete reports: ${error.message}`);
+  }
+  const signalStore = supabaseSignalStore(supabase);
+  for (const m of showcaseTouched) {
+    const before = await supabase.from('signals').select('level').eq('molecule_id', m.id).maybeSingle();
+    const result = await recomputeSignal(signalStore, m.id as string, new Date());
+    const was = (before.data?.level as string | undefined) ?? 'none';
+    console.log(`  ${m.name}: ${was} -> ${result.evaluation.level}`);
+    if (result.evaluation.changed) {
+      console.log('    The level moved during the run: rebuild with npm run demo:clear, then npm run demo:national.');
+    }
   }
   if (arrivals?.length) {
     const { error } = await supabase.from('arrival_announcements').delete().in('id', arrivals.map((a) => a.id as string));
