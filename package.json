@@ -26,7 +26,8 @@
     "test:e2e": "playwright test",
     "dpm:build": "tsx scripts/build-dpm-list.ts",
     "icons:build": "tsx scripts/build-icons.tsx",
-    "check:bundle": "tsx scripts/check-bundle-secrets.ts"
+    "check:bundle": "tsx scripts/check-bundle-secrets.ts",
+    "figures": "tsx scripts/figures.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
