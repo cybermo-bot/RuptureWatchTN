@@ -50,5 +50,8 @@
       "marker2": "Point de test 2",
       "detail": "Position fictive"
     }
+  },
+  "dpm": {
+    "notFollowed": "Ce médicament est enregistré en Tunisie (liste DPM). Il n’est pas encore suivi par RuptureWatch, qui suit les médicaments vitaux, essentiels et intermédiaires de la liste CNAM."
   }
 }
