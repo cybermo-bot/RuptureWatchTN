@@ -10,11 +10,11 @@ export function EmptyState({
   title: string;
   body?: ReactNode;
   action?: ReactNode;
-  /** Set when the element above already draws a hairline, so two rules never stack. */
+  /** Set inside a panel or under a hairline: no frame of its own. Otherwise it sits in its own panel. */
   afterRule?: boolean;
 }) {
   return (
-    <div className={`${afterRule ? 'border-b' : 'border-y'} border-line py-10`}>
+    <div className={afterRule ? 'py-8' : 'panel px-5 py-8'}>
       <div className="flex max-w-prose flex-col gap-2">
         <p className="font-medium text-ink">{title}</p>
         {body ? <div className="text-ink-muted">{body}</div> : null}

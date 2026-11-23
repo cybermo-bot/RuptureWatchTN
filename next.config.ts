@@ -5,6 +5,8 @@ import type { NextConfig } from 'next';
 // See docs/DECISIONS.md.
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Screenshots and previews are taken from the dev server: no Next badge on them.
+  devIndicators: false,
   // Two root layouts (app/(site) and app/(public)): one 404 page for unknown addresses.
   experimental: { globalNotFound: true },
   // Files read at run time by /methode and /retour, in case they are rendered on request.

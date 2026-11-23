@@ -1,21 +1,16 @@
 import { redirect } from 'next/navigation';
-import { SessionBar } from '@/components/SessionBar';
-import { SiteFooter, SiteHeader } from '@/components/SiteChrome';
+import { ConsoleShell } from '@/components/console/ConsoleShell';
 import { getCurrentSession } from '@/lib/auth/session';
+import { countUnreadAlerts } from '@/lib/pharmacy/data';
 
 export default async function SpaceLayout({ children }: { children: React.ReactNode }) {
   const session = await getCurrentSession();
   if (!session) redirect('/#roles');
 
+  const alerts = session.organisation.type === 'pharmacy' ? await countUnreadAlerts().catch(() => 0) : 0;
   return (
-    <>
-      <SiteHeader>
-        <SessionBar session={session} />
-      </SiteHeader>
-      <main id="contenu" className="mx-auto w-full max-w-6xl flex-1 px-5 py-8 sm:px-8 sm:py-12">
-        {children}
-      </main>
-      <SiteFooter />
-    </>
+    <ConsoleShell session={session} badges={{ alerts }}>
+      {children}
+    </ConsoleShell>
   );
 }
