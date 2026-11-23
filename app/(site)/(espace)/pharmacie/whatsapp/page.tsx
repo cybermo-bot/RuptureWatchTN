@@ -11,7 +11,7 @@ import { maskPhone } from '@/lib/whatsapp/link';
 
 export const metadata: Metadata = { title: t('core.whatsappLink.title') };
 
-const HOW = ['report', 'search', 'alerts'] as const;
+const HOW = ['report', 'requests', 'search', 'alerts'] as const;
 
 // The pharmacy's WhatsApp numbers. wa_links is service-role only, so the session's own
 // organisation is the only filter, applied here; numbers are shown masked.

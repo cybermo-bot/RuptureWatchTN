@@ -144,5 +144,27 @@ export function supabaseBotDeps(client: SupabaseClient, hooks: ReportHooks = {})
       if (!shown) return null;
       return { previous: result.previous, level: shown.level, rule: shown.rule, evidence: shown.evidence };
     },
+
+    async requests(organisationId) {
+      const { data, error } = await client.rpc('requests_for_pharmacy', { p_organisation_id: organisationId });
+      if (error) throw new Error(`requests_for_pharmacy: ${error.code}`);
+      const now = Date.now();
+      return ((data ?? []) as { request_id: string; molecule_name: string; expires_at: string }[]).map((r) => ({
+        requestId: r.request_id,
+        moleculeName: r.molecule_name,
+        minutesLeft: Math.max(1, Math.ceil((Date.parse(r.expires_at) - now) / 60_000)),
+      }));
+    },
+
+    async answer(organisationId, requestId, choice) {
+      const { data, error } = await client.rpc('answer_request_as', {
+        p_organisation_id: organisationId,
+        p_request_id: requestId,
+        p_answer: choice === 'no' ? 'unavailable' : 'available',
+        p_show_identity: choice === 'show',
+      });
+      if (error) throw new Error(`answer_request_as: ${error.code}`);
+      return data as 'answered' | 'expired' | 'already';
+    },
   };
 }

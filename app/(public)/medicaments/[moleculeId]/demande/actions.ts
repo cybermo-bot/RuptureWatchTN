@@ -1,9 +1,11 @@
 'use server';
 
+import { after } from 'next/server';
 import { hashDeviceId, isDeviceId, RATE_LIMITED } from '@/lib/availability/device';
 import { createServiceClient } from '@/lib/db/server';
 import { GOVERNORATE_CODES } from '@/lib/public/governorates';
-import { isUuid } from '@/lib/public/medicine';
+import { getPublicMolecule, isUuid } from '@/lib/public/medicine';
+import { notifyNewRequest } from '@/lib/whatsapp/requests';
 
 // Creates an availability request. Receives only the molecule, a governorate code and the
 // phone's random id; the id is hashed here and the hash is all the database keeps, to refuse a
@@ -31,7 +33,13 @@ export async function createRequest(input: { moleculeId: unknown; governorate: u
       console.error('availability request failed', error.code);
       return { ok: false, error: 'failed' };
     }
-    return { ok: true, id: data as string };
+    const id = data as string;
+    // After the answer to the visitor: tell the linked pharmacies of the governorate on WhatsApp.
+    after(async () => {
+      const molecule = await getPublicMolecule(moleculeId).catch(() => null);
+      if (molecule) await notifyNewRequest(id, governorate, molecule.name);
+    });
+    return { ok: true, id };
   } catch (error) {
     // Never logs the device id or its hash.
     console.error('availability request failed', error instanceof Error ? error.message.slice(0, 80) : 'unknown');

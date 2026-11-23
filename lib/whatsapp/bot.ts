@@ -6,6 +6,8 @@
 //   "Signaler" -> list of followed medicines (open, pick) -> list of delays (open, pick)
 // Typing anything else searches the catalogue (search_medicines) and answers with a list.
 // Reply ids: "rw:signaler", "rw:m:<molecule id>", "rw:d:<molecule id>:<delay>".
+// Patients' requests: "Demandes" -> list of open requests -> one request with three buttons
+// -> one tap answers. Ids: "rw:demandes", "rw:q:<request id>", "rw:a:<request id>:<show|anon|no>".
 // Never anything about a patient, never the name of another pharmacy: counts below 3 read
 // "moins de 3", as on every screen.
 
@@ -57,13 +59,27 @@ export interface BotDeps {
   molecule(moleculeId: string): Promise<MoleculeStatus | null>;
   /** Inserts the report (channel whatsapp), follows the molecule, recomputes. Null if the recompute failed. */
   report(pharmacy: LinkedPharmacy, moleculeId: string, delay: CountedDelay): Promise<ReportOutcome | null>;
+  /** Open patients' requests of the pharmacy's governorate it has not answered, oldest first. */
+  requests(organisationId: string): Promise<OpenRequestSummary[]>;
+  /** Records the pharmacy's answer; refused (throws) when the request is not routed to it. */
+  answer(organisationId: string, requestId: string, choice: RequestChoice): Promise<'answered' | 'expired' | 'already'>;
 }
+
+export interface OpenRequestSummary {
+  requestId: string;
+  moleculeName: string;
+  minutesLeft: number;
+}
+
+export type RequestChoice = 'show' | 'anon' | 'no';
+const CHOICES: readonly RequestChoice[] = ['show', 'anon', 'no'];
 
 export interface BotContext {
   siteUrl: string;
 }
 
 const REPORT_WORDS = new Set(['signaler', 'signal', 'signalement', 'signale', 's']);
+const REQUEST_WORDS = new Set(['demandes', 'demande', 'patients', 'patient', 'd']);
 const HELP_WORDS = new Set(['aide', 'help', 'menu', 'bonjour', 'salut', 'slt', 'bjr', 'start', 'hello', 'salam', '?']);
 
 const normalise = (text: string) =>
@@ -81,8 +97,73 @@ export function unlinkedReply(ctx: BotContext): Outbound[] {
   return [{ type: 'text', body: t('core.whatsapp.unlinked', { url: `${ctx.siteUrl}/pharmacie/whatsapp` }) }];
 }
 
+const requestsButton = (): { id: string; title: string } => ({ id: 'rw:demandes', title: t('core.whatsapp.requestsButton') });
+
 function help(): Outbound {
-  return { type: 'buttons', body: t('core.whatsapp.help'), buttons: [reportButton()] };
+  return { type: 'buttons', body: t('core.whatsapp.help'), buttons: [reportButton(), requestsButton()] };
+}
+
+function minutesText(minutes: number): string {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  if (h === 0) return t('core.requests.minutes', { m });
+  return m === 0 ? t('core.requests.hours', { h }) : t('core.requests.hoursMinutes', { h, m });
+}
+
+async function requestList(pharmacy: LinkedPharmacy, deps: BotDeps): Promise<Outbound> {
+  const open = await deps.requests(pharmacy.organisationId);
+  if (open.length === 0) return { type: 'buttons', body: t('core.whatsapp.requestsNone'), buttons: [reportButton()] };
+  return {
+    type: 'list',
+    body: t('core.whatsapp.requestsBody'),
+    button: t('core.whatsapp.requestsListButton'),
+    sectionTitle: t('core.whatsapp.requestsSection'),
+    rows: open.slice(0, 10).map((r) => ({
+      id: `rw:q:${r.requestId}`,
+      title: r.moleculeName,
+      description: t('core.whatsapp.requestRow', { time: minutesText(r.minutesLeft) }),
+    })),
+    footer: open.length > 10 ? t('core.whatsapp.requestsMore') : undefined,
+  };
+}
+
+async function requestQuestion(pharmacy: LinkedPharmacy, requestId: string, deps: BotDeps): Promise<Outbound> {
+  const request = (await deps.requests(pharmacy.organisationId)).find((r) => r.requestId === requestId);
+  if (!request) return { type: 'buttons', body: t('core.whatsapp.answerUnknown'), buttons: [requestsButton()] };
+  return {
+    type: 'buttons',
+    body: t('core.whatsapp.requestQuestion', { name: request.moleculeName }),
+    buttons: [
+      { id: `rw:a:${requestId}:show`, title: t('core.whatsapp.answerShow') },
+      { id: `rw:a:${requestId}:anon`, title: t('core.whatsapp.answerAnonymous') },
+      { id: `rw:a:${requestId}:no`, title: t('core.whatsapp.answerNo') },
+    ],
+  };
+}
+
+const ANSWERED: Record<RequestChoice, 'core.whatsapp.answeredShow' | 'core.whatsapp.answeredAnonymous' | 'core.whatsapp.answeredNo'> = {
+  show: 'core.whatsapp.answeredShow',
+  anon: 'core.whatsapp.answeredAnonymous',
+  no: 'core.whatsapp.answeredNo',
+};
+
+async function answerRequest(pharmacy: LinkedPharmacy, requestId: string, choice: string, deps: BotDeps): Promise<Outbound[]> {
+  if (!CHOICES.includes(choice as RequestChoice)) return [help()];
+  let result: 'answered' | 'expired' | 'already';
+  try {
+    result = await deps.answer(pharmacy.organisationId, requestId, choice as RequestChoice);
+  } catch {
+    return [{ type: 'buttons', body: t('core.whatsapp.answerUnknown'), buttons: [requestsButton()] }];
+  }
+  const body =
+    result === 'answered'
+      ? t(ANSWERED[choice as RequestChoice])
+      : result === 'expired'
+        ? t('core.whatsapp.answerExpired')
+        : t('core.whatsapp.answerAlready');
+  // The next request, if any, is one tap away.
+  const more = (await deps.requests(pharmacy.organisationId)).length > 0;
+  return [more ? { type: 'buttons', body, buttons: [{ ...requestsButton(), title: t('core.whatsapp.nextRequest') }] } : { type: 'text', body }];
 }
 
 async function followedList(pharmacy: LinkedPharmacy, deps: BotDeps): Promise<Outbound> {
@@ -179,10 +260,14 @@ export async function botReply(message: InboundMessage, pharmacy: LinkedPharmacy
     if (parts[0] === 'rw' && parts[1] === 'signaler') return [await followedList(pharmacy, deps)];
     if (parts[0] === 'rw' && parts[1] === 'm' && UUID.test(parts[2] ?? '')) return [await delayList(parts[2], deps)];
     if (parts[0] === 'rw' && parts[1] === 'd' && UUID.test(parts[2] ?? '')) return report(pharmacy, parts[2], parts[3] ?? '', deps, ctx);
+    if (parts[0] === 'rw' && parts[1] === 'demandes') return [await requestList(pharmacy, deps)];
+    if (parts[0] === 'rw' && parts[1] === 'q' && UUID.test(parts[2] ?? '')) return [await requestQuestion(pharmacy, parts[2], deps)];
+    if (parts[0] === 'rw' && parts[1] === 'a' && UUID.test(parts[2] ?? '')) return answerRequest(pharmacy, parts[2], parts[3] ?? '', deps);
     return [help()];
   }
   const text = normalise(message.body);
   if (REPORT_WORDS.has(text)) return [await followedList(pharmacy, deps)];
+  if (REQUEST_WORDS.has(text)) return [await requestList(pharmacy, deps)];
   if (text.length < 2 || HELP_WORDS.has(text)) return [help()];
   return [await search(message.body, deps)];
 }

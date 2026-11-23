@@ -32,8 +32,16 @@ const evidence = (pharmacies: number | '<3', governorates: number | null): Shown
   origins: ['simulated'],
 });
 
-function fakeDeps(overrides: Partial<BotDeps> = {}): BotDeps & { reports: string[] } {
+const REQ = '00000000-0000-4000-8000-000000000501';
+const REQ2 = '00000000-0000-4000-8000-000000000502';
+
+function fakeDeps(overrides: Partial<BotDeps> = {}): BotDeps & { reports: string[]; answers: string[] } {
   const reports: string[] = [];
+  const answers: string[] = [];
+  const open = [
+    { requestId: REQ, moleculeName: 'AMLODIPINE', minutesLeft: 135 },
+    { requestId: REQ2, moleculeName: 'TAMOXIFENE', minutesLeft: 40 },
+  ];
   const followed = Array.from({ length: 12 }, (_, i) => ({
     moleculeId: i === 0 ? MOL : `00000000-0000-4000-8000-${String(i).padStart(12, '0')}`,
     name: i === 0 ? 'AMLODIPINE' : `MOLECULE AU NOM TRES LONG NUMERO ${i}`,
@@ -41,7 +49,14 @@ function fakeDeps(overrides: Partial<BotDeps> = {}): BotDeps & { reports: string
   }));
   return {
     reports,
+    answers,
     followed: async () => followed,
+    requests: async () => open.filter((r) => !answers.some((a) => a.startsWith(r.requestId))),
+    answer: async (_org, id, choice) => {
+      if (answers.some((a) => a.startsWith(id))) return 'already';
+      answers.push(`${id}:${choice}`);
+      return 'answered';
+    },
     search: async (q) => (/aml/i.test(q) ? [{ moleculeId: MOL, title: 'AMLOR', description: 'AMLODIPINE' }] : []),
     dpmMatch: async (q) => /ruxolitinib/i.test(q),
     molecule: async (id) => (id === MOL ? { name: 'AMLODIPINE', level: 'likely', rule: 'two_pharmacies_7d', evidence: evidence('<3', null) } : null),
@@ -197,9 +212,10 @@ describe('search and help', () => {
     expect(bodyOf(one(await botReply(text('zzzz'), pharmacy, fakeDeps(), ctx)))).toContain('zzzz');
   });
 
-  it('a greeting gets the help with a "Signaler" button', async () => {
+  it('a greeting gets the help with a "Signaler" and a "Demandes" button', async () => {
     const reply = one(await botReply(text('Bonjour !'), pharmacy, fakeDeps(), ctx));
-    expect(reply).toMatchObject({ type: 'buttons', buttons: [{ id: 'rw:signaler' }] });
+    expect(reply).toMatchObject({ type: 'buttons', buttons: [{ id: 'rw:signaler' }, { id: 'rw:demandes' }] });
+    expectWithinLimits(reply);
   });
 
   it('an unlinked number gets one short message with the link to the web app', () => {
@@ -252,5 +268,62 @@ describe('Cloud API request bodies', () => {
         ],
       },
     });
+  });
+});
+
+describe("patients' requests in three taps", () => {
+  const tap = (replyId: string): InboundMessage => ({ ...text(''), replyId });
+
+  it('"Demandes" lists the open requests with the time left, oldest first', async () => {
+    const list = one(await botReply(text('demandes'), pharmacy, fakeDeps(), ctx));
+    if (list.type !== 'list') throw new Error('expected a list');
+    expect(list.rows).toEqual([
+      { id: `rw:q:${REQ}`, title: 'AMLODIPINE', description: t('core.whatsapp.requestRow', { time: t('core.requests.hoursMinutes', { h: 2, m: 15 }) }) },
+      { id: `rw:q:${REQ2}`, title: 'TAMOXIFENE', description: t('core.whatsapp.requestRow', { time: t('core.requests.minutes', { m: 40 }) }) },
+    ]);
+    expectWithinLimits(list);
+    expect(one(await botReply(tap('rw:demandes'), pharmacy, fakeDeps(), ctx)).type).toBe('list');
+  });
+
+  it('no open request says so', async () => {
+    const reply = one(await botReply(text('demandes'), pharmacy, fakeDeps({ requests: async () => [] }), ctx));
+    expect(bodyOf(reply)).toBe(t('core.whatsapp.requestsNone'));
+  });
+
+  it('a request asks the question with three buttons, and says nothing about the patient', async () => {
+    const reply = one(await botReply(tap(`rw:q:${REQ}`), pharmacy, fakeDeps(), ctx));
+    expect(reply).toMatchObject({
+      type: 'buttons',
+      body: t('core.whatsapp.requestQuestion', { name: 'AMLODIPINE' }),
+      buttons: [{ id: `rw:a:${REQ}:show` }, { id: `rw:a:${REQ}:anon` }, { id: `rw:a:${REQ}:no` }],
+    });
+    expectWithinLimits(reply);
+  });
+
+  it('one tap answers, says what the patient sees, and offers the next request', async () => {
+    const deps = fakeDeps();
+    const reply = one(await botReply(tap(`rw:a:${REQ}:show`), pharmacy, deps, ctx));
+    expect(deps.answers).toEqual([`${REQ}:show`]);
+    expect(reply).toMatchObject({ type: 'buttons', body: t('core.whatsapp.answeredShow'), buttons: [{ id: 'rw:demandes' }] });
+    const last = one(await botReply(tap(`rw:a:${REQ2}:anon`), pharmacy, deps, ctx));
+    expect(last).toEqual({ type: 'text', body: t('core.whatsapp.answeredAnonymous') });
+  });
+
+  it('an answered, closed or foreign request gets a plain answer, a tampered choice the help', async () => {
+    const deps = fakeDeps();
+    await botReply(tap(`rw:a:${REQ}:no`), pharmacy, deps, ctx);
+    expect(bodyOf(one(await botReply(tap(`rw:a:${REQ}:show`), pharmacy, deps, ctx)))).toBe(t('core.whatsapp.answerAlready'));
+    const closed = fakeDeps({ answer: async () => 'expired' });
+    expect(bodyOf(one(await botReply(tap(`rw:a:${REQ}:show`), pharmacy, closed, ctx)))).toBe(t('core.whatsapp.answerExpired'));
+    const refused = fakeDeps({
+      answer: async () => {
+        throw new Error('42501');
+      },
+    });
+    expect(bodyOf(one(await botReply(tap(`rw:a:${REQ}:show`), pharmacy, refused, ctx)))).toBe(t('core.whatsapp.answerUnknown'));
+    expect(one(await botReply(tap(`rw:a:${REQ}:everyone`), pharmacy, deps, ctx))).toMatchObject({ body: t('core.whatsapp.help') });
+    expect(bodyOf(one(await botReply(tap('rw:q:00000000-0000-4000-8000-000000000999'), pharmacy, deps, ctx)))).toBe(
+      t('core.whatsapp.answerUnknown'),
+    );
   });
 });
