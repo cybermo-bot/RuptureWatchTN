@@ -48,7 +48,7 @@ New: the DPM list of DCIs registered in Tunisia, from https://dpm.tn/index.php/m
 - Use, after track B merges: on `/medicaments`, when a search finds nothing in the catalogue but matches a DPM name, show "Ce médicament est enregistré en Tunisie (liste DPM). Il n'est pas encore suivi par RuptureWatch, qui suit les médicaments vitaux, essentiels et intermédiaires de la liste CNAM." Same answer in Arabic, flagged for review. Same in the WhatsApp search.
 - On the data sources page: one line naming the DPM list and its link, as the reference for this search answer. No counts, no dates.
 
-## 6. Threshold explorer and the reason for each number (last)
+## 6. Threshold explorer and the reason for each number
 
 On the methods page, under the parameters table:
 
@@ -61,6 +61,16 @@ On the methods page, under the parameters table:
   - Network share: the bar rises with the network, so 4 is the floor for a pilot, not the national rule.
   - 14 and 30 days: a level has to keep its evidence; it clears after deliveries return and is lowered when reports stop.
   - Present it as a case definition (suspected, probable, confirmed), the way epidemiologists define a case.
+
+## 7. Then, in this order, as long as time remains
+
+Overnight rules: do not stop to ask. If something needs the lead (a key, an approval, a decision that cannot be undone), skip it, write it in the report, and go on. Do not edit the paths the other tracks own: `app/(public)/medicaments`, `demandes`, `pharmacies`, `bibliotheque`, `ruptures-passees`, `prescripteurs`, `lib/allocation`, `lib/availability`, `tests/e2e`. If track B, C or D pull requests arrive, integrate them as in section 4.
+
+1. `/retour` with the real `episodes.csv`: check it renders all 9 episodes, the misses stated plainly, the computed counts and median lead. Fix wording or layout where needed. Add `episodes.csv`, `foreign_notices.csv` and the DPM list to `data/SOURCES.md`: who compiled them (the team) and the source links. No compile or copy dates in any file, page or report.
+2. Icons and sharing: favicon (fixes the 404), app icons, and Open Graph images for the home page, `/scenario`, `/methode` and `/retour`, so a link shared on WhatsApp or LinkedIn shows a clean preview. Same visual language as the site.
+3. Quality pass on every track A page (home, pharmacy space, coordination, hospital, `/methode`, `/scenario`, `/retour`, `/vues`, `/rejoindre`, `/status`): 360 and 1280 px, keyboard use, focus visible, contrast (WCAG AA), every loading, empty and error state worded in plain French. Fix what you find. Run Lighthouse on the deployed site and put the scores in the report.
+4. Security pass: one test per table proving what each role can and cannot read or write (extend `tests/db/grants.test.ts`), rate limits on `/rejoindre`, the report action and the WhatsApp webhook, and a check that no secret reaches the browser bundle. Fix what you find.
+5. Material for the report and the video: run `demo:shortage`, take screenshots of the key screens at 1280 and 360 px (home, pharmacy report flow step by step, result, alert, coordination with the map, `/vues`, `/scenario` at confirmed and at levée, `/retour`, `/methode` with the explorer), save them in `docs/reports/session-3/`, then run `demo:clear` and check the database is back as before. Write `docs/reports/figures.md`: the numbers the report can cite, each computed by a script (catalogue counts, number of tests, episodes and leads from the file, pages and roles), with the command that produced it.
 
 ## Done checks
 
