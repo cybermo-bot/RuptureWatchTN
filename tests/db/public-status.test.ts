@@ -37,14 +37,14 @@ async function errorOf(p: Promise<unknown>) {
 }
 
 const status = (caller: Caller, molecule: string) =>
-  as(db, caller, async (tx) => (await tx.query<{ level: string; since: Date | null }>('select * from public.public_molecule_status($1)', [molecule])).rows);
+  as(db, caller, async (tx) => (await tx.query<{ level: string; since: Date | null; origins: string[] }>('select * from public.public_molecule_status($1)', [molecule])).rows);
 
 beforeAll(async () => {
   db = await createTestDatabase({ defaultGrants: false });
   for (const [name, mol] of Object.entries(MOL)) await db.query('insert into public.molecules (id, name) values ($1, $2)', [mol, name.toUpperCase()]);
   const signal = async (mol: string, level: string, events: [string, string][]) => {
     await db.query(
-      `insert into public.signals (molecule_id, level, since, rule, evidence) values ($1, $2, $3, 'test_rule', '{"pharmacies14d": 2}')`,
+      `insert into public.signals (molecule_id, level, since, rule, evidence) values ($1, $2, $3, 'test_rule', '{"pharmacies14d": 2, "origins": ["simulated"]}')`,
       [mol, level, SINCE],
     );
     for (const [i, [from, to]] of events.entries()) {
@@ -102,12 +102,12 @@ afterAll(async () => {
 
 describe('public_molecule_status', () => {
   it('says "confirmée" with its date, to a visitor with no account', async () => {
-    expect(await status(anon, MOL.confirmed)).toEqual([{ level: 'confirmed', since: new Date(SINCE) }]);
+    expect(await status(anon, MOL.confirmed)).toEqual([{ level: 'confirmed', since: new Date(SINCE), origins: ['simulated'] }]);
   });
 
   it('says "levée" only when the medicine was confirmed before', async () => {
-    expect(await status(anon, MOL.clearedFromConfirmed)).toEqual([{ level: 'cleared', since: new Date(SINCE) }]);
-    expect(await status(anon, MOL.clearedFromLikely)).toEqual([{ level: 'none', since: null }]);
+    expect(await status(anon, MOL.clearedFromConfirmed)).toEqual([{ level: 'cleared', since: new Date(SINCE), origins: ['simulated'] }]);
+    expect(await status(anon, MOL.clearedFromLikely)).toEqual([{ level: 'none', since: null, origins: [] }]);
   });
 
   it('never returns "sous surveillance" or "probable", whoever asks', async () => {
@@ -116,17 +116,15 @@ describe('public_molecule_status', () => {
         const rows = await status(caller, mol);
         expect(rows).toHaveLength(1);
         expect(['confirmed', 'cleared', 'none']).toContain(rows[0].level);
-        if (rows[0].level === 'none') expect(rows[0].since).toBeNull();
+        if (rows[0].level === 'none') expect(rows[0]).toEqual({ level: 'none', since: null, origins: [] });
       }
     }
-    expect(await status(anon, MOL.watch)).toEqual([{ level: 'none', since: null }]);
-    expect(await status(anon, MOL.likely)).toEqual([{ level: 'none', since: null }]);
-    expect(await status(anon, MOL.noRow)).toEqual([{ level: 'none', since: null }]);
+    for (const mol of [MOL.watch, MOL.likely, MOL.noRow]) expect(await status(anon, mol)).toEqual([{ level: 'none', since: null, origins: [] }]);
   });
 
-  it('returns two columns only: no count, no rule', async () => {
+  it('returns the level, its date and its origins only: no count, no rule', async () => {
     const { fields } = await as(db, anon, (tx) => tx.query('select * from public.public_molecule_status($1)', [MOL.confirmed]));
-    expect(fields.map((f) => f.name)).toEqual(['level', 'since']);
+    expect(fields.map((f) => f.name)).toEqual(['level', 'since', 'origins']);
   });
 });
 
