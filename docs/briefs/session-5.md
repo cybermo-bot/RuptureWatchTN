@@ -4,6 +4,12 @@ Read `CLAUDE.md`, `docs/PLAN.md` and `docs/reports/session-3.md` first. Work on 
 
 The logic, the privacy rules and the tests are strong. What the jury sees is not: every page reads like a typeset document, the home page shows no product, the dashboards open half empty, and the institutions the platform is designed for (the Ministry, the Pharmacie Centrale, the Order of Pharmacists) have no space of their own. This session fixes that. Every product rule in `CLAUDE.md` section 2 still holds; nothing here relaxes them.
 
+## Answers to session 3's questions
+
+1. LEVETIRACETAM at "sous surveillance" from the Sfax demo account: remove it with the sanctioned reset (part 2).
+2. "Levée" reopened by a foreign notice that is still active: change the rule (part 4).
+3. Indexing: keep the whole site out of search engines. Someone searching a real medicine must never land on a simulated "Confirmée" and believe it. The jury uses the link.
+
 ## 1. New design direction (first, everything else is built in it)
 
 Replace section 9 of `CLAUDE.md` and of `AGENTS.md` with the direction below (keep the level shapes and the four level colours), record it in `docs/DECISIONS.md`, then apply it to every existing page.
