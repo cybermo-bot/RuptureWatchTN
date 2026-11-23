@@ -252,9 +252,7 @@
       "cleared": {
         "title": "Levée",
         "summary": "Au moins deux pharmacies signalent que le médicament est de nouveau livré, et aucune commande non livrée n'a été signalée depuis 14 jours.",
-        "guidance": [
-          "Reprenez vos commandes habituelles."
-        ]
+        "guidance": ["Reprenez vos commandes habituelles."]
       }
     },
     "standDown": "L'alerte sur {molecule} est terminée. Niveau actuel : {level}. Reprenez vos commandes habituelles.",
@@ -1064,5 +1062,36 @@
     "chooseRole": "Choisir un rôle",
     "public": "Je cherche un médicament",
     "footerLogo": "RuptureWatch TN"
+  },
+  "requests": {
+    "title": "Demandes de patients",
+    "intro": "Des patients de votre gouvernorat demandent si une pharmacie a ce médicament. Répondez en un geste : ils ne voient que ce que vous choisissez.",
+    "anonymousNote": "Le patient est anonyme : nous ne connaissons ni son nom ni son numéro. Une réponse ne change jamais le niveau d’alerte.",
+    "empty": "Aucune demande en attente dans votre gouvernorat.",
+    "emptyBody": "Une demande reste ouverte 3 heures. Cette page se met à jour toute seule.",
+    "asked": "Demandé à {time}",
+    "timeLeft": "Encore {time}",
+    "hoursMinutes": "{h} h {m} min",
+    "minutes": "{m} min",
+    "presentation": "Présentation : {label}",
+    "delegation": "Délégation : {delegation}",
+    "showMe": "Disponible, me montrer au patient",
+    "showMeHint": "Le patient voit le nom et l’adresse de votre pharmacie, pour cette demande seulement.",
+    "anonymous": "Disponible, rester anonyme",
+    "anonymousHint": "Le patient voit qu’une pharmacie de plus a répondu, sans savoir laquelle.",
+    "no": "Pas disponible",
+    "sending": "Envoi…",
+    "doneShow": "Réponse envoyée : le patient voit votre pharmacie sur sa carte.",
+    "doneAnonymous": "Réponse envoyée : le patient voit une réponse de plus, sans votre nom.",
+    "doneNo": "Réponse envoyée : merci. Le patient voit une réponse de plus.",
+    "expired": "Cette demande vient d’expirer : la réponse n’a pas été enregistrée.",
+    "already": "Vous avez déjà répondu à cette demande.",
+    "failed": "La réponse n’a pas pu être envoyée. Réessayez.",
+    "homeStrip": "{count} patients attendent votre réponse.",
+    "homeStripOne": "1 patient attend votre réponse.",
+    "answerNow": "Répondre",
+    "moreHint": "Répondre aux patients qui cherchent un médicament près de chez vous.",
+    "hours": "{h} h",
+    "noOther": "Aucune autre demande en attente."
   }
 }
