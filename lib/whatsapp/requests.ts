@@ -10,7 +10,7 @@ import { t } from '@/lib/i18n';
 import { alertDelivery } from './alerts';
 import { sendMessage, whatsappEnv } from './client';
 
-export async function notifyNewRequest(requestId: string, governorateCode: string, moleculeName: string, now = new Date()): Promise<void> {
+export async function notifyNewRequest(requestId: string, governorateCode: string, requestedName: string, now = new Date()): Promise<void> {
   const env = whatsappEnv();
   if (!env) return;
   const sent = { text: 0, skipped: 0, failed: 0 };
@@ -32,7 +32,7 @@ export async function notifyNewRequest(requestId: string, governorateCode: strin
           { to: link.reply_to },
           {
             type: 'buttons',
-            body: t('core.whatsapp.newRequest', { name: moleculeName }),
+            body: t('core.whatsapp.newRequest', { name: requestedName }),
             buttons: [{ id: `rw:q:${requestId}`, title: t('core.requests.answerNow') }],
           },
           env,

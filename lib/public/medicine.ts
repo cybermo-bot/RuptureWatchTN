@@ -49,6 +49,18 @@ export async function getBrands(moleculeId: string): Promise<Brand[]> {
   return (data ?? []) as Brand[];
 }
 
+/** A presentation is only valid in the context of its own molecule. */
+export async function getPublicPresentation(moleculeId: string, medicineId: unknown): Promise<Brand | null> {
+  if (!isUuid(moleculeId) || !isUuid(medicineId)) return null;
+  const { data, error } = await createAnonClient()
+    .from('medicines')
+    .select('id, label, brand, vei_category')
+    .eq('molecule_id', moleculeId)
+    .eq('id', medicineId)
+    .maybeSingle();
+  if (error) throw new Error(`medicine: ${error.message}`);
+  return data;
+}
 export async function getPublicStatus(moleculeId: string): Promise<PublicStatus> {
   const { data, error } = await createAnonClient().rpc('public_molecule_status', { p_molecule_id: moleculeId });
   if (error) throw new Error(`public_molecule_status: ${error.message}`);

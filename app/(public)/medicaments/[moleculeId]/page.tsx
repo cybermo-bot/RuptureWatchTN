@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { ButtonLink } from '@/components/Button';
 import { LevelShape } from '@/components/LevelBadge';
 import { OriginBadge } from '@/components/OriginBadge';
+import { FormPicture } from '@/components/medicine/FormPicture';
 import { FollowButton } from '@/components/public/FollowButton';
 import { Ltr } from '@/components/public/Ltr';
 import { PublicMain } from '@/components/public/PublicChrome';
@@ -15,10 +16,11 @@ import { formatPublicDate, formatPublicTime } from '@/lib/public/format';
 import { createAnonClient } from '@/lib/db/server';
 import { publicArrival } from '@/lib/institutions/data';
 import { LevelBand } from '@/components/charts/LevelBand';
-import { getBrands, getPublicHistory, getPublicMolecule, getPublicStatus } from '@/lib/public/medicine';
+import { getBrands, getPublicHistory, getPublicMolecule, getPublicPresentation, getPublicStatus } from '@/lib/public/medicine';
 import { ShareStatus } from '@/components/public/ShareStatus';
 import { OG_BASE } from '@/lib/og/meta';
 import { shareText, statusLines } from '@/lib/public/share';
+import { presentationText } from '@/lib/public/presentation';
 import { siteUrl } from '@/lib/site';
 
 // Track B: the rumour check. What the public may know about a medicine (CLAUDE.md rule 10):
@@ -49,14 +51,18 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
   const { t, locale } = await getTranslator();
   const molecule = await getPublicMolecule((await props.params).moleculeId);
   if (!molecule) notFound();
-  const [status, brands, arrival, history] = await Promise.all([
+  const { presentation: requestedPresentation } = await props.searchParams;
+  const [status, brands, arrival, history, presentation] = await Promise.all([
     getPublicStatus(molecule.id),
     getBrands(molecule.id),
     // Only while "confirmée" (public_arrival): the date and its origin, never a level change.
     publicArrival(createAnonClient(), molecule.id).catch(() => null),
     // The 90-day strip: "confirmée" and "levée" periods only (public_molecule_history).
     getPublicHistory(molecule.id, HISTORY_DAYS).catch(() => null),
+    requestedPresentation === undefined ? null : getPublicPresentation(molecule.id, requestedPresentation),
   ]);
+  if (requestedPresentation !== undefined && !presentation) notFound();
+  const requestHref = `/medicaments/${molecule.id}/demande${presentation ? `?presentation=${presentation.id}` : ''}`;
 
   const shown = status.level === 'confirmed' || status.level === 'cleared';
   // "Simulation" in the heading block whenever the status or the arrival shown comes from demo data.
@@ -95,12 +101,18 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
       </Link>
 
       <header className="flex flex-col gap-1.5">
-        <h1 className="text-2xl leading-tight font-semibold tracking-tight break-words text-ink sm:text-[1.75rem]">
-          <Ltr>{molecule.name}</Ltr>
-        </h1>
+        <div className="flex items-start gap-3">
+          <FormPicture label={presentation?.label} brand={presentation?.brand} locale={locale} className="size-14" />
+          <div className="min-w-0">
+            <h1 className="text-2xl leading-tight font-semibold tracking-tight break-words text-ink sm:text-[1.75rem]">
+              <Ltr>{presentation ? presentationText(presentation, t) : molecule.name}</Ltr>
+            </h1>
+            {presentation ? <Ltr className="text-ink-muted">{molecule.name}</Ltr> : null}
+          </div>
+        </div>
         {simulated ? (
           <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-muted">
-            <span className="rounded-sm border border-dashed border-ink-muted px-1.5 font-mono text-xs leading-5 font-medium tracking-wide text-ink uppercase">
+            <span className="font-semibold text-ink">
               {t('public.medicine.simulation')}
             </span>
             <span>{t('public.medicine.simulationNote')}</span>
@@ -158,7 +170,7 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
       </section>
 
       <div className="flex flex-col gap-4">
-        <ButtonLink href={`/medicaments/${molecule.id}/demande`} className="w-full sm:w-auto sm:self-start">
+        <ButtonLink href={requestHref} className="w-full sm:w-auto sm:self-start">
           <MapPin size={18} aria-hidden="true" />
           {t('public.medicine.ask')}
         </ButtonLink>
@@ -230,7 +242,10 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
                     <ul className="flex flex-col gap-1 px-4 pb-3">
                       {items.map((b) => (
                         <li key={b.id}>
-                          <Ltr className="text-sm break-words text-ink-muted">{b.label}</Ltr>
+                          <Link href={`/medicaments/${molecule.id}?presentation=${b.id}`} className="inline-flex min-h-12 items-center gap-3">
+                            <FormPicture label={b.label} brand={b.brand} locale={locale} />
+                            <Ltr className="text-sm break-words">{b.label}</Ltr>
+                          </Link>
                         </li>
                       ))}
                     </ul>

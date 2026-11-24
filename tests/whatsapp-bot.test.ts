@@ -290,6 +290,22 @@ describe("patients' requests in three taps", () => {
     expect(bodyOf(reply)).toBe(t('core.whatsapp.requestsNone'));
   });
 
+  it('shows the presentation of each request in the list and the selected question', async () => {
+    const first = 'ANTIOMAL 250 Comp Pell 250 MG BT 30';
+    const second = 'ANTIOMAL 500 Comp Pell 500 MG BT 30';
+    const deps = fakeDeps({
+      requests: async () => [
+        { requestId: REQ, moleculeName: 'LEVETIRACETAM', medicineLabel: first, minutesLeft: 20 },
+        { requestId: REQ2, moleculeName: 'LEVETIRACETAM', medicineLabel: second, minutesLeft: 25 },
+      ],
+    });
+    const list = one(await botReply(text('demandes'), pharmacy, deps, ctx));
+    expect(list).toMatchObject({ rows: [{ description: first }, { description: second }] });
+    const reply = one(await botReply(tap(`rw:q:${REQ2}`), pharmacy, deps, ctx));
+    expect(bodyOf(reply)).toContain(second);
+    expect(bodyOf(reply)).not.toContain(first);
+  });
+
   it('a request asks the question with three buttons, and says nothing about the patient', async () => {
     const reply = one(await botReply(tap(`rw:q:${REQ}`), pharmacy, fakeDeps(), ctx));
     expect(reply).toMatchObject({

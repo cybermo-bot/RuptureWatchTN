@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useEffect, useId, useState } from 'react';
 import { followMolecule } from '@/app/actions/pharmacy';
 import { Input } from '@/components/Input';
+import { FormPicture } from '@/components/medicine/FormPicture';
 import { t } from '@/lib/i18n';
 
 // Catalogue search for the pharmacy. A DCI leads to its molecule first, then the brands.
@@ -54,21 +55,26 @@ function Row({
   followed,
   title,
   lines,
+  label,
 }: {
   mode: 'follow' | 'report';
   moleculeId: string;
   followed: boolean;
   title: string;
   lines: string[];
+  label?: string;
 }) {
   const text = (
-    <div className="flex min-w-0 flex-col gap-0.5">
+    <div className="flex min-w-0 items-center gap-3">
+      <FormPicture label={label} brand={label ? title : undefined} />
+      <div className="flex min-w-0 flex-col gap-0.5 break-words">
       <span className="font-medium text-ink">{title}</span>
       {lines.map((line) => (
         <span key={line} className="text-sm text-ink-muted">
           {line}
         </span>
       ))}
+      </div>
     </div>
   );
   if (mode === 'report') {
@@ -177,6 +183,7 @@ export function MoleculeSearch({ mode, followedIds = [] }: { mode: 'follow' | 'r
                         moleculeId={m.molecule_id}
                         followed={followed.has(m.molecule_id)}
                         title={m.brand}
+                        label={m.label}
                         lines={[m.label, t('core.follow.medicineMeta', { dci: m.dci })]}
                       />
                     ))}

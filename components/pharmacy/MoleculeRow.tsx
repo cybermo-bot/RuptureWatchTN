@@ -2,6 +2,7 @@ import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { LevelBadge } from '@/components/LevelBadge';
 import { Origins } from '@/components/Origins';
+import { FormPicture } from '@/components/medicine/FormPicture';
 import { formatDate } from '@/lib/format';
 import { t } from '@/lib/i18n';
 import type { FollowedMolecule } from '@/lib/pharmacy/data';
@@ -16,7 +17,8 @@ export function MoleculeRow({ molecule, href, large = false, label }: { molecule
       data-pulse={molecule.moleculeId}
       className="flex min-h-16 items-center justify-between gap-4 px-4 py-3 no-underline transition-colors duration-150 hover:bg-surface-subtle active:bg-surface-subtle"
     >
-      <span className="flex min-w-0 flex-col gap-1">
+      <FormPicture />
+      <span className="flex min-w-0 flex-1 flex-col gap-1">
         <span className={`font-medium break-words text-ink ${large ? 'text-lg' : ''}`}>{molecule.name}</span>
         <span className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-muted">
           <LevelBadge level={level} />

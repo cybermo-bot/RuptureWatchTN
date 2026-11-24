@@ -10,6 +10,7 @@ const MOL = id(0x200);
 const MOL2 = id(0x201);
 const MED = id(0x300);
 const MED_OTHER = id(0x301);
+const MED_250 = id(0x302);
 const ORG = {
   yesShown: id(0xa1), // Tunis: available, shows itself
   yesHidden: id(0xa2), // Tunis: available, stays hidden
@@ -86,8 +87,9 @@ beforeAll(async () => {
   await db.query(
     `insert into public.medicines (id, code_pct, label, brand, dci, molecule_id, source)
      values ($1, '900001', 'KEPPRA 500 MG CP', 'KEPPRA', 'LEVETIRACETAM', $2, 'test'),
-            ($3, '900002', 'LEVOTHYROX 50', 'LEVOTHYROX', 'LEVOTHYROXINE', $4, 'test')`,
-    [MED, MOL, MED_OTHER, MOL2],
+            ($3, '900002', 'LEVOTHYROX 50', 'LEVOTHYROX', 'LEVOTHYROXINE', $4, 'test'),
+            ($5, '900003', 'KEPPRA 250 MG CP', 'KEPPRA', 'LEVETIRACETAM', $2, 'test')`,
+    [MED, MOL, MED_OTHER, MOL2, MED_250],
   );
   const orgs: [keyof typeof ORG, string, string, string][] = [
     ['yesShown', 'pharmacy', 'TN-11', 'simulated'],
@@ -322,5 +324,30 @@ describe('demand by governorate', () => {
   it('is refused to pharmacies and visitors', async () => {
     expect((await errorOf(demand(user('yesShown'))))?.code).toBe('42501');
     expect((await errorOf(demand(anon)))?.message).toMatch(/permission denied/);
+  });
+});
+
+it('routes and returns answers independently for two strengths of the same brand', async () => {
+  const request500 = await asCommitted(db, service, (tx) => createRequest(tx, { medicine: MED, device: hash(400) }));
+  const request250 = await asCommitted(db, service, (tx) => createRequest(tx, { medicine: MED_250, device: hash(401) }));
+  const expected = [
+    expect.objectContaining({ request_id: request500, medicine_id: MED, medicine_label: 'KEPPRA 500 MG CP' }),
+    expect.objectContaining({ request_id: request250, medicine_id: MED_250, medicine_label: 'KEPPRA 250 MG CP' }),
+  ];
+  const web = await as(db, user('yesShown'), (tx) => tx.query('select * from public.requests_for_my_pharmacy()'));
+  const whatsapp = await as(db, service, (tx) => tx.query('select * from public.requests_for_pharmacy($1)', [ORG.yesShown]));
+  expect(web.rows).toEqual(expect.arrayContaining(expected));
+  expect(whatsapp.rows).toEqual(expect.arrayContaining(expected));
+
+  await answer('yesShown', request500, 'available', true);
+  await answer('yesHidden', request250, 'available', true);
+  const read = (request: string) => as(db, anon, async (tx) =>
+    (await tx.query<{ r: unknown }>('select public.request_answers_public($1) as r', [request])).rows[0].r,
+  );
+  expect(await read(request500)).toMatchObject({
+    request_id: request500, medicine_id: MED, answered: '<3', available: [{ display_name: NAMES[ORG.yesShown] }],
+  });
+  expect(await read(request250)).toMatchObject({
+    request_id: request250, medicine_id: MED_250, answered: '<3', available: [{ display_name: NAMES[ORG.yesHidden] }],
   });
 });

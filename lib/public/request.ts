@@ -19,6 +19,7 @@ export interface ShownAnswer {
 export interface PublicRequest {
   request_id: string;
   molecule_id: string;
+  medicine_id: string | null;
   governorate_code: string;
   created_at: string;
   expires_at: string;

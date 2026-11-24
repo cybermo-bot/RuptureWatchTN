@@ -149,9 +149,10 @@ export function supabaseBotDeps(client: SupabaseClient, hooks: ReportHooks = {})
       const { data, error } = await client.rpc('requests_for_pharmacy', { p_organisation_id: organisationId });
       if (error) throw new Error(`requests_for_pharmacy: ${error.code}`);
       const now = Date.now();
-      return ((data ?? []) as { request_id: string; molecule_name: string; expires_at: string }[]).map((r) => ({
+      return ((data ?? []) as { request_id: string; molecule_name: string; medicine_label: string | null; expires_at: string }[]).map((r) => ({
         requestId: r.request_id,
         moleculeName: r.molecule_name,
+        medicineLabel: r.medicine_label,
         minutesLeft: Math.max(1, Math.ceil((Date.parse(r.expires_at) - now) / 60_000)),
       }));
     },

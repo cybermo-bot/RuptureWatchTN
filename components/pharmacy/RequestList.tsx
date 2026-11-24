@@ -4,6 +4,7 @@ import { CircleCheck, Clock, EyeOff, MapPin, X } from 'lucide-react';
 import { useState, useTransition } from 'react';
 import { answerRequest, type Choice } from '@/app/(site)/(espace)/pharmacie/demandes/actions';
 import { buttonClass } from '@/components/Button';
+import { FormPicture } from '@/components/medicine/FormPicture';
 import { formatTime } from '@/lib/format';
 import { t } from '@/lib/i18n';
 import type { OpenRequest } from '@/lib/pharmacy/requests';
@@ -114,14 +115,14 @@ export function RequestList({ requests }: { requests: OpenRequest[] }) {
         {rows.map((r) => {
           const done = answered[r.request_id];
           return (
-            <li key={r.request_id} className="panel flex flex-col gap-4 p-4">
-              <div className="flex flex-col gap-1">
-                <p className="text-lg font-semibold break-words text-ink">{r.molecule_name}</p>
+            <li key={r.request_id} data-request-id={r.request_id} className="panel flex flex-col gap-4 p-4">
+              <div className="flex items-start gap-3">
+                <FormPicture label={r.medicine_label} />
+                <div className="flex min-w-0 flex-col gap-1">
+                <p className="text-lg font-semibold break-words text-ink">{r.medicine_label ?? r.molecule_name}</p>
                 {r.medicine_label ? (
                   <p className="text-sm text-ink-muted">
-                    {t('core.requests.presentation', {
-                      label: r.medicine_label,
-                    })}
+                    {r.molecule_name}
                   </p>
                 ) : null}
                 {r.delegation ? (
@@ -146,6 +147,7 @@ export function RequestList({ requests }: { requests: OpenRequest[] }) {
                     </span>
                   ) : null}
                 </p>
+                </div>
               </div>
               {done ? (
                 <p role="status" className="flex items-start gap-2 rounded-md border border-level-cleared px-3 py-3 text-ink">
