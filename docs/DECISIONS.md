@@ -15,7 +15,7 @@ Newest first. Each entry: what was decided, and why.
 
 ### "Ouvrir sur votre téléphone" (part 8, item 3)
 
-- On the home page, desktop only, a QR code to `/medicaments` sits beside the public tiles, so a judge on a laptop tries the patient side on their phone. Drawn on the server by `qrcode`, the library the tester invitation already uses (entry of session 4): no new dependency. `lib/qr.ts` holds the helper; its dark modules take `currentColor`, so the code follows the design tokens. The link is built from the host that served the page, so a preview deployment points to itself.
+- On the home page, desktop only, a QR code to `/medicaments` sits beside the public tiles, so a judge on a laptop tries the patient side on their phone. Drawn on the server by `qrcode`, the library the tester invitation already uses (entry of session 2): no new dependency. `lib/qr.ts` holds the helper; its dark modules take `currentColor`, so the code follows the design tokens. The link is built from the host that served the page, so a preview deployment points to itself.
 - The invitation screens of the Ordre and the coordination already show the tester invitation link as a QR code (`TesterInvitation`); nothing to add there.
 
 ### "Ce qui manque" beside a level (part 5)
