@@ -1,4 +1,4 @@
-import { BookOpen, ChevronRight, House, MessageCircle, UsersRound } from 'lucide-react';
+import { Bell, BookOpen, ChevronRight, House, MessageCircle } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -10,7 +10,7 @@ import { t, type MessageKey } from '@/lib/i18n';
 export const metadata: Metadata = { title: t('core.more.title') };
 
 const LINKS: { href: string; icon: typeof House; title: MessageKey; hint: MessageKey }[] = [
-  { href: '/pharmacie/demandes', icon: UsersRound, title: 'core.nav.items.requests', hint: 'core.requests.moreHint' },
+  { href: '/pharmacie/alertes', icon: Bell, title: 'core.nav.items.alerts', hint: 'core.more.alertsHint' },
   { href: '/pharmacie/whatsapp', icon: MessageCircle, title: 'core.more.whatsapp', hint: 'core.more.whatsappHint' },
   { href: '/methode', icon: BookOpen, title: 'core.more.method', hint: 'core.more.methodHint' },
   { href: '/', icon: House, title: 'core.more.home', hint: 'core.more.homeHint' },

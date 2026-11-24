@@ -9,9 +9,9 @@ import { CatalogueLine } from '@/components/institutions/Lines';
 import { GOVERNORATE_SHAPES, GovernorateMap, type GovernorateValue } from '@/components/GovernorateMap';
 import { LevelBadge, LevelShape } from '@/components/LevelBadge';
 import { FreshnessLine } from '@/components/Freshness';
-import { LevelExplanation } from '@/components/LevelExplanation';
-import { MissingLine } from '@/components/MissingLine';
-import { PlaybookLink } from '@/components/PlaybookLink';
+import { RuleDetails } from '@/components/LevelExplanation';
+import { MedicineDecision } from '@/components/coordination/MedicineDecision';
+import { ButtonLink } from '@/components/Button';
 import { LevelChangeWatcher } from '@/components/live/LevelChangeWatcher';
 import { Origins } from '@/components/Origins';
 import { OriginBadge } from '@/components/OriginBadge';
@@ -265,7 +265,8 @@ export function TimelineList({ events }: { events: EventRow[] }) {
         <li key={e.id} className="flex flex-col gap-1 py-3 first:pt-0">
           <When at={e.at} />
           <Change from={e.from_level} to={e.to_level} />
-          <span className="font-mono text-xs text-ink-muted">{e.rule}</span>
+          <Origins origins={e.evidence.origins} />
+          <RuleDetails rule={e.rule} />
         </li>
       ))}
     </ol>
@@ -303,7 +304,7 @@ export function EventLog({
     ...arrivals.map((a) => ({ kind: 'arrival' as const, at: a.announcedAt, arrival: a })),
   ].sort((a, b) => b.at.localeCompare(a.at));
   return (
-    <Panel title={t('core.coordination.eventLogTitle')} titleId="journal" description={t('core.coordination.eventLogIntro')} bodyClassName="px-4">
+    <Panel id="journal-decisions" title={t('core.coordination.eventLogTitle')} titleId="journal" description={t('core.coordination.eventLogIntro')} bodyClassName="px-4">
       {items.length === 0 ? (
         <p className="py-6 text-sm text-ink-muted">{t('core.coordination.eventLogEmpty')}</p>
       ) : (
@@ -315,7 +316,8 @@ export function EventLog({
                 <span className="font-medium break-words text-ink">{item.event.molecule_name}</span>
                 <span className="flex flex-col gap-1">
                   <Change from={item.event.from_level} to={item.event.to_level} />
-                  <span className="font-mono text-xs text-ink-muted">{item.event.rule}</span>
+                  <Origins origins={item.event.evidence.origins} />
+                  <RuleDetails rule={item.event.rule} />
                 </span>
               </li>
             ) : item.kind === 'arrival' ? (
@@ -410,7 +412,7 @@ export function SignalsDashboard({
   data,
   basePath,
   figures,
-  afterSelected,
+  decisionAction,
   listTitle,
   extraFigures,
   overview,
@@ -428,8 +430,8 @@ export function SignalsDashboard({
   detailNote?: ReactNode;
   /** Key figures shown on top. Default: medicines at each level. */
   figures?: KeyFigure[];
-  /** Extra panel under the selected molecule's header (the wholesaler's split). */
-  afterSelected?: ReactNode;
+  /** Role-specific next step for the selected medicine. */
+  decisionAction?: ReactNode;
   listTitle?: string;
 }) {
   const { signals, selected } = data;
@@ -437,7 +439,7 @@ export function SignalsDashboard({
     <div className="flex flex-col gap-5">
       <LevelChangeWatcher
         items={signals.map((s) => ({ key: s.molecule_id, name: s.molecule_name, level: s.level }))}
-        governorates={data.counts.map((c) => ({ code: c.governorate_code, text: c.pharmacies }))}
+        map={selected ? { moleculeId: selected.molecule_id, codes: data.counts.map((c) => c.governorate_code) } : undefined}
       />
       {signals.length > 0 ? (
         <div className="flex justify-end">
@@ -471,29 +473,22 @@ export function SignalsDashboard({
                   <h2 id="detail-titre" className="text-xl font-semibold break-words text-ink">
                     {selected.molecule_name}
                   </h2>
-                  <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink-muted">
-                    <LevelBadge level={selected.level} />
-                    <span>{t('core.pharmacy.since', { date: formatDate(selected.since) })}</span>
-                    <Origins origins={selected.evidence.origins} />
+                  <MedicineDecision signal={selected} action={decisionAction ?? (
+                    <ButtonLink href={basePath === '/coordination' ? '#journal-decisions' : '#carte'}>
+                      {t(basePath === '/coordination' ? 'core.decisionBlock.log' : 'core.decisionBlock.hospital')}
+                    </ButtonLink>
+                  )}>
+                    <p>{t('core.pharmacy.since', { date: formatDate(selected.since) })}</p>
                     <SignalFreshness at={selected.updated_at} />
-                  </p>
-                  <LevelExplanation rule={selected.rule} evidence={selected.evidence} showRule methodLink />
-                  <MissingLine level={selected.level} rule={selected.rule} evidence={selected.evidence} />
-                  {facts?.get(selected.molecule_id) ? (
-                    <p className="text-sm text-ink-muted">
-                      <CatalogueLine facts={facts.get(selected.molecule_id)} />
-                    </p>
-                  ) : null}
+                    {facts?.get(selected.molecule_id) ? <p><CatalogueLine facts={facts.get(selected.molecule_id)} /></p> : null}
+                  </MedicineDecision>
                   {detailNote}
-                  <PlaybookLink molecule={selected.molecule_name} context="evenement" />
-                  <p className="text-sm text-ink-muted">{t('core.guidance.disclaimer')}</p>
                 </header>
                 <div className="flex flex-col gap-6 p-4">
                   <LevelBand events={data.timeline} title={t('core.charts.levelTimeline', { days: 30 })} />
                   <GovernoratePanel level={selected.level} counts={data.counts} />
                 </div>
               </section>
-              {afterSelected}
               <div className="grid gap-5 lg:grid-cols-2">
                 <Panel title={t('core.coordination.demandTitle', { days: DEMAND_WINDOW_DAYS })} titleId="demande" headingLevel={3}>
                   <DemandTable demand={data.demand} />

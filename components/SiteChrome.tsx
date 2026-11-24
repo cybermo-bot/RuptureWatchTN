@@ -16,22 +16,22 @@ export function Wordmark() {
   );
 }
 
-export function SiteHeader({ children }: { children?: ReactNode }) {
+export function SiteHeader({ children, compact = false }: { children?: ReactNode; compact?: boolean }) {
   return (
     <header className="border-b border-line bg-surface">
       <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-x-6 gap-y-1 px-4 sm:px-6 lg:px-8">
         <Wordmark />
-        <div className="order-3 -mx-4 w-[calc(100%+2rem)] overflow-x-auto border-t border-line px-4 sm:order-none sm:mx-0 sm:w-auto sm:border-0 sm:px-0 lg:flex-1">
+        {!compact ? <div className="order-3 -mx-4 w-[calc(100%+2rem)] overflow-x-auto border-t border-line px-4 sm:order-none sm:mx-0 sm:w-auto sm:border-0 sm:px-0 lg:flex-1">
           <UnderstandNav />
-        </div>
-        {children ?? (
+        </div> : null}
+        {children ?? (!compact && (
           <Link
             href="/#roles"
             className="inline-flex min-h-11 items-center rounded-md bg-brand px-4 text-sm font-medium text-white no-underline hover:bg-brand-strong hover:text-white"
           >
             {t('core.site.chooseRole')}
           </Link>
-        )}
+        ))}
       </div>
     </header>
   );

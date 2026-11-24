@@ -98,9 +98,6 @@ export function SplitComparison(props: SplitComparisonProps) {
       <section aria-labelledby="comparer" className="panel flex flex-col gap-5 p-5">
         <div className="flex flex-col gap-2">
           <p className="flex flex-wrap items-center gap-2">
-            <span className="rounded-sm border border-ink px-1.5 font-mono text-xs leading-5 tracking-wide text-ink uppercase">
-              {t('wholesaler.split.compare.simulation')}
-            </span>
             <OriginBadge origin="simulated" />
           </p>
           <h2 id="comparer" className="text-lg font-semibold text-ink">

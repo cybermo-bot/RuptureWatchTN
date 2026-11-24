@@ -9,7 +9,51 @@
     "skipToContent": "Aller au contenu",
     "loading": "Chargement de la page…"
   },
+  "decisionBlock": {
+    "next": "Prochaine action",
+    "why": "Pourquoi ?",
+    "log": "Voir le journal",
+    "hospital": "Voir les signalements par gouvernorat",
+    "review": "À examiner",
+    "medicine": "Ouvrir la fiche",
+    "sources": "Sources et actualités",
+    "sourcesMore": "Voir toutes les sources",
+    "sourcesEmpty": "Aucune source disponible.",
+    "demand": "Demandes reçues via RuptureWatch",
+    "dateRange": "Du {from} au {to}"
+  },
+  "decisionDemo": {
+    "title": "Un signalement peut changer le niveau",
+    "medicine": "Médicament fictif · commande non livrée",
+    "initial": "{n} pharmacies de Tunis ont signalé une commande non livrée.",
+    "concentrated": "Tous les signalements viennent du même gouvernorat : c'est peut-être un problème de distribution local.",
+    "spread": "Deux gouvernorats signalent la même commande non livrée : la rupture est confirmée.",
+    "actors": "La coordination examine le signal. Le grossiste peut comparer deux façons de répartir le stock.",
+    "add": "Ajouter le 4ᵉ signalement",
+    "choose": "D’où vient le signalement ?",
+    "allocation": "Comparer la répartition",
+    "cover": "Couverture du gouvernorat le moins approvisionné après répartition de {stock} boîtes simulées.",
+    "save": "Enregistrer la décision",
+    "saveHelp": "Dans cette simulation, aucune décision n’est enregistrée.",
+    "replay": "Voir tout le scénario",
+    "fullTitle": "Le scénario complet"
+  },
   "home": {
+    "entry": {
+      "title": "Repérer les ruptures de médicaments en Tunisie, avant qu’elles n’atteignent le comptoir.",
+      "demo": "Essayer la démo",
+      "caption": "Ajoutez un signalement et voyez ce qui fait changer le niveau d’alerte.",
+      "patient": "Je cherche un médicament",
+      "pharmacy": "Je suis pharmacien",
+      "coordination": "Je coordonne",
+      "more": "En savoir plus",
+      "roles": {
+        "ministry": "Ministère",
+        "central": "Pharmacie centrale",
+        "order": "Ordre",
+        "wholesaler": "Grossiste"
+      }
+    },
     "tagline": "Repérer les ruptures de médicaments avant qu’elles n’atteignent le comptoir.",
     "howTitle": "Comment ça marche",
     "steps": {
@@ -1136,6 +1180,7 @@
     "installed": "RuptureWatch est sur votre écran d’accueil."
   },
   "more": {
+    "alertsHint": "Consulter les alertes de vos médicaments suivis.",
     "title": "Plus",
     "intro": "Les autres outils de la pharmacie, et le prototype.",
     "whatsapp": "Signaler par WhatsApp",

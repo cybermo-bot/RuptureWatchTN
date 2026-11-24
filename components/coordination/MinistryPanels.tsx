@@ -1,9 +1,15 @@
 import Link from 'next/link';
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
+import { OriginBadge } from '@/components/OriginBadge';
 import { DailyBars, type DayValue } from '@/components/charts/DailyBars';
 import { Panel } from '@/components/console/Panel';
 import { GOVERNORATE_SHAPES, GovernorateMap, type GovernorateValue } from '@/components/GovernorateMap';
 import { LevelBadge } from '@/components/LevelBadge';
 import type { DayActivity } from '@/lib/institutions/data';
+import { readEpisodes } from '@/lib/content/episodes';
+import { parseNotices } from '@/lib/content/notices';
+import { formatDate } from '@/lib/format';
 import { t } from '@/lib/i18n';
 import { DEFAULT_PARAMS } from '@/lib/signal';
 import { LEVEL_ORDER, type ActiveLevel } from '@/lib/signals/views';
@@ -80,13 +86,45 @@ function toDayValues(rows: DayActivity[], key: 'pharmacies' | 'requests'): DayVa
   return rows.map((r) => ({ day: new Date(`${r.day}T12:00:00Z`), value: r[key] === '<3' ? '<3' : Number(r[key]) || 0 }));
 }
 
-export function ActivityCharts({ rows, days }: { rows: DayActivity[]; days: number }) {
+export function DemandChart({ rows }: { rows: DayActivity[] }) {
+  const from = rows[0]?.day;
+  const to = rows.at(-1)?.day;
   return (
-    <Panel title={t('core.ministry.chartsTitle', { days })} titleId="activite" headingLevel={3}>
-      <div className="grid gap-6 lg:grid-cols-2">
-        <DailyBars id="rapports-jour" data={toDayValues(rows, 'pharmacies')} title={t('core.ministry.reportsChart')} colour="var(--level-likely)" />
-        <DailyBars id="demande-jour" data={toDayValues(rows, 'requests')} title={t('core.ministry.demandChart')} colour="var(--brand)" />
-      </div>
+    <div className="min-w-0 self-start border-t border-line pt-4 sm:border-s sm:border-t-0 sm:ps-5 sm:pt-0">
+      {from && to ? <p className="mb-2 text-sm text-ink-muted">{t('core.decisionBlock.dateRange', { from: formatDate(from), to: formatDate(to) })}</p> : null}
+      <DailyBars id="demande-jour" data={toDayValues(rows, 'requests')} title={t('core.decisionBlock.demand')} colour="var(--brand)" />
+    </div>
+  );
+}
+
+export async function SourcesAndNews() {
+  const episodes = readEpisodes().episodes.map((episode) => ({ title: episode.label, ...episode.tnFirstReport, official: false }));
+  const csv = await readFile(join(process.cwd(), 'data/reference/foreign_notices.csv'), 'utf8').catch(() => '');
+  const notices = parseNotices(csv).rows.map((notice) => ({
+    title: notice.moleculeDci, source: notice.source, date: notice.publishedDate, url: notice.url, official: true,
+  }));
+  const rows = [...episodes, ...notices].sort((a, b) => b.date.localeCompare(a.date));
+  const list = (items: typeof rows) => (
+    <ul className="hairline-list">
+      {items.map(({ title, source, date, url, official }, i) => (
+        <li key={`${url}-${title}-${i}`} className="flex flex-wrap items-center gap-x-3">
+          <a href={url} className="inline-flex min-h-12 items-center font-medium">{title}</a>
+          <span className="text-sm text-ink-muted">{source}</span>
+          <time dateTime={date} className="text-sm text-ink-muted">{formatDate(date)}</time>
+          {official ? <OriginBadge origin="official_source" /> : null}
+        </li>
+      ))}
+    </ul>
+  );
+  return (
+    <Panel title={t('core.decisionBlock.sources')} titleId="sources-actualites">
+      {rows.length ? list(rows.slice(0, 4)) : <p>{t('core.decisionBlock.sourcesEmpty')}</p>}
+      {rows.length > 4 ? (
+        <details>
+          <summary className="min-h-12 cursor-pointer content-center font-medium text-brand">{t('core.decisionBlock.sourcesMore')}</summary>
+          {list(rows.slice(4))}
+        </details>
+      ) : null}
     </Panel>
   );
 }

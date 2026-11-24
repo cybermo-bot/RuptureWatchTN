@@ -7,7 +7,18 @@ const BASE = process.env.E2E_BASE_URL;
 
 async function signInAs(page: Page, role: string) {
   await page.goto('/');
-  await page.getByRole('button', { name: `Se connecter en tant que ${role}` }).click();
+  if (role === 'Pharmacie (Tunis)') {
+    await page.getByRole('button', { name: 'Je suis pharmacien' }).click();
+  } else {
+    const name = `Se connecter en tant que ${role}`;
+    await page.getByText('Je coordonne', { exact: true }).click();
+    const chooser = page.getByRole('button', { name, exact: true });
+    if (!(await chooser.isVisible())) {
+      await page.getByText('En savoir plus', { exact: true }).click();
+      await page.getByText('Choisissez un rôle', { exact: true }).click();
+    }
+    await chooser.click();
+  }
   // The sign-in is a form post that redirects to the role's space: wait for it before moving on.
   await page.waitForURL((url) => url.pathname !== '/', { timeout: 30_000 });
 }
@@ -20,7 +31,7 @@ test.describe('pharmacy report, then coordination', () => {
 
   test('1. a pharmacy reports a followed medicine in two taps and sees the result', async ({ page }) => {
     await signInAs(page, 'Pharmacie (Tunis)');
-    await expect(page).toHaveURL(/\/pharmacie$/);
+    await expect(page).toHaveURL(/\/pharmacie\/signaler$/);
 
     await page.goto('/pharmacie/signaler');
     // Never the showcase medicine (followed too): its simulated history stays untouched.
@@ -64,6 +75,34 @@ test.describe('scenario', () => {
     await expect(page.locator('[data-level="cleared"]')).toBeVisible();
     await expect(page.getByText('Fin du scénario', { exact: false })).toBeVisible();
   });
+
+  test('the decision demo keeps Tunis probable, confirms on Sfax and resets without a write', async ({ page }) => {
+    const writes: string[] = [];
+    page.on('request', (request) => {
+      if (!['GET', 'HEAD', 'OPTIONS'].includes(request.method())) writes.push(request.method());
+    });
+    await page.goto('/scenario');
+    const demo = page.locator('section[aria-labelledby="decision-demo"]');
+    const level = demo.locator('[data-demo-level]');
+    const add = demo.getByRole('button', { name: 'Ajouter le 4ᵉ signalement' });
+    const reset = demo.getByRole('button', { name: 'Recommencer' });
+    await expect(level).toHaveAttribute('data-demo-level', 'likely');
+    await add.click();
+    await demo.getByRole('button', { name: 'Tunis', exact: true }).click();
+    await expect(level).toHaveAttribute('data-demo-level', 'likely');
+    await expect(demo.getByText(/même gouvernorat/)).toBeVisible();
+    await reset.click();
+    await expect(demo.getByText(/3 pharmacies de Tunis/)).toBeVisible();
+    await add.click();
+    await demo.getByRole('button', { name: 'Sfax', exact: true }).click();
+    await expect(level).toHaveAttribute('data-demo-level', 'confirmed');
+    await expect(demo.getByText('<3', { exact: true }).filter({ visible: true })).toBeVisible();
+    await demo.getByRole('button', { name: 'Comparer la répartition' }).click();
+    await expect(demo.getByRole('button', { name: 'Enregistrer la décision' })).toBeDisabled();
+    await reset.click();
+    await expect(level).toHaveAttribute('data-demo-level', 'likely');
+    expect(writes).toEqual([]);
+  });
 });
 
 // LEVETIRACETAM: the demo shortage, "confirmée" on the live site (lib/demo/shortage.ts).
@@ -83,7 +122,7 @@ test.describe('patient request', () => {
     // The patient: no account, a fresh browser (a new random device id).
     const patient = await (await browser.newContext()).newPage();
     await patient.goto(`/medicaments/${SHOWCASE}/demande`);
-    await patient.getByLabel('Ou choisissez votre gouvernorat').selectOption({ label: 'Tunis' });
+    await patient.getByLabel('Choisissez votre gouvernorat').selectOption({ label: 'Tunis' });
     await patient.getByRole('button', { name: 'Envoyer la demande' }).click();
     await expect(patient).toHaveURL(/\/demandes\/[0-9a-f-]+$/, { timeout: 30_000 });
     await expect(patient.getByText('Pharmacie démo A, Tunis')).toHaveCount(0);
@@ -99,6 +138,44 @@ test.describe('patient request', () => {
     // The patient's page refreshes on its own and shows the pharmacy.
     await expect(patient.getByText('Pharmacie démo A, Tunis').first()).toBeVisible({ timeout: 30_000 });
     await expect(patient.getByText('Appelez avant de vous déplacer.', { exact: false })).toBeVisible();
+  });
+
+  test('two strengths of ANTIOMAL retain their own presentation and answer', async ({ browser }) => {
+    test.skip(process.env.E2E_WRITE_PRESENTATIONS !== '1', 'Requires a database approved for test request and answer writes.');
+    const strengths = [250, 500];
+    const patients = await Promise.all(strengths.map(async (strength) => {
+      const catalogue = new RegExp(`ANTIOMAL.*${strength} MG.*BT 30`, 'i');
+      const product = new RegExp(`ANTIOMAL ${strength} mg,.*boîte de 30`, 'i');
+      const page = await (await browser.newContext()).newPage();
+      await page.goto('/medicaments?recherche=1');
+      const search = page.getByRole('searchbox');
+      await expect(search).toBeFocused();
+      await search.fill('antiomal');
+      await page.getByRole('link', { name: catalogue }).click();
+      await expect(page.getByRole('heading', { level: 1 })).toHaveText(product);
+      await page.getByRole('link', { name: 'Demander aux pharmacies proches' }).click();
+      await page.getByLabel('Choisissez votre gouvernorat').selectOption({ label: 'Tunis' });
+      await expect(page.getByText(/Vous demandez/)).toContainText(product);
+      await page.getByRole('button', { name: 'Envoyer la demande' }).click();
+      await expect(page).toHaveURL(/\/demandes\/[0-9a-f-]+$/);
+      return { page, catalogue, product, id: new URL(page.url()).pathname.split('/').at(-1) };
+    }));
+    const pharmacy = await (await browser.newContext()).newPage();
+    await signInAs(pharmacy, 'Pharmacie (Tunis)');
+    await pharmacy.goto('/pharmacie/demandes');
+    for (const [index, { page, catalogue, product, id }] of patients.entries()) {
+      const row = pharmacy.locator(`[data-request-id="${id}"]`);
+      await expect(row).toContainText(catalogue);
+      const buttonName = index === 0 ? 'Disponible, me montrer au patient' : 'Pas disponible';
+      await row.getByRole('button', { name: buttonName, exact: true }).click();
+      await expect(row.getByRole('status')).toBeVisible();
+      await expect(page.locator('main header p')).toContainText(product);
+      if (index === 0) await expect(page.getByText('Pharmacie démo A, Tunis').first()).toBeVisible({ timeout: 30_000 });
+      else {
+        await expect(page.getByText('moins de 3', { exact: true }).last()).toBeVisible({ timeout: 30_000 });
+        await expect(page.getByText('Pharmacie démo A, Tunis')).toHaveCount(0);
+      }
+    }
   });
 });
 

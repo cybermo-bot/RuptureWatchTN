@@ -40,19 +40,17 @@ const PHARMACY_REPORT = '^/pharmacie/signaler';
 
 export const NAV: Record<OrganisationType, NavItem[]> = {
   pharmacy: [
-    { href: '/pharmacie', label: 'core.nav.items.followed', icon: 'followed', match: PHARMACY_HOME },
     { href: '/pharmacie/signaler', label: 'core.nav.items.report', icon: 'report', match: PHARMACY_REPORT },
-    { href: '/pharmacie/alertes', label: 'core.nav.items.alerts', icon: 'alerts', badge: 'alerts' },
+    { href: '/pharmacie', label: 'core.nav.items.followed', icon: 'followed', match: PHARMACY_HOME },
     { href: '/pharmacie/demandes', label: 'core.nav.items.requests', icon: 'requests', badge: 'requests' },
-    { href: '/pharmacie/whatsapp', label: 'core.nav.items.whatsapp', icon: 'whatsapp' },
+    { href: '/pharmacie/alertes', label: 'core.nav.items.alerts', icon: 'alerts', badge: 'alerts' },
+    { href: '/pharmacie/plus', label: 'core.nav.items.more', icon: 'more', match: '^/pharmacie/(plus|whatsapp)' },
   ],
   wholesaler: [{ href: '/grossiste', label: 'core.nav.items.signals', icon: 'signals', match: '^/grossiste' }],
   hospital_pharmacy: [{ href: '/hopital', label: 'core.nav.items.signals', icon: 'signals' }],
   coordinator: [
     { href: '/coordination', label: 'core.nav.items.national', icon: 'national' },
     { href: '/coordination/note', label: 'core.nav.items.note', icon: 'note' },
-    { href: '/coordination/export', label: 'core.nav.items.export', icon: 'export' },
-    { href: '/coordination/invitation', label: 'core.nav.items.invite', icon: 'invite' },
   ],
   // The prescriber's view is one public page (/prescripteurs), outside the console.
   prescriber: [],
@@ -63,7 +61,6 @@ export const NAV: Record<OrganisationType, NavItem[]> = {
   pharmacists_order: [
     { href: '/ordre', label: 'core.nav.items.network', icon: 'network' },
     { href: '/ordre/message', label: 'core.nav.items.message', icon: 'message' },
-    { href: '/ordre/invitation', label: 'core.nav.items.invite', icon: 'invite' },
   ],
 };
 
@@ -71,15 +68,23 @@ export const NAV: Record<OrganisationType, NavItem[]> = {
 export const PHARMACY_TABS: NavItem[] = [
   { href: '/pharmacie/signaler', label: 'core.nav.items.report', icon: 'report', match: PHARMACY_REPORT },
   { href: '/pharmacie', label: 'core.nav.items.followed', icon: 'followed', match: PHARMACY_HOME },
-  { href: '/pharmacie/alertes', label: 'core.nav.items.alerts', icon: 'alerts', badge: 'alerts' },
+  { href: '/pharmacie/demandes', label: 'core.nav.items.requests', icon: 'requests', badge: 'requests' },
   {
     href: '/pharmacie/plus',
     label: 'core.nav.items.more',
     icon: 'more',
-    match: '^/pharmacie/(plus|whatsapp|demandes)',
-    badge: 'requests',
+    match: '^/pharmacie/(plus|whatsapp|alertes)',
+    badge: 'alerts',
   },
 ];
+
+export const MORE_NAV: Partial<Record<OrganisationType, NavItem[]>> = {
+  coordinator: [
+    { href: '/coordination/export', label: 'core.nav.items.export', icon: 'export' },
+    { href: '/coordination/invitation', label: 'core.nav.items.invite', icon: 'invite' },
+  ],
+  pharmacists_order: [{ href: '/ordre/invitation', label: 'core.nav.items.invite', icon: 'invite' }],
+};
 
 /** Showcase pages, listed under "Comprendre" in every sidebar. */
 export const UNDERSTAND: { href: string; label: MessageKey }[] = [

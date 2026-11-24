@@ -76,7 +76,7 @@ export async function loadMinistry(client: SupabaseClient, selectedId: string | 
     safe('decisions', listDecisions(client, null, 50)).then((d) => d ?? null),
     safe('arrivals', listArrivals(client, 50)),
     safe('demand totals', demandTotals(client, DEMAND_FIGURE_DAYS)),
-    selected ? safe('daily activity', dailyActivity(client, selected.molecule_id, CHART_DAYS)) : Promise.resolve(null),
+    signals[0] ? safe('daily activity', dailyActivity(client, signals[0].molecule_id, CHART_DAYS)) : Promise.resolve(null),
     selected ? safe('upcoming arrival', upcomingArrivals(client, [selected.molecule_id])) : Promise.resolve(null),
   ]);
   for (const [id, f] of moreFacts) facts.set(id, f);

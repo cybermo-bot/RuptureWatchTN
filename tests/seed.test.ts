@@ -41,7 +41,7 @@ describe('demo follows', () => {
 
   it('is for the two demo pharmacies', () => {
     for (const key of follows.pharmacies) {
-      expect(DEMO_ROLES.find((r) => r.key === key)?.home).toBe('/pharmacie');
+      expect(DEMO_ROLES.find((r) => r.key === key)).toMatchObject({ profileRole: 'pharmacist', home: '/pharmacie/signaler' });
     }
   });
 });

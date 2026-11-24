@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { GOVERNORATE_SHAPES, GovernorateMap, type GovernorateValue } from '@/components/GovernorateMap';
-import { explanationText } from '@/components/LevelExplanation';
+import { explanationText, RuleDetails } from '@/components/LevelExplanation';
 import { LevelBadge } from '@/components/LevelBadge';
 import { MissingLine } from '@/components/MissingLine';
 import { OriginBadge } from '@/components/OriginBadge';
@@ -56,7 +56,6 @@ export function CompareCases() {
       <div className="flex flex-col gap-1.5">
         <h2 id="comparer-titre" className="flex flex-wrap items-center gap-2 text-xl font-semibold text-ink">
           {t('core.compare.title')}
-          <OriginBadge origin="simulated" />
         </h2>
         <p className="max-w-prose text-ink-muted">{t('core.compare.intro')}</p>
       </div>
@@ -146,8 +145,16 @@ export function CompareCases() {
               ) : null}
             </p>
             <p className="max-w-prose text-ink">{explanationText(frame.rule, frame.evidence)}</p>
-            <p className="font-mono text-xs text-ink-muted">{frame.rule}</p>
             <MissingLine level={frame.level} rule={frame.rule} evidence={frame.exact} exact now={new Date(frame.at)} />
+            <RuleDetails rule={frame.rule}>
+              <p>{t('core.compare.pilotNote', {
+                min: DEFAULT_PARAMS.confirmMinPharmacies,
+                governorates: DEFAULT_PARAMS.confirmMinGovernorates,
+                members: pilotScaleMembers(),
+                pct: Math.round(DEFAULT_PARAMS.confirmMemberShare * 100),
+              })}</p>
+              <Link href="/methode#explorer" className="flex min-h-12 w-fit items-center">{t('core.compare.explorerLink')}</Link>
+            </RuleDetails>
           </div>
         </section>
 
@@ -185,18 +192,7 @@ export function CompareCases() {
         </div>
       </div>
 
-      <p className="max-w-prose text-sm text-ink-muted">
-        {t('core.compare.pilotNote', {
-          min: DEFAULT_PARAMS.confirmMinPharmacies,
-          governorates: DEFAULT_PARAMS.confirmMinGovernorates,
-          members: pilotScaleMembers(),
-          pct: Math.round(DEFAULT_PARAMS.confirmMemberShare * 100),
-        })}
-      </p>
       <p className="text-sm text-ink-muted">{t('core.compare.memoryNote')}</p>
-      <Link href="/methode#explorer" className="flex min-h-12 w-fit items-center">
-        {t('core.compare.explorerLink')}
-      </Link>
     </section>
   );
 }

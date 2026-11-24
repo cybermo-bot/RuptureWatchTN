@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     '/methode': ['./data/SOURCES.md'],
     '/retour': ['./data/reference/episodes.csv'],
+    '/coordination': ['./data/reference/episodes.csv', './data/reference/foreign_notices.csv'],
     // Track C: the Library's French data and the OpenStreetMap fallback list.
     '/bibliotheque/[moleculeId]': ['./data/reference/library-fr.json'],
     '/api/places/osm': ['./data/reference/osm-pharmacies.json'],

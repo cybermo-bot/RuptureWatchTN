@@ -39,6 +39,11 @@ export function PublicFooter({ locale }: { locale: Locale }) {
           </p>
           <ul className="flex shrink-0 flex-wrap gap-x-5 gap-y-1">
             <li>
+              <Link href="/ruptures-passees" className="inline-flex min-h-12 items-center text-ink-muted underline hover:text-ink">
+                {t('public.nav.past')}
+              </Link>
+            </li>
+            <li>
               <Link href="/bibliotheque" className="inline-flex min-h-12 items-center text-ink-muted underline hover:text-ink">
                 {t('public.nav.library')}
               </Link>

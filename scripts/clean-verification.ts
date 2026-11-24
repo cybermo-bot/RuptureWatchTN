@@ -48,7 +48,7 @@ async function main() {
     process.exit(1);
   }
   const supabase = serviceClient();
-  const demoPharmacies = DEMO_ROLES.filter((r) => r.home === '/pharmacie').map((r) => r.organisationId);
+  const demoPharmacies = DEMO_ROLES.filter((r) => r.profileRole === 'pharmacist').map((r) => r.organisationId);
   const demoCentral = DEMO_ROLES.filter((r) => r.home === '/centrale').map((r) => r.organisationId);
   const demoOrder = DEMO_ROLES.filter((r) => r.home === '/ordre').map((r) => r.organisationId);
 

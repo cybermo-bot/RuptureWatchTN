@@ -1,4 +1,3 @@
-import { Split } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { ButtonLink } from '@/components/Button';
@@ -51,24 +50,10 @@ export default async function WholesalerHome({ searchParams }: PageProps<'/gross
     },
   ];
 
-  const splitPanel = selected ? (
-    <Panel title={t('wholesaler.home.splitTitle')} titleId="repartition-equitable" headingLevel={3}>
-      {canSplit ? (
-        <div className="flex flex-col gap-3">
-          <p className="text-ink">
-            {t('wholesaler.home.splitFor', { molecule: selected.molecule_name, level: t(`core.levels.${selected.level}`) })}
-          </p>
-          <ButtonLink href={`/grossiste/repartition/${selected.molecule_id}`} className="w-fit">
-            <Split size={18} aria-hidden="true" />
-            {t('wholesaler.home.splitAction')}
-          </ButtonLink>
-        </div>
-      ) : (
-        <p className="text-ink-muted">
-          {t('wholesaler.home.splitNotYet', { molecule: selected.molecule_name, level: t(`core.levels.${selected.level}`) })}
-        </p>
-      )}
-    </Panel>
+  const action = selected && canSplit ? (
+    <ButtonLink href={`/grossiste/repartition/${selected.molecule_id}`}>{t('core.decisionDemo.allocation')}</ButtonLink>
+  ) : selected ? (
+    <p className="text-ink-muted">{t('wholesaler.home.splitNotYet', { molecule: selected.molecule_name, level: t(`core.levels.${selected.level}`) })}</p>
   ) : null;
 
   return (
@@ -76,7 +61,7 @@ export default async function WholesalerHome({ searchParams }: PageProps<'/gross
       <PageHeader title={t('core.space.titles.wholesaler')} description={t('wholesaler.home.intro')} />
       <LiveRefresh table="signals" fallbackMs={4_000} />
 
-      <SignalsDashboard data={data} basePath="/grossiste" figures={figures} afterSelected={splitPanel} />
+      <SignalsDashboard data={data} basePath="/grossiste" figures={figures} decisionAction={action} />
 
       <Panel title={t('wholesaler.home.decisionsTitle')} titleId="mes-decisions" bodyClassName="px-4">
         {decisions === null ? (

@@ -1,11 +1,10 @@
 import { redirect } from 'next/navigation';
 import { Button } from '@/components/Button';
 import { Panel } from '@/components/console/Panel';
+import { MedicineDecision } from '@/components/coordination/MedicineDecision';
 import { EmptyState } from '@/components/EmptyState';
 import { ArrivalLine, CatalogueLine } from '@/components/institutions/Lines';
-import { LevelBadge } from '@/components/LevelBadge';
 import { LiveRefresh } from '@/components/LiveRefresh';
-import { Origins } from '@/components/Origins';
 import { PageHeader } from '@/components/PageHeader';
 import { getCurrentSession } from '@/lib/auth/session';
 import { createUserClient } from '@/lib/db/server';
@@ -68,18 +67,9 @@ export default async function CentralHome({ searchParams }: PageProps<'/centrale
               return (
                 <li key={s.molecule_id} id={`m-${s.molecule_id}`} className="flex scroll-mt-20 flex-col gap-2 px-4 py-4">
                   <span className="font-medium break-words text-ink">{s.molecule_name}</span>
-                  <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink-muted">
-                    <LevelBadge level={s.level} />
-                    <span>{t('core.pharmacy.since', { date: formatDate(s.since) })}</span>
-                    <Origins origins={s.evidence.origins} />
-                  </span>
-                  <span className="text-sm text-ink-muted">
-                    <CatalogueLine facts={facts.get(s.molecule_id)} />
-                  </span>
-                  {arrival ? <ArrivalLine arrival={arrival} /> : null}
-                  {eligible ? (
+                  <MedicineDecision signal={s} action={eligible ? (
                     <details className="group mt-1" open={m === s.molecule_id && Boolean(erreur)}>
-                      <summary className="flex min-h-12 w-fit cursor-pointer items-center font-medium text-brand underline underline-offset-4">
+                      <summary className="min-h-12 w-fit cursor-pointer content-center rounded-md bg-brand px-5 font-medium text-white hover:bg-brand-strong">
                         {t('core.central.announceTitle')}
                       </summary>
                       <form action={announceArrival} aria-labelledby={`${formId}-titre`} className="mt-2 flex max-w-xl flex-col gap-4 rounded-md border border-line p-4">
@@ -113,7 +103,11 @@ export default async function CentralHome({ searchParams }: PageProps<'/centrale
                         </Button>
                       </form>
                     </details>
-                  ) : null}
+                  ) : null}>
+                    <p>{t('core.pharmacy.since', { date: formatDate(s.since) })}</p>
+                    <p><CatalogueLine facts={facts.get(s.molecule_id)} /></p>
+                  </MedicineDecision>
+                  {arrival ? <ArrivalLine arrival={arrival} /> : null}
                 </li>
               );
             })}
