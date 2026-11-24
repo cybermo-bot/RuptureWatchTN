@@ -14,7 +14,8 @@ import { freshness } from '@/lib/freshness';
 import { formatPublicDate, formatPublicTime } from '@/lib/public/format';
 import { createAnonClient } from '@/lib/db/server';
 import { publicArrival } from '@/lib/institutions/data';
-import { getBrands, getPublicMolecule, getPublicStatus } from '@/lib/public/medicine';
+import { LevelBand } from '@/components/charts/LevelBand';
+import { getBrands, getPublicHistory, getPublicMolecule, getPublicStatus } from '@/lib/public/medicine';
 import { ShareStatus } from '@/components/public/ShareStatus';
 import { OG_BASE } from '@/lib/og/meta';
 import { shareText, statusLines } from '@/lib/public/share';
@@ -26,6 +27,8 @@ import { siteUrl } from '@/lib/site';
 // line (rule 11), the request to nearby pharmacies, and "Préviens-moi" (kept on the phone).
 
 export const dynamic = 'force-dynamic';
+
+const HISTORY_DAYS = 90;
 
 export async function generateMetadata(props: PageProps<'/medicaments/[moleculeId]'>): Promise<Metadata> {
   const { t, locale } = await getTranslator();
@@ -46,11 +49,13 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
   const { t, locale } = await getTranslator();
   const molecule = await getPublicMolecule((await props.params).moleculeId);
   if (!molecule) notFound();
-  const [status, brands, arrival] = await Promise.all([
+  const [status, brands, arrival, history] = await Promise.all([
     getPublicStatus(molecule.id),
     getBrands(molecule.id),
     // Only while "confirmée" (public_arrival): the date and its origin, never a level change.
     publicArrival(createAnonClient(), molecule.id).catch(() => null),
+    // The 90-day strip: "confirmée" and "levée" periods only (public_molecule_history).
+    getPublicHistory(molecule.id, HISTORY_DAYS).catch(() => null),
   ]);
 
   const shown = status.level === 'confirmed' || status.level === 'cleared';
@@ -160,6 +165,25 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
           }}
         />
       </div>
+
+      {history ? (
+        <section aria-label={t('public.history.title', { days: HISTORY_DAYS })} className="flex flex-col gap-1">
+          <LevelBand
+            events={history}
+            days={HISTORY_DAYS}
+            title={t('public.history.title', { days: HISTORY_DAYS })}
+            text={{
+              level: (level) => t(`public.history.levels.${level === 'confirmed' || level === 'cleared' ? level : 'none'}`),
+              today: t('public.history.today'),
+              axisStart: (from) => formatPublicDate(from, locale),
+              beforeWindow: (from) => t('public.history.beforeWindow', { date: formatPublicDate(from, locale) }),
+              fromDate: (date) => t('public.history.fromDate', { date: formatPublicDate(date, locale) }),
+              noLevel: t('public.history.noLevel', { days: HISTORY_DAYS }),
+            }}
+          />
+          <p className="text-xs text-ink-muted">{t('public.history.note')}</p>
+        </section>
+      ) : null}
 
       <section aria-labelledby="brands-title" className="flex flex-col gap-3">
         <h2 id="brands-title" className="text-lg font-semibold text-ink">

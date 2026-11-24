@@ -209,5 +209,18 @@
     "hours": "Mis à jour il y a {n} h",
     "days": "Mis à jour il y a {n} j",
     "title": "Dernière vérification : {date} à {time}"
+  },
+  "history": {
+    "title": "Les {days} derniers jours",
+    "levels": {
+      "confirmed": "Rupture confirmée",
+      "cleared": "Rupture levée",
+      "none": "Aucune rupture confirmée"
+    },
+    "today": "Aujourd’hui",
+    "beforeWindow": "avant le {date}",
+    "fromDate": "depuis le {date}",
+    "noLevel": "Aucune rupture confirmée sur les {days} derniers jours.",
+    "note": "Seules les périodes de rupture confirmée puis levée apparaissent ici."
   }
 }

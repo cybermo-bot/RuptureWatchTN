@@ -24,6 +24,11 @@ Newest first. Each entry: what was decided, and why.
 - The shared link is the production address (`siteUrl()`), not the host that served the page, so a link shared from a preview still opens the real site.
 - Each medicine page has its own Open Graph card (`opengraph-image.tsx` beside the page, `medicineCard()` in `lib/og/card.tsx`): the medicine, its public status with the level's shape, the "Simulé" badge when it applies, the disclaimer. The page's Open Graph description carries the same lines. The card is in French: a link preview is fetched without the visitor's language. If the status cannot be read, the card says to check the page, never "Aucune rupture".
 
+### A 90-day public status strip (part 8, item 6)
+
+- The public medicine page shows the last 90 days as a band, with the same text list under it: only "Rupture confirmée", "Rupture levée" (after a confirmation) and "Aucune rupture confirmée". It reuses `LevelBand`, which now takes optional words (`text`), so the public page speaks French or Arabic and names its three public levels; the console keeps its default. The band and its axis are left to right in both languages (time runs left to right); the list follows the page's direction.
+- The data comes from a new database function, `public_molecule_history` (migration 0024, applied), and not from `signal_events`, which the public cannot read. It maps each change to the public level, then keeps only the rows where the public level changes. So a change below "confirmée" leaves no trace, not even its time (rule 10; database tests, including a molecule that went through "sous surveillance" and "probable").
+
 ### "Mis à jour il y a …" (part 8, item 5)
 
 - Beside a level, the time since the signal was last evaluated: on the public medicine page (under the status) and on the console's medicine panel (coordination, hospital, wholesaler). It reads `signals.updated_at`, which `apply_signal_evaluation` sets on every evaluation, the daily recompute (04:30 UTC) included; so it usually reads in hours, and that is the honest figure. Whole minutes, hours, days, rounded down (`lib/freshness.ts`, tested); the exact time is in the tooltip and the `<time>` element.

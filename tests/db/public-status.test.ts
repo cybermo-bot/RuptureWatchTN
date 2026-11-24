@@ -4,6 +4,7 @@
 // - the prescriber receives the counts by governorate, the pharmacy and visitors do not;
 // - the prescriber reads no report, no pharmacy and no patient request (rules 1 to 3).
 // Session 6 (migration 0023): the time of the last evaluation, for a shown level only.
+// Session 6 (migration 0024): the public history, "confirmée" and "levée" periods only.
 
 import type { PGlite } from '@electric-sql/pglite';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -18,6 +19,7 @@ const MOL = {
   clearedFromConfirmed: id(0x304),
   clearedFromLikely: id(0x305),
   noRow: id(0x306),
+  history: id(0x307),
 };
 const ORG = { pharmacy: id(0xa1), prescriber: id(0xe1) };
 const USER = { pharmacy: id(0x1a1), prescriber: id(0x1e1) };
@@ -70,6 +72,27 @@ beforeAll(async () => {
     ['likely', 'confirmed'],
     ['confirmed', 'cleared'],
   ]);
+  // The history: probable, confirmée, levée, expiry, a new "sous surveillance", days ago.
+  await db.query(`insert into public.signals (molecule_id, level, since, rule, evidence) values ($1, 'watch', now() - interval '2 days', 'test_rule', '{}')`, [
+    MOL.history,
+  ]);
+  for (const [from, to, daysAgo] of [
+    ['none', 'watch', 200],
+    ['watch', 'confirmed', 120],
+    ['confirmed', 'cleared', 100],
+    ['cleared', 'none', 60],
+    ['none', 'watch', 50],
+    ['watch', 'likely', 40],
+    ['likely', 'confirmed', 30],
+    ['confirmed', 'cleared', 20],
+    ['cleared', 'none', 10],
+    ['none', 'watch', 2],
+  ] as const) {
+    await db.query(
+      `insert into public.signal_events (molecule_id, from_level, to_level, rule, at) values ($1, $2, $3, 'test_rule', now() - make_interval(days => $4))`,
+      [MOL.history, from, to, daysAgo],
+    );
+  }
   await signal(MOL.clearedFromLikely, 'cleared', [
     ['none', 'likely'],
     ['likely', 'cleared'],
@@ -134,6 +157,42 @@ describe('public_molecule_status', () => {
   });
 });
 
+describe('public_molecule_history', () => {
+  const history = (caller: Caller, molecule: string, days?: number) =>
+    as(db, caller, async (tx) =>
+      (await tx.query<{ at: Date; level: string }>('select * from public.public_molecule_history($1, $2)', [molecule, days ?? 90])).rows.map((r) => ({
+        daysAgo: Math.round((Date.now() - new Date(r.at).getTime()) / 86_400_000),
+        level: r.level,
+      })),
+    );
+
+  it('gives only the public changes: "confirmée", "levée" after one, and back to none; the level at the window start first', async () => {
+    expect(await history(anon, MOL.history)).toEqual([
+      { daysAgo: 100, level: 'cleared' },
+      { daysAgo: 60, level: 'none' },
+      { daysAgo: 30, level: 'confirmed' },
+      { daysAgo: 20, level: 'cleared' },
+      { daysAgo: 10, level: 'none' },
+    ]);
+  });
+
+  it('leaves no trace of a change below "confirmée", not even its time', async () => {
+    for (const caller of [anon, user('pharmacy')]) {
+      const rows = await history(caller, MOL.history, 365);
+      expect(rows.map((r) => r.daysAgo)).not.toContain(50);
+      expect(rows.map((r) => r.daysAgo)).not.toContain(40);
+      expect(rows.map((r) => r.daysAgo)).not.toContain(2);
+      for (const r of rows) expect(['confirmed', 'cleared', 'none']).toContain(r.level);
+    }
+    for (const mol of [MOL.watch, MOL.likely, MOL.clearedFromLikely, MOL.noRow]) expect(await history(anon, mol)).toEqual([]);
+  });
+
+  it('returns the time and the public level only', async () => {
+    const { fields } = await as(db, anon, (tx) => tx.query('select * from public.public_molecule_history($1, 90)', [MOL.history]));
+    expect(fields.map((f) => f.name)).toEqual(['at', 'level']);
+  });
+});
+
 describe('the prescriber', () => {
   const counts = (caller: Caller) =>
     as(db, caller, async (tx) => (await tx.query('select * from public.governorate_counts($1)', [MOL.confirmed])).rows);
@@ -149,7 +208,7 @@ describe('the prescriber', () => {
 
   it('sees every level with its explanation, through signals_view', async () => {
     const rows = await as(db, user('prescriber'), async (tx) => (await tx.query<{ level: string }>('select level from public.signals_view(null)')).rows);
-    expect(rows.map((r) => r.level).sort()).toEqual(['cleared', 'cleared', 'confirmed', 'likely', 'none', 'watch']);
+    expect(rows.map((r) => r.level).sort()).toEqual(['cleared', 'cleared', 'confirmed', 'likely', 'none', 'watch', 'watch']);
   });
 
   it('reads no report, no other organisation, no patient request', async () => {
