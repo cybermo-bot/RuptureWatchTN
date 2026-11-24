@@ -24,6 +24,11 @@ Newest first. Each entry: what was decided, and why.
 - The shared link is the production address (`siteUrl()`), not the host that served the page, so a link shared from a preview still opens the real site.
 - Each medicine page has its own Open Graph card (`opengraph-image.tsx` beside the page, `medicineCard()` in `lib/og/card.tsx`): the medicine, its public status with the level's shape, the "Simulé" badge when it applies, the disclaimer. The page's Open Graph description carries the same lines. The card is in French: a link preview is fetched without the visitor's language. If the status cannot be read, the card says to check the page, never "Aucune rupture".
 
+### Ctrl+K in the consoles (part 8, item 10)
+
+- In the ministry's, hospital's and wholesaler's consoles, Ctrl+K (Cmd+K on a Mac), or the "Aller à un médicament" button for touch screens, opens a native `<dialog>`: type a brand or a molecule, with or without accents. It reuses the catalogue search (`/api/medicines/search`: `search_molecules` and `search_medicines`, pg_trgm). The medicines with a level in this space match at once, before the catalogue answers.
+- A medicine with a level here opens its panel; Enter opens the first one. A medicine without a level here is listed with "Aucun niveau ici" and is not a link, because the panel would fall back to another medicine. No new dependency (`lib/console/quick-search.ts`, tested).
+
 ### Skeleton loading (part 8, item 8)
 
 - While a page loads its data, it shows its own shape in grey: the console (header, key figures, the list, the selected medicine) for every signed-in space, the app (main action, list) for the pharmacy, and on the patient's answers page the title, the two figures and the list, in French or Arabic. Next.js `loading.tsx` files, one shared component (`components/Skeleton.tsx`).

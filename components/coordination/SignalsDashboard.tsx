@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { LevelBand } from '@/components/charts/LevelBand';
 import { KeyFigures, type KeyFigure } from '@/components/console/KeyFigures';
 import { Panel } from '@/components/console/Panel';
+import { QuickSearch } from '@/components/console/QuickSearch';
 import { EmptyState } from '@/components/EmptyState';
 import { CatalogueLine } from '@/components/institutions/Lines';
 import { GOVERNORATE_SHAPES, GovernorateMap, type GovernorateValue } from '@/components/GovernorateMap';
@@ -438,6 +439,11 @@ export function SignalsDashboard({
         items={signals.map((s) => ({ key: s.molecule_id, name: s.molecule_name, level: s.level }))}
         governorates={data.counts.map((c) => ({ code: c.governorate_code, text: c.pharmacies }))}
       />
+      {signals.length > 0 ? (
+        <div className="flex justify-end">
+          <QuickSearch levels={signals.map((s) => ({ id: s.molecule_id, name: s.molecule_name, level: s.level }))} basePath={basePath} />
+        </div>
+      ) : null}
       <KeyFigures label={t('core.figures.label')} figures={figures ?? levelFigures(signals, data.history)} />
       {extraFigures ? <KeyFigures label={t('core.ministry.figuresLabel')} figures={extraFigures} columns={extraFigures.length} /> : null}
       {overview}

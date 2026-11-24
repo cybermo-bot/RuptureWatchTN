@@ -1415,5 +1415,19 @@
       "hours": "Il y a {n} h",
       "days": "Il y a {n} j"
     }
+  },
+  "quickSearch": {
+    "open": "Aller à un médicament",
+    "shortcut": "Ctrl K",
+    "title": "Aller à un médicament",
+    "label": "Nom de marque ou de molécule",
+    "hint": "Tapez au moins deux lettres. Entrée ouvre le premier médicament qui a un niveau ici.",
+    "searching": "Recherche…",
+    "none": "Aucun médicament trouvé dans le catalogue.",
+    "error": "La recherche n’a pas abouti. Réessayez.",
+    "count": "{n} résultat(s)",
+    "noLevel": "Aucun niveau ici",
+    "viaBrand": "trouvé par la marque {brand}",
+    "close": "Fermer"
   }
 }
