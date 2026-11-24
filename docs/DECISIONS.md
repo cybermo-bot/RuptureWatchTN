@@ -24,6 +24,11 @@ Newest first. Each entry: what was decided, and why.
 - The shared link is the production address (`siteUrl()`), not the host that served the page, so a link shared from a preview still opens the real site.
 - Each medicine page has its own Open Graph card (`opengraph-image.tsx` beside the page, `medicineCard()` in `lib/og/card.tsx`): the medicine, its public status with the level's shape, the "Simulé" badge when it applies, the disclaimer. The page's Open Graph description carries the same lines. The card is in French: a link preview is fetched without the visitor's language. If the status cannot be read, the card says to check the page, never "Aucune rupture".
 
+### Skeleton loading (part 8, item 8)
+
+- While a page loads its data, it shows its own shape in grey: the console (header, key figures, the list, the selected medicine) for every signed-in space, the app (main action, list) for the pharmacy, and on the patient's answers page the title, the two figures and the list, in French or Arabic. Next.js `loading.tsx` files, one shared component (`components/Skeleton.tsx`).
+- A placeholder never shows a figure or a made-up text: grey bars only, hidden from screen readers, with one status line in words ("Chargement de la page…", "Chargement des réponses…"). The pulse is `motion-safe` only, so `prefers-reduced-motion` keeps the bars still.
+
 ### The last five level changes (part 8, item 7)
 
 - A short feed, newest first, in the ministry's space (beside the national map) and in the home page's picture (under its map; after the medicine list on phones). Each row: the medicine, the change as shape and word, how long ago (exact time in the tooltip), the pharmacies and governorates over 14 days as the screens receive them, the rule id and the origin badges. It opens the medicine.
