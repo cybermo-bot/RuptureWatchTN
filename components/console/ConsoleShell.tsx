@@ -3,10 +3,12 @@ import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { switchRole } from '@/app/actions/auth';
 import { Logo, LogoMark } from '@/components/brand/Logo';
+import { HintStrip } from '@/components/console/HintStrip';
 import { MobileDrawer } from '@/components/console/MobileDrawer';
 import { BottomTabs, SidebarNav, type Badges } from '@/components/console/NavLinks';
 import { OriginBadge } from '@/components/OriginBadge';
 import type { CurrentSession } from '@/lib/auth/session';
+import { hintFor } from '@/lib/demo/hints';
 import { t } from '@/lib/i18n';
 import { NAV, PHARMACY_TABS, UNDERSTAND } from '@/lib/nav';
 
@@ -93,6 +95,7 @@ export function ConsoleShell({
   children: ReactNode;
 }) {
   const pharmacy = session.organisation.type === 'pharmacy';
+  const hint = hintFor(session.organisation.type, session.organisation.origin);
   return (
     <div className="flex min-h-full flex-1 flex-col bg-page lg:grid lg:grid-cols-[16rem_minmax(0,1fr)] print:block print:bg-white">
       {/* Desktop: the sidebar, a full-height column whose content stays in view. */}
@@ -138,6 +141,7 @@ export function ConsoleShell({
         id="contenu"
         className={`mx-auto w-full max-w-[90rem] flex-1 px-4 py-5 sm:px-6 lg:px-8 lg:py-8 print:max-w-none print:p-0 ${pharmacy ? 'pb-28 lg:pb-8' : ''}`}
       >
+        {hint ? <HintStrip type={session.organisation.type} hint={hint} /> : null}
         {children}
       </main>
 
