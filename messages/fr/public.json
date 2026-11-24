@@ -148,7 +148,8 @@
     "notFoundTitle": "Demande introuvable",
     "notFoundBody": "Cette demande n’existe pas, ou elle a été retirée.",
     "hours": "{h} h",
-    "closed": "Les demandes aux pharmacies ne sont pas encore ouvertes sur ce site. Le statut de ce médicament, sur la page précédente, reste à jour."
+    "closed": "Les demandes aux pharmacies ne sont pas encore ouvertes sur ce site. Le statut de ce médicament, sur la page précédente, reste à jour.",
+    "loading": "Chargement des réponses…"
   },
   "watch": {
     "follow": "Préviens-moi",
@@ -192,5 +193,37 @@
     "tester": "Testeur",
     "simulated": "Simulé",
     "label": "Origine des données : {origin}"
+  },
+  "share": {
+    "button": "Partager ce statut",
+    "whatsapp": "Partager sur WhatsApp",
+    "copy": "Copier le lien",
+    "copied": "Lien copié.",
+    "copyFailed": "Copie impossible : copiez l’adresse depuis la barre du navigateur.",
+    "text": "{name} : {status}",
+    "simulated": "Simulé : données de démonstration, pas des signalements réels.",
+    "ogAlt": "Statut public d’un médicament sur RuptureWatch TN",
+    "ogUnavailable": "Statut à vérifier sur la page du médicament.",
+    "simulatedNote": "Données de démonstration, pas des signalements réels."
+  },
+  "freshness": {
+    "now": "Mis à jour à l’instant",
+    "minutes": "Mis à jour il y a {n} min",
+    "hours": "Mis à jour il y a {n} h",
+    "days": "Mis à jour il y a {n} j",
+    "title": "Dernière vérification : {date} à {time}"
+  },
+  "history": {
+    "title": "Les {days} derniers jours",
+    "levels": {
+      "confirmed": "Rupture confirmée",
+      "cleared": "Rupture levée",
+      "none": "Aucune rupture confirmée"
+    },
+    "today": "Aujourd’hui",
+    "beforeWindow": "avant le {date}",
+    "fromDate": "depuis le {date}",
+    "noLevel": "Aucune rupture confirmée sur les {days} derniers jours.",
+    "note": "Seules les périodes de rupture confirmée puis levée apparaissent ici."
   }
 }

@@ -1416,5 +1416,83 @@
     "central": "Essayez : annoncer un arrivage pour un médicament en tension, puis voir ce qu’en lisent les pharmacies.",
     "order": "Essayez : écrire aux pharmacies d’un gouvernorat.",
     "orderLink": "Écrire un message"
+  },
+  "freshness": {
+    "now": "Mis à jour à l’instant",
+    "minutes": "Mis à jour il y a {n} min",
+    "hours": "Mis à jour il y a {n} h",
+    "days": "Mis à jour il y a {n} j",
+    "title": "Dernière évaluation des règles : {date} à {time}"
+  },
+  "recent": {
+    "title": "Derniers changements de niveau",
+    "intro": "Les cinq plus récents, tous médicaments confondus. Pharmacies comptées par gouvernorat, jamais nommées.",
+    "homeIntro": "Les cinq plus récents de la démonstration. Pharmacies comptées par gouvernorat, jamais nommées.",
+    "empty": "Aucun changement de niveau pour l’instant.",
+    "counts": "{pharmacies} pharmacies dans {governorates} gouvernorats sur {days} jours",
+    "countsOneGovernorate": "{pharmacies} pharmacies, toutes dans le même gouvernorat, sur {days} jours",
+    "countsFew": "Moins de 3 pharmacies sur {days} jours",
+    "countsNone": "Aucune pharmacie ne signale sur {days} jours",
+    "ago": {
+      "now": "À l’instant",
+      "minutes": "Il y a {n} min",
+      "hours": "Il y a {n} h",
+      "days": "Il y a {n} j"
+    }
+  },
+  "quickSearch": {
+    "open": "Aller à un médicament",
+    "shortcut": "Ctrl K",
+    "title": "Aller à un médicament",
+    "label": "Nom de marque ou de molécule",
+    "hint": "Tapez au moins deux lettres. Entrée ouvre le premier médicament qui a un niveau ici.",
+    "searching": "Recherche…",
+    "none": "Aucun médicament trouvé dans le catalogue.",
+    "error": "La recherche n’a pas abouti. Réessayez.",
+    "count": "{n} résultat(s)",
+    "noLevel": "Aucun niveau ici",
+    "viaBrand": "trouvé par la marque {brand}",
+    "close": "Fermer"
+  },
+  "compare": {
+    "title": "Comparer les cas",
+    "intro": "Les mêmes quatre pharmacies fictives signalent une commande non livrée, les mêmes jours. Une seule donnée change : le gouvernorat de la quatrième. Changez de cas à n’importe quelle étape.",
+    "choose": "Choisissez un cas",
+    "cases": {
+      "spread": {
+        "title": "Signal réparti",
+        "body": "La quatrième pharmacie est à Sfax : deux gouvernorats."
+      },
+      "concentrated": {
+        "title": "Signal concentré",
+        "body": "Les quatre pharmacies sont à Tunis : un seul gouvernorat."
+      }
+    },
+    "controls": "Commandes de la comparaison",
+    "previous": "Précédente",
+    "next": "Suivante",
+    "restart": "Recommencer",
+    "progress": "Étape {n} sur {total}",
+    "day": "Jour {day}",
+    "steps": {
+      "start": "Aucun signalement pour ce médicament fictif.",
+      "report1": "Une première pharmacie, à {governorate}, signale une commande non livrée depuis plus de 72 heures.",
+      "report2": "Une deuxième pharmacie, à {governorate}, signale aussi.",
+      "report3": "Une troisième pharmacie, à {governorate}, signale aussi.",
+      "report4": "Une quatrième pharmacie, à {governorate}, signale aussi.",
+      "arrival": "Un grossiste annonce un arrivage.",
+      "delivered1": "Une pharmacie de {governorate} signale que le médicament est de nouveau livré.",
+      "delivered2": "Une deuxième pharmacie de {governorate} le signale aussi."
+    },
+    "differs": "C’est la seule donnée qui change entre les deux cas : le gouvernorat de cette pharmacie. Même nombre de pharmacies, mêmes jours.",
+    "arrivalNote": "Un arrivage annoncé est un événement en amont : il ne change pas le niveau. Seules les livraisons constatées par les pharmacies lèvent l’alerte.",
+    "levelTitle": "Niveau du signal",
+    "changedFrom": "Change depuis « {level} »",
+    "unchanged": "Niveau inchangé",
+    "bothTitle": "À cette étape, dans les deux cas",
+    "mapTitle": "Pharmacies qui signalent, par gouvernorat, sur {days} jours",
+    "pilotNote": "À l’échelle d’un pilote : {min} pharmacies dans au moins {governorates} gouvernorats suffisent pour « confirmée » tant que le réseau compte au plus {members} pharmacies membres actives. Au-delà, il en faut {pct} % des pharmacies membres actives.",
+    "memoryNote": "La comparaison se calcule dans votre navigateur avec les règles du site. Rien n’est enregistré.",
+    "explorerLink": "Faire varier les seuils sur la page Méthode"
   }
 }

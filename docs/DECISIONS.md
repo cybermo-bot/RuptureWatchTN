@@ -28,6 +28,44 @@ Newest first. Each entry: what was decided, and why.
 - On the home page, desktop only, a QR code to `/medicaments` sits beside the public tiles, so a judge on a laptop tries the patient side on their phone. Drawn on the server by `qrcode`, the library the tester invitation already uses (entry of session 2): no new dependency. `lib/qr.ts` holds the helper; its dark modules take `currentColor`, so the code follows the design tokens. The link is built from the host that served the page, so a preview deployment points to itself.
 - The invitation screens of the Ordre and the coordination already show the tester invitation link as a QR code (`TesterInvitation`); nothing to add there.
 
+### Share a verified status (part 8, item 4)
+
+- The public medicine page has "Partager ce statut": the phone's share sheet (Web Share API) where the browser offers it, otherwise a WhatsApp link and "Copier le lien". The fallback is drawn on the server, so the WhatsApp link works without JavaScript. The shared text is built on the server (`lib/public/share.ts`, tested): the page's own status sentence (never a level below "confirmée", rule 10), "Simulé : données de démonstration..." when the shown status rests on simulated data, and "Ceci n'est pas une déclaration officielle de rupture." Nothing about the visitor is shared or stored.
+- The shared link is the production address (`siteUrl()`), not the host that served the page, so a link shared from a preview still opens the real site.
+- Each medicine page has its own Open Graph card (`opengraph-image.tsx` beside the page, `medicineCard()` in `lib/og/card.tsx`): the medicine, its public status with the level's shape, the "Simulé" badge when it applies, the disclaimer. The page's Open Graph description carries the same lines. The card is in French: a link preview is fetched without the visitor's language. If the status cannot be read, the card says to check the page, never "Aucune rupture".
+
+### "Comparer les cas" on the scenario page (part 7, handoff C)
+
+- Under the scenario player, two named cases: "Signal réparti" and "Signal concentré". The same four fictional pharmacies report on the same days; only the governorate of the fourth changes (Sfax or Tunis). At day 4 the spread case reaches "confirmée" (`confirmed_threshold`) and the concentrated one stays "probable" (`single_governorate_cap`, gate two). The visitor can switch case at any step: the step stays, and a small table shows both levels at that step.
+- The recovery is the same in both cases: on day 10 a wholesaler announces an arrival, an upstream event that is not an input of `evaluate()` and changes no level; on days 19 and 20 two Tunis pharmacies report the medicine delivered again, after the quiet period, and the level becomes "levée".
+- `evaluate()` from `lib/signal`, in the browser, deterministic, nothing written (`lib/scenario/compare.ts`, tested against the acceptance: four in one governorate stay "probable", one moved confirms, only that report differs). "Ce qui manque" uses exact counts, as the cases are fictional. A line computes "à l'échelle d'un pilote" from the parameters (4 pharmacies up to 200 active members, then 2 %), and a link opens the threshold explorer on `/methode`. Its own module, so the ui-refresh changes to `lib/scenario/frames.ts` do not conflict.
+
+### Ctrl+K in the consoles (part 8, item 10)
+
+- In the ministry's, hospital's and wholesaler's consoles, Ctrl+K (Cmd+K on a Mac), or the "Aller à un médicament" button for touch screens, opens a native `<dialog>`: type a brand or a molecule, with or without accents. It reuses the catalogue search (`/api/medicines/search`: `search_molecules` and `search_medicines`, pg_trgm). The medicines with a level in this space match at once, before the catalogue answers.
+- A medicine with a level here opens its panel; Enter opens the first one. A medicine without a level here is listed with "Aucun niveau ici" and is not a link, because the panel would fall back to another medicine. No new dependency (`lib/console/quick-search.ts`, tested).
+
+### Skeleton loading (part 8, item 8)
+
+- While a page loads its data, it shows its own shape in grey: the console (header, key figures, the list, the selected medicine) for every signed-in space, the app (main action, list) for the pharmacy, and on the patient's answers page the title, the two figures and the list, in French or Arabic. Next.js `loading.tsx` files, one shared component (`components/Skeleton.tsx`). A `loading.tsx` only shows when its own segment's child changes, so each space has one (the `(espace)` one alone covered entering a space, not moving between its pages: checked with a slowed navigation).
+- A placeholder never shows a figure or a made-up text: grey bars only, hidden from screen readers, with one status line in words ("Chargement de la page…", "Chargement des réponses…"). The pulse is `motion-safe` only, so `prefers-reduced-motion` keeps the bars still.
+
+### The last five level changes (part 8, item 7)
+
+- A short feed, newest first, in the ministry's space (beside the national map) and in the home page's picture (under its map; after the medicine list on phones). Each row: the medicine, the change as shape and word, how long ago (exact time in the tooltip), the pharmacies and governorates over 14 days as the screens receive them, the rule id and the origin badges. It opens the medicine.
+- Counts come from the event's evidence as `signal_events_view` returns it (`app.shown_evidence`): "Moins de 3 pharmacies" below 3, and then no number of governorates. Never a pharmacy (`lib/signals/recent.ts`, tested).
+- On the home page the feed keeps item 1's frame: only changes whose evidence is entirely simulated, of medicines whose current signal is a demonstration signal, read through the demonstration coordination account. A change from tester or official data never appears there.
+
+### A 90-day public status strip (part 8, item 6)
+
+- The public medicine page shows the last 90 days as a band, with the same text list under it: only "Rupture confirmée", "Rupture levée" (after a confirmation) and "Aucune rupture confirmée". It reuses `LevelBand`, which now takes optional words (`text`), so the public page speaks French or Arabic and names its three public levels; the console keeps its default. The band and its axis are left to right in both languages (time runs left to right); the list follows the page's direction.
+- The data comes from a new database function, `public_molecule_history` (migration 0024, applied), and not from `signal_events`, which the public cannot read. It maps each change to the public level, then keeps only the rows where the public level changes. So a change below "confirmée" leaves no trace, not even its time (rule 10; database tests, including a molecule that went through "sous surveillance" and "probable").
+
+### "Mis à jour il y a …" (part 8, item 5)
+
+- Beside a level, the time since the signal was last evaluated: on the public medicine page (under the status) and on the console's medicine panel (coordination, hospital, wholesaler). It reads `signals.updated_at`, which `apply_signal_evaluation` sets on every evaluation, the daily recompute (04:30 UTC) included; so it usually reads in hours, and that is the honest figure. Whole minutes, hours, days, rounded down (`lib/freshness.ts`, tested); the exact time is in the tooltip and the `<time>` element.
+- The public page needed the time: migration 0023 adds `evaluated_at` to `public_molecule_status`, for a shown level only ("confirmée", or "levée" after one). Below "confirmée" it stays null, so the time never hints that a medicine has a signal the public may not see (rule 10; database test). Applied to the live project before the code that reads it.
+
 ### "Ce qui manque" beside a level (part 5)
 
 - One line on the coordination, hospital (and wholesaler) medicine panel and the prescriber check says which condition is still missing for the next level: "Pour « Confirmée », il manque un deuxième gouvernorat.", "… des signalements d’autres pharmacies, jusqu’au seuil de « confirmée »", for "confirmée" what "levée" needs. Nothing at "levée".

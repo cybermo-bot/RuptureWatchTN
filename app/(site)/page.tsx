@@ -13,6 +13,7 @@ import { SiteFooter, SiteHeader } from '@/components/SiteChrome';
 import { getCurrentSession, type CurrentSession } from '@/lib/auth/session';
 import { HOME_BY_TYPE } from '@/lib/demo/roles';
 import { formatDate } from '@/lib/format';
+import { RecentChangesList } from '@/components/RecentChanges';
 import { loadNationalPicture, type NationalPicture } from '@/lib/home/national';
 import { t, type MessageKey } from '@/lib/i18n';
 import { LEVEL_ORDER } from '@/lib/signals/views';
@@ -61,8 +62,8 @@ function National({ picture }: { picture: NationalPicture | null }) {
   if (!picture) return <p className="panel p-5 text-ink-muted">{t('core.home.national.unavailable')}</p>;
   const simulated = picture.origins.includes('simulated');
   return (
-    <div className="grid gap-5 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
-      <div className="panel flex flex-col gap-4 p-5">
+    <div className="grid gap-5 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:grid-rows-[auto_1fr]">
+      <div className="panel flex flex-col gap-4 p-5 lg:col-start-1 lg:row-start-1">
         <NationalMap picture={picture} />
         <ul aria-label={t('core.home.national.countsLabel')} className="grid grid-cols-2 gap-x-4 gap-y-2 border-t border-line pt-4 text-sm">
           {LEVEL_ORDER.map((level) => (
@@ -73,7 +74,7 @@ function National({ picture }: { picture: NationalPicture | null }) {
           ))}
         </ul>
       </div>
-      <section aria-labelledby="medicaments-niveau" className="panel flex min-w-0 flex-col">
+      <section aria-labelledby="medicaments-niveau" className="panel flex min-w-0 flex-col lg:col-start-2 lg:row-span-2 lg:row-start-1">
         <header className="panel-header">
           <h3 id="medicaments-niveau" className="font-semibold text-ink">
             {t('core.home.national.listTitle')}
@@ -106,6 +107,18 @@ function National({ picture }: { picture: NationalPicture | null }) {
           </ul>
         )}
         <p className="mt-auto border-t border-line px-4 py-3 text-xs text-ink-muted">{t('core.home.national.source')}</p>
+      </section>
+      <section aria-labelledby="derniers-changements" className="panel flex min-w-0 flex-col self-start lg:col-start-1 lg:row-start-2">
+        <header className="panel-header">
+          <div className="flex min-w-0 flex-col gap-0.5">
+            <h3 id="derniers-changements" className="font-semibold text-ink">
+              {t('core.recent.title')}
+            </h3>
+            <p className="text-sm text-ink-muted">{t('core.recent.homeIntro')}</p>
+          </div>
+          {picture.recent.length > 0 ? <OriginBadge origin="simulated" /> : null}
+        </header>
+        <RecentChangesList events={picture.recent} href={(id) => `/vues/${id}`} />
       </section>
     </div>
   );
