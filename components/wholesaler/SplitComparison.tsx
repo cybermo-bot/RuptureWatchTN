@@ -372,22 +372,20 @@ function ResultCard({
         </span>
         <h3 className="font-semibold text-ink">{title}</h3>
       </div>
-      <dl className="flex flex-col gap-2">
-        <div className="flex flex-col">
+      <dl className="grid grid-cols-[auto_auto] justify-start gap-x-6 gap-y-1">
+        <div className="col-span-2 mb-1 flex flex-col">
           <dt className="text-sm text-ink-muted">{t('wholesaler.split.compare.minCover')}</dt>
           <dd className="font-mono text-2xl font-semibold text-ink tabular-nums">
             {minCover === null ? '—' : t('wholesaler.split.compare.daysValue', { days: df.format(minCover) })}
           </dd>
         </div>
-        <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm">
-          <div className="flex gap-1.5">
-            <dt className="text-ink-muted">{t('wholesaler.split.compare.allocated')}</dt>
-            <dd className="font-mono text-ink tabular-nums">{nf.format(allocated)}</dd>
-          </div>
-          <div className="flex gap-1.5">
-            <dt className="text-ink-muted">{t('wholesaler.split.compare.unallocated')}</dt>
-            <dd className="font-mono text-ink tabular-nums">{nf.format(unallocated)}</dd>
-          </div>
+        <div className="flex gap-1.5 text-sm">
+          <dt className="text-ink-muted">{t('wholesaler.split.compare.allocated')}</dt>
+          <dd className="font-mono text-ink tabular-nums">{nf.format(allocated)}</dd>
+        </div>
+        <div className="flex gap-1.5 text-sm">
+          <dt className="text-ink-muted">{t('wholesaler.split.compare.unallocated')}</dt>
+          <dd className="font-mono text-ink tabular-nums">{nf.format(unallocated)}</dd>
         </div>
       </dl>
       <p className="text-sm text-ink-muted">{body}</p>
