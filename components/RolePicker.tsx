@@ -3,6 +3,7 @@
 import { Building2, Hospital, Landmark, Search, Stethoscope, Store, Truck, Users, type LucideIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import type { ReactNode } from 'react';
 import { useFormStatus } from 'react-dom';
 import { signInAsDemoRole } from '@/app/actions/auth';
 import previews from '@/public/previews/manifest.json';
@@ -79,7 +80,7 @@ function RoleTile({ role }: { role: DemoRole }) {
   );
 }
 
-function Groups() {
+function Groups({ publicExtra }: { publicExtra?: ReactNode }) {
   const { pending } = useFormStatus();
   return (
     <div className="flex flex-col gap-8" aria-busy={pending}>
@@ -105,6 +106,8 @@ function Groups() {
               {roles.map((role) => (
                 <RoleTile key={role.key} role={role} />
               ))}
+              {/* Desktop only: open the public side on a phone (components/home/PhoneQr.tsx). */}
+              {group === 'public' && publicExtra ? <li className="hidden lg:block">{publicExtra}</li> : null}
             </ul>
           </section>
         );
@@ -113,10 +116,10 @@ function Groups() {
   );
 }
 
-export function RolePicker() {
+export function RolePicker({ publicExtra }: { publicExtra?: ReactNode } = {}) {
   return (
     <form action={signInAsDemoRole}>
-      <Groups />
+      <Groups publicExtra={publicExtra} />
     </form>
   );
 }

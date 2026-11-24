@@ -8,6 +8,7 @@ import { LevelBadge } from '@/components/LevelBadge';
 import { Origins } from '@/components/Origins';
 import { OriginBadge } from '@/components/OriginBadge';
 import { RolePicker } from '@/components/RolePicker';
+import { PhoneQr } from '@/components/home/PhoneQr';
 import { SiteFooter, SiteHeader } from '@/components/SiteChrome';
 import { getCurrentSession, type CurrentSession } from '@/lib/auth/session';
 import { HOME_BY_TYPE } from '@/lib/demo/roles';
@@ -168,7 +169,7 @@ export default async function HomePage({ searchParams }: PageProps<'/'>) {
               </div>
             ) : null}
 
-            <RolePicker />
+            <RolePicker publicExtra={<PhoneQr />} />
           </div>
         </section>
 

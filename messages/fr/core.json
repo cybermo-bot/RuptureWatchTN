@@ -72,6 +72,11 @@
       "label": "Je cherche un médicament",
       "hint": "Côté patient, sans compte : le statut vérifié d’un médicament et les pharmacies proches."
     },
+    "phoneQr": {
+      "title": "Ouvrir sur votre téléphone",
+      "body": "Scannez pour essayer le côté public sur votre téléphone : chercher un médicament, son statut vérifié, les pharmacies proches.",
+      "qrLabel": "Code QR vers la recherche de médicaments sur ce site"
+    },
     "previewAlt": "Aperçu de l’espace {role}",
     "open": "Ouvrir",
     "national": {
@@ -1399,5 +1404,17 @@
     "quietOne": "encore {n} jour sans nouvelle commande non livrée",
     "quietMany": "encore {n} jours sans nouvelle commande non livrée",
     "deliveredIfNotYet": "des signalements « livré à nouveau » d’au moins {n} pharmacies, s’il n’y en a pas encore assez"
+  },
+  "tryHint": {
+    "label": "Par où commencer",
+    "dismiss": "Masquer ce conseil",
+    "pharmacy": "Essayez : signaler un médicament commandé et non livré, en deux gestes.",
+    "pharmacyLink": "Signaler",
+    "wholesaler": "Essayez : changer le stock et comparer les deux répartitions.",
+    "wholesalerLink": "Proposer une répartition",
+    "panel": "Essayez : choisir un médicament dans la liste, puis lire pourquoi il a ce niveau et ce qui manque pour le suivant.",
+    "central": "Essayez : annoncer un arrivage pour un médicament en tension, puis voir ce qu’en lisent les pharmacies.",
+    "order": "Essayez : écrire aux pharmacies d’un gouvernorat.",
+    "orderLink": "Écrire un message"
   }
 }

@@ -18,6 +18,16 @@ Newest first. Each entry: what was decided, and why.
 
 - The home page is public, and it listed every medicine with a level, "probable" and "sous surveillance" included: rule 10 forbids that for real data. The national picture is now framed as what the national unit sees in the demonstration: title "Ce que voit la cellule nationale", the line "Démonstration · données simulées" beside it, one sentence saying the public only ever sees a confirmed shortage. `loadNationalPicture()` keeps only signals whose evidence is entirely simulated (`isDemonstrationSignal`, tested): a signal with any tester or official evidence never appears there, at any level. Done before the visual pass (part 6), so the `ui-refresh` branch starts from it.
 
+### Hint strip per role (part 8, item 2)
+
+- A demo account's space opens with one line, "Essayez : ...", the first thing to try there (`lib/demo/hints.ts`, `components/console/HintStrip.tsx`). Why: a jury clicks around without instructions; this is their instruction. Only for organisations whose origin is `simulated`: a tester or a real member never sees it. A hint whose action is on another page links to it and hides on that page; the wholesaler's links to the split panel of the medicine selected by default.
+- Dismissal is kept in the browser only (`localStorage`), never sent. Until the browser answers, nothing is drawn, so a dismissed hint never flashes back; the cost is that the strip appears just after the first paint.
+
+### "Ouvrir sur votre téléphone" (part 8, item 3)
+
+- On the home page, desktop only, a QR code to `/medicaments` sits beside the public tiles, so a judge on a laptop tries the patient side on their phone. Drawn on the server by `qrcode`, the library the tester invitation already uses (entry of session 2): no new dependency. `lib/qr.ts` holds the helper; its dark modules take `currentColor`, so the code follows the design tokens. The link is built from the host that served the page, so a preview deployment points to itself.
+- The invitation screens of the Ordre and the coordination already show the tester invitation link as a QR code (`TesterInvitation`); nothing to add there.
+
 ### "Ce qui manque" beside a level (part 5)
 
 - One line on the coordination, hospital (and wholesaler) medicine panel and the prescriber check says which condition is still missing for the next level: "Pour « Confirmée », il manque un deuxième gouvernorat.", "… des signalements d’autres pharmacies, jusqu’au seuil de « confirmée »", for "confirmée" what "levée" needs. Nothing at "levée".
