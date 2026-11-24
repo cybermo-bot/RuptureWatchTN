@@ -53,6 +53,12 @@ test.describe('scenario', () => {
 
   test('3. the scenario plays to "Levée"', async ({ page }) => {
     await page.goto('/scenario');
+    // Manual by default; the arrow keys step through (session 6).
+    await expect(page.locator('[data-step="0"]')).toBeVisible();
+    await page.keyboard.press('ArrowRight');
+    await expect(page.locator('[data-step="1"]')).toBeVisible();
+    await page.keyboard.press('ArrowLeft');
+    await expect(page.locator('[data-step="0"]')).toBeVisible();
     await page.getByRole('button', { name: 'Lancer le scénario' }).click();
     await expect(page.locator('[data-done="true"]')).toBeVisible({ timeout: 60_000 });
     await expect(page.locator('[data-level="cleared"]')).toBeVisible();

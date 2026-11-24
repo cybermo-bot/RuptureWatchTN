@@ -124,3 +124,8 @@ export function scenarioFrames(noticeSource: string, noticeUrl: string): Scenari
   }
   return frames;
 }
+
+/** The home page's frozen moment: the step where the scenario first reaches "confirmée". */
+export function frozenFrame(frames: ScenarioFrame[]): ScenarioFrame {
+  return frames.find((f) => f.changed && f.level === 'confirmed') ?? frames[frames.length - 1];
+}

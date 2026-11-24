@@ -5,7 +5,7 @@ import { LevelBadge } from '@/components/LevelBadge';
 import { OriginBadge } from '@/components/OriginBadge';
 import { StateTimeline } from '@/components/scenario/StateTimeline';
 import { t, type MessageKey } from '@/lib/i18n';
-import { scenarioFrames, type ScenarioFrame } from '@/lib/scenario/frames';
+import { frozenFrame, scenarioFrames, type ScenarioFrame } from '@/lib/scenario/frames';
 
 // The home page's stage (session 6, part 6): on plum, a 5/7 split. Left, the label that it is a
 // demonstration, the heading, one sentence, the citron "Voir le scénario" and the "Choisir un
@@ -15,11 +15,6 @@ import { scenarioFrames, type ScenarioFrame } from '@/lib/scenario/frames';
 // come first, the graphic below.
 
 const GOV_NAME = new Map(GOVERNORATE_SHAPES.map((g) => [g.code, g.name]));
-
-/** The frozen moment: the step where the scenario first reaches "confirmée". */
-export function frozenFrame(frames: ScenarioFrame[]): ScenarioFrame {
-  return frames.find((f) => f.changed && f.level === 'confirmed') ?? frames[frames.length - 1];
-}
 
 function mapValues(f: ScenarioFrame): Partial<Record<string, GovernorateValue>> {
   const values: Partial<Record<string, GovernorateValue>> = {};
