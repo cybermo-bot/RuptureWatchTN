@@ -37,7 +37,7 @@ Newest first. Each entry: what was decided, and why.
 
 ### Skeleton loading (part 8, item 8)
 
-- While a page loads its data, it shows its own shape in grey: the console (header, key figures, the list, the selected medicine) for every signed-in space, the app (main action, list) for the pharmacy, and on the patient's answers page the title, the two figures and the list, in French or Arabic. Next.js `loading.tsx` files, one shared component (`components/Skeleton.tsx`).
+- While a page loads its data, it shows its own shape in grey: the console (header, key figures, the list, the selected medicine) for every signed-in space, the app (main action, list) for the pharmacy, and on the patient's answers page the title, the two figures and the list, in French or Arabic. Next.js `loading.tsx` files, one shared component (`components/Skeleton.tsx`). A `loading.tsx` only shows when its own segment's child changes, so each space has one (the `(espace)` one alone covered entering a space, not moving between its pages: checked with a slowed navigation).
 - A placeholder never shows a figure or a made-up text: grey bars only, hidden from screen readers, with one status line in words ("Chargement de la page…", "Chargement des réponses…"). The pulse is `motion-safe` only, so `prefers-reduced-motion` keeps the bars still.
 
 ### The last five level changes (part 8, item 7)
