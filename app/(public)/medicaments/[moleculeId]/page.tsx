@@ -9,7 +9,9 @@ import { FollowButton } from '@/components/public/FollowButton';
 import { Ltr } from '@/components/public/Ltr';
 import { PublicMain } from '@/components/public/PublicChrome';
 import { getTranslator } from '@/lib/i18n-server';
-import { formatPublicDate } from '@/lib/public/format';
+import { FreshnessLine } from '@/components/Freshness';
+import { freshness } from '@/lib/freshness';
+import { formatPublicDate, formatPublicTime } from '@/lib/public/format';
 import { createAnonClient } from '@/lib/db/server';
 import { publicArrival } from '@/lib/institutions/data';
 import { getBrands, getPublicMolecule, getPublicStatus } from '@/lib/public/medicine';
@@ -52,6 +54,8 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
   ]);
 
   const shown = status.level === 'confirmed' || status.level === 'cleared';
+  // "Mis à jour il y a …": the last evaluation of a shown status (never below "confirmée").
+  const fresh = shown && status.evaluatedAt ? freshness(status.evaluatedAt, new Date()) : null;
   const headline =
     status.level === 'confirmed' && status.since
       ? t('public.medicine.confirmed', {
@@ -108,6 +112,18 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
           <span>{headline}</span>
         </p>
         <p className="text-ink">{body}</p>
+        {fresh && status.evaluatedAt ? (
+          <p className="text-sm text-ink-muted">
+            <FreshnessLine
+              at={status.evaluatedAt}
+              text={fresh.unit === 'now' ? t('public.freshness.now') : t(`public.freshness.${fresh.unit}`, { n: fresh.n })}
+              title={t('public.freshness.title', {
+                date: formatPublicDate(status.evaluatedAt, locale),
+                time: formatPublicTime(status.evaluatedAt, locale),
+              })}
+            />
+          </p>
+        ) : null}
         {status.origins.length > 0 ? (
           <p className="flex flex-wrap gap-1.5">
             {status.origins.map((o) => (

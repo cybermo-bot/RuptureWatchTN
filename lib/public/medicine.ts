@@ -18,6 +18,8 @@ export interface PublicStatus {
   level: PublicLevel;
   since: string | null;
   origins: Origin[];
+  /** When the shown status was last evaluated; null below "confirmée" (migration 0023). */
+  evaluatedAt: string | null;
 }
 
 export interface Brand {
@@ -49,6 +51,8 @@ export async function getBrands(moleculeId: string): Promise<Brand[]> {
 export async function getPublicStatus(moleculeId: string): Promise<PublicStatus> {
   const { data, error } = await createAnonClient().rpc('public_molecule_status', { p_molecule_id: moleculeId });
   if (error) throw new Error(`public_molecule_status: ${error.message}`);
-  const row = (data as { level: PublicLevel; since: string | null; origins: Origin[] | null }[] | null)?.[0];
-  return row ? { level: row.level, since: row.since, origins: row.origins ?? [] } : { level: 'none', since: null, origins: [] };
+  const row = (data as { level: PublicLevel; since: string | null; origins: Origin[] | null; evaluated_at?: string | null }[] | null)?.[0];
+  return row
+    ? { level: row.level, since: row.since, origins: row.origins ?? [], evaluatedAt: row.evaluated_at ?? null }
+    : { level: 'none', since: null, origins: [], evaluatedAt: null };
 }

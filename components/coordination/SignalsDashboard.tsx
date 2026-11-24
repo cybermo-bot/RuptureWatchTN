@@ -7,6 +7,7 @@ import { EmptyState } from '@/components/EmptyState';
 import { CatalogueLine } from '@/components/institutions/Lines';
 import { GOVERNORATE_SHAPES, GovernorateMap, type GovernorateValue } from '@/components/GovernorateMap';
 import { LevelBadge, LevelShape } from '@/components/LevelBadge';
+import { FreshnessLine } from '@/components/Freshness';
 import { LevelExplanation } from '@/components/LevelExplanation';
 import { MissingLine } from '@/components/MissingLine';
 import { PlaybookLink } from '@/components/PlaybookLink';
@@ -18,6 +19,7 @@ import type { CatalogueFacts } from '@/lib/institutions/catalogue';
 import type { Arrival } from '@/lib/institutions/data';
 import { moleculesAtLevelPerDay } from '@/lib/charts/series';
 import { formatDate, formatTime } from '@/lib/format';
+import { freshness } from '@/lib/freshness';
 import { t } from '@/lib/i18n';
 import { DEFAULT_PARAMS, type ForeignNotice, type Level } from '@/lib/signal';
 import {
@@ -56,6 +58,19 @@ const GOV_NAME = new Map(GOVERNORATE_SHAPES.map((g) => [g.code, g.name]));
 export const FIGURE_DAYS = 14;
 
 /** Map band for a suppressed count: '<3', 3 or 4, 5 and more. */
+/** "Mis à jour il y a 4 min", from the signal's last evaluation (part 8, item 5). */
+function SignalFreshness({ at }: { at: string | null | undefined }) {
+  const f = at ? freshness(at, new Date()) : null;
+  if (!at || !f) return null;
+  return (
+    <FreshnessLine
+      at={at}
+      text={f.unit === 'now' ? t('core.freshness.now') : t(`core.freshness.${f.unit}`, { n: f.n })}
+      title={t('core.freshness.title', { date: formatDate(at), time: formatTime(at) })}
+    />
+  );
+}
+
 export function countBand(pharmacies: string): 'few' | 'some' | 'many' {
   if (pharmacies === '<3') return 'few';
   return Number(pharmacies) >= 5 ? 'many' : 'some';
@@ -454,6 +469,7 @@ export function SignalsDashboard({
                     <LevelBadge level={selected.level} />
                     <span>{t('core.pharmacy.since', { date: formatDate(selected.since) })}</span>
                     <Origins origins={selected.evidence.origins} />
+                    <SignalFreshness at={selected.updated_at} />
                   </p>
                   <LevelExplanation rule={selected.rule} evidence={selected.evidence} showRule methodLink />
                   <MissingLine level={selected.level} rule={selected.rule} evidence={selected.evidence} />

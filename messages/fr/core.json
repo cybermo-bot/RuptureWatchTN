@@ -1392,5 +1392,12 @@
     "central": "Essayez : annoncer un arrivage pour un médicament en tension, puis voir ce qu’en lisent les pharmacies.",
     "order": "Essayez : écrire aux pharmacies d’un gouvernorat.",
     "orderLink": "Écrire un message"
+  },
+  "freshness": {
+    "now": "Mis à jour à l’instant",
+    "minutes": "Mis à jour il y a {n} min",
+    "hours": "Mis à jour il y a {n} h",
+    "days": "Mis à jour il y a {n} j",
+    "title": "Dernière évaluation des règles : {date} à {time}"
   }
 }

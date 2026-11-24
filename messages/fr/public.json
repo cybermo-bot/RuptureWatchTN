@@ -202,5 +202,12 @@
     "ogAlt": "Statut public d’un médicament sur RuptureWatch TN",
     "ogUnavailable": "Statut à vérifier sur la page du médicament.",
     "simulatedNote": "Données de démonstration, pas des signalements réels."
+  },
+  "freshness": {
+    "now": "Mis à jour à l’instant",
+    "minutes": "Mis à jour il y a {n} min",
+    "hours": "Mis à jour il y a {n} h",
+    "days": "Mis à jour il y a {n} j",
+    "title": "Dernière vérification : {date} à {time}"
   }
 }

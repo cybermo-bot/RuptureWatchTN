@@ -24,6 +24,11 @@ Newest first. Each entry: what was decided, and why.
 - The shared link is the production address (`siteUrl()`), not the host that served the page, so a link shared from a preview still opens the real site.
 - Each medicine page has its own Open Graph card (`opengraph-image.tsx` beside the page, `medicineCard()` in `lib/og/card.tsx`): the medicine, its public status with the level's shape, the "Simulé" badge when it applies, the disclaimer. The page's Open Graph description carries the same lines. The card is in French: a link preview is fetched without the visitor's language. If the status cannot be read, the card says to check the page, never "Aucune rupture".
 
+### "Mis à jour il y a …" (part 8, item 5)
+
+- Beside a level, the time since the signal was last evaluated: on the public medicine page (under the status) and on the console's medicine panel (coordination, hospital, wholesaler). It reads `signals.updated_at`, which `apply_signal_evaluation` sets on every evaluation, the daily recompute (04:30 UTC) included; so it usually reads in hours, and that is the honest figure. Whole minutes, hours, days, rounded down (`lib/freshness.ts`, tested); the exact time is in the tooltip and the `<time>` element.
+- The public page needed the time: migration 0023 adds `evaluated_at` to `public_molecule_status`, for a shown level only ("confirmée", or "levée" after one). Below "confirmée" it stays null, so the time never hints that a medicine has a signal the public may not see (rule 10; database test). Applied to the live project before the code that reads it.
+
 ### "Ce qui manque" beside a level (part 5)
 
 - One line on the coordination, hospital (and wholesaler) medicine panel and the prescriber check says which condition is still missing for the next level: "Pour « Confirmée », il manque un deuxième gouvernorat.", "… des signalements d’autres pharmacies, jusqu’au seuil de « confirmée »", for "confirmée" what "levée" needs. Nothing at "levée".
