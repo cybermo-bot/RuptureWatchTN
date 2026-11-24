@@ -87,7 +87,6 @@ function National({ picture }: { picture: NationalPicture | null }) {
               <li key={s.molecule_id}>
                 <Link
                   href={`/vues/${s.molecule_id}`}
-                  aria-label={`${s.molecule_name}, ${t(`core.levels.${s.level}`)}. ${t('core.home.national.seeViews')}`}
                   className="flex min-h-14 items-center justify-between gap-3 px-4 py-3 no-underline transition-colors duration-150 hover:bg-surface-subtle"
                 >
                   <span className="flex min-w-0 flex-col gap-1">
@@ -98,6 +97,7 @@ function National({ picture }: { picture: NationalPicture | null }) {
                       <Origins origins={s.evidence.origins} />
                     </span>
                   </span>
+                  <span className="sr-only">{t('core.home.national.seeViews')}</span>
                   <ChevronRight size={18} aria-hidden="true" className="shrink-0 text-ink-muted rtl:-scale-x-100" />
                 </Link>
               </li>

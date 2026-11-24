@@ -100,7 +100,7 @@ export function ScenarioPlayer() {
 
   return (
     <div className="flex flex-col gap-6" data-step={index} data-level={frame.level} data-done={done ? 'true' : 'false'}>
-      <div className="grid gap-5 lg:grid-cols-12">
+      <div className="grid gap-5 lg:grid-cols-12 lg:items-start">
         {/* Region 1, on the plum stage: controls, the timeline, what just happened. */}
         <section aria-labelledby="etape" className="stage flex flex-col gap-6 rounded-xl bg-stage p-5 text-on-stage sm:p-7 lg:col-span-8">
           <div role="group" aria-label={t('core.scenario.controls')} className="flex flex-col gap-3">
