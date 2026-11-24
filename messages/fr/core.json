@@ -72,6 +72,11 @@
       "label": "Je cherche un médicament",
       "hint": "Côté patient, sans compte : le statut vérifié d’un médicament et les pharmacies proches."
     },
+    "phoneQr": {
+      "title": "Ouvrir sur votre téléphone",
+      "body": "Scannez pour essayer le côté public sur votre téléphone : chercher un médicament, son statut vérifié, les pharmacies proches.",
+      "qrLabel": "Code QR vers la recherche de médicaments sur ce site"
+    },
     "previewAlt": "Aperçu de l’espace {role}",
     "open": "Ouvrir",
     "national": {
