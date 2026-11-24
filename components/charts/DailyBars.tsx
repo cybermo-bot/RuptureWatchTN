@@ -24,19 +24,22 @@ export function DailyBars({
   id: string;
 }) {
   const width = 600;
-  const height = 120;
-  const pad = { top: 14, bottom: 4 };
+  const height = 132;
+  const pad = { top: 8, bottom: 5 };
   const numeric = data.map((d) => (d.value === '<3' ? 2 : d.value));
   const max = Math.max(3, ...numeric);
   const x = scaleBand<number>()
     .domain(data.map((_, i) => i))
     .range([0, width])
-    .paddingInner(0.25)
-    .paddingOuter(0.1);
+    .paddingInner(0.36)
+    .paddingOuter(0.15);
   const y = scaleLinear()
     .domain([0, max])
     .range([height - pad.bottom, pad.top]);
   const empty = data.every((d) => d.value === 0);
+  const maxShown = Math.max(0, ...data.map((d) => (d.value === '<3' ? 0 : d.value)));
+  const lastNonZero = numeric.findLastIndex((value) => value > 0);
+  const dates = data.length > 8 ? [0, Math.floor((data.length - 1) / 2), data.length - 1] : [0, data.length - 1];
   const patternId = `${id}-hatch`;
 
   return (
@@ -45,7 +48,7 @@ export function DailyBars({
         <span>{title}</span>
         {!empty ? (
           <span className="text-xs font-normal text-ink-muted tabular-nums" aria-hidden="true">
-            {t('core.charts.max', { value: Math.max(...data.map((d) => (d.value === '<3' ? 0 : d.value))) || '<3' })}
+            {t('core.charts.max', { value: maxShown || '<3' })}
           </span>
         ) : null}
       </figcaption>
@@ -53,14 +56,16 @@ export function DailyBars({
         <p className="text-sm text-ink-muted">{t('core.charts.noData', { days: data.length })}</p>
       ) : (
         <>
-          <svg viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" aria-hidden="true" focusable="false" className="block h-28 w-full">
+          <svg viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" aria-hidden="true" focusable="false" className="mt-2 block h-28 w-full sm:h-32">
             <defs>
               <pattern id={patternId} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
                 <rect width="6" height="6" fill="var(--surface)" />
                 <line x1="0" y1="0" x2="0" y2="6" stroke={colour} strokeWidth="3" />
               </pattern>
             </defs>
-            <line x1={0} x2={width} y1={height - pad.bottom} y2={height - pad.bottom} stroke="var(--line)" vectorEffect="non-scaling-stroke" />
+            {[0, max / 2, max].map((tick) => (
+              <line key={tick} x1={0} x2={width} y1={y(tick)} y2={y(tick)} stroke="var(--line)" vectorEffect="non-scaling-stroke" />
+            ))}
             {data.map((d, i) => {
               const v = numeric[i];
               if (v === 0) return null;
@@ -72,8 +77,8 @@ export function DailyBars({
                   width={x.bandwidth()}
                   y={top}
                   height={height - pad.bottom - top}
-                  rx={1.5}
-                  fill={d.value === '<3' ? `url(#${patternId})` : colour}
+                  rx={2}
+                  fill={d.value === '<3' ? `url(#${patternId})` : i === lastNonZero ? colour : `color-mix(in srgb, ${colour} 66%, var(--surface))`}
                   stroke={d.value === '<3' ? colour : 'none'}
                   strokeWidth={1}
                   vectorEffect="non-scaling-stroke"
@@ -82,8 +87,7 @@ export function DailyBars({
             })}
           </svg>
           <div className="flex justify-between text-xs text-ink-muted tabular-nums" aria-hidden="true">
-            <span>{formatDayMonth(data[0].day)}</span>
-            <span>{formatDayMonth(data[data.length - 1].day)}</span>
+            {[...new Set(dates)].map((i) => <span key={i}>{formatDayMonth(data[i].day)}</span>)}
           </div>
           <table className="sr-only">
             <thead>

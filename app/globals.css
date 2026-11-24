@@ -1,43 +1,39 @@
 @import "tailwindcss";
 
-/* Design tokens. Source: CLAUDE.md section 9 (session 6 palette: plum stage, lavender paper,
-   violet action, citron accent on the presentation surfaces only). Adjust only for contrast
-   (see docs/DECISIONS.md). Ratios checked: ink 16.7:1 and ink-muted 6.6:1 on white, 5.4:1 on
-   surface-subtle; brand 7.8:1 on white; level colours 5.5:1 or more on page; on-stage 15.5:1 and
-   on-stage-muted 10.5:1 on stage; stage on citron 13.9:1. */
+/* RuptureWatch's limestone and powder-blue palette. Alert colours describe the signal level. */
 :root {
-  --ink: #241834;
-  --ink-muted: #665775;
+  --ink: #153442;
+  --ink-muted: #475e67;
   --surface: #ffffff;
-  --page: #f7f4fc;
-  --surface-subtle: #ece6f7;
-  --line: #ddd4ea;
-  --brand: #4d36c8;
-  --brand-strong: #38249c;
-  /* The console rail and the presentation stage share the plum. */
-  --sidebar: #261638;
-  --sidebar-raised: #35204c;
-  --sidebar-line: #47325f;
-  --sidebar-text: #f9f4ff;
-  --sidebar-muted: #d5c7e4;
-  --sidebar-accent: #c7b6ff;
-  --stage: #261638;
-  --stage-raised: #35204c;
-  --stage-line: #4b3566;
-  --on-stage: #f9f4ff;
-  --on-stage-muted: #d5c7e4;
-  /* One accent on plum: the current scenario position or the primary launch button. */
-  --citron: #dff576;
+  --page: #f5f3ef;
+  --surface-subtle: #e8f0f3;
+  --line: #ccd8da;
+  --brand: #235c76;
+  --brand-strong: #174359;
+  --limestone: #f6f2ec;
+  --powder-blue: #ddeef3;
+  --sidebar: #143440;
+  --sidebar-raised: #224956;
+  --sidebar-line: #3b5963;
+  --sidebar-text: #f5fbff;
+  --sidebar-muted: #cbdde2;
+  --sidebar-accent: #add5e5;
+  --stage: #163846;
+  --stage-raised: #234b59;
+  --stage-line: #466573;
+  --on-stage: #f5fbff;
+  --on-stage-muted: #cbdde2;
+  --scenario-accent: #bce1ef;
   --level-watch: #8b5900;
   --level-likely: #a94412;
   --level-confirmed: #ae233a;
   --level-cleared: #216d54;
-  /* The same four levels on the plum stage (7:1 or more on stage), always with their shape and word. */
+  /* Dark surfaces use lighter level indicators with the same shapes and words. */
   --level-watch-on-stage: #e9c46a;
   --level-likely-on-stage: #f4a06b;
   --level-confirmed-on-stage: #ff8fa3;
   --level-cleared-on-stage: #6fd3ae;
-  --level-none-on-stage: #7e6a96;
+  --level-none-on-stage: #9ab3bb;
 }
 
 @theme inline {
@@ -60,7 +56,7 @@
   --color-stage-line: var(--stage-line);
   --color-on-stage: var(--on-stage);
   --color-on-stage-muted: var(--on-stage-muted);
-  --color-citron: var(--citron);
+  --color-scenario-accent: var(--scenario-accent);
   --color-level-watch-on-stage: var(--level-watch-on-stage);
   --color-level-likely-on-stage: var(--level-likely-on-stage);
   --color-level-confirmed-on-stage: var(--level-confirmed-on-stage);
@@ -104,9 +100,8 @@
     border-radius: 2px;
   }
 
-  /* On the plum stage the focus ring turns light (citron, 13.9:1 on plum). */
   .stage :focus-visible {
-    outline-color: var(--citron);
+    outline-color: var(--scenario-accent);
   }
 
   .stage a:not([data-button]) {
@@ -155,11 +150,10 @@
     vertical-align: top;
   }
 
-  /* Panels group related content: white, hairline border, 8 px radius, no shadow. */
   .panel {
     background: var(--surface);
     border: 1px solid var(--line);
-    border-radius: 8px;
+    border-radius: 12px;
   }
 
   .panel-header {
@@ -176,6 +170,281 @@
   .safe-bottom {
     padding-bottom: env(safe-area-inset-bottom);
   }
+}
+
+.home-masthead,
+.home-read {
+  background: var(--limestone);
+}
+
+.home-wrap {
+  width: min(100% - 2rem, 82rem);
+  margin-inline: auto;
+}
+
+.home-nav {
+  display: flex;
+  min-height: 4rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.home-nav-link {
+  min-height: 3rem;
+  align-items: center;
+  align-content: center;
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.home-nav-link:hover {
+  text-decoration: underline;
+}
+
+.home-hero {
+  display: grid;
+  align-items: center;
+  gap: clamp(1.5rem, 4.2vw, 4.25rem);
+  padding-block: clamp(1.5rem, 4vw, 3.25rem);
+}
+
+.home-hero-copy {
+  display: grid;
+  justify-items: start;
+  gap: clamp(1rem, 2.2vw, 1.75rem);
+}
+
+.home-hero h1 {
+  max-width: 19ch;
+  font-size: clamp(2.5rem, 4.35vw, 4rem);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.042em;
+  text-wrap: balance;
+}
+
+.home-hero p {
+  max-width: 40ch;
+  color: var(--ink-muted);
+  font-size: clamp(1rem, 1.65vw, 1.25rem);
+  line-height: 1.5;
+}
+
+.home-hero .home-search-action {
+  border-color: var(--ink-muted);
+  background: transparent;
+}
+
+.home-hero .home-search-action:hover {
+  border-color: var(--ink);
+  background: var(--surface);
+}
+
+.home-hero-photo {
+  position: relative;
+  aspect-ratio: 1.55;
+  overflow: hidden;
+  border-radius: clamp(0.75rem, 1.7vw, 1.375rem);
+  background: var(--powder-blue);
+}
+
+.home-hero-photo img {
+  object-fit: cover;
+  object-position: 61% 45%;
+}
+
+.home-read h2 {
+  font-size: clamp(1.85rem, 3.4vw, 3.15rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.home-read :is(.home-story-copy, .home-explore) p {
+  max-width: 47ch;
+  margin-block-start: 0.7rem;
+  color: var(--ink-muted);
+}
+
+.home-story {
+  display: grid;
+  align-items: center;
+  gap: clamp(1.25rem, 4vw, 3.5rem);
+  padding: clamp(1.25rem, 3.7vw, 3rem);
+  border-radius: 1.35rem;
+  background: var(--powder-blue);
+}
+
+.home-inline-link {
+  display: inline-flex;
+  min-height: 3rem;
+  width: fit-content;
+  align-items: center;
+  gap: 0.6rem;
+  margin-block-start: 0.45rem;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.home-story-process {
+  min-width: 0;
+  padding-block-start: 1.15rem;
+  border-top: 1px solid #a8c2cd;
+}
+
+.home-process {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin-block-start: 1.05rem;
+}
+
+.home-process li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  font-size: 0.875rem;
+  line-height: 1.3;
+}
+
+.home-process li:not(:last-child)::before {
+  position: absolute;
+  top: 1rem;
+  inset-inline: 2.125rem -0.25rem;
+  height: 1px;
+  background: #94b3c0;
+  content: "";
+}
+
+.home-process-stop {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--brand);
+}
+
+.home-process li:last-child .home-process-stop {
+  background: var(--brand);
+  color: var(--surface);
+}
+
+.home-roles {
+  padding-block: clamp(2.75rem, 7vw, 6rem);
+  scroll-margin-top: 1rem;
+}
+
+.home-role-list {
+  display: grid;
+  margin-block-start: clamp(1.25rem, 3vw, 2.25rem);
+  border-block: 1px solid var(--line);
+}
+
+.home-role-list li + li,
+.home-explore li + li {
+  border-top: 1px solid var(--line);
+}
+
+.home-role-link,
+.home-explore-link {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.8rem;
+  color: var(--ink);
+  text-decoration: none;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+.home-role-link {
+  min-height: 6rem;
+  height: 100%;
+  padding: 0.95rem;
+}
+
+.home-role-link strong {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.home-role-link span span {
+  display: block;
+  margin-block-start: 0.2rem;
+  color: var(--ink-muted);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.home-role-link:hover,
+.home-explore-link:hover {
+  background: var(--powder-blue);
+  color: var(--brand-strong);
+}
+
+.home-arrow {
+  transition: transform 180ms ease;
+}
+
+.home-role-link:hover .home-arrow,
+.home-explore-link:hover .home-arrow {
+  transform: translateX(4px);
+}
+
+.home-explore {
+  display: grid;
+  gap: clamp(1rem, 5vw, 4rem);
+  align-items: center;
+  padding: clamp(1.25rem, 4vw, 3.5rem);
+  margin-block-end: clamp(2rem, 5vw, 4rem);
+  border-radius: 1.35rem;
+  background: var(--surface);
+}
+
+.home-explore-link {
+  min-height: 3.5rem;
+  padding-inline: 0.6rem;
+  font-weight: 500;
+}
+
+@media (min-width: 45rem) {
+  .home-wrap { width: min(100% - 4rem, 82rem); }
+  .home-hero { grid-template-columns: minmax(0, 0.93fr) minmax(0, 1.13fr); }
+  .home-hero-photo { aspect-ratio: 1.4; }
+  .home-story { grid-template-columns: minmax(0, 0.83fr) minmax(0, 1.17fr); }
+  .home-story-process { padding: 0 0 0 1.5rem; border-block-start: 0; border-inline-start: 1px solid #a8c2cd; }
+  .home-process li { font-size: 1rem; }
+  .home-role-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .home-role-list li + li { border-block-start: 0; border-inline-start: 1px solid var(--line); }
+  .home-role-link { min-height: 7rem; padding-inline: clamp(0.65rem, 2vw, 1.6rem); }
+  .home-explore { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+
+@media (min-width: 68.75rem) {
+  .home-hero { padding-block-end: 2rem; }
+  .home-hero-photo { aspect-ratio: 1.65; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .home-story.home-chapter {
+      animation: rw-chapter-reveal 1ms ease-out both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 26%;
+    }
+  }
+}
+
+@keyframes rw-chapter-reveal {
+  from { transform: translateY(1.25rem); }
+  to { transform: translateY(0); }
 }
 
 /* Live feel. A row or a governorate whose level just changed pulses once. */
@@ -277,10 +546,10 @@ path.rw-pulse {
   }
 }
 
-/* A level change on the plum stage: the line pulses once (motion off under reduced motion). */
+/* A level change on the scenario stage pulses once. */
 @keyframes rw-stage-pulse {
   0% {
-    background-color: color-mix(in srgb, var(--citron) 22%, transparent);
+    background-color: color-mix(in srgb, var(--scenario-accent) 22%, transparent);
   }
   100% {
     background-color: transparent;

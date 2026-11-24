@@ -182,7 +182,7 @@ export function ScenarioPlayer() {
                   <span className="text-sm text-on-stage-muted">{t('core.scenario.unchanged')}</span>
                 ) : null}
               </p>
-              {done ? <p className="border-s-2 border-citron ps-3 font-medium text-on-stage">{t('core.scenario.end')}</p> : null}
+              {done ? <p className="border-s-2 border-scenario-accent ps-3 font-medium text-on-stage">{t('core.scenario.end')}</p> : null}
             </div>
             <div className="flex flex-col gap-2">
               <GovernorateMap tone="stage" values={mapValues(frame)} title={t('core.coordination.mapTitle')} className="mx-auto w-full max-w-[11rem] sm:max-w-none" />

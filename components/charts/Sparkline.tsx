@@ -26,7 +26,7 @@ export function Sparkline({
   const points = values.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`);
   const last = values.length - 1;
   return (
-    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} aria-hidden="true" focusable="false" className="block shrink-0 overflow-visible">
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} aria-hidden="true" focusable="false" className="block min-w-0 overflow-visible">
       <line x1={0} x2={width} y1={height - 2} y2={height - 2} stroke="var(--line)" strokeWidth={1} />
       <polyline points={points.join(' ')} fill="none" stroke={colour} strokeWidth={1.5} strokeLinejoin="round" strokeLinecap="round" />
       <circle cx={x(last)} cy={y(values[last])} r={2.25} fill={colour} />

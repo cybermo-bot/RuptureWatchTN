@@ -10,7 +10,7 @@ const VARIANT: Record<Variant, string> = {
   primary: 'bg-brand text-white hover:bg-brand-strong hover:text-white',
   secondary: 'border border-line bg-surface text-ink hover:border-ink-muted hover:text-ink',
   quiet: 'px-2 text-brand underline hover:text-brand-strong',
-  stage: 'bg-citron text-stage hover:bg-on-stage hover:text-stage',
+  stage: 'bg-scenario-accent text-stage hover:bg-on-stage hover:text-stage',
 };
 
 export function buttonClass(variant: Variant = 'primary', extra = '') {

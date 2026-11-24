@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-24T22:15:15Z",
+  "title": "Design System: RuptureWatch TN",
+  "extensions": {
+    "colorMeta": {
+      "limestone": { "role": "neutral", "displayName": "Limestone" },
+      "powder-blue": { "role": "supporting", "displayName": "Powder Blue" },
+      "primary": { "role": "primary", "displayName": "Deep Blue" },
+      "scenario": { "role": "dark-surface", "displayName": "Petrol" }
+    },
+    "motion": [
+      { "name": "link-hover", "value": "180ms ease", "purpose": "Small arrow movement on homepage links." },
+      { "name": "story-entry", "value": "view() entry 0% cover 26%", "purpose": "Reveal the scenario chapter while it enters the viewport, with a static reduced-motion layout." }
+    ],
+    "breakpoints": [
+      { "name": "home-split", "value": "720px" },
+      { "name": "photo-wide", "value": "1100px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "A homepage action with an explicit destination.",
+      "html": "<button class=\"home-action\">Essayer la démo</button>",
+      "css": ".home-action { background: #235c76; color: white; min-height: 48px; padding-inline: 20px; font: 500 1rem IBM Plex Sans, sans-serif; border: 0; border-radius: 6px; } .home-action:hover { background: #174359; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Au comptoir",
+    "overview": "Start with the task of checking a delivery at a pharmacy. Give each chapter a real destination and make the evidence legible.",
+    "keyCharacteristics": ["Warm editorial public surfaces", "Powder-blue scenario chapter", "Compact, legible professional charts"],
+    "rules": [{ "name": "Legible evidence", "body": "Pair signal colors with words and shapes. Keep small-count suppression and a text equivalent in every chart.", "section": "colors" }],
+    "dos": ["Place the demo and medicine search before the first scroll.", "Use visible role names that describe their work."]
+  }
+}

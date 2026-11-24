@@ -118,60 +118,14 @@ tests/                unit and end-to-end tests
 
 ## 9. Design direction
 
-The interface should look designed by a person for a clinical setting: calm, exact, alive. Two kinds of surface share one identity (session 6, `docs/DECISIONS.md`).
+Read `DESIGN.md` for the current design tokens and layout. The public opening uses warm limestone, powder blue, and a dark blue action color. Start with a pharmacy photograph and visible paths to the scenario and medicine search. Use successive sections to show how a report becomes a decision and where each role starts.
 
-**The presentation surfaces, `/` and `/scenario`, tell the story of one decision on a plum stage.**
-
-- Home: a 5/7 split on plum. Left: "Démonstration · données simulées", the heading "Du premier signal à la décision", one sentence, the citron "Voir le scénario" button and the "Choisir un rôle" link. Right: one frozen moment of the scenario computed from `scenarioFrames()` (the governorates that reported on the Tunisia map, the state line, the source of the picture). On phones the heading and the button come first; at 360 × 800 the button is in the first screen. Below: "Ce que voit la cellule nationale" (simulated signals only, rule 10), then the roles in three groups, then "Comprendre".
-- Scenario: two editorial regions. On plum, the controls (play, previous, next, restart, the step as text, the keyboard shortcuts), the state timeline annotated at the level changes, and the event that just happened. Beside it, "Pourquoi ce niveau ?" and "Qui peut agir ?". Manual playback by default; one short pulse on a level change; nothing moves under `prefers-reduced-motion`.
-- Citron (`--citron`) appears only on plum, and only for the current scenario position or the primary launch button.
-
-**Professional spaces look like an operations console, and stay sober.**
-
-- A fixed left rail in plum (`--sidebar`): the logo, the role's name and organisation with its origin badge, the space's sections as navigation items with icons, and "Changer de rôle" at the bottom. On phones it becomes a bottom tab bar (pharmacy) or a top drawer (other roles).
-- Lavender paper (`--page`) with white panels; violet (`--brand`) marks the action, the current selection or a meaningful state, nothing else.
-- A compact strip of key figures at the top of each dashboard: a label, the value, a 14-day sparkline, all computed. No decorative giant numbers, no animated counters.
-- Panels group related content: white, 1 px `--line` border, 8 px radius, no shadow. Lists and tables inside a panel stay separated by hairlines.
-- Live feel: when a level changes, the governorate on the map and the row in the list pulse once and a small toast says what changed. Transitions of 150 to 250 ms. `prefers-reduced-motion` turns motion off, never the information.
-- Charts only where they carry information, drawn as server-rendered SVG with `d3-scale` or plain HTML: a level timeline per medicine, reports per day, patient demand per day, the two splits side by side for wholesalers. Every chart has a text equivalent.
-
-**The pharmacy space and the public pages feel like a mobile app.**
-
-- At 360 px: an app header, a bottom tab bar (pharmacy: Signaler, Mes médicaments, Alertes, Plus), a large search field, rows you tap across the whole width, a clear primary action fixed at the bottom of a flow.
-- The report flow keeps its two taps, states the 72-hour rule in plain words at the timing choice, and ends on "Signalement reçu", "Ce que votre signalement a changé", "Prochaine action".
-- The pharmacy space is installable (web app manifest); the install help lives under "Plus", not above the work.
-- A simulated status or arrival carries "Simulation" in its heading block, on the public medicine page and the wholesaler split page.
-
-**Identity.**
-
-- Our own logo mark, drawn in SVG (`components/brand/Logo.tsx`): an open ring broken at one point, with the dot that escapes it, the moment a shortage is caught before it reaches the counter. No cross, no pill, no institution's symbol. Used in the rail, the favicon and the share cards.
-- One icon set, Lucide (`lucide-react`), used everywhere. Icons sit next to words, never instead of them.
-- IBM Plex Sans for text (with its Arabic variant), IBM Plex Mono for codes, timestamps and aligned numbers. Loaded with `next/font`. Home heading 32–36 px on phones, 48–56 px on desktop; workspace headings 24–28 px; body 16 px. One text style per sentence; emphasis by weight only, and rarely.
-- Tap targets of 48 px minimum, visible focus (citron on plum), WCAG AA contrast, on plum too.
-
-**Never:** cream or beige backgrounds, orange-and-blue pairings, gradients as decoration, glass effects, shadows everywhere, emoji as icons, stock illustrations, animated counters, italic or coloured words inside a heading, giant numbers as decoration, citron on a light surface.
-
-Tokens (adjust only for contrast; ratios in `app/globals.css`):
-
-| Token | Value | Use |
-| --- | --- | --- |
-| `--ink` | `#241834` | text |
-| `--ink-muted` | `#665775` | secondary text |
-| `--surface` | `#FFFFFF` | panels, public pages |
-| `--page` | `#F7F4FC` | lavender paper, console content area |
-| `--surface-subtle` | `#ECE6F7` | bands, table headers, selected rows |
-| `--line` | `#DDD4EA` | hairlines, panel borders |
-| `--stage` / `--sidebar` | `#261638` | plum stage (home, scenario), console rail |
-| `--stage-raised` | `#35204C` | raised surface on plum |
-| `--on-stage` / `--on-stage-muted` | `#F9F4FF` / `#D5C7E4` | text on plum |
-| `--brand` / `--brand-strong` | `#4D36C8` / `#38249C` | action, pressed |
-| `--citron` | `#DFF576` | one accent on plum only |
-| `--level-watch` | `#8B5900` | sous surveillance |
-| `--level-likely` | `#A94412` | probable |
-| `--level-confirmed` | `#AE233A` | confirmée |
-| `--level-cleared` | `#216D54` | levée |
-
-On plum the levels use lighter tints (`--level-*-on-stage`, 7:1 or more). Each level is always a shape plus a word, never colour alone: watch an open circle, likely a half-filled circle, confirmed a filled circle, cleared a check mark.
+- Keep the demo action visible at 360 × 800. Keep patient access anonymous. Present pharmacy and wholesaler sign-in separately. The team provides the institutional sign-in link to authorized users. Label the role demos and keep them in the scenario.
+- Keep professional navigation compact and specific to the role. Use petrol for the rail and scenario, neutral paper for work areas, and blue for actions and selection.
+- Use IBM Plex Sans and its Arabic variant for text, IBM Plex Mono for figures and identifiers, the existing RuptureWatch wordmark, and Lucide icons next to words.
+- Keep a 48 px minimum tap target, visible keyboard focus and WCAG AA contrast. Respect reduced motion and let visitors scroll at their own pace.
+- Show a level with its shape and word. Keep all chart values computed, with a text equivalent and small-count suppression. Origin labels and the product rules in section 2 still apply.
+- Keep the pharmacy reporting flow to two taps after choosing the medicine. Keep the 72-hour explanation, result and next action. Preserve the install help under « Plus ».
 
 <!-- BEGIN:nextjs-agent-rules -->
 

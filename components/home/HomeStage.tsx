@@ -49,7 +49,7 @@ export function HomeStage() {
             <Link
               href="/scenario"
               data-button
-              className="inline-flex min-h-12 items-center gap-2 rounded-md bg-citron px-5 text-base font-semibold text-stage no-underline transition-colors duration-150 hover:bg-white hover:text-stage"
+              className="inline-flex min-h-12 items-center gap-2 rounded-md bg-scenario-accent px-5 text-base font-semibold text-stage no-underline transition-colors duration-150 hover:bg-white hover:text-stage"
             >
               <Play size={18} aria-hidden="true" />
               {t('core.home.stage.cta')}
