@@ -79,3 +79,64 @@ export async function ogCard({ title, body }: { title: string; body: string }): 
     },
   );
 }
+
+/**
+ * The card of a public medicine page (part 8, item 4): the medicine, its public status sentence
+ * with the level's shape ("confirmée" or "levée" only, rule 10), "Simulé" when the status rests on
+ * demonstration data, and the disclaimer. French: a link preview is fetched without a language.
+ */
+export async function medicineCard({
+  name,
+  level,
+  sentence,
+  simulated,
+}: {
+  name: string;
+  level: 'confirmed' | 'cleared' | 'none' | null;
+  sentence: string;
+  simulated: boolean;
+}): Promise<ImageResponse> {
+  const [regular, semibold] = await Promise.all([font('IBMPlexSans-Regular.ttf'), font('IBMPlexSans-SemiBold.ttf')]);
+  const shape = level === 'confirmed' || level === 'cleared' ? LEVELS.find((l) => l.key === level) : undefined;
+  return new ImageResponse(
+    (
+      <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', background: '#FFFFFF', padding: '64px 72px', fontFamily: 'Plex', color: INK }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+            <Mark size={56} />
+            <div style={{ display: 'flex', fontSize: 34, fontWeight: 600 }}>
+              {t('core.app.wordmark')}
+              <span style={{ color: MUTED, fontWeight: 400, marginLeft: 10 }}>{t('core.app.wordmarkCountry')}</span>
+            </div>
+          </div>
+          <div style={{ display: 'flex', fontSize: 24, color: MUTED }}>{t('public.medicine.statusTitle')}</div>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', marginTop: 'auto', gap: 24 }}>
+          <div style={{ display: 'flex', fontSize: 68, fontWeight: 600, lineHeight: 1.1, letterSpacing: -1 }}>{name}</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 38, fontWeight: 600, lineHeight: 1.25 }}>
+            {shape ? <Shape level={shape.key} colour={shape.colour} /> : null}
+            <span>{sentence}</span>
+          </div>
+          {simulated ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 26, color: MUTED }}>
+              <span style={{ display: 'flex', border: `2px dashed ${MUTED}`, borderRadius: 4, padding: '2px 12px', letterSpacing: 2, textTransform: 'uppercase', color: INK }}>
+                {t('public.origin.simulated')}
+              </span>
+              <span>{t('public.share.simulatedNote')}</span>
+            </div>
+          ) : null}
+        </div>
+        <div style={{ display: 'flex', marginTop: 44, paddingTop: 26, borderTop: `2px solid ${LINE}`, fontSize: 26, color: MUTED }}>
+          {t('public.medicine.disclaimer')}
+        </div>
+      </div>
+    ),
+    {
+      ...OG_SIZE,
+      fonts: [
+        { name: 'Plex', data: regular, weight: 400, style: 'normal' },
+        { name: 'Plex', data: semibold, weight: 600, style: 'normal' },
+      ],
+    },
+  );
+}

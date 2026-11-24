@@ -18,6 +18,12 @@ Newest first. Each entry: what was decided, and why.
 - On the home page, desktop only, a QR code to `/medicaments` sits beside the public tiles, so a judge on a laptop tries the patient side on their phone. Drawn on the server by `qrcode`, the library the tester invitation already uses (entry of session 2): no new dependency. `lib/qr.ts` holds the helper; its dark modules take `currentColor`, so the code follows the design tokens. The link is built from the host that served the page, so a preview deployment points to itself.
 - The invitation screens of the Ordre and the coordination already show the tester invitation link as a QR code (`TesterInvitation`); nothing to add there.
 
+### Share a verified status (part 8, item 4)
+
+- The public medicine page has "Partager ce statut": the phone's share sheet (Web Share API) where the browser offers it, otherwise a WhatsApp link and "Copier le lien". The fallback is drawn on the server, so the WhatsApp link works without JavaScript. The shared text is built on the server (`lib/public/share.ts`, tested): the page's own status sentence (never a level below "confirmée", rule 10), "Simulé : données de démonstration..." when the shown status rests on simulated data, and "Ceci n'est pas une déclaration officielle de rupture." Nothing about the visitor is shared or stored.
+- The shared link is the production address (`siteUrl()`), not the host that served the page, so a link shared from a preview still opens the real site.
+- Each medicine page has its own Open Graph card (`opengraph-image.tsx` beside the page, `medicineCard()` in `lib/og/card.tsx`): the medicine, its public status with the level's shape, the "Simulé" badge when it applies, the disclaimer. The page's Open Graph description carries the same lines. The card is in French: a link preview is fetched without the visitor's language. If the status cannot be read, the card says to check the page, never "Aucune rupture".
+
 ### "Ce qui manque" beside a level (part 5)
 
 - One line on the coordination, hospital (and wholesaler) medicine panel and the prescriber check says which condition is still missing for the next level: "Pour « Confirmée », il manque un deuxième gouvernorat.", "… des signalements d’autres pharmacies, jusqu’au seuil de « confirmée »", for "confirmée" what "levée" needs. Nothing at "levée".

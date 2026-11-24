@@ -13,6 +13,10 @@ import { formatPublicDate } from '@/lib/public/format';
 import { createAnonClient } from '@/lib/db/server';
 import { publicArrival } from '@/lib/institutions/data';
 import { getBrands, getPublicMolecule, getPublicStatus } from '@/lib/public/medicine';
+import { ShareStatus } from '@/components/public/ShareStatus';
+import { OG_BASE } from '@/lib/og/meta';
+import { shareText, statusLines } from '@/lib/public/share';
+import { siteUrl } from '@/lib/site';
 
 // Track B: the rumour check. What the public may know about a medicine (CLAUDE.md rule 10):
 // "confirmée" with its date, "levée" after a confirmation, otherwise "Aucune rupture confirmée
@@ -22,9 +26,18 @@ import { getBrands, getPublicMolecule, getPublicStatus } from '@/lib/public/medi
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata(props: PageProps<'/medicaments/[moleculeId]'>): Promise<Metadata> {
-  const { t } = await getTranslator();
+  const { t, locale } = await getTranslator();
   const molecule = await getPublicMolecule((await props.params).moleculeId).catch(() => null);
-  return { title: molecule ? molecule.name : t('public.pages.medicine.title') };
+  if (!molecule) return { title: t('public.pages.medicine.title') };
+  // A shared link shows the medicine and its public status (its card: opengraph-image.tsx).
+  const status = await getPublicStatus(molecule.id).catch(() => null);
+  const description = status ? statusLines(status, t, locale).join(' ') : undefined;
+  return {
+    title: molecule.name,
+    description,
+    metadataBase: new URL(siteUrl()),
+    openGraph: { ...OG_BASE, locale: locale === 'ar' ? 'ar_TN' : 'fr_FR', title: molecule.name, description },
+  };
 }
 
 export default async function MedicinePage(props: PageProps<'/medicaments/[moleculeId]'>) {
@@ -118,6 +131,18 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
           {t('public.medicine.ask')}
         </ButtonLink>
         <FollowButton moleculeId={molecule.id} name={molecule.name} level={status.level} since={status.since} locale={locale} />
+        <ShareStatus
+          title={molecule.name}
+          text={shareText(molecule.name, status, t, locale)}
+          url={`${siteUrl()}/medicaments/${molecule.id}`}
+          labels={{
+            share: t('public.share.button'),
+            whatsapp: t('public.share.whatsapp'),
+            copy: t('public.share.copy'),
+            copied: t('public.share.copied'),
+            copyFailed: t('public.share.copyFailed'),
+          }}
+        />
       </div>
 
       <section aria-labelledby="brands-title" className="flex flex-col gap-3">

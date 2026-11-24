@@ -190,5 +190,17 @@
     "tester": "Testeur",
     "simulated": "Simulé",
     "label": "Origine des données : {origin}"
+  },
+  "share": {
+    "button": "Partager ce statut",
+    "whatsapp": "Partager sur WhatsApp",
+    "copy": "Copier le lien",
+    "copied": "Lien copié.",
+    "copyFailed": "Copie impossible : copiez l’adresse depuis la barre du navigateur.",
+    "text": "{name} : {status}",
+    "simulated": "Simulé : données de démonstration, pas des signalements réels.",
+    "ogAlt": "Statut public d’un médicament sur RuptureWatch TN",
+    "ogUnavailable": "Statut à vérifier sur la page du médicament.",
+    "simulatedNote": "Données de démonstration, pas des signalements réels."
   }
 }
