@@ -1399,5 +1399,21 @@
     "hours": "Mis à jour il y a {n} h",
     "days": "Mis à jour il y a {n} j",
     "title": "Dernière évaluation des règles : {date} à {time}"
+  },
+  "recent": {
+    "title": "Derniers changements de niveau",
+    "intro": "Les cinq plus récents, tous médicaments confondus. Pharmacies comptées par gouvernorat, jamais nommées.",
+    "homeIntro": "Les cinq plus récents de la démonstration. Pharmacies comptées par gouvernorat, jamais nommées.",
+    "empty": "Aucun changement de niveau pour l’instant.",
+    "counts": "{pharmacies} pharmacies dans {governorates} gouvernorats sur {days} jours",
+    "countsOneGovernorate": "{pharmacies} pharmacies, toutes dans le même gouvernorat, sur {days} jours",
+    "countsFew": "Moins de 3 pharmacies sur {days} jours",
+    "countsNone": "Aucune pharmacie ne signale sur {days} jours",
+    "ago": {
+      "now": "À l’instant",
+      "minutes": "Il y a {n} min",
+      "hours": "Il y a {n} h",
+      "days": "Il y a {n} j"
+    }
   }
 }

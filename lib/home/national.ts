@@ -10,7 +10,17 @@
 // data never appears here, at any level.
 
 import 'server-only';
-import { LEVEL_ORDER, governorateCounts, listSignals, sortSignals, type ActiveLevel, type SignalRow } from '@/lib/signals/views';
+import { demonstrationChanges } from '@/lib/signals/recent';
+import {
+  LEVEL_ORDER,
+  governorateCounts,
+  listEvents,
+  listSignals,
+  sortSignals,
+  type ActiveLevel,
+  type EventRow,
+  type SignalRow,
+} from '@/lib/signals/views';
 import { demoClient, VIEW_ROLES } from '@/lib/views/demo-clients';
 import type { Origin } from '@/lib/signal';
 
@@ -22,6 +32,8 @@ export interface NationalPicture {
   counts: Record<ActiveLevel, number>;
   /** Origins of the data behind every level shown. */
   origins: Origin[];
+  /** The last five level changes of the demonstration (part 8, item 7), newest first. */
+  recent: EventRow[];
 }
 
 /** A demonstration signal: evidence known and entirely simulated. Only these reach the home page. */
@@ -46,7 +58,10 @@ export function combineByGovernorate(perMolecule: { level: ActiveLevel; governor
 export async function loadNationalPicture(): Promise<NationalPicture | null> {
   try {
     const client = await demoClient(VIEW_ROLES.coordination);
-    const signals = sortSignals(await listSignals(client)).filter(isDemonstrationSignal);
+    const [all, events] = await Promise.all([listSignals(client), listEvents(client, null, 200)]);
+    const signals = sortSignals(all).filter(isDemonstrationSignal);
+    // The feed keeps the same frame: changes of demonstration medicines, on simulated data only.
+    const recent = demonstrationChanges(events, new Set(all.filter(isDemonstrationSignal).map((s) => s.molecule_id)));
     const perMolecule = await Promise.all(
       signals.map(async (s) => ({
         level: s.level as ActiveLevel,
@@ -55,7 +70,7 @@ export async function loadNationalPicture(): Promise<NationalPicture | null> {
     );
     const counts = Object.fromEntries(LEVEL_ORDER.map((l) => [l, signals.filter((s) => s.level === l).length])) as Record<ActiveLevel, number>;
     const origins = [...new Set(signals.flatMap((s) => s.evidence.origins ?? []))];
-    return { signals, byGovernorate: combineByGovernorate(perMolecule), counts, origins };
+    return { signals, byGovernorate: combineByGovernorate(perMolecule), counts, origins, recent };
   } catch (error) {
     console.error('home: national picture unavailable', error instanceof Error ? error.message : error);
     return null;

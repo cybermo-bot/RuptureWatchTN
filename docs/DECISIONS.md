@@ -24,6 +24,12 @@ Newest first. Each entry: what was decided, and why.
 - The shared link is the production address (`siteUrl()`), not the host that served the page, so a link shared from a preview still opens the real site.
 - Each medicine page has its own Open Graph card (`opengraph-image.tsx` beside the page, `medicineCard()` in `lib/og/card.tsx`): the medicine, its public status with the level's shape, the "Simulé" badge when it applies, the disclaimer. The page's Open Graph description carries the same lines. The card is in French: a link preview is fetched without the visitor's language. If the status cannot be read, the card says to check the page, never "Aucune rupture".
 
+### The last five level changes (part 8, item 7)
+
+- A short feed, newest first, in the ministry's space (beside the national map) and in the home page's picture (under its map; after the medicine list on phones). Each row: the medicine, the change as shape and word, how long ago (exact time in the tooltip), the pharmacies and governorates over 14 days as the screens receive them, the rule id and the origin badges. It opens the medicine.
+- Counts come from the event's evidence as `signal_events_view` returns it (`app.shown_evidence`): "Moins de 3 pharmacies" below 3, and then no number of governorates. Never a pharmacy (`lib/signals/recent.ts`, tested).
+- On the home page the feed keeps item 1's frame: only changes whose evidence is entirely simulated, of medicines whose current signal is a demonstration signal, read through the demonstration coordination account. A change from tester or official data never appears there.
+
 ### A 90-day public status strip (part 8, item 6)
 
 - The public medicine page shows the last 90 days as a band, with the same text list under it: only "Rupture confirmée", "Rupture levée" (after a confirmation) and "Aucune rupture confirmée". It reuses `LevelBand`, which now takes optional words (`text`), so the public page speaks French or Arabic and names its three public levels; the console keeps its default. The band and its axis are left to right in both languages (time runs left to right); the list follows the page's direction.
