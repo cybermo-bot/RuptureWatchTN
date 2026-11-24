@@ -1,23 +1,28 @@
-import { ArrowRight, BriefcaseMedical, ChevronRight, Search, Waypoints } from 'lucide-react';
+import { ArrowRight, BriefcaseMedical, ClipboardList, MapPin, Search, Truck, Waypoints } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
-import { signInAsDemoRole } from '@/app/actions/auth';
 import { buttonClass } from '@/components/Button';
-import { PhoneQr } from '@/components/home/PhoneQr';
-import { RolePicker } from '@/components/RolePicker';
-import { SiteFooter, SiteHeader } from '@/components/SiteChrome';
-import { findDemoRole } from '@/lib/demo/roles';
+import { OriginBadge } from '@/components/OriginBadge';
+import { SiteFooter, Wordmark } from '@/components/SiteChrome';
 import { t } from '@/lib/i18n';
-import { UNDERSTAND } from '@/lib/nav';
 
-const ROLES = [
-  { key: 'coordination', label: 'ministry' },
-  { key: 'centrale', label: 'central' },
-  { key: 'ordre', label: 'order' },
-  { key: 'grossiste', label: 'wholesaler' },
+const PATHS = [
+  { key: 'patient', href: '/medicaments?recherche=1', icon: Search },
+  { key: 'pharmacy', href: '/connexion/pharmacie', icon: BriefcaseMedical },
+  { key: 'wholesaler', href: '/connexion/grossiste', icon: Truck },
 ] as const;
 
-const door = 'flex min-h-14 w-full items-center gap-3 px-2 py-3 text-start font-semibold text-ink no-underline hover:bg-surface-subtle hover:text-ink sm:px-4';
-const arrow = 'ms-auto shrink-0 text-ink-muted';
+const STEPS = [
+  { key: 'report', icon: ClipboardList },
+  { key: 'review', icon: Waypoints },
+  { key: 'respond', icon: Truck },
+] as const;
+
+const EXPLORE = [
+  { key: 'directory', href: '/pharmacies', icon: MapPin },
+  { key: 'replay', href: '/retour', icon: ClipboardList },
+  { key: 'method', href: '/methode', icon: Waypoints },
+] as const;
 
 export default async function HomePage({ searchParams }: PageProps<'/'>) {
   const { erreur } = await searchParams;
@@ -25,73 +30,104 @@ export default async function HomePage({ searchParams }: PageProps<'/'>) {
 
   return (
     <>
-      <SiteHeader compact />
-      <main id="contenu" className="flex-1 bg-page">
-        <section className="stage bg-stage text-on-stage">
-          <div className="mx-auto flex max-w-7xl flex-col items-start gap-5 px-4 py-9 sm:px-6 sm:py-16 lg:px-8">
-            <h1 className="max-w-[23ch] text-[2rem] leading-tight font-semibold tracking-tight text-balance sm:text-5xl">
-              {t('core.home.entry.title')}
-            </h1>
-            <Link href="/scenario" data-button className={buttonClass('stage')}>
-              {t('core.home.entry.demo')} <ArrowRight size={18} aria-hidden="true" />
-            </Link>
-            <p className="text-sm text-on-stage-muted sm:text-base">{t('core.home.entry.caption')}</p>
-          </div>
-        </section>
+      <header className="home-masthead">
+        <div className="home-wrap home-nav">
+          <Wordmark />
+          <nav aria-label={t('core.redesign.navLabel')} className="flex items-center gap-x-6">
+            <Link href="/scenario" className="home-nav-link hidden sm:inline-flex">{t('core.redesign.scenario')}</Link>
+            <Link href="/medicaments?recherche=1" className="home-nav-link hidden md:inline-flex">{t('core.redesign.search')}</Link>
+            <a href="#roles" className="home-nav-link">{t('core.redesign.professionals')}</a>
+          </nav>
+        </div>
+      </header>
 
-        <div id="roles" className="mx-auto flex max-w-7xl scroll-mt-4 flex-col gap-6 px-4 py-5 sm:px-6 sm:py-8 lg:px-8">
-          {signInError ? <p role="alert" className="text-level-confirmed">{signInError}</p> : null}
-          <ul className="divide-y divide-line border-y border-line sm:grid sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-            <li>
-              <Link href="/medicaments?recherche=1" className={door}>
-                <Search size={20} aria-hidden="true" className="shrink-0 text-brand" />
-                {t('core.home.entry.patient')}
-                <ChevronRight size={18} aria-hidden="true" className={arrow} />
+      <main id="contenu" className="home-read flex-1">
+        <div className="home-wrap">
+          <section className="home-hero" aria-labelledby="accroche">
+            <div className="home-hero-copy">
+              <h1 id="accroche">{t('core.redesign.headline')}</h1>
+              <p>{t('core.redesign.lead')}</p>
+              <div className="flex flex-wrap gap-2.5">
+                <Link href="/scenario" className={buttonClass('primary', 'min-h-12 rounded-full')}>
+                  {t('core.home.entry.demo')} <ArrowRight size={18} aria-hidden="true" />
+                </Link>
+                <Link href="/medicaments?recherche=1" className={buttonClass('secondary', 'home-search-action rounded-full')}>
+                  {t('core.redesign.search')}
+                </Link>
+              </div>
+            </div>
+            <div className="home-hero-photo">
+              <Image
+                src="/brand/pharmacy-counter.webp"
+                alt={t('core.redesign.photoAlt')}
+                fill
+                sizes="(min-width: 1100px) 52vw, (min-width: 720px) 46vw, 100vw"
+                fetchPriority="high"
+                unoptimized
+              />
+            </div>
+          </section>
+
+          <section className="home-story home-chapter" aria-labelledby="scenario-titre">
+            <div className="home-story-copy">
+              <h2 id="scenario-titre">{t('core.redesign.storyTitle')}</h2>
+              <p>{t('core.redesign.storyBody')}</p>
+              <Link href="/scenario" className="home-inline-link">
+                {t('core.redesign.storyLink')} <ArrowRight size={17} aria-hidden="true" />
               </Link>
-            </li>
-            <li>
-              <form action={signInAsDemoRole}>
-                <button name="role" value="pharmacie-tunis" type="submit" className={door}>
-                  <BriefcaseMedical size={20} aria-hidden="true" className="shrink-0 text-brand" />
-                  {t('core.home.entry.pharmacy')}
-                  <ChevronRight size={18} aria-hidden="true" className={arrow} />
-                </button>
-              </form>
-            </li>
-            <li>
-              <details>
-                <summary className={`${door} group cursor-pointer list-none [&::-webkit-details-marker]:hidden`}>
-                  <Waypoints size={20} aria-hidden="true" className="shrink-0 text-brand" />
-                  {t('core.home.entry.coordination')}
-                  <ChevronRight size={18} aria-hidden="true" className={`${arrow} group-[[open]>summary]:rotate-90`} />
-                </summary>
-                <form action={signInAsDemoRole}>
-                  <ul className="divide-y divide-line border-t border-line">
-                    {ROLES.map(({ key, label }) => (
-                      <li key={key}>
-                        <button type="submit" name="role" value={key} aria-label={t('core.roles.signInAs', { role: t(findDemoRole(key)!.labelKey) })} className="min-h-12 w-full px-4 text-start text-brand hover:bg-surface-subtle">
-                          {t(`core.home.entry.roles.${label}`)}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </form>
-              </details>
-            </li>
-          </ul>
-          <details>
-            <summary className="flex min-h-12 cursor-pointer items-center font-medium text-brand underline underline-offset-4">{t('core.home.entry.more')}</summary>
-            <ul className="flex flex-wrap gap-x-5">
-              {([...UNDERSTAND, { href: '/ruptures-passees', label: 'public.nav.past' }, { href: '/bibliotheque', label: 'public.nav.library' }, { href: '/status', label: 'core.home.statusLink' }] as const).map(({ href, label }) => (
-                <li key={href}><Link href={href} className="inline-flex min-h-12 items-center">{t(label)}</Link></li>
+            </div>
+            <div className="home-story-process">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <span className="font-medium">{t('core.redesign.storyEvent')}</span>
+                <OriginBadge origin="simulated" />
+              </div>
+              <ol className="home-process">
+                {STEPS.map(({ key, icon: Icon }) => (
+                  <li key={key}>
+                    <span className="home-process-stop"><Icon size={17} aria-hidden="true" /></span>
+                    <span>{t(`core.redesign.steps.${key}`)}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </section>
+
+          <section id="roles" className="home-roles home-chapter" aria-labelledby="roles-titre">
+            <h2 id="roles-titre">{t('core.redesign.rolesTitle')}</h2>
+            {signInError ? <p role="alert" className="mt-4 text-level-confirmed">{signInError}</p> : null}
+            <ul className="home-role-list">
+              {PATHS.map(({ key, href, icon: Icon }) => (
+                <li key={key}>
+                  <Link href={href} className="home-role-link">
+                    <Icon size={25} strokeWidth={1.6} aria-hidden="true" />
+                    <span className="min-w-0">
+                      <strong>{t(`core.redesign.roles.${key}.title`)}</strong>
+                      <span>{t(`core.redesign.roles.${key}.body`)}</span>
+                    </span>
+                    <ArrowRight size={19} aria-hidden="true" className="home-arrow" />
+                  </Link>
+                </li>
               ))}
             </ul>
-            <details className="mt-3">
-              <summary className="flex min-h-12 cursor-pointer items-center font-medium text-brand">{t('core.home.rolesTitle')}</summary>
-              <p className="mb-4 text-ink-muted">{t('core.home.rolesNote')}</p>
-              <RolePicker publicExtra={<PhoneQr />} />
-            </details>
-          </details>
+          </section>
+
+          <section className="home-explore home-chapter" aria-labelledby="explorer-titre">
+            <div>
+              <h2 id="explorer-titre">{t('core.redesign.exploreTitle')}</h2>
+              <p>{t('core.redesign.exploreBody')}</p>
+            </div>
+            <ul>
+              {EXPLORE.map(({ key, href, icon: Icon }) => (
+                <li key={key}>
+                  <Link href={href} className="home-explore-link">
+                    <Icon size={21} strokeWidth={1.7} aria-hidden="true" />
+                    <span>{t(`core.redesign.explore.${key}`)}</span>
+                    <ArrowRight size={17} aria-hidden="true" className="home-arrow" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
         </div>
       </main>
       <SiteFooter />

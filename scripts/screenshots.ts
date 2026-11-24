@@ -110,18 +110,11 @@ export const PREVIEW_SHOTS: Shot[] = [
 ];
 
 async function signIn(page: Page, role: string) {
-  await page.goto(`${BASE}/`, { waitUntil: 'domcontentloaded' });
-  let button = page.locator(`button[name="role"][value="${role}"]:visible`);
-  if (!(await button.count()) && await page.getByText('Je coordonne', { exact: true }).count()) {
-    await page.getByText('Je coordonne', { exact: true }).click();
-    if (!(await button.count())) {
-      await page.getByText('En savoir plus', { exact: true }).click();
-      await page.getByText('Choisissez un rôle', { exact: true }).click();
-    }
-    button = button.first();
-  }
+  await page.goto(`${BASE}/scenario#espaces-demo`, { waitUntil: 'domcontentloaded' });
+  await page.locator('#espaces-demo > summary').click();
+  const button = page.locator(`#espaces-demo button[name="role"][value="${role}"]`);
   await Promise.all([
-    page.waitForURL((url) => url.pathname !== '/', { timeout: 60_000 }),
+    page.waitForURL((url) => url.pathname !== '/' && url.pathname !== '/scenario', { timeout: 60_000 }),
     button.click(),
   ]);
 }
@@ -154,10 +147,10 @@ async function take(browser: Browser, shot: Shot, width: number, out: string, qu
       const reflows = await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
       if (!reflows) throw new Error('Horizontal overflow');
       if (shot.name === 's7-home') {
-        const colour = await page.locator('main .stage').evaluate((stage) => getComputedStyle(stage).backgroundColor);
-        if (colour !== 'rgb(38, 22, 56)') throw new Error('The stage stylesheet did not load');
-        const doors = await page.locator('#roles > ul').boundingBox();
-        if (!doors || doors.y + doors.height > height) throw new Error('The three doors do not fit in the first viewport');
+        const colour = await page.locator('main').evaluate((main) => getComputedStyle(main).backgroundColor);
+        if (colour !== 'rgb(246, 242, 236)') throw new Error('The homepage stylesheet did not load');
+        const demo = await page.getByRole('link', { name: 'Essayer la démo', exact: true }).boundingBox();
+        if (!demo || demo.y + demo.height > height) throw new Error('The demo CTA falls below the first viewport');
       }
     }
     if (quality) {

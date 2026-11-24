@@ -9,6 +9,62 @@
     "skipToContent": "Aller au contenu",
     "loading": "Chargement de la page…"
   },
+  "redesign": {
+    "navLabel": "Navigation principale",
+    "scenario": "Le scénario",
+    "search": "Chercher un médicament",
+    "professionals": "Les espaces",
+    "headline": "Repérer les ruptures de médicaments plus tôt.",
+    "lead": "En Tunisie, les pharmacies signalent les commandes non livrées, les patients vérifient la disponibilité et la coordination peut agir.",
+    "photoAlt": "Dans une officine, une pharmacienne vérifie une livraison sur le comptoir.",
+    "storyTitle": "Du comptoir à la décision",
+    "storyBody": "Suivez une commande non livrée et voyez ce qui change quand plusieurs pharmacies signalent le même problème.",
+    "storyLink": "Suivre le scénario",
+    "storyEvent": "Commande non livrée",
+    "steps": {
+      "report": "La pharmacie signale",
+      "review": "Les signalements se recoupent",
+      "respond": "La coordination peut agir"
+    },
+    "rolesTitle": "Accéder à votre espace",
+    "roles": {
+      "patient": { "title": "Patient", "body": "Vérifier un statut ou demander une disponibilité. Accès anonyme." },
+      "pharmacy": { "title": "Pharmacie", "body": "Signaler une commande non livrée et répondre aux demandes." },
+      "wholesaler": { "title": "Grossiste", "body": "Suivre les signaux et comparer deux répartitions d’un arrivage." }
+    },
+    "exploreTitle": "Comprendre ce qui se passe",
+    "exploreBody": "Retrouvez les pharmacies près de vous, les ruptures documentées et les règles qui déclenchent un signal.",
+    "explore": {
+      "directory": "Trouver une pharmacie",
+      "replay": "Rejouer des ruptures documentées",
+      "method": "Comprendre la méthode"
+    },
+    "demoRoles": "Explorer les espaces de démonstration"
+  },
+  "access": {
+    "email": "Adresse e-mail professionnelle",
+    "password": "Mot de passe",
+    "submit": "Se connecter",
+    "pending": "Connexion…",
+    "signOut": "Se déconnecter",
+    "invalid": "Vérifiez votre adresse e-mail et votre mot de passe, puis réessayez.",
+    "busy": "Trop de tentatives. Réessayez dans quelques minutes.",
+    "demo": "Essayer avec le compte de démonstration",
+    "invitation": "Utilisez le lien ou les identifiants transmis par l’équipe RuptureWatch.",
+    "home": "Retour à l’accueil",
+    "pharmacie": {
+      "title": "Espace pharmacie",
+      "description": "Accédez à vos signalements, aux médicaments suivis et aux demandes reçues."
+    },
+    "grossiste": {
+      "title": "Espace grossiste",
+      "description": "Suivez les signaux, comparez les répartitions et retrouvez vos décisions."
+    },
+    "institution": {
+      "title": "Accès institutionnel",
+      "description": "Espace réservé aux comptes habilités par l’équipe RuptureWatch."
+    }
+  },
   "decisionBlock": {
     "next": "Prochaine action",
     "why": "Pourquoi ?",

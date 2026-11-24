@@ -1,4 +1,4 @@
-import { ArrowLeftRight } from 'lucide-react';
+import { ArrowLeftRight, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { switchRole } from '@/app/actions/auth';
@@ -33,6 +33,8 @@ export function SwitchRole({ session, tone = 'dark' }: { session: CurrentSession
   // Testers get no role switch: their account lives only in this browser's session.
   if (session.organisation.origin === 'tester') return null;
   const dark = tone === 'dark';
+  const demo = session.organisation.origin === 'simulated';
+  const Icon = demo ? ArrowLeftRight : LogOut;
   return (
     <form action={switchRole}>
       <button
@@ -43,18 +45,19 @@ export function SwitchRole({ session, tone = 'dark' }: { session: CurrentSession
             : 'flex min-h-14 w-full items-center gap-3 px-4 text-start text-ink hover:bg-surface-subtle'
         }
       >
-        <ArrowLeftRight size={18} strokeWidth={1.75} aria-hidden="true" className={dark ? 'text-sidebar-muted' : 'text-ink-muted'} />
-        {t('core.roles.switch')}
+        <Icon size={18} strokeWidth={1.75} aria-hidden="true" className={dark ? 'text-sidebar-muted' : 'text-ink-muted'} />
+        {t(demo ? 'core.roles.switch' : 'core.access.signOut')}
       </button>
     </form>
   );
 }
 
-function Understand() {
+function Understand({ demo }: { demo: boolean }) {
+  const links = demo ? UNDERSTAND : UNDERSTAND.filter(({ href }) => href === '/methode');
   return (
     <div className="flex flex-col gap-1">
       <ul className="flex flex-col">
-        {UNDERSTAND.map((u) => (
+        {links.map((u) => (
           <li key={u.href}>
             <Link
               href={u.href}
@@ -81,7 +84,7 @@ function SidebarBody({ session, badges }: { session: CurrentSession; badges: Bad
           <details>
             <summary className="min-h-12 cursor-pointer content-center rounded-md px-3 text-sm text-sidebar-text hover:bg-sidebar-raised focus-visible:outline-sidebar-accent">{t('core.nav.items.more')}</summary>
             {secondary ? <SidebarNav items={secondary} /> : null}
-            <Understand />
+            <Understand demo={session.organisation.origin === 'simulated'} />
           </details>
         ) : null}
       </nav>

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { RolePicker } from '@/components/RolePicker';
 import { CompareCases } from '@/components/scenario/CompareCases';
 import { DecisionDemo } from '@/components/scenario/DecisionDemo';
 import { ScenarioPlayer } from '@/components/scenario/ScenarioPlayer';
@@ -23,6 +24,11 @@ export default function ScenarioPage() {
             <CompareCases />
           </details>
         </section>
+        <details id="espaces-demo" className="scroll-mt-4 border-t border-line pt-3">
+          <summary className="min-h-12 cursor-pointer content-center font-medium text-brand">{t('core.redesign.demoRoles')}</summary>
+          <p className="my-3 text-ink-muted">{t('core.home.rolesNote')}</p>
+          <RolePicker />
+        </details>
       </SiteMain>
       <SiteFooter />
     </>

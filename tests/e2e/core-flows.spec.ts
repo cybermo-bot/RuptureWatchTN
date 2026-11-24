@@ -6,21 +6,11 @@ import { expect, test, type Page } from '@playwright/test';
 const BASE = process.env.E2E_BASE_URL;
 
 async function signInAs(page: Page, role: string) {
-  await page.goto('/');
-  if (role === 'Pharmacie (Tunis)') {
-    await page.getByRole('button', { name: 'Je suis pharmacien' }).click();
-  } else {
-    const name = `Se connecter en tant que ${role}`;
-    await page.getByText('Je coordonne', { exact: true }).click();
-    const chooser = page.getByRole('button', { name, exact: true });
-    if (!(await chooser.isVisible())) {
-      await page.getByText('En savoir plus', { exact: true }).click();
-      await page.getByText('Choisissez un rôle', { exact: true }).click();
-    }
-    await chooser.click();
-  }
+  await page.goto('/scenario#espaces-demo');
+  await page.locator('#espaces-demo > summary').click();
+  await page.getByRole('button', { name: `Se connecter en tant que ${role}`, exact: true }).click();
   // The sign-in is a form post that redirects to the role's space: wait for it before moving on.
-  await page.waitForURL((url) => url.pathname !== '/', { timeout: 30_000 });
+  await page.waitForURL((url) => url.pathname !== '/' && url.pathname !== '/scenario', { timeout: 30_000 });
 }
 
 test.describe('pharmacy report, then coordination', () => {
