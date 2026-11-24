@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { PageHeader } from '@/components/PageHeader';
+import { CompareCases } from '@/components/scenario/CompareCases';
 import { ScenarioPlayer } from '@/components/scenario/ScenarioPlayer';
 import { SiteFooter, SiteHeader, SiteMain } from '@/components/SiteChrome';
 import { t } from '@/lib/i18n';
@@ -16,6 +17,7 @@ export default function ScenarioPage() {
       <SiteMain>
         <PageHeader title={t('core.scenario.title')} description={t('core.scenario.intro')} />
         <ScenarioPlayer />
+        <CompareCases />
         <Link href="/methode" className="flex min-h-12 w-fit items-center">
           {t('core.explanation.methodLink')}
         </Link>

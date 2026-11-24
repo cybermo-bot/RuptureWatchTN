@@ -24,6 +24,12 @@ Newest first. Each entry: what was decided, and why.
 - The shared link is the production address (`siteUrl()`), not the host that served the page, so a link shared from a preview still opens the real site.
 - Each medicine page has its own Open Graph card (`opengraph-image.tsx` beside the page, `medicineCard()` in `lib/og/card.tsx`): the medicine, its public status with the level's shape, the "Simulé" badge when it applies, the disclaimer. The page's Open Graph description carries the same lines. The card is in French: a link preview is fetched without the visitor's language. If the status cannot be read, the card says to check the page, never "Aucune rupture".
 
+### "Comparer les cas" on the scenario page (part 7, handoff C)
+
+- Under the scenario player, two named cases: "Signal réparti" and "Signal concentré". The same four fictional pharmacies report on the same days; only the governorate of the fourth changes (Sfax or Tunis). At day 4 the spread case reaches "confirmée" (`confirmed_threshold`) and the concentrated one stays "probable" (`single_governorate_cap`, gate two). The visitor can switch case at any step: the step stays, and a small table shows both levels at that step.
+- The recovery is the same in both cases: on day 10 a wholesaler announces an arrival, an upstream event that is not an input of `evaluate()` and changes no level; on days 19 and 20 two Tunis pharmacies report the medicine delivered again, after the quiet period, and the level becomes "levée".
+- `evaluate()` from `lib/signal`, in the browser, deterministic, nothing written (`lib/scenario/compare.ts`, tested against the acceptance: four in one governorate stay "probable", one moved confirms, only that report differs). "Ce qui manque" uses exact counts, as the cases are fictional. A line computes "à l'échelle d'un pilote" from the parameters (4 pharmacies up to 200 active members, then 2 %), and a link opens the threshold explorer on `/methode`. Its own module, so the ui-refresh changes to `lib/scenario/frames.ts` do not conflict.
+
 ### Ctrl+K in the consoles (part 8, item 10)
 
 - In the ministry's, hospital's and wholesaler's consoles, Ctrl+K (Cmd+K on a Mac), or the "Aller à un médicament" button for touch screens, opens a native `<dialog>`: type a brand or a molecule, with or without accents. It reuses the catalogue search (`/api/medicines/search`: `search_molecules` and `search_medicines`, pg_trgm). The medicines with a level in this space match at once, before the catalogue answers.
