@@ -56,7 +56,7 @@ components:
 
 **Creative North Star: “Au comptoir”**
 
-Start at the pharmacy shelf. Use a real, credited photograph of pharmacy work and let the next chapter explain how an undelivered order becomes a shortage signal. Present the pharmacist, wholesaler and anonymous patient paths by what each person can do.
+Start at the pharmacy shelf. Use a real, credited photograph of pharmacy work and let the next chapter explain how an undelivered order becomes a shortage signal. Present the anonymous patient, pharmacist, wholesaler and institution paths by what each person can do. Every space is one click from the home page.
 
 ## Colors
 

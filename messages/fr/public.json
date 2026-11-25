@@ -249,5 +249,11 @@
     "fromDate": "depuis le {date}",
     "noLevel": "Aucune rupture confirmée sur les {days} derniers jours.",
     "note": "Seules les périodes de rupture confirmée puis levée apparaissent ici."
+  },
+  "home": {
+    "institution": {
+      "title": "Institutions",
+      "body": "Espaces conçus pour le Ministère de la Santé, la Pharmacie centrale, l’Ordre des pharmaciens et les pharmacies hospitalières. Organisations fictives."
+    }
   }
 }
