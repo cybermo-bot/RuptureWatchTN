@@ -421,14 +421,20 @@
   .home-story { grid-template-columns: minmax(0, 0.83fr) minmax(0, 1.17fr); }
   .home-story-process { padding: 0 0 0 1.5rem; border-block-start: 0; border-inline-start: 1px solid #a8c2cd; }
   .home-process li { font-size: 1rem; }
-  .home-role-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  /* Four doors: two by two, then one row on wide screens. */
+  .home-role-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .home-role-list li + li { border-block-start: 0; border-inline-start: 1px solid var(--line); }
+  .home-role-list li:nth-child(2n + 1) { border-inline-start: 0; }
+  .home-role-list li:nth-child(n + 3) { border-block-start: 1px solid var(--line); }
   .home-role-link { min-height: 7rem; padding-inline: clamp(0.65rem, 2vw, 1.6rem); }
   .home-explore { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 }
 
 @media (min-width: 68.75rem) {
   .home-hero { padding-block-end: 2rem; }
+  .home-role-list { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .home-role-list li:nth-child(n + 2) { border-inline-start: 1px solid var(--line); }
+  .home-role-list li:nth-child(n + 3) { border-block-start: 0; }
   .home-hero-photo { aspect-ratio: 1.65; }
 }
 

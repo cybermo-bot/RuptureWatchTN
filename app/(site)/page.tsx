@@ -1,16 +1,18 @@
-import { ArrowRight, BriefcaseMedical, ClipboardList, MapPin, Search, Truck, Waypoints } from 'lucide-react';
+import { ArrowRight, BriefcaseMedical, ClipboardList, Landmark, MapPin, Search, Truck, Waypoints } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { buttonClass } from '@/components/Button';
 import { OriginBadge } from '@/components/OriginBadge';
 import { SiteFooter, Wordmark } from '@/components/SiteChrome';
-import { t } from '@/lib/i18n';
+import { type MessageKey, t } from '@/lib/i18n';
 
+// Every space is one click from here: the patient search and the three sign-in doors.
 const PATHS = [
-  { key: 'patient', href: '/medicaments?recherche=1', icon: Search },
-  { key: 'pharmacy', href: '/connexion/pharmacie', icon: BriefcaseMedical },
-  { key: 'wholesaler', href: '/connexion/grossiste', icon: Truck },
-] as const;
+  { key: 'patient', href: '/medicaments?recherche=1', icon: Search, title: 'core.redesign.roles.patient.title', body: 'core.redesign.roles.patient.body' },
+  { key: 'pharmacy', href: '/connexion/pharmacie', icon: BriefcaseMedical, title: 'core.redesign.roles.pharmacy.title', body: 'core.redesign.roles.pharmacy.body' },
+  { key: 'wholesaler', href: '/connexion/grossiste', icon: Truck, title: 'core.redesign.roles.wholesaler.title', body: 'core.redesign.roles.wholesaler.body' },
+  { key: 'institution', href: '/connexion/institution', icon: Landmark, title: 'public.home.institution.title', body: 'public.home.institution.body' },
+] as const satisfies readonly { key: string; href: string; icon: unknown; title: MessageKey; body: MessageKey }[];
 
 const STEPS = [
   { key: 'report', icon: ClipboardList },
@@ -96,13 +98,13 @@ export default async function HomePage({ searchParams }: PageProps<'/'>) {
             <h2 id="roles-titre">{t('core.redesign.rolesTitle')}</h2>
             {signInError ? <p role="alert" className="mt-4 text-level-confirmed">{signInError}</p> : null}
             <ul className="home-role-list">
-              {PATHS.map(({ key, href, icon: Icon }) => (
+              {PATHS.map(({ key, href, icon: Icon, title, body }) => (
                 <li key={key}>
                   <Link href={href} className="home-role-link">
                     <Icon size={25} strokeWidth={1.6} aria-hidden="true" />
                     <span className="min-w-0">
-                      <strong>{t(`core.redesign.roles.${key}.title`)}</strong>
-                      <span>{t(`core.redesign.roles.${key}.body`)}</span>
+                      <strong>{t(title)}</strong>
+                      <span>{t(body)}</span>
                     </span>
                     <ArrowRight size={19} aria-hidden="true" className="home-arrow" />
                   </Link>
