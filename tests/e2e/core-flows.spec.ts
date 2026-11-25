@@ -128,6 +128,11 @@ test.describe('patient request', () => {
     // The patient's page refreshes on its own and shows the pharmacy.
     await expect(patient.getByText('Pharmacie démo A, Tunis').first()).toBeVisible({ timeout: 30_000 });
     await expect(patient.getByText('Appelez avant de vous déplacer.', { exact: false })).toBeVisible();
+
+    const home = new URL('/', patient.url()).href;
+    await patient.getByRole('link', { name: 'RuptureWatch TN, accueil du site' }).click();
+    await expect(patient).toHaveURL(home);
+    await expect(patient.getByRole('heading', { level: 1 })).toHaveText('Repérer les ruptures de médicaments plus tôt.');
   });
 
   test('two strengths of ANTIOMAL retain their own presentation and answer', async ({ browser }) => {

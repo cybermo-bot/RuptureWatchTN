@@ -15,9 +15,8 @@ export function PublicHeader({ locale }: { locale: Locale }) {
     <header className="sticky top-0 z-[1100] border-b border-line bg-surface">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-x-6 px-4 sm:px-8">
         <div className="flex min-w-0 items-center gap-6">
-          <Link href="/medicaments" className="inline-flex min-h-14 items-center no-underline">
+          <Link href="/" aria-label={t('public.shell.wordmarkTitle')} className="inline-flex min-h-14 items-center no-underline">
             <Logo compact />
-            <span className="sr-only">{t('public.shell.wordmarkTitle')}</span>
           </Link>
           <PublicNav locale={locale} variant="top" />
         </div>

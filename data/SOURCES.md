@@ -86,3 +86,10 @@ Test fixtures in `tests/fixtures/whatsapp/` follow the documented example payloa
 - **File:** `data/reference/foreign_notices.csv`, imported with `npm run notices:import` (dry run first, then `--apply`).
 - **Use:** foreign notices in the warning logic (alone they never raise a medicine above "sous surveillance"). Each notice names its regulator.
 - **Terms:** each notice keeps its regulator's terms; cited by regulator and link.
+
+## Homepage pharmacy photograph
+
+- **Credit:** National Cancer Institute, on Unsplash.
+- **Source:** [Pharmacist reaching for medication on a shelf](https://unsplash.com/photos/pharmacist-reaching-for-medication-on-shelf-byGTytEGjBo).
+- **Licence:** [Unsplash License](https://unsplash.com/license), as identified on the source page.
+- **Use:** `public/brand/pharmacy-inventory.webp`, resized and encoded as WebP for the homepage. The photograph provides editorial context for pharmacy work.

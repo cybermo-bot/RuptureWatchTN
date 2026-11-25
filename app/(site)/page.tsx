@@ -58,7 +58,7 @@ export default async function HomePage({ searchParams }: PageProps<'/'>) {
             </div>
             <div className="home-hero-photo">
               <Image
-                src="/brand/pharmacy-counter.webp"
+                src="/brand/pharmacy-inventory.webp"
                 alt={t('core.redesign.photoAlt')}
                 fill
                 sizes="(min-width: 1100px) 52vw, (min-width: 720px) 46vw, 100vw"

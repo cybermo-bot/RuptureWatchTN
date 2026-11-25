@@ -56,7 +56,7 @@ components:
 
 **Creative North Star: “Au comptoir”**
 
-Start at a real task in a Tunisian pharmacy. Use a single editorial photograph of a delivery being checked and let the next chapter explain how that work becomes a shortage signal. Present the pharmacist, wholesaler and anonymous patient paths by what each person can do.
+Start at the pharmacy shelf. Use a real, credited photograph of pharmacy work and let the next chapter explain how an undelivered order becomes a shortage signal. Present the pharmacist, wholesaler and anonymous patient paths by what each person can do.
 
 ## Colors
 
@@ -76,10 +76,12 @@ Use a modest radius on actions, workspace panels and story chapters. Separate ro
 
 ## Components
 
+Use the custom RW monogram in the wordmark, app icons and share cards. The header wordmark opens the main homepage from every patient page.
+
 In a daily activity chart, give the last nonzero day a stronger shade, keep small counts hatched and include the text table. The powder-blue story panel shows three steps with their labels. Its small scroll transition runs only when motion is enabled.
 
 ## Do's and Don'ts
 
 - Give each link a destination that helps with a real task.
-- Use editorial imagery about pharmacy work. The homepage illustration depicts a fictional pharmacy.
+- Use licensed, documentary photography for pharmacy work. Record the credit and terms in `data/SOURCES.md`.
 - Keep numerical evidence tied to a source, period and origin, and use meaningful empty states.

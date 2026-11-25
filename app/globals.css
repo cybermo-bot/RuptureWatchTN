@@ -253,7 +253,7 @@
 
 .home-hero-photo img {
   object-fit: cover;
-  object-position: 61% 45%;
+  object-position: center 42%;
 }
 
 .home-read h2 {
