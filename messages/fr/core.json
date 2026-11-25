@@ -888,6 +888,11 @@
         "name": "Avis de pénurie d’autorités étrangères",
         "use": "Les avis étrangers dans les règles d’alerte. Seuls, ils ne font jamais dépasser « sous surveillance ».",
         "licence": "Compilé par l’équipe à partir des pages publiques des autorités ; chaque avis nomme son autorité et son lien."
+      },
+      "unsplash": {
+        "name": "Photographie de la page d’accueil",
+        "use": "La photographie qui ouvre la page d’accueil : un médicament pris sur le rayonnage d’une pharmacie. Photographie du National Cancer Institute, publiée sur Unsplash.",
+        "licence": "Licence Unsplash, telle qu’indiquée sur la page de la photographie."
       }
     },
     "backHome": "Retour à l’accueil",

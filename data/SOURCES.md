@@ -87,7 +87,7 @@ Test fixtures in `tests/fixtures/whatsapp/` follow the documented example payloa
 - **Use:** foreign notices in the warning logic (alone they never raise a medicine above "sous surveillance"). Each notice names its regulator.
 - **Terms:** each notice keeps its regulator's terms; cited by regulator and link.
 
-## Homepage pharmacy photograph
+## Unsplash: homepage pharmacy photograph
 
 - **Credit:** National Cancer Institute, on Unsplash.
 - **Source:** [Pharmacist reaching for medication on a shelf](https://unsplash.com/photos/pharmacist-reaching-for-medication-on-shelf-byGTytEGjBo).
