@@ -120,7 +120,7 @@ tests/                unit and end-to-end tests
 
 Read `DESIGN.md` for the current design tokens and layout. The public opening uses cool neutrals (page `#F5F7F6`, band `#F3F6F5`), powder blue, and a dark blue action color. No cream or beige. Start with a pharmacy photograph and visible paths to the scenario and medicine search. Use successive sections to show how a report becomes a decision and where each role starts.
 
-- Keep the demo action visible at 360 × 800. Keep patient access anonymous. Present pharmacy and wholesaler sign-in separately. The team provides the institutional sign-in link to authorized users. Label the role demos and keep them in the scenario.
+- Keep the demo action visible at 360 × 800. Keep patient access anonymous. Present pharmacy and wholesaler sign-in separately. The team provides the institutional sign-in link to authorized users; that page also offers one labelled demo per institutional space. Label the role demos and keep them in the scenario.
 - Keep professional navigation compact and specific to the role. Use petrol for the rail and scenario, the cool neutral page for work areas, and blue for actions and selection.
 - Use IBM Plex Sans and its Arabic variant for text, IBM Plex Mono for figures and identifiers, the existing RuptureWatch wordmark, and Lucide icons next to words.
 - Keep a 48 px minimum tap target, visible keyboard focus and WCAG AA contrast. Respect reduced motion and let visitors scroll at their own pace.
