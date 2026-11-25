@@ -32,7 +32,7 @@ export default async function PharmacyHome() {
       {openRequests > 0 ? (
         <Link
           href="/pharmacie/demandes"
-          className="panel flex min-h-14 items-center gap-3 border-brand px-4 py-3 no-underline hover:bg-surface-subtle"
+          className="flex min-h-14 items-center gap-3 rounded-md bg-surface-subtle px-3 py-2 no-underline hover:bg-surface-subtle/60 sm:px-4"
         >
           <Inbox size={20} aria-hidden="true" className="shrink-0 text-brand" />
           <span className="flex-1 text-ink">
@@ -58,11 +58,9 @@ export default async function PharmacyHome() {
           ) : null}
         </div>
         {followed.length === 0 ? (
-          <div className="panel px-4">
-            <EmptyState afterRule title={t('core.pharmacy.followedEmptyTitle')} body={t('core.pharmacy.followedEmptyBody')} />
-          </div>
+          <EmptyState afterRule title={t('core.pharmacy.followedEmptyTitle')} body={t('core.pharmacy.followedEmptyBody')} />
         ) : (
-          <ul className="panel hairline-list overflow-hidden">
+          <ul className="hairline-list border-y border-line">
             {followed.map((m) => (
               <li key={m.moleculeId}>
                 <MoleculeRow molecule={m} href={`/pharmacie/molecule/${m.moleculeId}`} label={t('core.pharmacy.openMolecule', { molecule: m.name })} />

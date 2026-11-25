@@ -171,7 +171,7 @@ export function ScenarioPlayer() {
                 <span>{t('core.scenario.molecule')}</span>
                 <OriginBadge origin="simulated" tone="dark" />
               </p>
-              <h2 id="etape" className="text-xl leading-snug font-semibold text-on-stage sm:text-2xl">
+              <h2 id="etape" tabIndex={-1} className="text-xl leading-snug font-semibold text-on-stage sm:text-2xl">
                 {stepText(frame)}
               </h2>
               <p key={frame.index} className={`flex flex-wrap items-center gap-x-3 gap-y-1 ${frame.changed ? 'rw-stage-pulse' : ''}`}>
@@ -201,7 +201,7 @@ export function ScenarioPlayer() {
         </section>
 
         {/* Region 2: why this level, who can act. */}
-        <aside aria-label={t('core.scenario.paneLabel')} className="panel flex flex-col gap-6 p-5 lg:col-span-4">
+        <aside aria-label={t('core.scenario.paneLabel')} className="flex flex-col gap-5 border-t border-line pt-4 lg:col-span-4 lg:border-s lg:border-t-0 lg:ps-5 lg:pt-2">
           <section aria-labelledby="pourquoi" className="flex flex-col gap-2">
             <h2 id="pourquoi" className="text-lg font-semibold text-ink">
               {t('core.scenario.whyTitle')}
@@ -250,20 +250,34 @@ export function ScenarioPlayer() {
         </aside>
       </div>
 
-      <section aria-labelledby="scenario-historique" className="panel flex flex-col gap-3 p-5">
-        <h2 id="scenario-historique" className="flex flex-wrap items-center gap-2 text-sm font-medium text-ink-muted">
+      <section aria-labelledby="scenario-historique" className="flex flex-col gap-2 border-t border-line pt-4">
+        <h2 id="scenario-historique" className="flex flex-wrap items-center gap-2 text-lg font-semibold text-ink">
           {t('core.scenario.historyTitle')}
           <OriginBadge origin="simulated" />
         </h2>
         {changes.length === 0 ? (
           <p className="text-sm text-ink-muted">{t('core.scenario.historyEmpty')}</p>
         ) : (
-          <ol className="hairline-list">
+          <ol className="hairline-list border-y border-line">
             {changes.map((f) => (
-              <li key={f.index} className="flex flex-wrap items-center gap-x-3 gap-y-1 py-2 text-sm">
-                <span className="font-mono text-ink-muted">{t('core.scenario.day', { day: f.day })}</span>
-                <LevelBadge level={f.level} />
-                <RuleDetails rule={f.rule} />
+              <li key={f.index}>
+                <button
+                  type="button"
+                  aria-current={f.index === index ? 'step' : undefined}
+                  onClick={() => {
+                    setPlaying(false);
+                    setIndex(f.index);
+                    document.getElementById('etape')?.focus();
+                  }}
+                  className="grid min-h-12 w-full cursor-pointer grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-2 py-2 text-start text-sm hover:bg-surface-subtle aria-[current=step]:bg-surface-subtle sm:gap-4"
+                >
+                  <span className="font-mono text-ink-muted">{t('core.scenario.dayShort', { day: f.day })}</span>
+                  <span className="grid gap-0.5">
+                    <span className="font-medium text-ink">{stepText(f)}</span>
+                    <LevelBadge level={f.level} />
+                  </span>
+                  <ChevronRight size={18} aria-hidden="true" className="text-brand" />
+                </button>
               </li>
             ))}
           </ol>
