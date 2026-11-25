@@ -1,7 +1,8 @@
-import { Download, FileText, UserPlus } from 'lucide-react';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { ButtonLink } from '@/components/Button';
-import { ActivityCharts, NationalMapPanel } from '@/components/coordination/MinistryPanels';
+import { DemandChart, NationalMapPanel, SourcesAndNews } from '@/components/coordination/MinistryPanels';
+import { MedicineDecision } from '@/components/coordination/MedicineDecision';
 import { SignalsDashboard } from '@/components/coordination/SignalsDashboard';
 import { ArrivalLine } from '@/components/institutions/Lines';
 import { LevelShape } from '@/components/LevelBadge';
@@ -11,7 +12,7 @@ import { PageHeader } from '@/components/PageHeader';
 import { RecentChangesList } from '@/components/RecentChanges';
 import { getCurrentSession } from '@/lib/auth/session';
 import { selectedParam } from '@/lib/coordination/dashboard';
-import { CHART_DAYS, DEMAND_FIGURE_DAYS, levelParam, loadMinistry } from '@/lib/coordination/ministry';
+import { DEMAND_FIGURE_DAYS, levelParam, loadMinistry } from '@/lib/coordination/ministry';
 import { createUserClient } from '@/lib/db/server';
 import { HOME_BY_TYPE } from '@/lib/demo/roles';
 import { t } from '@/lib/i18n';
@@ -33,6 +34,7 @@ export default async function CoordinationHome({ searchParams }: PageProps<'/coo
   const supabase = await createUserClient();
   const data = await loadMinistry(supabase, selectedParam(m), mapLevel);
   const selectedId = data.dashboard.selected?.molecule_id ?? null;
+  const priority = data.dashboard.signals[0];
 
   return (
     <div className="flex flex-col gap-6">
@@ -40,24 +42,22 @@ export default async function CoordinationHome({ searchParams }: PageProps<'/coo
         meta={t('core.orgTypes.coordinator')}
         title={t('core.space.titles.coordinator')}
         description={t('core.ministry.intro')}
-        actions={
-          <>
-            <ButtonLink href="/coordination/note" variant="secondary" className="min-h-11 px-4 text-sm">
-              <FileText size={16} aria-hidden="true" />
-              {t('core.ministry.noteLink')}
-            </ButtonLink>
-            <ButtonLink href="/coordination/export" variant="secondary" className="min-h-11 px-4 text-sm">
-              <Download size={16} aria-hidden="true" />
-              {t('core.coordination.exportLink')}
-            </ButtonLink>
-            <ButtonLink href="/coordination/invitation" variant="secondary" className="min-h-11 px-4 text-sm">
-              <UserPlus size={16} aria-hidden="true" />
-              {t('core.coordination.invite')}
-            </ButtonLink>
-          </>
-        }
       />
       <LiveRefresh table="signals" fallbackMs={4_000} />
+      <Panel title={t('core.decisionBlock.review')} titleId="a-examiner">
+        {priority ? (
+          <div className="grid gap-4 sm:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+            <div className="flex min-w-0 flex-col gap-2">
+              <h3 className="break-words text-xl font-semibold text-ink">
+                <Link href={`/coordination?m=${priority.molecule_id}#detail`}>{priority.molecule_name}</Link>
+              </h3>
+              <MedicineDecision signal={priority} action={<ButtonLink href="/coordination/note">{t('core.ministry.noteLink')}</ButtonLink>} />
+              <Link href="#journal-decisions" className="min-h-12 w-fit content-center text-sm">{t('core.decisionBlock.log')}</Link>
+            </div>
+            {data.activity ? <DemandChart rows={data.activity} /> : null}
+          </div>
+        ) : <p className="text-ink-muted">{t('core.coordination.emptyTitle')}</p>}
+      </Panel>
       <SignalsDashboard
         data={data.dashboard}
         basePath="/coordination"
@@ -101,8 +101,8 @@ export default async function CoordinationHome({ searchParams }: PageProps<'/coo
           </div>
         }
         detailNote={data.arrival ? <ArrivalLine arrival={data.arrival} /> : null}
-        afterSelected={data.activity ? <ActivityCharts rows={data.activity} days={CHART_DAYS} /> : null}
       />
+      <SourcesAndNews />
     </div>
   );
 }

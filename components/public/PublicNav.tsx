@@ -1,6 +1,6 @@
 'use client';
 
-import { History, MapPin, Search, type LucideIcon } from 'lucide-react';
+import { MapPin, Search, type LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { translator, type Locale, type MessageKey } from '@/lib/i18n';
@@ -12,7 +12,6 @@ import { translator, type Locale, type MessageKey } from '@/lib/i18n';
 const TABS: { href: string; label: MessageKey; icon: LucideIcon; match: RegExp }[] = [
   { href: '/medicaments', label: 'public.nav.medicines', icon: Search, match: /^\/(medicaments|demandes)(\/|$)/ },
   { href: '/pharmacies', label: 'public.nav.pharmacies', icon: MapPin, match: /^\/pharmacies(\/|$)/ },
-  { href: '/ruptures-passees', label: 'public.nav.past', icon: History, match: /^\/ruptures-passees(\/|$)/ },
 ];
 
 export function PublicNav({ locale, variant }: { locale: Locale; variant: 'top' | 'bottom' }) {
@@ -46,7 +45,7 @@ export function PublicNav({ locale, variant }: { locale: Locale; variant: 'top' 
   }
   return (
     <nav aria-label={t('public.nav.label')} className="safe-bottom fixed inset-x-0 bottom-0 z-[1100] border-t border-line bg-surface sm:hidden">
-      <ul className="grid grid-cols-3">
+      <ul className="grid grid-cols-2">
         {TABS.map(({ href, label, icon: Icon, match }) => {
           const current = match.test(pathname);
           return (

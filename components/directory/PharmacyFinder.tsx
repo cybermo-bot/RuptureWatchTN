@@ -34,6 +34,8 @@ import {
 import { parseOsmFile, type OsmFile } from '@/lib/directory/osm';
 import { translator, type Locale } from '@/lib/i18n';
 
+const NO_PHARMACY_PINS: MapMarker[] = [];
+
 export interface Area {
   code: string;
   name: string;
@@ -195,17 +197,6 @@ export function PharmacyFinder({ locale, areas }: { locale: Locale; areas: Area[
     () => (done ? done.entries.filter((e) => passesFilters(e.hours, filters, now, e.nowHours)) : []),
     [done, filters, now],
   );
-  const markers: MapMarker[] = useMemo(
-    () =>
-      visible.map((e) => ({
-        id: e.id,
-        lat: e.lat,
-        lng: e.lng,
-        label: e.name ?? t('directory.list.unnamed'),
-        detail: e.address ?? undefined,
-      })),
-    [visible, t],
-  );
 
   const formatNumber = (n: number, digits: number) =>
     new Intl.NumberFormat(locale === 'ar' ? 'ar-TN' : 'fr-TN', { maximumFractionDigits: digits }).format(n);
@@ -237,7 +228,7 @@ export function PharmacyFinder({ locale, areas }: { locale: Locale; areas: Area[
 
       <PatientMap
         key={mapView.key}
-        markers={markers}
+        markers={NO_PHARMACY_PINS}
         locale={locale}
         label={t('directory.list.mapLabel')}
         center={mapView.center}

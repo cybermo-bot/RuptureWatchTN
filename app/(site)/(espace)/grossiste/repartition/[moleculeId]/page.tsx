@@ -99,7 +99,6 @@ export default async function SplitPage({
                   {t("wholesaler.split.simulation")}
                 </span>
               ) : null}
-              <span className="text-sm">{t("wholesaler.split.simulationNeeds")}</span>
             </span>
             <span>{t("wholesaler.split.intro")}</span>
           </span>
@@ -130,13 +129,9 @@ export default async function SplitPage({
         }
       />
 
-      <section
-        aria-labelledby="parametres"
-        className="panel flex flex-col gap-2 p-5"
-      >
-        <h2 id="parametres" className="font-semibold text-ink">
-          {t("wholesaler.split.paramsTitle")}
-        </h2>
+      <details className="panel px-5">
+        <summary className="min-h-12 cursor-pointer content-center font-medium text-brand">{t('core.decisionBlock.why')}</summary>
+        <h2 className="mb-2 font-semibold text-ink">{t("wholesaler.split.paramsTitle")}</h2>
         <ul className="flex flex-col gap-1 text-ink">
           <li>
             {t("wholesaler.split.paramReserve", {
@@ -150,10 +145,10 @@ export default async function SplitPage({
           </li>
           <li>{t("wholesaler.split.cap")}</li>
         </ul>
-        <p className="text-sm text-ink-muted">
+        <p className="pb-4 text-sm text-ink-muted">
           {t("wholesaler.split.paramsNote")}
         </p>
-      </section>
+      </details>
 
       <section
         aria-labelledby="historique-decisions"

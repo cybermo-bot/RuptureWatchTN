@@ -1,7 +1,7 @@
 {
   "shell": {
     "skipToContent": "Aller au contenu",
-    "wordmarkTitle": "RuptureWatch TN, alerte précoce sur les ruptures de médicaments",
+    "wordmarkTitle": "RuptureWatch TN, accueil du site",
     "title": "RuptureWatch TN, médicaments en Tunisie",
     "description": "Savoir si un médicament est en rupture confirmée, et quelles pharmacies proches l’ont. Sans compte, sans nom, sans numéro de téléphone.",
     "languageLabel": "Langue",
@@ -62,7 +62,20 @@
     "past": "Ruptures passées",
     "library": "Bibliothèque"
   },
+  "dosageForm": {
+    "tablet": "Comprimé",
+    "capsule": "Gélule",
+    "oralLiquid": "Sirop ou solution buvable",
+    "injectable": "Injectable",
+    "topical": "Crème ou pommade",
+    "drops": "Gouttes",
+    "suppository": "Suppositoire",
+    "sachet": "Sachet",
+    "inhaler": "Inhalateur",
+    "unknown": "Forme non précisée"
+  },
   "medicines": {
+    "boxedTablet": "{brand} {strength} mg, comprimé pelliculé, boîte de {units}",
     "intro": "Tapez le nom de la marque ou de la molécule, même incomplet. Vous saurez si une rupture est confirmée, et vous pourrez demander aux pharmacies proches.",
     "searchLabel": "Nom du médicament",
     "searchPlaceholder": "Ex. : Amlor, amlodipine",
@@ -104,8 +117,19 @@
     "simulationNote": "Ce statut vient des données de démonstration, pas de signalements réels."
   },
   "request": {
+    "product": "Quel produit cherchez-vous ?",
+    "anyBrand": "toute marque de {name}",
+    "scope": "Vous demandez : {name}, aux pharmacies participantes de {governorate}.",
+    "scopeBeforeArea": "Vous demandez : {name}. Choisissez le gouvernorat.",
+    "available": "Disponible",
+    "answeredAgo": {
+      "now": "à l’instant",
+      "minutes": "il y a {n} min",
+      "hours": "il y a {n} h",
+      "days": "il y a {n} j"
+    },
     "title": "Demander aux pharmacies proches",
-    "intro": "Demandez aux pharmacies proches si elles ont ce médicament. Nous ne demandons ni votre nom ni votre numéro.",
+    "intro": "Votre demande est anonyme. Seules les pharmacies participantes la reçoivent.",
     "areaTitle": "Où êtes-vous ?",
     "nearMe": "Près de moi",
     "nearMeHint": "Votre téléphone trouve votre gouvernorat à partir de votre position. Seul le gouvernorat nous est envoyé.",
@@ -114,7 +138,7 @@
     "outside": "Votre position n’est dans aucun gouvernorat de Tunisie. Choisissez-le dans la liste.",
     "denied": "Position non autorisée. Choisissez votre gouvernorat dans la liste.",
     "unavailable": "Position introuvable pour le moment. Choisissez votre gouvernorat dans la liste.",
-    "governorateLabel": "Ou choisissez votre gouvernorat",
+    "governorateLabel": "Choisissez votre gouvernorat",
     "choose": "Choisir…",
     "send": "Envoyer la demande",
     "sending": "Envoi…",

@@ -1,4 +1,4 @@
-import { ArrowLeftRight } from 'lucide-react';
+import { ArrowLeftRight, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { switchRole } from '@/app/actions/auth';
@@ -10,7 +10,7 @@ import { OriginBadge } from '@/components/OriginBadge';
 import type { CurrentSession } from '@/lib/auth/session';
 import { hintFor } from '@/lib/demo/hints';
 import { t } from '@/lib/i18n';
-import { NAV, PHARMACY_TABS, UNDERSTAND } from '@/lib/nav';
+import { MORE_NAV, NAV, PHARMACY_TABS, UNDERSTAND } from '@/lib/nav';
 
 // The professional spaces as an operations console: a fixed dark sidebar (logo, who you are,
 // the space's sections, "Changer de rôle"), a light content area. On phones the sidebar becomes
@@ -33,6 +33,8 @@ export function SwitchRole({ session, tone = 'dark' }: { session: CurrentSession
   // Testers get no role switch: their account lives only in this browser's session.
   if (session.organisation.origin === 'tester') return null;
   const dark = tone === 'dark';
+  const demo = session.organisation.origin === 'simulated';
+  const Icon = demo ? ArrowLeftRight : LogOut;
   return (
     <form action={switchRole}>
       <button
@@ -43,23 +45,23 @@ export function SwitchRole({ session, tone = 'dark' }: { session: CurrentSession
             : 'flex min-h-14 w-full items-center gap-3 px-4 text-start text-ink hover:bg-surface-subtle'
         }
       >
-        <ArrowLeftRight size={18} strokeWidth={1.75} aria-hidden="true" className={dark ? 'text-sidebar-muted' : 'text-ink-muted'} />
-        {t('core.roles.switch')}
+        <Icon size={18} strokeWidth={1.75} aria-hidden="true" className={dark ? 'text-sidebar-muted' : 'text-ink-muted'} />
+        {t(demo ? 'core.roles.switch' : 'core.access.signOut')}
       </button>
     </form>
   );
 }
 
-function Understand() {
+function Understand({ demo }: { demo: boolean }) {
+  const links = demo ? UNDERSTAND : UNDERSTAND.filter(({ href }) => href === '/methode');
   return (
     <div className="flex flex-col gap-1">
-      <p className="px-3 text-xs text-sidebar-muted">{t('core.nav.understand')}</p>
       <ul className="flex flex-col">
-        {UNDERSTAND.map((u) => (
+        {links.map((u) => (
           <li key={u.href}>
             <Link
               href={u.href}
-              className="flex min-h-10 items-center rounded-md px-3 text-sm text-sidebar-muted no-underline hover:bg-sidebar-raised hover:text-white focus-visible:outline-sidebar-accent"
+              className="flex min-h-12 items-center rounded-md px-3 text-sm text-sidebar-muted no-underline hover:bg-sidebar-raised hover:text-white focus-visible:outline-sidebar-accent"
             >
               {t(u.label)}
             </Link>
@@ -71,14 +73,22 @@ function Understand() {
 }
 
 function SidebarBody({ session, badges }: { session: CurrentSession; badges: Badges }) {
+  const type = session.organisation.type;
+  const secondary = MORE_NAV[type];
   return (
     <div className="flex flex-1 flex-col gap-6">
       <WhoAmI session={session} />
       <nav aria-label={t('core.nav.label')}>
-        <SidebarNav items={NAV[session.organisation.type]} badges={badges} />
+        <SidebarNav items={NAV[type]} badges={badges} />
+        {type !== 'pharmacy' ? (
+          <details>
+            <summary className="min-h-12 cursor-pointer content-center rounded-md px-3 text-sm text-sidebar-text hover:bg-sidebar-raised focus-visible:outline-sidebar-accent">{t('core.nav.items.more')}</summary>
+            {secondary ? <SidebarNav items={secondary} /> : null}
+            <Understand demo={session.organisation.origin === 'simulated'} />
+          </details>
+        ) : null}
       </nav>
       <div className="mt-auto flex flex-col gap-4 border-t border-sidebar-line pt-4">
-        <Understand />
         <SwitchRole session={session} />
       </div>
     </div>
@@ -141,8 +151,13 @@ export function ConsoleShell({
         id="contenu"
         className={`mx-auto w-full max-w-[90rem] flex-1 px-4 py-5 sm:px-6 lg:px-8 lg:py-8 print:max-w-none print:p-0 ${pharmacy ? 'pb-28 lg:pb-8' : ''}`}
       >
-        {hint ? <HintStrip type={session.organisation.type} hint={hint} /> : null}
         {children}
+        {hint ? (
+          <details className="mt-4 print:hidden">
+            <summary className="min-h-12 w-fit cursor-pointer content-center text-sm font-medium text-brand">{t('core.tryHint.label')}</summary>
+            <HintStrip type={session.organisation.type} hint={hint} />
+          </details>
+        ) : null}
       </main>
 
       {pharmacy ? <BottomTabs items={PHARMACY_TABS} badges={badges} /> : null}

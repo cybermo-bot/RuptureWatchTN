@@ -4,7 +4,7 @@ import type { Level } from '@/lib/signal';
 
 // The scenario's state timeline, drawn on the plum stage: one segment per step coloured by its
 // level up to the selected step (the steps still to come stay blank, so the outcome is not given
-// away), the changes so far annotated with their day and shape, and the citron dot on the selected
+// away), the changes so far annotated with their day and shape, and the blue dot on the selected
 // step. Used by /scenario and by the home page's hero, which shows one frozen moment. The same
 // sequence is given as a text list for screen readers.
 
@@ -41,9 +41,9 @@ export function StateTimeline({
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
       <div aria-hidden="true" className="relative pt-5">
-        {/* The selected step: a citron dot above the band. */}
+        {/* The selected step sits above the band. */}
         <span
-          className="absolute top-0 size-3 -translate-x-1/2 rounded-full bg-citron ring-2 ring-stage motion-safe:transition-[left] motion-safe:duration-200"
+          className="absolute top-0 size-3 -translate-x-1/2 rounded-full bg-scenario-accent ring-2 ring-stage motion-safe:transition-[left] motion-safe:duration-200"
           style={{ left: pos(selected) }}
         />
         <div className="flex h-3 gap-px overflow-hidden rounded-sm">

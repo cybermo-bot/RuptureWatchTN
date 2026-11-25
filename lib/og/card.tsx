@@ -11,9 +11,9 @@ import { Mark } from './mark';
 export const OG_SIZE = { width: 1200, height: 630 };
 export const OG_CONTENT_TYPE = 'image/png';
 
-const INK = '#241834';
-const MUTED = '#665775';
-const LINE = '#DDD4EA';
+const INK = '#153442';
+const MUTED = '#475E67';
+const LINE = '#CCD8DA';
 const LEVELS = [
   { key: 'watch', colour: '#8B5900' },
   { key: 'likely', colour: '#A94412' },

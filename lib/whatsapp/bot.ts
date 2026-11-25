@@ -68,6 +68,7 @@ export interface BotDeps {
 export interface OpenRequestSummary {
   requestId: string;
   moleculeName: string;
+  medicineLabel?: string | null;
   minutesLeft: number;
 }
 
@@ -121,7 +122,7 @@ async function requestList(pharmacy: LinkedPharmacy, deps: BotDeps): Promise<Out
     rows: open.slice(0, 10).map((r) => ({
       id: `rw:q:${r.requestId}`,
       title: r.moleculeName,
-      description: t('core.whatsapp.requestRow', { time: minutesText(r.minutesLeft) }),
+      description: r.medicineLabel ?? t('core.whatsapp.requestRow', { time: minutesText(r.minutesLeft) }),
     })),
     footer: open.length > 10 ? t('core.whatsapp.requestsMore') : undefined,
   };
@@ -132,7 +133,7 @@ async function requestQuestion(pharmacy: LinkedPharmacy, requestId: string, deps
   if (!request) return { type: 'buttons', body: t('core.whatsapp.answerUnknown'), buttons: [requestsButton()] };
   return {
     type: 'buttons',
-    body: t('core.whatsapp.requestQuestion', { name: request.moleculeName }),
+    body: t('core.whatsapp.requestQuestion', { name: request.medicineLabel ?? request.moleculeName }),
     buttons: [
       { id: `rw:a:${requestId}:show`, title: t('core.whatsapp.answerShow') },
       { id: `rw:a:${requestId}:anon`, title: t('core.whatsapp.answerAnonymous') },

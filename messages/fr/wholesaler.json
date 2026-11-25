@@ -20,7 +20,7 @@
     "paramsNote": "Des paramètres de conception proposés pour un pilote, à fixer avec les grossistes et la cellule de coordination. Ce ne sont pas des résultats.",
     "paramReserve": "Réserve hospitalière : {pct} % du stock",
     "paramPeriod": "Période couverte : {days} jours",
-    "cap": "Plafond de commande : en attente de validation clinique.",
+    "cap": "Plafond de commande : à fixer avec les grossistes et la coordination (en attente de validation). Le calculateur limite les allocations au besoin de la période.",
     "stockLabel": "Stock disponible (boîtes)",
     "compute": "Calculer la répartition",
     "stockInvalid": "Indiquez un nombre entier de boîtes, entre 1 et 10 000 000.",

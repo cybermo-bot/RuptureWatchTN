@@ -36,9 +36,8 @@ function pulse(selector: string) {
   });
 }
 
-export function LevelChangeWatcher({ items, governorates = [] }: { items: WatchedLevel[]; governorates?: { code: string; text: string }[] }) {
+export function LevelChangeWatcher({ items, map }: { items: WatchedLevel[]; map?: { moleculeId: string; codes: string[] } }) {
   const previous = useRef<Map<string, Level> | null>(null);
-  const previousGov = useRef<Map<string, string> | null>(null);
   const nextId = useRef(1);
   const [toasts, setToasts] = useState<Toast[]>([]);
 
@@ -54,18 +53,13 @@ export function LevelChangeWatcher({ items, governorates = [] }: { items: Watche
     }
     if (changed.length === 0) return;
     for (const item of items) if ((before.get(item.key) ?? 'none') !== item.level) pulse(`[data-pulse="${item.key}"]`);
+    if (map && before.has(map.moleculeId) && before.get(map.moleculeId) !== now.get(map.moleculeId)) {
+      for (const code of map.codes) pulse(`#detail path[data-code="${code}"]`);
+    }
     // Toasts are added after the commit, as the browser paints the new levels.
     const frame = requestAnimationFrame(() => setToasts((list) => [...list, ...changed].slice(-3)));
     return () => cancelAnimationFrame(frame);
-  }, [items]);
-
-  useEffect(() => {
-    const before = previousGov.current;
-    const now = new Map(governorates.map((g) => [g.code, g.text]));
-    previousGov.current = now;
-    if (!before) return;
-    for (const [code, text] of now) if (before.get(code) !== text) pulse(`path[data-code="${code}"]`);
-  }, [governorates]);
+  }, [items, map]);
 
   useEffect(() => {
     if (toasts.length === 0) return;

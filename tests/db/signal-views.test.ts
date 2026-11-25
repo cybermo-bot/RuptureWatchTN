@@ -133,7 +133,7 @@ describe('fix 2: no exact count under 3 for a signed-in caller', () => {
   });
 
   it('signal_events_view never returns 1 or 2 in a pharmacy count', async () => {
-    const { rows } = await as(db, user(USER.coordinator), (tx) => tx.query<Row>(`select * from public.signal_events_view()`));
+    const { rows } = await as(db, user(USER.coordinator), (tx) => tx.query<Row & { at: Date }>(`select * from public.signal_events_view()`));
     expect(rows.length).toBeGreaterThanOrEqual(5);
     for (const r of rows) {
       for (const key of ['pharmacies14d', 'pharmacies7d', 'deliveredAgainPharmacies', 'ignoredTooEarly']) {
@@ -142,8 +142,8 @@ describe('fix 2: no exact count under 3 for a signed-in caller', () => {
       if (r.evidence.pharmacies14d === '<3') expect(r.evidence.governorates14d).toBeNull();
     }
     // Newest first.
-    const times = rows.map((r) => (r as unknown as { at: string }).at);
-    expect([...times].sort().reverse()).toEqual(times);
+    const times = rows.map((r) => r.at.getTime());
+    expect([...times].sort((a, b) => b - a)).toEqual(times);
   });
 
   it('my_alerts returns only the caller’s alerts, with display counts', async () => {

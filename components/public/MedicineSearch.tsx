@@ -4,6 +4,7 @@ import { ChevronRight, Search } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useId, useState } from 'react';
 import { Input } from '@/components/Input';
+import { FormPicture } from '@/components/medicine/FormPicture';
 import { translator, type Locale } from '@/lib/i18n';
 import { Ltr } from './Ltr';
 
@@ -37,11 +38,12 @@ type State =
     }
   | { kind: 'error' };
 
-function ResultRow({ href, title, lines }: { href: string; title: string; lines: string[] }) {
+function ResultRow({ href, title, lines, locale, label }: { href: string; title: string; lines: string[]; locale: Locale; label?: string }) {
   return (
     <li>
       <Link href={href} className="flex min-h-14 items-center justify-between gap-4 px-4 py-3 no-underline hover:bg-surface-subtle">
-        <span className="flex min-w-0 flex-col gap-0.5">
+        <FormPicture label={label} brand={label ? title : undefined} locale={locale} />
+        <span className="flex min-w-0 flex-1 flex-col gap-0.5">
           <Ltr className="self-start font-medium break-words text-ink">{title}</Ltr>
           {lines.map((line) => (
             <span key={line} className="text-sm break-words text-ink-muted">
@@ -56,7 +58,7 @@ function ResultRow({ href, title, lines }: { href: string; title: string; lines:
 }
 
 /** linkPrefix: where a row leads, followed by the molecule id (the public status page by default). */
-export function MedicineSearch({ locale, linkPrefix = '/medicaments/', label }: { locale: Locale; linkPrefix?: string; label?: string }) {
+export function MedicineSearch({ locale, linkPrefix = '/medicaments/', label, autoFocus = false }: { locale: Locale; linkPrefix?: string; label?: string; autoFocus?: boolean }) {
   const t = translator(locale);
   const [q, setQ] = useState('');
   const [state, setState] = useState<State>({ kind: 'idle' });
@@ -103,6 +105,7 @@ export function MedicineSearch({ locale, linkPrefix = '/medicaments/', label }: 
         large
         icon={<Search size={20} />}
         type="search"
+        autoFocus={autoFocus}
         inputMode="search"
         autoComplete="off"
         autoCorrect="off"
@@ -139,6 +142,7 @@ export function MedicineSearch({ locale, linkPrefix = '/medicaments/', label }: 
                     {state.molecules.map((m) => (
                       <ResultRow
                         key={m.id}
+                        locale={locale}
                         href={`${linkPrefix}${m.id}`}
                         title={m.name}
                         lines={[
@@ -160,7 +164,7 @@ export function MedicineSearch({ locale, linkPrefix = '/medicaments/', label }: 
                   </h2>
                   <ul className="panel hairline-list overflow-hidden">
                     {state.results.map((m) => (
-                      <ResultRow key={m.id} href={`${linkPrefix}${m.molecule_id}`} title={m.brand} lines={[m.label, m.molecule_name]} />
+                      <ResultRow key={m.id} locale={locale} label={m.label} href={`${linkPrefix}${m.molecule_id}${linkPrefix === '/medicaments/' ? `?presentation=${m.id}` : ''}`} title={m.brand} lines={[m.label, m.molecule_name]} />
                     ))}
                   </ul>
                 </section>

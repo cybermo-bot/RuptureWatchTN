@@ -21,6 +21,8 @@ interface GovernorateMapProps {
   className?: string;
   /** "stage": drawn on the plum stage (home, scenario). */
   tone?: 'light' | 'stage';
+  /** Highlight only the governorate that changed the level. */
+  pulseCode?: string | null;
 }
 
 // Greater Tunis: too small at phone size to carry a visible name.
@@ -36,7 +38,7 @@ export interface GovernorateShape {
 export const GOVERNORATE_SHAPES = map.governorates as GovernorateShape[];
 export const GOVERNORATE_MAP_LICENCE = map.licence;
 
-export function GovernorateMap({ values = {}, title, showLabels = false, className = '', tone = 'light' }: GovernorateMapProps) {
+export function GovernorateMap({ values = {}, title, showLabels = false, className = '', tone = 'light', pulseCode }: GovernorateMapProps) {
   const stage = tone === 'stage';
   const name = title ?? t('core.map.label');
   return (
@@ -61,6 +63,7 @@ export function GovernorateMap({ values = {}, title, showLabels = false, classNa
                 strokeWidth={0.75}
                 vectorEffect="non-scaling-stroke"
                 data-code={g.code}
+                className={g.code === pulseCode ? 'rw-pulse' : undefined}
               >
                 <title>{value ? `${g.name} : ${value.text}` : g.name}</title>
               </path>

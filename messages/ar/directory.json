@@ -47,7 +47,7 @@
     "distanceKm": "على بعد {n} كم",
     "call": "اتصال",
     "directions": "الطريق",
-    "mapLabel": "خريطة الصيدليات"
+    "mapLabel": "خريطة المنطقة"
   },
   "osm": {
     "unavailableTitle": "القائمة الاحتياطية غير محمّلة بعد.",

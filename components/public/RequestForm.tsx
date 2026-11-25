@@ -6,10 +6,14 @@ import { useRouter } from 'next/navigation';
 import { useId, useState, useTransition } from 'react';
 import { createRequest } from '@/app/(public)/medicaments/[moleculeId]/demande/actions';
 import { buttonClass } from '@/components/Button';
+import { FormPicture } from '@/components/medicine/FormPicture';
 import { governorateAt, type GovernorateMapFile } from '@/lib/geo/locate';
 import { translator, type Locale } from '@/lib/i18n';
 import { deviceId, myRequest, rememberRequest } from '@/lib/public/device';
 import type { Governorate } from '@/lib/public/governorates';
+import type { Brand } from '@/lib/public/medicine';
+import { presentationText } from '@/lib/public/presentation';
+import { Ltr } from './Ltr';
 
 // The request: where the visitor is, as a governorate, then one button. "Près de moi" finds
 // the governorate on the phone (point in polygon on the map outlines, loaded only when
@@ -17,11 +21,12 @@ import type { Governorate } from '@/lib/public/governorates';
 
 type Locating = 'idle' | 'locating' | 'denied' | 'unavailable' | 'outside';
 
-export function RequestForm({ moleculeId, list, locale }: { moleculeId: string; list: Governorate[]; locale: Locale }) {
+export function RequestForm({ molecule, presentation, list, locale }: { molecule: { id: string; name: string }; presentation: Brand | null; list: Governorate[]; locale: Locale }) {
   const t = translator(locale);
   const router = useRouter();
   const selectId = useId();
   const [code, setCode] = useState('');
+  const [anyBrand, setAnyBrand] = useState(!presentation);
   const [locating, setLocating] = useState<Locating>('idle');
   const [located, setLocated] = useState<string | null>(null);
   const [error, setError] = useState<'invalid' | 'limited' | 'failed' | 'closed' | null>(null);
@@ -29,6 +34,8 @@ export function RequestForm({ moleculeId, list, locale }: { moleculeId: string; 
   const [pending, startTransition] = useTransition();
 
   const nameOf = (c: string) => list.find((g) => g.code === c)?.name ?? c;
+  const product = presentation ? presentationText(presentation, t) : molecule.name;
+  const requestedName = anyBrand ? t('public.request.anyBrand', { name: `\u2068${molecule.name}\u2069` }) : `\u2068${product}\u2069`;
 
   const locate = () => {
     if (!('geolocation' in navigator)) {
@@ -61,17 +68,18 @@ export function RequestForm({ moleculeId, list, locale }: { moleculeId: string; 
     }
     startTransition(async () => {
       const result = await createRequest({
-        moleculeId,
+        moleculeId: molecule.id,
+        medicineId: anyBrand ? null : presentation?.id ?? null,
         governorate: code,
         deviceId: deviceId(),
       });
       if (result.ok) {
-        rememberRequest(moleculeId, result.id, new Date(Date.now() + 3 * 3_600_000).toISOString());
+        rememberRequest(molecule.id, result.id, new Date(Date.now() + 3 * 3_600_000).toISOString());
         router.push(`/demandes/${result.id}`);
         return;
       }
       setError(result.error);
-      if (result.error === 'limited') setOpenRequest(myRequest(moleculeId)?.id ?? null);
+      if (result.error === 'limited') setOpenRequest(myRequest(molecule.id)?.id ?? null);
     });
   };
 
@@ -96,17 +104,24 @@ export function RequestForm({ moleculeId, list, locale }: { moleculeId: string; 
         send();
       }}
     >
+      {presentation ? (
+        <fieldset className="flex flex-col gap-1">
+          <legend className="pb-1 text-lg font-semibold text-ink">{t('public.request.product')}</legend>
+          <label className="flex min-h-12 items-center gap-3 font-medium">
+            <input type="radio" name="scope" checked={!anyBrand} onChange={() => setAnyBrand(false)} disabled={pending} className="size-5 shrink-0 accent-brand" />
+            <FormPicture label={presentation.label} brand={presentation.brand} locale={locale} />
+            <Ltr>{product}</Ltr>
+          </label>
+          <label className="flex min-h-12 items-center gap-3 text-ink-muted">
+            <input type="radio" name="scope" checked={anyBrand} onChange={() => setAnyBrand(true)} disabled={pending} className="size-5 shrink-0 accent-brand" />
+            <FormPicture locale={locale} />
+            {t('public.request.anyBrand', { name: `\u2068${molecule.name}\u2069` })}
+          </label>
+        </fieldset>
+      ) : <FormPicture locale={locale} />}
+      {anyBrand ? <p className="text-sm text-ink-muted">{t('public.medicine.brandsCaution')}</p> : null}
       <fieldset className="flex flex-col gap-4">
         <legend className="pb-2 text-lg font-semibold text-ink">{t('public.request.areaTitle')}</legend>
-        <div className="flex flex-col gap-2">
-          <button type="button" onClick={locate} disabled={locating === 'locating'} className={buttonClass('secondary', 'self-start')}>
-            <LocateFixed size={18} aria-hidden="true" />
-            {t('public.request.nearMe')}
-          </button>
-          <p className="text-sm text-ink-muted" aria-live="polite">
-            {locatingText}
-          </p>
-        </div>
         <div className="flex flex-col gap-1.5">
           <label htmlFor={selectId} className="text-sm font-medium text-ink">
             {t('public.request.governorateLabel')}
@@ -114,6 +129,7 @@ export function RequestForm({ moleculeId, list, locale }: { moleculeId: string; 
           <select
             id={selectId}
             value={code}
+            disabled={pending}
             onChange={(e) => {
               setCode(e.target.value);
               setError(null);
@@ -128,9 +144,18 @@ export function RequestForm({ moleculeId, list, locale }: { moleculeId: string; 
             ))}
           </select>
         </div>
+        <div className="flex flex-col gap-2">
+          <button type="button" onClick={locate} disabled={pending || locating === 'locating'} className={buttonClass('secondary', 'self-start')}>
+            <LocateFixed size={18} aria-hidden="true" />
+            {t('public.request.nearMe')}
+          </button>
+          <p className="text-sm text-ink-muted" aria-live="polite">
+            {locatingText}
+          </p>
+        </div>
       </fieldset>
 
-      <div aria-live="polite">
+      <div aria-live="polite" className="empty:hidden">
         {error === 'invalid' ? <p className="text-ink">{t('public.request.invalid')}</p> : null}
         {error === 'failed' ? <p className="text-ink">{t('public.request.failed')}</p> : null}
         {error === 'closed' ? <p className="text-ink">{t('public.request.closed')}</p> : null}
@@ -147,12 +172,15 @@ export function RequestForm({ moleculeId, list, locale }: { moleculeId: string; 
       </div>
 
       <div className="sticky bottom-20 flex flex-col gap-2 border-t border-line bg-surface pt-4 pb-2 sm:static sm:border-0 sm:pt-0">
+        <p className="text-sm font-medium text-ink" aria-live="polite">
+          {code ? t('public.request.scope', { name: requestedName, governorate: nameOf(code) }) : t('public.request.scopeBeforeArea', { name: requestedName })}
+        </p>
         <button type="submit" disabled={pending} className={buttonClass('primary', 'w-full sm:w-auto sm:self-start')}>
           <Send size={18} aria-hidden="true" className="rtl:-scale-x-100" />
           {pending ? t('public.request.sending') : t('public.request.send')}
         </button>
-        <p className="text-sm text-ink-muted">{t('public.request.stored')}</p>
       </div>
+      <p className="text-sm text-ink-muted">{t('public.request.stored')}</p>
     </form>
   );
 }

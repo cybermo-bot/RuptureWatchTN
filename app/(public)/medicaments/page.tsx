@@ -12,12 +12,13 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t('public.pages.medicines.title') };
 }
 
-export default async function MedicinesPage() {
+export default async function MedicinesPage({ searchParams }: PageProps<'/medicaments'>) {
   const { t, locale } = await getTranslator();
+  const { recherche } = await searchParams;
   return (
     <PublicMain narrow>
       <PageHeader title={t('public.pages.medicines.title')} description={t('public.medicines.intro')} />
-      <MedicineSearch locale={locale} />
+      <MedicineSearch locale={locale} autoFocus={recherche === '1'} />
     </PublicMain>
   );
 }

@@ -47,7 +47,7 @@
     "distanceKm": "à {n} km",
     "call": "Appeler",
     "directions": "Itinéraire",
-    "mapLabel": "Carte des pharmacies"
+    "mapLabel": "Carte des environs"
   },
   "osm": {
     "unavailableTitle": "La liste de secours n’est pas encore chargée.",

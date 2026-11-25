@@ -9,7 +9,115 @@
     "skipToContent": "Aller au contenu",
     "loading": "Chargement de la page…"
   },
+  "redesign": {
+    "navLabel": "Navigation principale",
+    "scenario": "Le scénario",
+    "search": "Chercher un médicament",
+    "professionals": "Les espaces",
+    "headline": "Repérer les ruptures de médicaments plus tôt.",
+    "lead": "En Tunisie, les pharmacies signalent les commandes non livrées, les patients vérifient la disponibilité et la coordination peut agir.",
+    "photoAlt": "Une pharmacienne prend une boîte de médicament sur un rayon.",
+    "storyTitle": "Du comptoir à la décision",
+    "storyBody": "Suivez une commande non livrée et voyez ce qui change quand plusieurs pharmacies signalent le même problème.",
+    "storyLink": "Suivre le scénario",
+    "storyEvent": "Commande non livrée",
+    "steps": {
+      "report": "La pharmacie signale",
+      "review": "Les signalements se recoupent",
+      "respond": "La coordination peut agir"
+    },
+    "rolesTitle": "Accéder à votre espace",
+    "roles": {
+      "patient": { "title": "Patient", "body": "Vérifier un statut ou demander une disponibilité. Accès anonyme." },
+      "pharmacy": { "title": "Pharmacie", "body": "Signaler une commande non livrée et répondre aux demandes." },
+      "wholesaler": { "title": "Grossiste", "body": "Suivre les signaux et comparer deux répartitions d’un arrivage." }
+    },
+    "exploreTitle": "Comprendre ce qui se passe",
+    "exploreBody": "Retrouvez les pharmacies près de vous, les ruptures documentées et les règles qui déclenchent un signal.",
+    "explore": {
+      "directory": "Trouver une pharmacie",
+      "replay": "Rejouer des ruptures documentées",
+      "method": "Comprendre la méthode"
+    },
+    "demoRoles": "Explorer les espaces de démonstration"
+  },
+  "access": {
+    "email": "Adresse e-mail professionnelle",
+    "password": "Mot de passe",
+    "submit": "Se connecter",
+    "pending": "Connexion…",
+    "signOut": "Se déconnecter",
+    "invalid": "Vérifiez votre adresse e-mail et votre mot de passe, puis réessayez.",
+    "busy": "Trop de tentatives. Réessayez dans quelques minutes.",
+    "demo": "Essayer avec le compte de démonstration",
+    "invitation": "Utilisez le lien ou les identifiants transmis par l’équipe RuptureWatch.",
+    "home": "Retour à l’accueil",
+    "pharmacie": {
+      "title": "Espace pharmacie",
+      "description": "Accédez à vos signalements, aux médicaments suivis et aux demandes reçues."
+    },
+    "grossiste": {
+      "title": "Espace grossiste",
+      "description": "Suivez les signaux, comparez les répartitions et retrouvez vos décisions."
+    },
+    "institution": {
+      "title": "Accès institutionnel",
+      "description": "Espace réservé aux comptes habilités par l’équipe RuptureWatch.",
+      "demoTitle": "Espaces de démonstration",
+      "demoNote": "Organisations fictives et données simulées. Ces espaces sont conçus pour les institutions, pas utilisés par elles.",
+      "demo": {
+        "coordination": "Démo : Ministère de la Santé",
+        "centrale": "Démo : Pharmacie centrale",
+        "ordre": "Démo : Ordre des pharmaciens",
+        "hopital": "Démo : pharmacie hospitalière"
+      }
+    }
+  },
+  "decisionBlock": {
+    "next": "Prochaine action",
+    "why": "Pourquoi ?",
+    "log": "Voir le journal",
+    "hospital": "Voir les signalements par gouvernorat",
+    "review": "À examiner",
+    "medicine": "Ouvrir la fiche",
+    "sources": "Sources et actualités",
+    "sourcesMore": "Voir toutes les sources",
+    "sourcesEmpty": "Aucune source disponible.",
+    "demand": "Demandes reçues via RuptureWatch",
+    "dateRange": "Du {from} au {to}"
+  },
+  "decisionDemo": {
+    "title": "Un signalement peut changer le niveau",
+    "medicine": "Médicament fictif · commande non livrée",
+    "initial": "{n} pharmacies de Tunis ont signalé une commande non livrée.",
+    "concentrated": "Tous les signalements viennent du même gouvernorat : c'est peut-être un problème de distribution local.",
+    "spread": "Deux gouvernorats signalent la même commande non livrée : la rupture est confirmée.",
+    "actors": "La coordination examine le signal. Le grossiste peut comparer deux façons de répartir le stock.",
+    "add": "Ajouter le 4ᵉ signalement",
+    "choose": "D’où vient le signalement ?",
+    "allocation": "Comparer la répartition",
+    "cover": "Couverture du gouvernorat le moins approvisionné après répartition de {stock} boîtes simulées.",
+    "save": "Enregistrer la décision",
+    "saveHelp": "Dans cette simulation, aucune décision n’est enregistrée.",
+    "replay": "Voir tout le scénario",
+    "fullTitle": "Le scénario complet"
+  },
   "home": {
+    "entry": {
+      "title": "Repérer les ruptures de médicaments en Tunisie, avant qu’elles n’atteignent le comptoir.",
+      "demo": "Essayer la démo",
+      "caption": "Ajoutez un signalement et voyez ce qui fait changer le niveau d’alerte.",
+      "patient": "Je cherche un médicament",
+      "pharmacy": "Je suis pharmacien",
+      "coordination": "Je coordonne",
+      "more": "En savoir plus",
+      "roles": {
+        "ministry": "Ministère",
+        "central": "Pharmacie centrale",
+        "order": "Ordre",
+        "wholesaler": "Grossiste"
+      }
+    },
     "tagline": "Repérer les ruptures de médicaments avant qu’elles n’atteignent le comptoir.",
     "howTitle": "Comment ça marche",
     "steps": {
@@ -780,6 +888,11 @@
         "name": "Avis de pénurie d’autorités étrangères",
         "use": "Les avis étrangers dans les règles d’alerte. Seuls, ils ne font jamais dépasser « sous surveillance ».",
         "licence": "Compilé par l’équipe à partir des pages publiques des autorités ; chaque avis nomme son autorité et son lien."
+      },
+      "unsplash": {
+        "name": "Photographie de la page d’accueil",
+        "use": "La photographie qui ouvre la page d’accueil : un médicament pris sur le rayonnage d’une pharmacie. Photographie du National Cancer Institute, publiée sur Unsplash.",
+        "licence": "Licence Unsplash, telle qu’indiquée sur la page de la photographie."
       }
     },
     "backHome": "Retour à l’accueil",
@@ -1136,6 +1249,7 @@
     "installed": "RuptureWatch est sur votre écran d’accueil."
   },
   "more": {
+    "alertsHint": "Consulter les alertes de vos médicaments suivis.",
     "title": "Plus",
     "intro": "Les autres outils de la pharmacie, et le prototype.",
     "whatsapp": "Signaler par WhatsApp",

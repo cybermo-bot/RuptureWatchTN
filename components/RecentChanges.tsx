@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { LevelBadge } from '@/components/LevelBadge';
+import { RuleDetails } from '@/components/LevelExplanation';
 import { Origins } from '@/components/Origins';
 import { formatDate, formatTime } from '@/lib/format';
 import { freshness } from '@/lib/freshness';
@@ -82,10 +83,10 @@ export function RecentChangesList({
             </span>
             <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-muted">
               <span>{countsText(e)}</span>
-              <span className="font-mono">{e.rule}</span>
               <Origins origins={e.evidence.origins} />
             </span>
           </Link>
+          <div className="px-4"><RuleDetails rule={e.rule} /></div>
         </li>
       ))}
     </ol>

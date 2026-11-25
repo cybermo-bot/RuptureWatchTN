@@ -1,10 +1,9 @@
 'use client';
 
 import { ChevronLeft, ChevronRight, Pause, Play, RotateCcw } from 'lucide-react';
-import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { GOVERNORATE_SHAPES, GovernorateMap, type GovernorateValue } from '@/components/GovernorateMap';
-import { explanationText } from '@/components/LevelExplanation';
+import { explanationText, RuleDetails } from '@/components/LevelExplanation';
 import { LevelBadge } from '@/components/LevelBadge';
 import { MissingLine } from '@/components/MissingLine';
 import { OriginBadge } from '@/components/OriginBadge';
@@ -183,7 +182,7 @@ export function ScenarioPlayer() {
                   <span className="text-sm text-on-stage-muted">{t('core.scenario.unchanged')}</span>
                 ) : null}
               </p>
-              {done ? <p className="border-s-2 border-citron ps-3 font-medium text-on-stage">{t('core.scenario.end')}</p> : null}
+              {done ? <p className="border-s-2 border-scenario-accent ps-3 font-medium text-on-stage">{t('core.scenario.end')}</p> : null}
             </div>
             <div className="flex flex-col gap-2">
               <GovernorateMap tone="stage" values={mapValues(frame)} title={t('core.coordination.mapTitle')} className="mx-auto w-full max-w-[11rem] sm:max-w-none" />
@@ -208,16 +207,8 @@ export function ScenarioPlayer() {
               {t('core.scenario.whyTitle')}
             </h2>
             <p className="text-ink">{explanationText(frame.rule, frame.evidence)}</p>
-            <p className="text-sm text-ink-muted">
-              {t('core.explanation.ruleLabel')}
-              {t('core.common.colon')}
-              <span className="font-mono text-xs">{frame.rule}</span>
-            </p>
             <MissingLine level={frame.level} rule={frame.rule} evidence={frame.exact} exact now={new Date(frame.at)} />
-            <p className="text-sm text-ink-muted">{t('core.scenario.rulesNote')}</p>
-            <Link href={`/methode#${frame.rule}`} className="inline-flex min-h-12 w-fit items-center text-sm">
-              {t('core.explanation.methodLink')}
-            </Link>
+            <RuleDetails rule={frame.rule}><p>{t('core.scenario.rulesNote')}</p></RuleDetails>
           </section>
 
           <section aria-labelledby="qui-agit" className="flex flex-col gap-2 border-t border-line pt-5">
@@ -272,7 +263,7 @@ export function ScenarioPlayer() {
               <li key={f.index} className="flex flex-wrap items-center gap-x-3 gap-y-1 py-2 text-sm">
                 <span className="font-mono text-ink-muted">{t('core.scenario.day', { day: f.day })}</span>
                 <LevelBadge level={f.level} />
-                <span className="font-mono text-xs text-ink-muted">{f.rule}</span>
+                <RuleDetails rule={f.rule} />
               </li>
             ))}
           </ol>

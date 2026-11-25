@@ -1,11 +1,10 @@
-// Screenshots of the product, as a visitor sees it, for the session reports and the home page's
-// role previews. Signs in with the one-click demo buttons, like a visitor (no password here).
+// Screenshots of the product, as a visitor sees it, for session reports and role preview assets.
+// Signs in with the one-click demo buttons, like a visitor (no password here).
 //
 //   npm run screenshots -- [--base http://localhost:3000] [--out docs/reports/session-5] [--only name,name] [--widths 360,1280]
 //   npm run previews:build -- [--base https://rupturewatch-tn.vercel.app]
 //
-// previews:build writes public/previews/<role>.jpg: a 1280 x 800 view of each space, scaled
-// down, used by the home page's role tiles. Regenerate it after a design change.
+// previews:build writes scaled views of the demo roles to public/previews/.
 
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -38,6 +37,27 @@ const SHOWCASE_ID = '75077225-938d-4278-9e21-51de44d88a9f'; // LEVETIRACETAM
 const TAMOXIFEN_ID = 'e7dc2583-9c34-49e6-bc49-65a3ebcd5665';
 
 export const SHOTS: Shot[] = [
+  { name: 's7-home', path: '/', fullPage: false },
+  { name: 's7-scenario-entry', path: '/scenario', fullPage: false },
+  { name: 's7-scenario-confirmed', path: '/scenario', fullPage: false, before: async (page) => {
+    await page.getByRole('button', { name: 'Ajouter le 4ᵉ signalement' }).click();
+    await page.getByRole('button', { name: 'Sfax', exact: true }).click();
+    await page.locator('[data-demo-level="confirmed"]').waitFor();
+  } },
+  { name: 's7-professional', path: `/grossiste?m=${SHOWCASE_ID}#detail`, role: 'grossiste', fullPage: false, before: async (page) => {
+    await page.getByRole('link', { name: 'Comparer la répartition' }).waitFor();
+    await page.locator('#detail').evaluate((detail) => detail.scrollIntoView({ block: 'start' }));
+  } },
+  { name: 's7-request', path: '/medicaments?recherche=1', fullPage: false, before: async (page) => {
+    await page.getByRole('searchbox').fill('antiomal');
+    await page.getByRole('link', { name: /ANTIOMAL.*500mg.*Bt 60/i }).click();
+    await page.getByRole('link', { name: 'Demander aux pharmacies proches' }).click();
+    await page.getByLabel('Choisissez votre gouvernorat').selectOption({ label: 'Tunis' });
+    await page.getByRole('radio', { name: /toute marque/ }).check();
+    await page.getByText(/Ne changez pas de marque/).waitFor();
+    await page.getByRole('radio', { name: /ANTIOMAL.*500 mg.*boîte de 60/i }).check();
+    await page.getByText(/Vous demandez.*ANTIOMAL.*Tunis/).waitFor();
+  } },
   { name: 'accueil', path: '/' },
   { name: 'pharmacie', path: '/pharmacie', role: 'pharmacie-tunis' },
   { name: 'pharmacie-alertes', path: '/pharmacie/alertes', role: 'pharmacie-tunis' },
@@ -90,10 +110,12 @@ export const PREVIEW_SHOTS: Shot[] = [
 ];
 
 async function signIn(page: Page, role: string) {
-  await page.goto(`${BASE}/`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${BASE}/scenario#espaces-demo`, { waitUntil: 'domcontentloaded' });
+  await page.locator('#espaces-demo > summary').click();
+  const button = page.locator(`#espaces-demo button[name="role"][value="${role}"]`);
   await Promise.all([
-    page.waitForURL((url) => url.pathname !== '/', { timeout: 60_000 }),
-    page.click(`button[name="role"][value="${role}"]`),
+    page.waitForURL((url) => url.pathname !== '/' && url.pathname !== '/scenario', { timeout: 60_000 }),
+    button.click(),
   ]);
 }
 
@@ -103,9 +125,9 @@ async function settle(page: Page) {
 }
 
 async function take(browser: Browser, shot: Shot, width: number, out: string, quality?: number): Promise<boolean> {
-  const height = width < 600 ? 780 : 800;
+  const height = shot.name.startsWith('s7-') ? 800 : width < 600 ? 780 : 800;
   // Previews are small: a desktop screen at half scale (640 x 400), a phone screen at 1x.
-  const scale = quality ? (width < 600 ? 1 : 0.5) : width < 600 ? 2 : 1;
+  const scale = shot.name.startsWith('s7-') ? 1 : quality ? (width < 600 ? 1 : 0.5) : width < 600 ? 2 : 1;
   const context = await browser.newContext({
     viewport: { width, height },
     deviceScaleFactor: scale,
@@ -121,6 +143,16 @@ async function take(browser: Browser, shot: Shot, width: number, out: string, qu
     await page.goto(`${BASE}${shot.path}`, { waitUntil: 'domcontentloaded', timeout: 60_000 });
     await settle(page);
     if (shot.before) await shot.before(page);
+    if (shot.name.startsWith('s7-')) {
+      const reflows = await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
+      if (!reflows) throw new Error('Horizontal overflow');
+      if (shot.name === 's7-home') {
+        const colour = await page.locator('main').evaluate((main) => getComputedStyle(main).backgroundColor);
+        if (colour !== 'rgb(246, 242, 236)') throw new Error('The homepage stylesheet did not load');
+        const demo = await page.getByRole('link', { name: 'Essayer la démo', exact: true }).boundingBox();
+        if (!demo || demo.y + demo.height > height) throw new Error('The demo CTA falls below the first viewport');
+      }
+    }
     if (quality) {
       await page.screenshot({ path: out, type: 'jpeg', quality, fullPage: false });
     } else {
@@ -146,7 +178,7 @@ async function main() {
       for (const shot of PREVIEW_SHOTS) {
         if (await take(browser, shot, shot.device === 'phone' ? 360 : 1280, join(outDir, `${shot.name}.jpg`), 70)) written.push(shot.name);
       }
-      // The home page shows a preview only for the files listed here.
+      // Keep track of the preview assets produced by this run.
       await writeFile(join(outDir, 'manifest.json'), `${JSON.stringify({ previews: written }, null, 2)}
 `);
       return;
@@ -157,9 +189,9 @@ async function main() {
       .filter(Boolean);
     const widths = arg('widths', '360,1280').split(',').map(Number);
     await mkdir(outDir, { recursive: true });
-    for (const shot of SHOTS.filter((s) => only.length === 0 || only.includes(s.name))) {
+    for (const shot of SHOTS.filter((s) => only.length === 0 ? !s.name.startsWith('s7-') : only.includes(s.name))) {
       for (const width of widths) {
-        await take(browser, shot, width, join(outDir, `${shot.name}-${width}.png`));
+        if (!(await take(browser, shot, width, join(outDir, `${shot.name}-${width}.png`)))) process.exitCode = 1;
       }
     }
   } finally {
