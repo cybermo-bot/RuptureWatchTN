@@ -1,11 +1,11 @@
 ---
 name: RuptureWatch TN
-description: Warm editorial public pages and legible operational dashboards for medicine shortages in Tunisia.
+description: Cool, calm editorial public pages and legible operational dashboards for medicine shortages in Tunisia.
 colors:
   ink: "#153442"
   ink-muted: "#475e67"
-  limestone: "#f6f2ec"
-  paper: "#f5f3ef"
+  band: "#f3f6f5"
+  page: "#f5f7f6"
   powder-blue: "#ddeef3"
   surface: "#ffffff"
   hairline: "#ccd8da"
@@ -60,11 +60,11 @@ Start at the pharmacy shelf. Use a real, credited photograph of pharmacy work an
 
 ## Colors
 
-Limestone carries the homepage. Powder blue groups the scenario summary and active interactions, while deep blue identifies actions. Keep the scenario and professional rail in petrol so the product signals and progress remain legible. Level colors are paired with names and shapes.
+Cool neutrals carry the homepage: the page is `#f5f7f6` and the masthead and reading bands are `#f3f6f5`. Never use cream or beige. Powder blue groups the scenario summary and active interactions, while deep blue identifies actions. Keep the scenario and professional rail in petrol so the product signals and progress remain legible. Level colors are paired with names and shapes.
 
 ## Typography
 
-Use IBM Plex Sans for French, IBM Plex Sans Arabic for Arabic, and IBM Plex Mono for aligned figures, timestamps and identifiers. Body contrast is 11.8:1 on limestone, muted text is 6.1:1 on limestone and 5.7:1 on powder blue, and primary buttons are 7.3:1 against white text.
+Use IBM Plex Sans for French, IBM Plex Sans Arabic for Arabic, and IBM Plex Mono for aligned figures, timestamps and identifiers. Body contrast is 12.1:1 on the band, muted text is 6.3:1 on the band and 5.7:1 on powder blue, and the level colours are at least 5.0:1 on powder blue, and primary buttons are 7.3:1 against white text.
 
 ## Layout
 

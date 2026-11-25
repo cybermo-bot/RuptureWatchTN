@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
-/* RuptureWatch's limestone and powder-blue palette. Alert colours describe the signal level. */
+/* RuptureWatch's cool neutral and powder-blue palette. Alert colours describe the signal level. */
 :root {
   --ink: #153442;
   --ink-muted: #475e67;
   --surface: #ffffff;
-  --page: #f5f3ef;
+  --page: #f5f7f6;
   --surface-subtle: #e8f0f3;
   --line: #ccd8da;
   --brand: #235c76;
   --brand-strong: #174359;
-  --limestone: #f6f2ec;
+  --band: #f3f6f5;
   --powder-blue: #ddeef3;
   --sidebar: #143440;
   --sidebar-raised: #224956;
@@ -174,7 +174,7 @@
 
 .home-masthead,
 .home-read {
-  background: var(--limestone);
+  background: var(--band);
 }
 
 .home-wrap {

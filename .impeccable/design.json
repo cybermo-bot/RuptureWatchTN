@@ -1,10 +1,11 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-24T22:15:15Z",
+  "generatedAt": "2026-11-25T12:00:00Z",
   "title": "Design System: RuptureWatch TN",
   "extensions": {
     "colorMeta": {
-      "limestone": { "role": "neutral", "displayName": "Limestone" },
+      "page": { "role": "neutral", "displayName": "Page", "value": "#f5f7f6" },
+      "band": { "role": "neutral", "displayName": "Band", "value": "#f3f6f5" },
       "powder-blue": { "role": "supporting", "displayName": "Powder Blue" },
       "primary": { "role": "primary", "displayName": "Deep Blue" },
       "scenario": { "role": "dark-surface", "displayName": "Petrol" }
@@ -31,7 +32,7 @@
   "narrative": {
     "northStar": "Au comptoir",
     "overview": "Start with the task of checking a delivery at a pharmacy. Give each chapter a real destination and make the evidence legible.",
-    "keyCharacteristics": ["Warm editorial public surfaces", "Powder-blue scenario chapter", "Compact, legible professional charts"],
+    "keyCharacteristics": ["Cool neutral editorial public surfaces, never cream or beige", "Powder-blue scenario chapter", "Compact, legible professional charts"],
     "rules": [{ "name": "Legible evidence", "body": "Pair signal colors with words and shapes. Keep small-count suppression and a text equivalent in every chart.", "section": "colors" }],
     "dos": ["Place the demo and medicine search before the first scroll.", "Use visible role names that describe their work."]
   }
