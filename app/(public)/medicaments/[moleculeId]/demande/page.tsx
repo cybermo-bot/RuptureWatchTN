@@ -27,18 +27,18 @@ export default async function RequestCreatePage(props: PageProps<'/medicaments/[
   if (selected !== undefined && !presentation) notFound();
   return (
     <PublicMain narrow>
-      <Link href={`/medicaments/${molecule.id}${presentation ? `?presentation=${presentation.id}` : ''}`} className="inline-flex min-h-12 items-center gap-2 self-start text-brand underline">
+      <Link href={`/medicaments/${molecule.id}${presentation ? `?presentation=${presentation.id}` : ''}`} className="-mb-3 inline-flex min-h-12 items-center gap-2 self-start text-sm font-medium text-brand underline">
         <ArrowLeft size={18} aria-hidden="true" className="rtl:-scale-x-100" />
         <Ltr>{molecule.name}</Ltr>
       </Link>
       <header className="flex flex-col gap-1.5">
-        <h1 className="text-2xl leading-tight font-semibold tracking-tight text-ink sm:text-[1.75rem]">{t('public.request.title')}</h1>
+        <h1 className="text-2xl leading-tight font-semibold tracking-tight text-ink sm:text-3xl">{t('public.request.title')}</h1>
         <p className="max-w-prose text-ink-muted">{t('public.request.intro')}</p>
       </header>
       {requestsConfigured() ? (
         <RequestForm key={presentation?.id ?? molecule.id} molecule={molecule} presentation={presentation} list={governorates(locale)} locale={locale} />
       ) : (
-        <p className="panel p-5 text-ink">{t('public.request.closed')}</p>
+        <p className="border-t border-line pt-4 text-ink">{t('public.request.closed')}</p>
       )}
     </PublicMain>
   );

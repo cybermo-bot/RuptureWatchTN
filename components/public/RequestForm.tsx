@@ -107,18 +107,17 @@ export function RequestForm({ molecule, presentation, list, locale }: { molecule
       {presentation ? (
         <fieldset className="flex flex-col gap-1">
           <legend className="pb-1 text-lg font-semibold text-ink">{t('public.request.product')}</legend>
-          <label className="flex min-h-12 items-center gap-3 font-medium">
+          <label className="flex min-h-12 cursor-pointer items-center gap-3 rounded-md px-2 py-1.5 font-medium has-checked:bg-surface-subtle hover:bg-surface-subtle">
             <input type="radio" name="scope" checked={!anyBrand} onChange={() => setAnyBrand(false)} disabled={pending} className="size-5 shrink-0 accent-brand" />
             <FormPicture label={presentation.label} brand={presentation.brand} locale={locale} />
             <Ltr>{product}</Ltr>
           </label>
-          <label className="flex min-h-12 items-center gap-3 text-ink-muted">
+          <label className="flex min-h-12 cursor-pointer items-center gap-3 rounded-md px-2 py-1.5 text-ink-muted has-checked:bg-surface-subtle hover:bg-surface-subtle">
             <input type="radio" name="scope" checked={anyBrand} onChange={() => setAnyBrand(true)} disabled={pending} className="size-5 shrink-0 accent-brand" />
-            <FormPicture locale={locale} />
             {t('public.request.anyBrand', { name: `\u2068${molecule.name}\u2069` })}
           </label>
         </fieldset>
-      ) : <FormPicture locale={locale} />}
+      ) : null}
       {anyBrand ? <p className="text-sm text-ink-muted">{t('public.medicine.brandsCaution')}</p> : null}
       <fieldset className="flex flex-col gap-4">
         <legend className="pb-2 text-lg font-semibold text-ink">{t('public.request.areaTitle')}</legend>
@@ -145,7 +144,7 @@ export function RequestForm({ molecule, presentation, list, locale }: { molecule
           </select>
         </div>
         <div className="flex flex-col gap-2">
-          <button type="button" onClick={locate} disabled={pending || locating === 'locating'} className={buttonClass('secondary', 'self-start')}>
+          <button type="button" onClick={locate} disabled={pending || locating === 'locating'} className={buttonClass('quiet', 'self-start')}>
             <LocateFixed size={18} aria-hidden="true" />
             {t('public.request.nearMe')}
           </button>
@@ -160,7 +159,7 @@ export function RequestForm({ molecule, presentation, list, locale }: { molecule
         {error === 'failed' ? <p className="text-ink">{t('public.request.failed')}</p> : null}
         {error === 'closed' ? <p className="text-ink">{t('public.request.closed')}</p> : null}
         {error === 'limited' ? (
-          <div className="panel flex flex-col gap-2 p-4">
+          <div className="flex flex-col gap-2 border-t border-line pt-4">
             <p className="text-ink">{t('public.request.limited')}</p>
             {openRequest ? (
               <Link href={`/demandes/${openRequest}`} className="inline-flex min-h-12 items-center self-start text-brand underline">
@@ -171,7 +170,7 @@ export function RequestForm({ molecule, presentation, list, locale }: { molecule
         ) : null}
       </div>
 
-      <div className="sticky bottom-20 flex flex-col gap-2 border-t border-line bg-surface pt-4 pb-2 sm:static sm:border-0 sm:pt-0">
+      <div className="flex flex-col gap-2 border-t border-line pt-4">
         <p className="text-sm font-medium text-ink" aria-live="polite">
           {code ? t('public.request.scope', { name: requestedName, governorate: nameOf(code) }) : t('public.request.scopeBeforeArea', { name: requestedName })}
         </p>

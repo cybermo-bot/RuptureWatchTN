@@ -2,6 +2,7 @@
 
 import { Copy, MessageCircle, Share2 } from 'lucide-react';
 import { useState, useSyncExternalStore } from 'react';
+import { buttonClass } from '@/components/Button';
 
 // "Partager ce statut": the phone's share sheet (Web Share API) where the browser has one;
 // otherwise a WhatsApp link and "Copier le lien". The text is built on the server
@@ -27,14 +28,13 @@ export function ShareStatus({ title, text, url, labels }: { title: string; text:
   );
   const [copy, setCopy] = useState<'idle' | 'done' | 'failed'>('idle');
 
-  const BUTTON =
-    'inline-flex min-h-12 items-center justify-center gap-2 rounded-md border border-line bg-surface px-4 font-medium text-ink no-underline hover:border-ink-muted hover:bg-surface-subtle';
+  const actionClass = buttonClass('quiet');
 
   if (canShare) {
     return (
       <button
         type="button"
-        className={`${BUTTON} w-full sm:w-auto sm:self-start`}
+        className={actionClass}
         onClick={() => {
           navigator.share({ title, text, url }).catch(() => undefined);
         }}
@@ -46,15 +46,19 @@ export function ShareStatus({ title, text, url, labels }: { title: string; text:
   }
 
   return (
-    <div className="flex flex-col gap-2" role="group" aria-label={labels.share}>
-      <div className="flex flex-col gap-2 sm:flex-row">
-        <a href={`https://wa.me/?text=${encodeURIComponent(`${text}\n${url}`)}`} target="_blank" rel="noopener noreferrer" className={BUTTON}>
+    <details>
+      <summary className={`${actionClass} cursor-pointer list-none [&::-webkit-details-marker]:hidden`}>
+        <Share2 size={18} aria-hidden="true" />
+        {labels.share}
+      </summary>
+      <div className="flex flex-wrap gap-x-2">
+        <a href={`https://wa.me/?text=${encodeURIComponent(`${text}\n${url}`)}`} target="_blank" rel="noopener noreferrer" className={actionClass}>
           <MessageCircle size={18} aria-hidden="true" className="text-brand" />
           {labels.whatsapp}
         </a>
         <button
           type="button"
-          className={BUTTON}
+          className={actionClass}
           onClick={() => {
             navigator.clipboard
               .writeText(url)
@@ -69,6 +73,6 @@ export function ShareStatus({ title, text, url, labels }: { title: string; text:
       <p aria-live="polite" className="text-sm text-ink-muted">
         {copy === 'done' ? labels.copied : copy === 'failed' ? labels.copyFailed : ''}
       </p>
-    </div>
+    </details>
   );
 }

@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { PageHeader } from '@/components/PageHeader';
 import { MedicineSearch } from '@/components/public/MedicineSearch';
 import { PublicMain } from '@/components/public/PublicChrome';
 import { getTranslator } from '@/lib/i18n-server';
@@ -17,8 +16,7 @@ export default async function MedicinesPage({ searchParams }: PageProps<'/medica
   const { recherche } = await searchParams;
   return (
     <PublicMain narrow>
-      <PageHeader title={t('public.pages.medicines.title')} description={t('public.medicines.intro')} />
-      <MedicineSearch locale={locale} autoFocus={recherche === '1'} />
+      <MedicineSearch locale={locale} autoFocus={recherche === '1'} title={t('public.pages.medicines.title')} />
     </PublicMain>
   );
 }

@@ -32,5 +32,5 @@ export function statusLines(status: PublicStatus, t: Translate, locale: Locale):
 /** The shared text, without the link (the share sheet or WhatsApp adds it). */
 export function shareText(name: string, status: PublicStatus, t: Translate, locale: Locale): string {
   const [sentence, ...rest] = statusLines(status, t, locale);
-  return [t('public.share.text', { name, status: sentence }), ...rest].join('\n');
+  return [t('public.share.text', { name, status: sentence }), t('public.medicine.statusScope'), ...rest].join('\n');
 }

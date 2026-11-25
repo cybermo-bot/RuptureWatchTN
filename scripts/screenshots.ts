@@ -50,7 +50,7 @@ export const SHOTS: Shot[] = [
   } },
   { name: 's7-request', path: '/medicaments?recherche=1', fullPage: false, before: async (page) => {
     await page.getByRole('searchbox').fill('antiomal');
-    await page.getByRole('link', { name: /ANTIOMAL.*500mg.*Bt 60/i }).click();
+    await page.getByRole('link', { name: /ANTIOMAL.*500 mg.*boîte de 60/i }).click();
     await page.getByRole('link', { name: 'Demander aux pharmacies proches' }).click();
     await page.getByLabel('Choisissez votre gouvernorat').selectOption({ label: 'Tunis' });
     await page.getByRole('radio', { name: /toute marque/ }).check();

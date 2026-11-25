@@ -61,15 +61,19 @@ export function FollowButton({
       ) : (
         <button
           type="button"
-          className={buttonClass('secondary', 'self-start')}
+          className={buttonClass('quiet', 'self-start')}
           onClick={() => setFollowed(moleculeId, { name, level, since })}
         >
           <Bell size={18} aria-hidden="true" />
           {t('public.watch.follow')}
         </button>
       )}
-      <p className="text-sm text-ink-muted">{t('public.watch.stored')}</p>
-      {following ? <p className="text-sm text-ink-muted">{t('public.watch.how')}</p> : null}
+      {following ? (
+        <>
+          <p className="text-sm text-ink-muted">{t('public.watch.stored')}</p>
+          <p className="text-sm text-ink-muted">{t('public.watch.how')}</p>
+        </>
+      ) : null}
     </div>
   );
 }

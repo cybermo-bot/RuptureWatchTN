@@ -1,4 +1,4 @@
-import { ArrowLeft, ChevronDown, MapPin, PackageCheck } from 'lucide-react';
+import { ArrowLeft, ChevronDown, Info, MapPin, PackageCheck } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -19,7 +19,7 @@ import { LevelBand } from '@/components/charts/LevelBand';
 import { getBrands, getPublicHistory, getPublicMolecule, getPublicPresentation, getPublicStatus } from '@/lib/public/medicine';
 import { ShareStatus } from '@/components/public/ShareStatus';
 import { OG_BASE } from '@/lib/og/meta';
-import { shareText, statusLines } from '@/lib/public/share';
+import { publicStatusSentence, shareText, statusLines } from '@/lib/public/share';
 import { presentationText } from '@/lib/public/presentation';
 import { siteUrl } from '@/lib/site';
 
@@ -65,29 +65,9 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
   const requestHref = `/medicaments/${molecule.id}/demande${presentation ? `?presentation=${presentation.id}` : ''}`;
 
   const shown = status.level === 'confirmed' || status.level === 'cleared';
-  // "Simulation" in the heading block whenever the status or the arrival shown comes from demo data.
-  const simulated =
-    (shown && status.origins.includes('simulated')) || (arrival?.origin === 'simulated' && status.level === 'confirmed');
   // "Mis à jour il y a …": the last evaluation of a shown status (never below "confirmée").
   const fresh = shown && status.evaluatedAt ? freshness(status.evaluatedAt, new Date()) : null;
-  const headline =
-    status.level === 'confirmed' && status.since
-      ? t('public.medicine.confirmed', {
-          date: formatPublicDate(status.since, locale),
-        })
-      : status.level === 'cleared' && status.since
-        ? t('public.medicine.cleared', {
-            date: formatPublicDate(status.since, locale),
-          })
-        : t('public.medicine.none');
-  const body =
-    status.level === 'confirmed'
-      ? t('public.medicine.confirmedBody')
-      : status.level === 'cleared'
-        ? t('public.medicine.clearedBody')
-        : t('public.medicine.noneBody');
-  const tone =
-    status.level === 'confirmed' ? 'border-level-confirmed' : status.level === 'cleared' ? 'border-level-cleared' : 'border-line';
+  const body = shown ? t(status.level === 'confirmed' ? 'public.medicine.confirmedBody' : 'public.medicine.clearedBody') : null;
   const categories = [...new Set(brands.map((b) => b.vei_category).filter((c): c is 'V' | 'E' | 'I' => c !== null))];
   // One row per brand, its presentations folded underneath, labels as written in the CNAM list.
   const groups = [...Map.groupBy(brands, (b) => b.brand).entries()];
@@ -95,117 +75,115 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
 
   return (
     <PublicMain narrow>
-      <Link href="/medicaments" className="inline-flex min-h-12 items-center gap-2 self-start text-brand underline">
+      <Link href="/medicaments" className="-mb-3 inline-flex min-h-12 items-center gap-2 self-start text-sm font-medium text-brand underline">
         <ArrowLeft size={18} aria-hidden="true" className="rtl:-scale-x-100" />
         {t('public.medicine.back')}
       </Link>
 
-      <header className="flex flex-col gap-1.5">
-        <div className="flex items-start gap-3">
+      <header className="flex flex-col gap-2">
+        <div className="flex items-center gap-3">
           <FormPicture label={presentation?.label} brand={presentation?.brand} locale={locale} className="size-14" />
           <div className="min-w-0">
-            <h1 className="text-2xl leading-tight font-semibold tracking-tight break-words text-ink sm:text-[1.75rem]">
+            <h1 className="text-2xl leading-tight font-semibold tracking-tight break-words text-ink sm:text-3xl">
               <Ltr>{presentation ? presentationText(presentation, t) : molecule.name}</Ltr>
             </h1>
-            {presentation ? <Ltr className="text-ink-muted">{molecule.name}</Ltr> : null}
+            {presentation ? (
+              <p className="mt-1 text-sm text-ink-muted">
+                {t('public.medicine.selectedMolecule', { name: `\u2068${molecule.name}\u2069` })}
+              </p>
+            ) : null}
           </div>
         </div>
-        {simulated ? (
-          <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-muted">
-            <span className="font-semibold text-ink">
-              {t('public.medicine.simulation')}
-            </span>
-            <span>{t('public.medicine.simulationNote')}</span>
-          </p>
-        ) : null}
-        {categories.length > 0 ? (
-          <p className="text-sm text-ink-muted">
-            {t('public.medicine.category', {
-              category: categories.map((c) => t(`public.medicine.categories.${c}`)).join(', '),
-            })}
-          </p>
-        ) : null}
       </header>
 
-      <section aria-labelledby="status-title" className={`panel flex flex-col gap-3 border-s-4 p-5 ${tone}`}>
-        <h2 id="status-title" className="text-sm font-medium text-ink-muted">
-          {t('public.medicine.statusTitle')}
-        </h2>
-        <p className="flex items-start gap-3 text-xl leading-snug font-semibold text-ink">
-          {shown ? (
+      <section aria-labelledby="status-title" className="flex flex-col gap-2.5 rounded-xl bg-surface-subtle p-4 sm:p-6">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <p className="text-sm font-medium text-ink-muted">{t('public.medicine.statusTitle')}</p>
+          {status.origins.map((origin) => (
+            <OriginBadge key={origin} origin={origin} locale={locale} />
+          ))}
+        </div>
+        <h2 id="status-title" className="flex items-start gap-2.5 text-xl leading-snug font-semibold text-ink">
+          {status.level === 'confirmed' || status.level === 'cleared' ? (
             <span className="pt-1">
-              <LevelShape level={status.level as 'confirmed' | 'cleared'} size={18} />
+              <LevelShape level={status.level} size={18} />
             </span>
           ) : null}
-          <span>{headline}</span>
-        </p>
-        <p className="text-ink">{body}</p>
-        {fresh && status.evaluatedAt ? (
-          <p className="text-sm text-ink-muted">
-            <FreshnessLine
-              at={status.evaluatedAt}
-              text={fresh.unit === 'now' ? t('public.freshness.now') : t(`public.freshness.${fresh.unit}`, { n: fresh.n })}
-              title={t('public.freshness.title', {
-                date: formatPublicDate(status.evaluatedAt, locale),
-                time: formatPublicTime(status.evaluatedAt, locale),
-              })}
-            />
-          </p>
-        ) : null}
-        {status.origins.length > 0 ? (
-          <p className="flex flex-wrap gap-1.5">
-            {status.origins.map((o) => (
-              <OriginBadge key={o} origin={o} locale={locale} />
-            ))}
-          </p>
-        ) : null}
+          <span>{publicStatusSentence(status, t, locale)}</span>
+        </h2>
+        <p className="max-w-[60ch] text-sm text-ink-muted">{t('public.medicine.statusScope')}</p>
         {arrival && status.level === 'confirmed' ? (
-          <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-ink">
+          <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink">
             <PackageCheck size={18} aria-hidden="true" className="shrink-0 text-brand" />
             <span>{t('public.medicine.arrival', { date: formatPublicDate(arrival.expectedOn, locale) })}</span>
             <OriginBadge origin={arrival.origin} locale={locale} />
           </p>
         ) : null}
-        <p className="border-t border-line pt-3 text-sm text-ink-muted">{t('public.medicine.disclaimer')}</p>
+        <p className="text-sm text-ink-muted">{t('public.medicine.disclaimer')}</p>
       </section>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
         <ButtonLink href={requestHref} className="w-full sm:w-auto sm:self-start">
           <MapPin size={18} aria-hidden="true" />
           {t('public.medicine.ask')}
         </ButtonLink>
-        <FollowButton moleculeId={molecule.id} name={molecule.name} level={status.level} since={status.since} locale={locale} />
-        <ShareStatus
-          title={molecule.name}
-          text={shareText(molecule.name, status, t, locale)}
-          url={`${siteUrl()}/medicaments/${molecule.id}`}
-          labels={{
-            share: t('public.share.button'),
-            whatsapp: t('public.share.whatsapp'),
-            copy: t('public.share.copy'),
-            copied: t('public.share.copied'),
-            copyFailed: t('public.share.copyFailed'),
-          }}
-        />
-      </div>
-
-      {history ? (
-        <section aria-label={t('public.history.title', { days: HISTORY_DAYS })} className="flex flex-col gap-1">
-          <LevelBand
-            events={history}
-            days={HISTORY_DAYS}
-            title={t('public.history.title', { days: HISTORY_DAYS })}
-            text={{
-              level: (level) => t(`public.history.levels.${level === 'confirmed' || level === 'cleared' ? level : 'none'}`),
-              today: t('public.history.today'),
-              axisStart: (from) => formatPublicDate(from, locale),
-              beforeWindow: (from) => t('public.history.beforeWindow', { date: formatPublicDate(from, locale) }),
-              fromDate: (date) => t('public.history.fromDate', { date: formatPublicDate(date, locale) }),
-              noLevel: t('public.history.noLevel', { days: HISTORY_DAYS }),
+        <div className="flex flex-wrap items-start gap-x-4">
+          <FollowButton moleculeId={molecule.id} name={molecule.name} level={status.level} since={status.since} locale={locale} />
+          <ShareStatus
+            title={molecule.name}
+            text={shareText(molecule.name, status, t, locale)}
+            url={`${siteUrl()}/medicaments/${molecule.id}`}
+            labels={{
+              share: t('public.share.button'),
+              whatsapp: t('public.share.whatsapp'),
+              copy: t('public.share.copy'),
+              copied: t('public.share.copied'),
+              copyFailed: t('public.share.copyFailed'),
             }}
           />
-          <p className="text-xs text-ink-muted">{t('public.history.note')}</p>
-        </section>
+        </div>
+      </div>
+
+      {history || shown ? (
+        <details className="group border-y border-line">
+          <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 py-2 font-medium text-brand [&::-webkit-details-marker]:hidden">
+            {t('public.medicine.statusDetails')}
+            <ChevronDown size={18} aria-hidden="true" className="shrink-0 group-open:rotate-180" />
+          </summary>
+          <div className="flex flex-col gap-2 pb-4 text-sm text-ink-muted">
+            {body ? <p>{body}</p> : null}
+            {fresh && status.evaluatedAt ? (
+              <p>
+                <FreshnessLine
+                  at={status.evaluatedAt}
+                  text={fresh.unit === 'now' ? t('public.freshness.now') : t(`public.freshness.${fresh.unit}`, { n: fresh.n })}
+                  title={t('public.freshness.title', {
+                    date: formatPublicDate(status.evaluatedAt, locale),
+                    time: formatPublicTime(status.evaluatedAt, locale),
+                  })}
+                />
+              </p>
+            ) : null}
+            {history ? (
+              <>
+                <LevelBand
+                  events={history}
+                  days={HISTORY_DAYS}
+                  title={t('public.history.title', { days: HISTORY_DAYS })}
+                  text={{
+                    level: (level) => t(`public.history.levels.${level === 'confirmed' || level === 'cleared' ? level : 'none'}`),
+                    today: t('public.history.today'),
+                    axisStart: (from) => formatPublicDate(from, locale),
+                    beforeWindow: (from) => t('public.history.beforeWindow', { date: formatPublicDate(from, locale) }),
+                    fromDate: (date) => t('public.history.fromDate', { date: formatPublicDate(date, locale) }),
+                    noLevel: t('public.history.noLevel', { days: HISTORY_DAYS }),
+                  }}
+                />
+                <p>{t('public.history.note')}</p>
+              </>
+            ) : null}
+          </div>
+        </details>
       ) : null}
 
       <section aria-labelledby="brands-title" className="flex flex-col gap-3">
@@ -214,12 +192,15 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
         </h2>
         {brands.length > 0 ? (
           <>
-            <p className="rounded-md border border-ink-muted px-4 py-3 font-medium text-ink">{t('public.medicine.brandsCaution')}</p>
-            <ul className="panel hairline-list overflow-hidden">
+            <p className="flex items-start gap-2 text-sm text-ink-muted">
+              <Info size={17} aria-hidden="true" className="mt-0.5 shrink-0 text-brand" />
+              {t('public.medicine.brandsCaution')}
+            </p>
+            <ul className="hairline-list border-y border-line">
               {groups.map(([brand, items]) => (
                 <li key={brand}>
                   <details className="group">
-                    <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 hover:bg-surface-subtle [&::-webkit-details-marker]:hidden">
+                    <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-2 py-2 hover:bg-surface-subtle [&::-webkit-details-marker]:hidden">
                       <span className="flex min-w-0 flex-col gap-0.5">
                         <Ltr className="self-start font-medium break-words text-ink">{brand}</Ltr>
                         <span className="text-sm text-ink-muted">
@@ -242,7 +223,7 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
                     <ul className="flex flex-col gap-1 px-4 pb-3">
                       {items.map((b) => (
                         <li key={b.id}>
-                          <Link href={`/medicaments/${molecule.id}?presentation=${b.id}`} className="inline-flex min-h-12 items-center gap-3">
+                          <Link href={`/medicaments/${molecule.id}?presentation=${b.id}`} prefetch={false} aria-current={b.id === presentation?.id ? 'page' : undefined} className="inline-flex min-h-12 items-center gap-3">
                             <FormPicture label={b.label} brand={b.brand} locale={locale} />
                             <Ltr className="text-sm break-words">{b.label}</Ltr>
                           </Link>

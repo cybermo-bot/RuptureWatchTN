@@ -148,7 +148,7 @@ test.describe('patient request', () => {
       const search = page.getByRole('searchbox');
       await expect(search).toBeFocused();
       await search.fill('antiomal');
-      await page.getByRole('link', { name: catalogue }).click();
+      await page.getByRole('link', { name: product }).click();
       await expect(page.getByRole('heading', { level: 1 })).toHaveText(product);
       await page.getByRole('link', { name: 'Demander aux pharmacies proches' }).click();
       await page.getByLabel('Choisissez votre gouvernorat').selectOption({ label: 'Tunis' });

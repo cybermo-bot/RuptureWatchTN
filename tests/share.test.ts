@@ -10,10 +10,11 @@ const ar = translator('ar');
 const SINCE = '2026-11-14T09:00:00Z';
 
 describe('share a verified status', () => {
-  it('shares the confirmed sentence, the simulated mention and the disclaimer', () => {
+  it('shares the confirmed sentence, its scope, the simulated mention and the disclaimer', () => {
     const text = shareText('LEVETIRACETAM', { level: 'confirmed', since: SINCE, origins: ['simulated'], evaluatedAt: null }, fr, 'fr');
     expect(text.split('\n')).toEqual([
       'LEVETIRACETAM : Rupture confirmée depuis le 14 novembre 2026.',
+      'Ce signal regroupe les signalements par molécule. La disponibilité peut varier selon la marque, le dosage ou la forme.',
       'Simulé : données de démonstration, pas des signalements réels.',
       'Ceci n’est pas une déclaration officielle de rupture.',
     ]);
@@ -36,6 +37,7 @@ describe('share a verified status', () => {
   it('is written in Arabic for an Arabic visitor', () => {
     const text = shareText('LEVETIRACETAM', { level: 'confirmed', since: SINCE, origins: ['simulated'], evaluatedAt: null }, ar, 'ar');
     expect(text).toContain('انقطاع مؤكَّد');
+    expect(text).toContain('تُجمّع البلاغات حسب المادة الفعّالة.');
     expect(text).toContain('محاكاة');
     expect(text).toContain('هذا ليس إعلانًا رسميًا عن انقطاع الدواء.');
   });
