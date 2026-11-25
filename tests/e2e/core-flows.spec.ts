@@ -68,8 +68,10 @@ test.describe('scenario', () => {
 
   test('the decision demo keeps Tunis probable, confirms on Sfax and resets without a write', async ({ page }) => {
     const writes: string[] = [];
+    // Writes to the app only: Vercel's toolbar on preview deployments posts to vercel.live.
+    const app = new URL(BASE!).origin;
     page.on('request', (request) => {
-      if (!['GET', 'HEAD', 'OPTIONS'].includes(request.method())) writes.push(request.method());
+      if (!['GET', 'HEAD', 'OPTIONS'].includes(request.method()) && new URL(request.url()).origin === app) writes.push(request.method());
     });
     await page.goto('/scenario');
     const demo = page.locator('section[aria-labelledby="decision-demo"]');
