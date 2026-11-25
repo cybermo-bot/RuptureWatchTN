@@ -2,6 +2,18 @@
 
 Newest first. Each entry: what was decided, and why.
 
+## 2026-11-25, home page redesign
+
+### Home page: the scenario on a 3D globe, plum palette scoped to the home page
+
+- `/` is rebuilt in `components/landing/`: a full-screen 3D globe where the scenario plays (start, foreign notice, first report in Tunis, three reports in one governorate, Sfax confirms, stand-down), with the card pinned to the place it describes; then how it works, the national unit's view, one door per space (patient, pharmacy, wholesaler, institutions) and the pages that explain the method. Why: the jury opens `/` cold, and a scenario that moves from place to place shows "one governorate cannot confirm, two can" in a few seconds.
+- Palette: the plum stage, lavender paper, violet action and citron accent of session 6, scoped under `.rwl` in `components/landing/landing.css`. The rest of the site keeps the cool-neutral and petrol design of `DESIGN.md`. This departs from `CLAUDE.md` §9 and `DESIGN.md` for the home page only, with gradients and more motion than they allow: for the team lead to accept or refuse before merging. The `.home-*` classes in `app/globals.css` and `components/home/` are left untouched, so going back is a one-file change in `app/(site)/page.tsx`.
+- Nothing is hardcoded: the tour's stops come from `tourStops()` (`lib/landing/tour.ts`, tested in `tests/landing-tour.test.ts`) over `scenarioFrames()`; the national view, the level chart and the figures from `frozenFrame()`, `lib/signal/params.ts` and the governorate map. Counts under 3 read "<3" and the number of governorates is withheld below 3 pharmacies, as in `shownEvidence()`. Every simulated block carries "Simulé", and the first screen carries "Ceci n'est pas une déclaration officielle de rupture."
+- Accessibility: a level is always its shape (the `LevelBadge` shapes) and its word. Under reduced motion the tour starts paused on the first event and nothing flies or pulses. Every section is rendered on the server and readable without JavaScript; without WebGL 2 the card stays in place on a still background. The tour is driven by buttons (previous, play or pause, next, one per step).
+- New dependency `three` (and `@types/three` for development): the WebGL scene of the globe. It is imported dynamically by the home page only, after the first paint, so no other page and no first paint carries it.
+- Fonts: Instrument Serif, Hanken Grotesk and DM Mono through `next/font`, declared in `components/landing/fonts.ts` so only the home page downloads them.
+- Data: `public/landing/globe.json` (about 520 KB, fetched after the first paint). Sources and licences in `data/SOURCES.md`; the map credit is shown on the globe and under the relief map.
+
 ## 2026-11-24, session 6
 
 ### Visual direction: plum stage, lavender paper, violet action, citron accent (part 6, branch `ui-refresh`)

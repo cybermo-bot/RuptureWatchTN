@@ -851,6 +851,11 @@
         "use": "La carte des 24 gouvernorats.",
         "licence": "Open Database License (ODbL) 1.0. © les contributeurs d’OpenStreetMap, via geoBoundaries."
       },
+      "natural": {
+        "name": "Terres et côtes du globe (Natural Earth)",
+        "use": "Les terres, les côtes et les frontières autour de la Tunisie sur le globe de la page d’accueil.",
+        "licence": "Domaine public. Les limites des gouvernorats sur le même globe restent sous Open Database License (ODbL) 1.0, © les contributeurs d’OpenStreetMap, via geoBoundaries."
+      },
       "iso": {
         "name": "Codes des gouvernorats (ISO 3166-2:TN)",
         "use": "Les codes des 24 gouvernorats (TN-11 pour Tunis).",
@@ -1608,5 +1613,138 @@
     "pilotNote": "À l’échelle d’un pilote : {min} pharmacies dans au moins {governorates} gouvernorats suffisent pour « confirmée » tant que le réseau compte au plus {members} pharmacies membres actives. Au-delà, il en faut {pct} % des pharmacies membres actives.",
     "memoryNote": "La comparaison se calcule dans votre navigateur avec les règles du site. Rien n’est enregistré.",
     "explorerLink": "Faire varier les seuils sur la page Méthode"
+  },
+  "landing": {
+    "nav": {
+      "label": "Sections de l’accueil",
+      "home": "RuptureWatch TN, haut de la page d’accueil",
+      "scenario": "Scénario",
+      "national": "Vue nationale",
+      "roles": "Espaces",
+      "explore": "Comprendre"
+    },
+    "hero": {
+      "titleEmphasis": "signal",
+      "phasesLabel": "Le principe",
+      "globeLabel": "Globe 3D de la Tunisie et de ses 24 gouvernorats. Le scénario simulé s’y joue étape par étape : la caméra se pose sur chaque gouvernorat qui signale. Glissez pour faire tourner, survolez un gouvernorat pour voir son nom.",
+      "country": "Tunisie",
+      "noticePlace": "Avis étranger (fictif)",
+      "controls": "Commandes de la visite du scénario",
+      "previous": "Étape précédente",
+      "next": "Étape suivante",
+      "pause": "Mettre en pause",
+      "play": "Lancer la visite",
+      "start": "Début",
+      "startLabel": "Début du scénario",
+      "stepLabel": "Jour {day}, {level}",
+      "unchanged": "Niveau inchangé",
+      "alerted": "Alertés",
+      "standDown": "Message de levée",
+      "nobody": "Personne n’est alerté : le niveau ne change pas.",
+      "recipients": {
+        "followers": "Pharmacies",
+        "wholesalers": "Grossistes",
+        "hospitals": "Hôpitaux",
+        "coordination": "Coordination"
+      },
+      "meta": {
+        "pharmacy": "pharmacie",
+        "pharmacies": "pharmacies",
+        "governorate": "gouvernorat",
+        "governorates": "gouvernorats",
+        "notice": "avis étranger",
+        "notices": "avis étrangers"
+      },
+      "rules": {
+        "foreign_notice_only": "Seul, un avis étranger ne fait jamais dépasser ce niveau.",
+        "local_report_plus_foreign_notice": "Une pharmacie signale « commandé, non livré ».",
+        "two_pharmacies_7d": "{pharmacies} pharmacies, un seul gouvernorat : pas encore de confirmation.",
+        "confirmed_threshold": "Un deuxième gouvernorat signale : le seuil est atteint.",
+        "delivered_again_cleared": "Livraisons reprises, puis {quietDays} jours sans signalement."
+      },
+      "disclaimerLong": "Médicament et pharmacies fictifs, règles d’alerte réelles.",
+      "attribution": "Carte : © contributeurs OpenStreetMap via geoBoundaries (ODbL) ; Natural Earth"
+    },
+    "band": [
+      "Aucune donnée patient",
+      "Aucune pharmacie nommée à un tiers",
+      "Chaque niveau expliqué",
+      "Règles publiques",
+      "Données simulées signalées"
+    ],
+    "how": {
+      "phoneMedicine": "Médicament de démonstration",
+      "phoneStatus": "Commandé, non livré",
+      "phoneAction": "Signaler",
+      "phoneDone": "Signalement reçu",
+      "ladder": {
+        "watch": "avis étranger",
+        "likely": "{pharmacies} pharmacies en {days} j",
+        "confirmed": "{governorates} gouvernorats",
+        "cleared": "{days} j de calme"
+      }
+    },
+    "national": {
+      "emphasis": "cellule nationale",
+      "mapHint": "Survolez la carte pour l’incliner.",
+      "mapLabel": "Carte de la Tunisie en relief : {governorates} au niveau {level}, les autres gouvernorats sans signalement.",
+      "legend": "{level} : {governorates}",
+      "since": "Depuis le jour {day}",
+      "seeScenario": "Voir ce médicament dans le scénario",
+      "source": "Calculé à l’affichage à partir du scénario : pharmacies fictives, règles d’alerte réelles. Rien n’est lu dans la base.",
+      "changesTitle": "Derniers changements",
+      "change": "{from} → {to}",
+      "changeMeta": "Jour {day} · {why}",
+      "why": {
+        "foreign_notice_only": "un avis étranger seul, sans aller plus loin",
+        "local_report_plus_foreign_notice": "un signalement local plus un avis étranger",
+        "confirmed_threshold": "{pharmacies} pharmacies dans {governorates} gouvernorats",
+        "delivered_again_cleared": "livraisons reprises, puis {quietDays} jours sans signalement"
+      },
+      "chartLabel": "Niveau du médicament jour par jour : {steps}.",
+      "chartStep": "{level} au jour {day}",
+      "marks": {
+        "foreign_notice_only": "Avis étranger",
+        "local_report_plus_foreign_notice": "1er signalement",
+        "confirmed_threshold": "2ᵉ gouvernorat",
+        "delivered_again_cleared": "Levée"
+      },
+      "figures": {
+        "governorates": "gouvernorats sur la carte",
+        "levels": "niveaux d’alerte, chacun expliqué",
+        "hoursUnit": "h",
+        "hours": "règle de la commande non livrée",
+        "daysUnit": "jours",
+        "quiet": "de calme avant la levée"
+      }
+    },
+    "roles": {
+      "eyebrow": "Une porte par espace",
+      "emphasis": "votre espace",
+      "intro": "Le patient entre sans compte. Pharmacies, grossistes et institutions ont chacun leur porte, avec un compte de démonstration.",
+      "publicHint": "Sans compte, sans nom, sans numéro.",
+      "miniStatus": "Aucune rupture confirmée à ce jour",
+      "miniPrivacy": "Aucun compte, aucun nom, aucun numéro.",
+      "institutions": [
+        "Ministère de la Santé",
+        "Pharmacie centrale",
+        "Ordre des pharmaciens",
+        "Pharmacie hospitalière"
+      ]
+    },
+    "explore": {
+      "eyebrow": "Aller plus loin",
+      "directoryBody": "Les pharmacies ouvertes autour de vous, sur une carte, sans compte.",
+      "views": [
+        "Pharmacie",
+        "Grossiste",
+        "Coordination",
+        "Public"
+      ]
+    },
+    "footer": {
+      "label": "Pied de page",
+      "noEndorsement": "Aucun logo ni aval d’institution n’est impliqué."
+    }
   }
 }

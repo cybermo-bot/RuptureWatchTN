@@ -26,6 +26,14 @@ Raw files are in `data/raw/` and are never edited by hand. Cleaned files in `dat
 - **Produced:** `data/reference/governorates-map.json` by `scripts/build-governorate-map.ts`, and `data/reference/governorate-areas.json` by `scripts/build-directory-areas.ts` (track C: for each governorate, its names from the governorates migration, the area-weighted centroid of its outline and its bounding box, used by `/pharmacies` when a visitor picks a governorate).
 - **Rejected:** Natural Earth 10m admin-1 (public domain): it has 23 Tunisian units and no Ariana (TN-12).
 
+## Natural Earth: land and coastlines for the home page globe
+
+- **Publisher:** Natural Earth, public domain map data at 1:10m, 1:50m and 1:110m scales.
+- **Page:** https://www.naturalearthdata.com/
+- **File:** land at 1:110m, 1:50m and 1:10m and countries at 1:50m, as TopoJSON from the `world-atlas` 2.0.2 npm package (https://github.com/topojson/world-atlas).
+- **Licence:** public domain. No attribution required; credited on the globe anyway.
+- **Produced:** `public/landing/globe.json`, 2026-11-24, once, for the home page, by a Node script with `d3-geo` and `topojson-client` that is not yet in `scripts/`. Land is sampled as dots on a latitude-corrected grid (1.5° for the world, 0.2° around the Mediterranean, 0.065° around Tunisia), leaving Tunisia itself to the governorate outlines; coastlines and borders are clipped to the region. The same file holds the 24 governorate outlines of the geoBoundaries file above (islets under about 3 km² dropped), with each governorate's centroid, radius and bounding box: that part is under the ODbL, credited on the globe and under the relief map. Used only by `components/landing/globe-engine.ts`.
+
 ## ISO 3166-2:TN governorate codes
 
 - **Checked against:** https://en.wikipedia.org/wiki/ISO_3166-2:TN (list of the 24 codes), on 2026-11-21. Used only to verify the codes in `supabase/migrations/20261121000200_reference_data.sql`; no text copied. French names use common usage ("Ariana" where ISO writes "L'Ariana").
