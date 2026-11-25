@@ -7,8 +7,11 @@ import { Button } from '@/components/Button';
 import { SiteFooter, SiteHeader, SiteMain } from '@/components/SiteChrome';
 import { canEnterAudience, isAccessAudience } from '@/lib/auth/access';
 import { getCurrentSession } from '@/lib/auth/session';
-import { HOME_BY_TYPE } from '@/lib/demo/roles';
+import { type DemoRoleKey, HOME_BY_TYPE } from '@/lib/demo/roles';
 import { t } from '@/lib/i18n';
+
+// The institution door lists one demo per institutional space (lib/demo/roles.ts), the others one each.
+const INSTITUTION_DEMOS = ['coordination', 'centrale', 'ordre', 'hopital'] as const satisfies readonly DemoRoleKey[];
 
 const inputClass = 'min-h-12 w-full rounded-md border border-ink-muted bg-surface px-3 text-base font-normal text-ink';
 
@@ -22,7 +25,8 @@ export default async function SignInPage({ params, searchParams }: PageProps<'/c
     redirect(type === 'pharmacy' ? '/pharmacie/signaler' : HOME_BY_TYPE[type]);
   }
 
-  const demoRole = audience === 'pharmacie' ? 'pharmacie-tunis' : audience === 'grossiste' ? 'grossiste' : null;
+  const demoRole: DemoRoleKey | null =
+    audience === 'pharmacie' ? 'pharmacie-tunis' : audience === 'grossiste' ? 'grossiste' : null;
 
   return (
     <>
@@ -53,6 +57,21 @@ export default async function SignInPage({ params, searchParams }: PageProps<'/c
               <Button type="submit" name="role" value={demoRole} variant="quiet" className="w-full">
                 {t('core.access.demo')}
               </Button>
+            </form>
+          ) : null}
+          {audience === 'institution' ? (
+            <form action={signInAsDemoRole} className="mt-5 border-t border-line pt-3" aria-labelledby="demo-institution">
+              <h2 id="demo-institution" className="text-base font-semibold text-ink">{t('core.access.institution.demoTitle')}</h2>
+              <p className="mt-1 text-sm text-ink-muted">{t('core.access.institution.demoNote')}</p>
+              <ul className="mt-2 grid">
+                {INSTITUTION_DEMOS.map((key) => (
+                  <li key={key}>
+                    <Button type="submit" name="role" value={key} variant="quiet" className="w-full">
+                      {t(`core.access.institution.demo.${key}`)}
+                    </Button>
+                  </li>
+                ))}
+              </ul>
             </form>
           ) : null}
         </section>

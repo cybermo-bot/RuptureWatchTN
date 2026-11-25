@@ -233,4 +233,23 @@ test.describe('institutions', () => {
     const pages = pdf.match(/\/Type\s*\/Page(?!s)/g)?.length ?? 0;
     expect(pages).toBe(1);
   });
+
+  test('8. every institutional demo opens its space from the institution door', async ({ browser }) => {
+    const demos = [
+      ['Démo : Ministère de la Santé', '/coordination'],
+      ['Démo : Pharmacie centrale', '/centrale'],
+      ['Démo : Ordre des pharmaciens', '/ordre'],
+      ['Démo : pharmacie hospitalière', '/hopital'],
+    ] as const;
+    for (const [name, home] of demos) {
+      // A fresh context: a signed-in visitor is sent on from the door instead of seeing it.
+      const context = await browser.newContext();
+      const page = await context.newPage();
+      await page.goto('/connexion/institution');
+      await page.getByRole('button', { name, exact: true }).click();
+      await page.waitForURL((url) => url.pathname === home, { timeout: 30_000 });
+      await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+      await context.close();
+    }
+  });
 });

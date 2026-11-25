@@ -62,7 +62,15 @@
     },
     "institution": {
       "title": "Accès institutionnel",
-      "description": "Espace réservé aux comptes habilités par l’équipe RuptureWatch."
+      "description": "Espace réservé aux comptes habilités par l’équipe RuptureWatch.",
+      "demoTitle": "Espaces de démonstration",
+      "demoNote": "Organisations fictives et données simulées. Ces espaces sont conçus pour les institutions, pas utilisés par elles.",
+      "demo": {
+        "coordination": "Démo : Ministère de la Santé",
+        "centrale": "Démo : Pharmacie centrale",
+        "ordre": "Démo : Ordre des pharmaciens",
+        "hopital": "Démo : pharmacie hospitalière"
+      }
     }
   },
   "decisionBlock": {
