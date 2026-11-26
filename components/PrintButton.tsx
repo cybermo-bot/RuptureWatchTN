@@ -1,6 +1,7 @@
 'use client';
 
 import { Printer } from 'lucide-react';
+import { buttonClass } from '@/components/Button';
 import { t } from '@/lib/i18n';
 
 /** Opens the browser's print dialog ("Enregistrer au format PDF" keeps a copy). */
@@ -9,9 +10,9 @@ export function PrintButton() {
     <button
       type="button"
       onClick={() => window.print()}
-      className="inline-flex min-h-12 items-center gap-2 rounded-md bg-brand px-4 font-medium text-white transition-colors duration-150 hover:bg-brand-strong"
+      className={buttonClass()}
     >
-      <Printer size={18} aria-hidden="true" />
+      <Printer size={20} aria-hidden="true" />
       {t('core.note.print')}
     </button>
   );

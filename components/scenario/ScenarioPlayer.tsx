@@ -7,14 +7,16 @@ import { explanationText, RuleDetails } from '@/components/LevelExplanation';
 import { LevelBadge } from '@/components/LevelBadge';
 import { MissingLine } from '@/components/MissingLine';
 import { OriginBadge } from '@/components/OriginBadge';
-import { StateTimeline } from '@/components/scenario/StateTimeline';
+import { LevelStepChart } from '@/components/scenario/LevelStepChart';
+import { StopRail } from '@/components/scenario/StopRail';
+import { tourStops } from '@/lib/landing/tour';
 import { t, type MessageKey } from '@/lib/i18n';
 import { PLATFORM_ACTORS } from '@/lib/playbooks/actors';
 import { scenarioFrames, type ScenarioFrame } from '@/lib/scenario/frames';
 
 // Plays the scenario in the browser: buildScenario() and evaluate() from lib/signal, in memory.
 // It never calls the server; "Recommencer" is the whole reset.
-// Two editorial regions (session 6): on the plum stage, the state timeline and the event that just
+// Two editorial regions (session 6): on the petrol stage, the state timeline and the event that just
 // happened; beside it, a pane answering "Pourquoi ce niveau ?" and "Qui peut agir ?". Manual by
 // default: the visitor steps through, or presses play. Arrow keys step, Space plays or pauses.
 
@@ -38,7 +40,7 @@ function mapValues(f: ScenarioFrame): Partial<Record<string, GovernorateValue>> 
 }
 
 const STAGE_BUTTON =
-  'inline-flex min-h-12 items-center justify-center gap-2 rounded-md px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45 sm:px-4';
+  'inline-flex min-h-12 items-center justify-center gap-2 rounded-sm px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45 sm:px-4';
 
 function isTyping(target: EventTarget | null): boolean {
   const el = target as HTMLElement | null;
@@ -47,6 +49,7 @@ function isTyping(target: EventTarget | null): boolean {
 
 export function ScenarioPlayer() {
   const frames = useMemo(() => scenarioFrames(t('core.scenario.noticeSource'), '/methode#garde-fous'), []);
+  const stops = useMemo(() => tourStops(frames), [frames]);
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
   const last = frames.length - 1;
@@ -100,13 +103,13 @@ export function ScenarioPlayer() {
   return (
     <div className="flex flex-col gap-6" data-step={index} data-level={frame.level} data-done={done ? 'true' : 'false'}>
       <div className="grid gap-5 lg:grid-cols-12 lg:items-start">
-        {/* Region 1, on the plum stage: controls, the timeline, what just happened. */}
-        <section aria-labelledby="etape" className="stage flex flex-col gap-6 rounded-xl bg-stage p-5 text-on-stage sm:p-7 lg:col-span-8">
+        {/* Region 1, on the petrol stage: controls, the timeline, what just happened. */}
+        <section aria-labelledby="etape" className="stage flex flex-col gap-6 rounded-md bg-stage p-5 text-on-stage sm:p-7 lg:col-span-8">
           <div role="group" aria-label={t('core.scenario.controls')} className="flex flex-col gap-3">
             <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
               {running ? (
                 <button type="button" onClick={() => setPlaying(false)} className={`${STAGE_BUTTON} col-span-2 bg-on-stage text-stage hover:bg-white`}>
-                  <Pause size={18} aria-hidden="true" />
+                  <Pause size={20} aria-hidden="true" />
                   {t('core.scenario.pause')}
                 </button>
               ) : (
@@ -117,7 +120,7 @@ export function ScenarioPlayer() {
                   data-action="play"
                   className={`${STAGE_BUTTON} col-span-2 bg-on-stage text-stage hover:bg-white`}
                 >
-                  <Play size={18} aria-hidden="true" />
+                  <Play size={20} aria-hidden="true" />
                   {index === 0 ? t('core.scenario.play') : t('core.scenario.resume')}
                 </button>
               )}
@@ -127,7 +130,7 @@ export function ScenarioPlayer() {
                 disabled={index === 0}
                 className={`${STAGE_BUTTON} border border-stage-line text-on-stage hover:bg-stage-raised`}
               >
-                <ChevronLeft size={18} aria-hidden="true" />
+                <ChevronLeft size={20} aria-hidden="true" />
                 {t('core.scenario.previous')}
               </button>
               <button
@@ -137,7 +140,7 @@ export function ScenarioPlayer() {
                 className={`${STAGE_BUTTON} border border-stage-line text-on-stage hover:bg-stage-raised`}
               >
                 {t('core.scenario.step')}
-                <ChevronRight size={18} aria-hidden="true" />
+                <ChevronRight size={20} aria-hidden="true" />
               </button>
               <button
                 type="button"
@@ -158,10 +161,13 @@ export function ScenarioPlayer() {
             </p>
           </div>
 
-          <StateTimeline
-            steps={frames.map((f) => ({ index: f.index, day: f.day, level: f.level, changed: f.changed }))}
-            selected={index}
-            label={t('core.scenario.timelineLabel')}
+          <StopRail
+            stops={stops}
+            index={index}
+            onSelect={(i) => {
+              setPlaying(false);
+              setIndex(i);
+            }}
           />
 
           <div className="grid gap-6 sm:grid-cols-[minmax(0,1fr)_10rem] lg:grid-cols-[minmax(0,1fr)_11rem]">
@@ -255,6 +261,7 @@ export function ScenarioPlayer() {
           {t('core.scenario.historyTitle')}
           <OriginBadge origin="simulated" />
         </h2>
+        <LevelStepChart frames={frames} index={index} />
         {changes.length === 0 ? (
           <p className="text-sm text-ink-muted">{t('core.scenario.historyEmpty')}</p>
         ) : (
@@ -276,7 +283,7 @@ export function ScenarioPlayer() {
                     <span className="font-medium text-ink">{stepText(f)}</span>
                     <LevelBadge level={f.level} />
                   </span>
-                  <ChevronRight size={18} aria-hidden="true" className="text-brand" />
+                  <ChevronRight size={20} aria-hidden="true" className="text-brand" />
                 </button>
               </li>
             ))}

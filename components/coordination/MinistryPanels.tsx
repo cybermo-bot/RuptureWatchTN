@@ -51,7 +51,7 @@ export function NationalMapPanel({ map, level, selectedId }: { map: Record<strin
                   <Link
                     href={href(f)}
                     aria-current={current ? 'true' : undefined}
-                    className={`inline-flex min-h-12 items-center rounded-md border px-3 text-sm no-underline transition-colors duration-150 ${
+                    className={`inline-flex min-h-12 items-center rounded-sm border px-3 text-sm no-underline transition-colors duration-(--dur-fast) ${
                       current ? 'border-ink bg-surface-subtle font-medium text-ink' : 'border-line text-ink hover:border-ink-muted'
                     }`}
                   >

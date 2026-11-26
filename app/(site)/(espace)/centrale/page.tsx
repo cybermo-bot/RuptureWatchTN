@@ -1,11 +1,14 @@
 import { redirect } from 'next/navigation';
-import { Button } from '@/components/Button';
+import { Button, buttonClass } from '@/components/Button';
 import { Panel } from '@/components/console/Panel';
 import { MedicineDecision } from '@/components/coordination/MedicineDecision';
+import { presentationsReported } from '@/lib/presentations/reported';
 import { EmptyState } from '@/components/EmptyState';
 import { ArrivalLine, CatalogueLine } from '@/components/institutions/Lines';
 import { LiveRefresh } from '@/components/LiveRefresh';
+import { LevelBadge } from '@/components/LevelBadge';
 import { PageHeader } from '@/components/PageHeader';
+import { Stat, StatRow } from '@/components/ui/Stat';
 import { getCurrentSession } from '@/lib/auth/session';
 import { createUserClient } from '@/lib/db/server';
 import { HOME_BY_TYPE } from '@/lib/demo/roles';
@@ -30,7 +33,11 @@ export default async function CentralHome({ searchParams }: PageProps<'/centrale
   const ids = all.map((s) => s.molecule_id);
   const [facts, arrivals] = await Promise.all([loadCatalogueFacts(client, ids), upcomingArrivals(client, ids)]);
   const signals = byLevelCategoryBrands(all, facts);
+  // Pilot-3 item 2: the presentations reported for each medicine of the list.
+  const presentations = new Map(await Promise.all(signals.map(async (s) => [s.molecule_id, await presentationsReported(s.molecule_id)] as const)));
   const today = tunisToday();
+  // Key figures, computed from the list itself: medicines at each level, arrivals announced.
+  const atLevel = (level: string) => signals.filter((x) => x.level === level).length;
   const max = tunisDayIn(365);
   const named = signals.find((s) => s.molecule_id === m)?.molecule_name ?? '';
   const message =
@@ -48,6 +55,14 @@ export default async function CentralHome({ searchParams }: PageProps<'/centrale
     <div className="flex flex-col gap-6">
       <PageHeader meta={t('core.orgTypes.central_pharmacy')} title={t('core.space.titles.central_pharmacy')} description={t('core.central.intro')} />
       <LiveRefresh table="signals" fallbackMs={15_000} />
+      {signals.length > 0 ? (
+        <StatRow label={t('core.central.figures.label')}>
+          <Stat value={atLevel('confirmed')} label={<LevelBadge level="confirmed" />} />
+          <Stat value={atLevel('likely')} label={<LevelBadge level="likely" />} />
+          <Stat value={atLevel('watch')} label={<LevelBadge level="watch" />} />
+          <Stat value={arrivals.size} label={t('core.central.figures.arrivals')} />
+        </StatRow>
+      ) : null}
       {message ? (
         <p role="status" className={`panel border-s-4 p-4 text-ink ${message.ok ? 'border-s-level-cleared' : 'border-s-level-confirmed'}`}>
           {message.text}
@@ -67,12 +82,12 @@ export default async function CentralHome({ searchParams }: PageProps<'/centrale
               return (
                 <li key={s.molecule_id} id={`m-${s.molecule_id}`} className="flex scroll-mt-20 flex-col gap-2 px-4 py-4">
                   <span className="font-medium break-words text-ink">{s.molecule_name}</span>
-                  <MedicineDecision signal={s} action={eligible ? (
+                  <MedicineDecision signal={s} presentations={presentations.get(s.molecule_id)} action={eligible ? (
                     <details className="group mt-1" open={m === s.molecule_id && Boolean(erreur)}>
-                      <summary className="min-h-12 w-fit cursor-pointer content-center rounded-md bg-brand px-5 font-medium text-white hover:bg-brand-strong">
+                      <summary className={buttonClass('primary', 'w-fit cursor-pointer list-none [&::-webkit-details-marker]:hidden')}>
                         {t('core.central.announceTitle')}
                       </summary>
-                      <form action={announceArrival} aria-labelledby={`${formId}-titre`} className="mt-2 flex max-w-xl flex-col gap-4 rounded-md border border-line p-4">
+                      <form action={announceArrival} aria-labelledby={`${formId}-titre`} className="mt-2 flex max-w-xl flex-col gap-4 rounded-sm border border-line p-4">
                         <input type="hidden" name="molecule_id" value={s.molecule_id} />
                         <p id={`${formId}-titre`} className="text-sm text-ink-muted">
                           {t('core.central.announceHint')}
@@ -85,7 +100,7 @@ export default async function CentralHome({ searchParams }: PageProps<'/centrale
                             required
                             min={today}
                             max={max}
-                            className="min-h-12 w-full max-w-xs rounded-md border border-ink-muted bg-surface px-3 text-base font-normal"
+                            className="min-h-12 w-full max-w-xs rounded-sm border border-ink-muted bg-surface px-3 text-base font-normal"
                           />
                         </label>
                         <fieldset className="flex flex-col gap-1">

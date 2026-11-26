@@ -1,17 +1,20 @@
 import Link from 'next/link';
+import { buttonClass } from '@/components/Button';
 import type { ReactNode } from 'react';
 import { Logo, LogoMark } from '@/components/brand/Logo';
 import { UnderstandNav } from '@/components/console/UnderstandNav';
 import { FeedbackLink } from '@/components/feedback/FeedbackLink';
 import { isPilot } from '@/lib/env';
 import { t } from '@/lib/i18n';
+import { PageEnter } from '@/components/ui/PageEnter';
 
 // Chrome of the showcase pages (home, scenario, four views, method, replay, status): the logo,
 // the "Comprendre" pages, and the way into the roles. Same identity as the console.
 
-export function Wordmark() {
+/** named: the header copy, the one view-transition name per page (one per page only). */
+export function Wordmark({ named = false }: { named?: boolean }) {
   return (
-    <Link href="/" className="inline-flex min-h-12 items-center no-underline hover:text-ink">
+    <Link href="/" className={`${named ? 'rw-wordmark ' : ''}inline-flex min-h-12 items-center no-underline hover:text-ink`}>
       <Logo />
       <span className="sr-only">, {t('core.app.title')}</span>
     </Link>
@@ -22,14 +25,14 @@ export function SiteHeader({ children, compact = false }: { children?: ReactNode
   return (
     <header className="border-b border-line bg-surface">
       <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-x-6 gap-y-1 px-4 sm:px-6 lg:px-8">
-        <Wordmark />
+        <Wordmark named />
         {!compact ? <div className="order-3 -mx-4 w-[calc(100%+2rem)] overflow-x-auto border-t border-line px-4 sm:order-none sm:mx-0 sm:w-auto sm:border-0 sm:px-0 lg:flex-1">
           <UnderstandNav />
         </div> : null}
         {children ?? (!compact && (
           <Link
             href={isPilot() ? '/connexion/pharmacie' : '/#roles'}
-            className="inline-flex min-h-11 items-center rounded-md bg-brand px-4 text-sm font-medium text-white no-underline hover:bg-brand-strong hover:text-white"
+            className={buttonClass('primary', 'px-4 text-sm')}
           >
             {t(isPilot() ? 'core.pilot.signIn' : 'core.site.chooseRole')}
           </Link>
@@ -62,9 +65,9 @@ export function SiteFooter() {
 export function SiteMain({ children, narrow = false, className = '' }: { children: ReactNode; narrow?: boolean; className?: string }) {
   return (
     <main id="contenu" className={`w-full flex-1 bg-page ${className}`}>
-      <div className={`mx-auto flex w-full flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8 lg:py-10 ${narrow ? 'max-w-3xl' : 'max-w-7xl'}`}>
+      <PageEnter className={`mx-auto flex w-full flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8 lg:py-10 ${narrow ? 'max-w-3xl' : 'max-w-7xl'}`}>
         {children}
-      </div>
+      </PageEnter>
     </main>
   );
 }

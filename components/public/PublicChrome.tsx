@@ -16,7 +16,7 @@ export function PublicHeader({ locale }: { locale: Locale }) {
     <header className="sticky top-0 z-[1100] border-b border-line bg-surface">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-x-6 px-4 sm:px-8">
         <div className="flex min-w-0 items-center gap-6">
-          <Link href="/" aria-label={t('public.shell.wordmarkTitle')} className="inline-flex min-h-14 items-center no-underline">
+          <Link href="/" aria-label={t('public.shell.wordmarkTitle')} className="rw-wordmark inline-flex min-h-14 items-center no-underline">
             <Logo compact />
           </Link>
           <PublicNav locale={locale} variant="top" />
@@ -31,7 +31,7 @@ export function PublicFooter({ locale }: { locale: Locale }) {
   const t = translator(locale);
   return (
     <>
-      <footer className="mt-auto border-t border-line bg-surface-subtle pb-20 sm:pb-0">
+      <footer className="mt-auto border-t border-line pb-[calc(3.5rem+env(safe-area-inset-bottom))] sm:pb-0">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-ink-muted sm:flex-row sm:items-start sm:justify-between sm:px-8">
           <p className="flex max-w-prose items-start gap-3">
             <LogoMark size={20} className="mt-0.5 text-ink-muted" />

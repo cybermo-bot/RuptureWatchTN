@@ -6,6 +6,7 @@ import type { OrganisationType } from '@/lib/demo/roles';
 import type { MessageKey } from '@/lib/i18n';
 
 export type NavIcon =
+  | 'today'
   | 'report'
   | 'followed'
   | 'alerts'
@@ -41,8 +42,8 @@ const PHARMACY_REPORT = '^/pharmacie/signaler';
 
 export const NAV: Record<OrganisationType, NavItem[]> = {
   pharmacy: [
+    { href: '/pharmacie', label: 'core.pharmacy.today.nav', icon: 'today', match: PHARMACY_HOME },
     { href: '/pharmacie/signaler', label: 'core.nav.items.report', icon: 'report', match: PHARMACY_REPORT },
-    { href: '/pharmacie', label: 'core.nav.items.followed', icon: 'followed', match: PHARMACY_HOME },
     { href: '/pharmacie/demandes', label: 'core.nav.items.requests', icon: 'requests', badge: 'requests' },
     { href: '/pharmacie/alertes', label: 'core.nav.items.alerts', icon: 'alerts', badge: 'alerts' },
     { href: '/pharmacie/plus', label: 'core.nav.items.more', icon: 'more', match: '^/pharmacie/(plus|whatsapp)' },
@@ -71,12 +72,12 @@ export const NAV: Record<OrganisationType, NavItem[]> = {
  * neighbour at 375 px (pilot-1 item 7).
  */
 export const PHARMACY_TABS: NavItem[] = [
-  { href: '/pharmacie/signaler', label: 'core.nav.items.report', icon: 'report', match: PHARMACY_REPORT },
-  { href: '/pharmacie', label: 'core.nav.items.followed', icon: 'followed', match: PHARMACY_HOME },
+  { href: '/pharmacie', label: 'core.pharmacy.tabs.home', icon: 'today', match: PHARMACY_HOME },
+  { href: '/pharmacie/signaler', label: 'core.pharmacy.tabs.report', icon: 'report', match: PHARMACY_REPORT },
   { href: '/pharmacie/demandes', label: 'core.pharmacy.tabs.requests', icon: 'requests', badge: 'requests' },
   {
     href: '/pharmacie/plus',
-    label: 'core.nav.items.more',
+    label: 'core.pharmacy.tabs.more',
     icon: 'more',
     match: '^/pharmacie/(plus|whatsapp|alertes)',
     badge: 'alerts',

@@ -74,7 +74,7 @@ export function EpisodeCursor({ episodes }: { episodes: CursorEpisode[] }) {
             setKey(ev.target.value);
             setOffset(null);
           }}
-          className="min-h-12 max-w-full rounded-md border border-line bg-surface px-3 text-ink"
+          className="min-h-12 max-w-full rounded-sm border border-line bg-surface px-3 text-ink"
         >
           {episodes.map((e) => (
             <option key={e.key} value={e.key}>
@@ -105,7 +105,7 @@ export function EpisodeCursor({ episodes }: { episodes: CursorEpisode[] }) {
           className="h-12 w-full accent-[var(--brand)]"
         />
       </div>
-      <div className="flex flex-col gap-2 rounded-lg bg-surface-subtle p-4" aria-live="polite">
+      <div className="flex flex-col gap-2 rounded-md bg-surface-subtle p-4" aria-live="polite">
         <p className="text-sm text-ink-muted">{t('core.replay.cursorLevel', { date: formatDate(date) })}</p>
         <LevelBadge level={result.level} className="text-base" />
         {episode.foreign ? (

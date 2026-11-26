@@ -450,6 +450,9 @@
     "reportCta": "Signaler une commande non livrée",
     "tabsLabel": "Sections de l’espace pharmacie",
     "tabs": {
+      "home": "Accueil",
+      "report": "Signaler",
+      "more": "Plus",
       "followed": "Mes médicaments suivis",
       "requests": "Demandes",
       "alerts": "Alertes",
@@ -461,11 +464,23 @@
     "since": "depuis le {date}",
     "addTitle": "Suivre un médicament",
     "openMolecule": "Ouvrir la fiche de {molecule}",
-    "homeTitle": "Mes médicaments",
+    "homeTitle": "Vos médicaments",
     "followedCount": "{count} médicaments suivis",
     "followedCountOne": "1 médicament suivi",
     "levelsCount": "dont {count} avec un niveau",
-    "searchTitle": "Suivre un autre médicament"
+    "searchTitle": "Suivre un autre médicament",
+    "today": {
+      "title": "Aujourd’hui",
+      "nav": "Aujourd’hui",
+      "noRequests": "Aucun patient n’attend votre réponse.",
+      "allRequests": "Toutes les demandes ({count})",
+      "new": "nouveau",
+      "notice": "avis étranger",
+      "quiet": "{count} médicaments sans signal",
+      "quietOne": "1 médicament sans signal",
+      "toastOne": "Un patient demande un médicament.",
+      "toastMany": "{count} nouvelles demandes de patients."
+    }
   },
   "follow": {
     "searchLabel": "Rechercher un médicament",
@@ -507,7 +522,19 @@
       "when": "La date de commande"
     },
     "changeMedicine": "Changer de médicament",
+    "presentation": {
+      "title": "Quelle présentation ?",
+      "unknown": "Plusieurs ou je ne sais pas",
+      "more": "Autres présentations ({n})"
+    },
     "rule72": "Règle des {hours} heures : une commande compte comme signal si elle n’est toujours pas livrée {hours} heures après l’avoir passée. Commandée il y a moins de 3 jours ? Rien n’est envoyé, revenez si elle n’arrive pas."
+  },
+  "presentations": {
+    "title": "Présentations signalées",
+    "window": "· {days} derniers jours",
+    "none": "Les signalements ne précisent pas encore de présentation.",
+    "count": "{n} pharmacies",
+    "own": "Présentation signalée : {product}"
   },
   "result": {
     "title": "Signalement reçu",
@@ -526,7 +553,7 @@
     "belowThresholdOne": "Votre signalement est enregistré. Il faut le signalement d’une deuxième pharmacie pour passer à « Probable ».",
     "belowThresholdMany": "Votre signalement est enregistré. Il faut les signalements de {count} pharmacies sur {days} jours pour passer à « Probable ».",
     "toMolecule": "Voir la fiche du médicament",
-    "toHome": "Retour à mes médicaments",
+    "toHome": "Retour à l’accueil",
     "countLabelMany": "pharmacies signalent ce médicament",
     "countLabelFew": "Moins de 3 pharmacies signalent ce médicament",
     "countGovernorates": "dans {count} gouvernorats",
@@ -611,6 +638,12 @@
     "back": "Retour"
   },
   "coordination": {
+    "tabs": {
+      "label": "Vues de la cellule nationale",
+      "signals": "Signaux",
+      "demand": "Demande des patients",
+      "journal": "Journal"
+    },
     "signalsTitle": "Médicaments avec un signal",
     "emptyTitle": "Aucun signal pour l’instant",
     "emptyBody": "Dès qu’une pharmacie signale une commande non livrée, le médicament apparaît ici avec son niveau et son explication.",
@@ -959,6 +992,18 @@
     }
   },
   "scenario": {
+    "rail": {
+      "label": "Étapes clés du scénario",
+      "start": "Départ",
+      "startLabel": "Départ : aucun signal",
+      "ahead": "Jour {day} : à venir"
+    },
+    "chart": {
+      "title": "Niveau jour par jour",
+      "label": "Niveau du médicament fictif jour par jour : {steps}.",
+      "step": "{level} au jour {day}",
+      "none": "aucun changement pour l’instant"
+    },
     "title": "Le scénario : une rupture simulée, du premier signe à la levée",
     "intro": "Trois semaines de signalements fictifs pour un médicament fictif, joués pas à pas par les vraies règles d’alerte. Tout se passe dans votre navigateur : rien n’est écrit dans la base de données.",
     "molecule": "Médicament de démonstration (fictif)",
@@ -1379,6 +1424,10 @@
     "footer": "Note produite automatiquement : chaque valeur est calculée, aucune phrase n’est écrite à la main."
   },
   "central": {
+    "figures": {
+      "label": "Chiffres clés de la centrale",
+      "arrivals": "Arrivages annoncés"
+    },
     "intro": "Les médicaments qui ont un niveau en Tunisie, avec leur catégorie CNAM et le nombre d’autres marques. Pour un médicament « probable » ou « confirmée », annoncez un arrivage : les pharmacies le voient, le niveau ne change pas.",
     "listTitle": "Médicaments à risque",
     "listIntro": "Classés par niveau, puis catégorie (vitaux d’abord), puis nombre d’autres marques (le moins d’abord).",

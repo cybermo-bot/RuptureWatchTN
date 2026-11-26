@@ -30,6 +30,8 @@ export interface MapMarker extends LatLng {
   /** Shown on hover and in the marker's popup, as plain text. */
   label: string;
   detail?: string;
+  /** Just arrived (a patient's answer): its pin drops once. */
+  fresh?: boolean;
 }
 
 export type MapProvider = 'google' | 'osm';
@@ -137,6 +139,7 @@ async function createGoogleMap(el: HTMLElement, center: LatLng, zoom: number, ma
       for (const p of pins) p.map = null;
       pins = markers.map((m) => {
         const pin = new PinElement({ background: BRAND, borderColor: INK, glyphColor: '#FFFFFF' });
+        if (m.fresh) pin.element.classList.add('rw-pin-drop');
         const marker = new AdvancedMarkerElement({ map, position: m, title: m.label, content: pin.element, gmpClickable: true });
         marker.addListener('click', () => {
           info.setContent(popupNode(m));
@@ -184,7 +187,7 @@ async function createOsmMap(el: HTMLElement, center: LatLng, zoom: number, isCan
     setMarkers(markers, fit = false) {
       layer.clearLayers();
       for (const m of markers) {
-        L.circleMarker([m.lat, m.lng], { radius: 9, color: INK, weight: 2, fillColor: BRAND, fillOpacity: 0.9 })
+        L.circleMarker([m.lat, m.lng], { radius: 9, color: INK, weight: 2, fillColor: BRAND, fillOpacity: 0.9, className: m.fresh ? 'rw-pin-drop' : '' })
           .bindTooltip(m.label)
           .bindPopup(popupNode(m))
           .addTo(layer);
@@ -306,7 +309,7 @@ export function PatientMap({
             type="button"
             onClick={locate}
             disabled={status === 'loading'}
-            className="inline-flex min-h-12 w-fit items-center rounded-md border border-brand px-4 font-medium text-brand hover:bg-surface-subtle disabled:opacity-50"
+            className="inline-flex min-h-12 w-fit items-center rounded-sm border border-brand px-4 font-medium text-brand hover:bg-surface-subtle disabled:opacity-50"
           >
             {t('public.map.nearMe')}
           </button>
@@ -323,7 +326,7 @@ export function PatientMap({
           role="region"
           aria-label={label}
           data-provider={status}
-          className={`w-full overflow-hidden rounded-md border border-line bg-surface-subtle ${className}`}
+          className={`w-full overflow-hidden rounded-sm border border-line bg-surface-subtle ${className}`}
         />
         {status === 'loading' ? (
           <p className="absolute inset-0 flex items-center justify-center text-sm text-ink-muted">{t('public.map.loading')}</p>

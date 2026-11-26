@@ -35,7 +35,7 @@ export function DecisionDemo() {
   ]));
 
   return (
-    <section aria-labelledby="decision-demo" className="stage grid gap-4 rounded-lg bg-stage px-4 py-5 text-on-stage sm:p-8 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] md:gap-10">
+    <section aria-labelledby="decision-demo" className="stage grid gap-4 rounded-md bg-stage px-4 py-5 text-on-stage sm:p-8 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] md:gap-10">
       <div className="flex flex-col items-start gap-4">
         <h1 id="decision-demo" className="text-[2rem] leading-tight font-semibold tracking-tight sm:text-4xl">{t('core.decisionDemo.title')}</h1>
         <p className="text-on-stage-muted">{t('core.decisionDemo.medicine')}</p>
@@ -55,7 +55,7 @@ export function DecisionDemo() {
             <legend className="mb-2 font-medium">{t('core.decisionDemo.choose')}</legend>
             <div className="flex gap-3">
               {choices.map(({ key, name }) => (
-                <button key={key} type="button" className="min-h-12 rounded-md border border-on-stage-muted px-5 font-medium hover:bg-stage-raised" onClick={() => setChosen(key)}>{name}</button>
+                <button key={key} type="button" className="min-h-12 rounded-sm border border-on-stage-muted px-5 font-medium hover:bg-stage-raised" onClick={() => setChosen(key)}>{name}</button>
               ))}
             </div>
           </fieldset>

@@ -115,6 +115,11 @@ test.describe('patient request', () => {
   test.skip(!BASE, 'Set E2E_BASE_URL to the preview or production URL.');
 
   test('4. a patient request, a pharmacy answer, the pharmacy on the map', async ({ browser }) => {
+    // The pharmacy has « Aujourd'hui » open before the request arrives (pilot-4 step 4).
+    const pharmacy = await (await browser.newContext()).newPage();
+    await signInAs(pharmacy, 'Pharmacie (Tunis)');
+    await pharmacy.goto('/pharmacie');
+
     // The patient: no account, a fresh browser (a new random device id).
     const patient = await (await browser.newContext()).newPage();
     await patient.goto(`/medicaments/${SHOWCASE}/demande`);
@@ -123,9 +128,10 @@ test.describe('patient request', () => {
     await expect(patient).toHaveURL(/\/demandes\/[0-9a-f-]+$/, { timeout: 30_000 });
     await expect(patient.getByText('Pharmacie démo A, Tunis')).toHaveCount(0);
 
+    // The open page polls: the new request shows a toast (and the « Demandes » badge pulses once).
+    await expect(pharmacy.locator('[data-request-toast]')).toBeVisible({ timeout: 30_000 });
+
     // The pharmacy answers the newest request for the showcase medicine, showing its name.
-    const pharmacy = await (await browser.newContext()).newPage();
-    await signInAs(pharmacy, 'Pharmacie (Tunis)');
     await pharmacy.goto('/pharmacie/demandes');
     const row = pharmacy.locator('li').filter({ hasText: SHOWCASE_NAME }).last();
     await row.getByRole('button', { name: 'Disponible, me montrer au patient' }).click();

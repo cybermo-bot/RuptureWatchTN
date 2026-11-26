@@ -19,6 +19,7 @@ import { DEMO_SHORTAGE_MOLECULE } from './showcase';
 
 // The molecule's name lives in the showcase list (lib/demo/showcase.ts), with the others.
 export { DEMO_SHORTAGE_MOLECULE };
+import { DEMO_PRESENTATION_CODES, demoMedicineFor } from './presentations';
 
 const HOUR = 3_600_000;
 const DAY = 24 * HOUR;
@@ -73,6 +74,8 @@ export interface DemoReport {
   organisation_id: string;
   governorate_code: string;
   molecule_id: string;
+  /** The product named (pilot-3), a real CNAM presentation of the molecule, or null. */
+  medicine_id: string | null;
   kind: 'not_delivered';
   ordered_at: string;
   reported_at: string;
@@ -116,7 +119,12 @@ const REQUESTS: [string, number][] = [
 ];
 
 /** The rows to insert, dated back from `now`: a report about every eleven hours, spreading outwards. */
-export function buildDemoShortage(moleculeId: string, now: Date, governorateNames: Map<string, string>): DemoPlan {
+export function buildDemoShortage(
+  moleculeId: string,
+  now: Date,
+  governorateNames: Map<string, string>,
+  medicineIds: readonly string[] = [],
+): DemoPlan {
   const organisations: DemoOrganisation[] = [];
   const reporters = REPORTERS.map((r) => {
     if (r.seedId) return { id: r.seedId, governorateCode: r.governorateCode };
@@ -140,6 +148,7 @@ export function buildDemoShortage(moleculeId: string, now: Date, governorateName
       organisation_id: r.id,
       governorate_code: r.governorateCode,
       molecule_id: moleculeId,
+      medicine_id: demoMedicineFor(medicineIds, i),
       kind: 'not_delivered',
       ordered_at: new Date(reportedAt.getTime() - ORDER_DELAY_DAYS * DAY).toISOString(),
       reported_at: reportedAt.toISOString(),
@@ -165,6 +174,8 @@ export function buildDemoShortage(moleculeId: string, now: Date, governorateName
 
 export interface DemoStore {
   moleculeIdByName(name: string): Promise<string | null>;
+  /** The ids of these CNAM codes among the molecule's presentations, in the codes' order. */
+  medicineIdsByCode(moleculeId: string, codes: readonly string[]): Promise<string[]>;
   governorateNames(): Promise<Map<string, string>>;
   /** Reports on the molecule that are not this demo's, whether it has a signal row, and how many demo rows exist. */
   state(moleculeId: string): Promise<{ otherReports: number; hasSignal: boolean; demoRows: number }>;
@@ -192,7 +203,8 @@ export async function runDemoShortage(store: DemoStore, now: Date = new Date()):
   if (before.otherReports > 0 || before.hasSignal) {
     return { status: 'refused', reason: 'someone else has reported this molecule or it has a signal: the demo would mix with real data' };
   }
-  const plan = buildDemoShortage(moleculeId, now, await store.governorateNames());
+  const medicineIds = await store.medicineIdsByCode(moleculeId, DEMO_PRESENTATION_CODES[DEMO_SHORTAGE_MOLECULE] ?? []);
+  const plan = buildDemoShortage(moleculeId, now, await store.governorateNames(), medicineIds);
   await store.insert(plan);
   const changes: RecomputeResult[] = [];
   for (const r of plan.reports) {

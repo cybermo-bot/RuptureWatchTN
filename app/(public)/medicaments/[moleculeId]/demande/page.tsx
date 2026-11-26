@@ -1,8 +1,6 @@
-import { ArrowLeft } from 'lucide-react';
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Ltr } from '@/components/public/Ltr';
+import { PageHeader } from '@/components/PageHeader';
 import { PublicMain } from '@/components/public/PublicChrome';
 import { RequestForm } from '@/components/public/RequestForm';
 import { requestsConfigured } from '@/lib/availability/device';
@@ -27,14 +25,11 @@ export default async function RequestCreatePage(props: PageProps<'/medicaments/[
   if (selected !== undefined && !presentation) notFound();
   return (
     <PublicMain narrow>
-      <Link href={`/medicaments/${molecule.id}${presentation ? `?presentation=${presentation.id}` : ''}`} className="-mb-3 inline-flex min-h-12 items-center gap-2 self-start text-sm font-medium text-brand underline">
-        <ArrowLeft size={18} aria-hidden="true" className="rtl:-scale-x-100" />
-        <Ltr>{molecule.name}</Ltr>
-      </Link>
-      <header className="flex flex-col gap-1.5">
-        <h1 className="text-2xl leading-tight font-semibold tracking-tight text-ink sm:text-3xl">{t('public.request.title')}</h1>
-        <p className="max-w-prose text-ink-muted">{t('public.request.intro')}</p>
-      </header>
+      <PageHeader
+        back={{ href: `/medicaments/${molecule.id}${presentation ? `?presentation=${presentation.id}` : ''}`, label: molecule.name }}
+        title={t('public.request.title')}
+        description={t('public.request.intro')}
+      />
       {requestsConfigured() ? (
         <RequestForm key={presentation?.id ?? molecule.id} molecule={molecule} presentation={presentation} list={governorates(locale)} locale={locale} />
       ) : (

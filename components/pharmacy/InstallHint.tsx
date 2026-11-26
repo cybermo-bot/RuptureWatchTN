@@ -1,6 +1,7 @@
 'use client';
 
 import { Smartphone, X } from 'lucide-react';
+import { buttonClass } from '@/components/Button';
 import { useEffect, useState } from 'react';
 import { t } from '@/lib/i18n';
 
@@ -61,7 +62,7 @@ export function InstallHint({ compact = false, hideOnIos = false }: { compact?: 
 
   return (
     <section aria-labelledby="installer" className="panel flex items-start gap-3 p-4">
-      <Smartphone size={22} strokeWidth={1.75} aria-hidden="true" className="mt-0.5 shrink-0 text-brand" />
+      <Smartphone size={24} strokeWidth={1.75} aria-hidden="true" className="mt-0.5 shrink-0 text-brand" />
       <div className="flex min-w-0 flex-1 flex-col gap-2">
         <h2 id="installer" className="font-semibold text-ink">
           {t('core.install.title')}
@@ -75,7 +76,7 @@ export function InstallHint({ compact = false, hideOnIos = false }: { compact?: 
               const choice = await prompt.userChoice;
               if (choice.outcome === 'accepted') setMode('hidden');
             }}
-            className="inline-flex min-h-12 w-fit items-center rounded-md bg-brand px-4 text-sm font-medium text-white hover:bg-brand-strong"
+            className={buttonClass('primary', 'w-fit px-4 text-sm')}
           >
             {t('core.install.action')}
           </button>
@@ -90,9 +91,9 @@ export function InstallHint({ compact = false, hideOnIos = false }: { compact?: 
             localStorage.setItem(DISMISSED, '1');
             setMode('hidden');
           }}
-          className="-m-2 inline-flex min-h-12 min-w-12 shrink-0 items-center justify-center rounded-md text-ink-muted hover:text-ink"
+          className="-m-2 inline-flex min-h-12 min-w-12 shrink-0 items-center justify-center rounded-sm text-ink-muted hover:text-ink"
         >
-          <X size={18} aria-hidden="true" />
+          <X size={20} aria-hidden="true" />
           <span className="sr-only">{t('core.install.dismiss')}</span>
         </button>
       )}

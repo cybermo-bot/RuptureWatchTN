@@ -39,6 +39,15 @@ beforeAll(async () => {
       id, type, `Organisation ${type}`,
     ]);
   }
+  // Pilot-3 item 2: two of the demo's CNAM codes are presentations of the molecule; the third
+  // belongs to another molecule here, so it must never be named on the demo's reports.
+  await db.query(
+    `insert into public.medicines (id, code_pct, label, brand, dci, molecule_id, source) values
+       ('00000000-0000-4000-8000-000000000501', '106811', 'EPITAM 100mg/ml Sol Buv Fl 240ml', 'EPITAM', 'LEVETIRACETAM', $1, 'test'),
+       ('00000000-0000-4000-8000-000000000502', '105727', 'EPIXX 500mg Comp Pell Bt 50', 'EPIXX', 'LEVETIRACETAM', $1, 'test'),
+       ('00000000-0000-4000-8000-000000000503', '303673', 'AUTRE 1 Comp Bt 10', 'AUTRE', 'AUTRE', '00000000-0000-4000-8000-000000000401', 'test')`,
+    [MOL],
+  );
   // Unrelated data that must survive untouched: a follow and a report on another molecule.
   await db.query(`insert into public.followed_molecules (organisation_id, molecule_id) values ('00000000-0000-4000-8000-000000000a01', $1)`, [MOL]);
   await db.query(
@@ -71,6 +80,10 @@ describe('demo:shortage then demo:clear', () => {
     }
     expect([...perGovernorate.values()].filter((p) => p.size >= 3).length).toBeGreaterThanOrEqual(3);
     for (const r of result.plan.reports) expect(r.origin).toBe('simulated');
+    // Pilot-3 item 2: the reports name real presentations of the molecule, mostly the first.
+    const named = result.plan.reports.map((r) => r.medicine_id);
+    expect(new Set(named)).toEqual(new Set(['00000000-0000-4000-8000-000000000501', '00000000-0000-4000-8000-000000000502']));
+    expect(named.filter((m) => m === '00000000-0000-4000-8000-000000000501').length).toBeGreaterThan(named.length / 2);
     for (const o of result.plan.organisations) {
       expect(o.origin).toBe('simulated');
       expect(o.display_name).toMatch(/^Pharmacie démo \d{2}, /);

@@ -69,13 +69,30 @@ export const SHOTS: Shot[] = [
   { name: 'signaler-1-recherche', path: '/pharmacie/signaler', role: 'pharmacie-tunis' },
   // Pilot-1 item 3: a showcase medicine reached from the search, refused to the one-click pharmacy.
   { name: 'signaler-2-showcase', path: `/pharmacie/signaler/${SHOWCASE_ID}`, role: 'pharmacie-tunis' },
+  // Pilot-3 item 1: step 2 of a followed, non-showcase medicine, with « Quelle présentation ? ».
+  // Opens the row only; nothing is sent.
+  { name: 'signaler-2-presentation', path: '/pharmacie/signaler', role: 'pharmacie-tunis', before: async (page) => {
+    await page.locator('section[aria-labelledby="choix-suivis"] a:not([data-showcase])').first().click();
+    await page.locator('[data-presentations]').waitFor();
+  } },
+  // Pilot-4 step 4: the report result, opened by its URL (« Avant » from the query, « Après » the
+  // live level); it only reads, nothing is reported.
+  { name: 'resultat', path: `/pharmacie/molecule/${SHOWCASE_ID}/resultat?avant=likely`, role: 'pharmacie-tunis' },
   { name: 'pharmacie-whatsapp', path: '/pharmacie/whatsapp', role: 'pharmacie-tunis' },
   { name: 'coordination', path: '/coordination', role: 'coordination' },
+  // Pilot-4 step 5: the coordination tabs, in the URL.
+  { name: 'coordination-demande', path: '/coordination?vue=demande', role: 'coordination' },
+  { name: 'coordination-journal', path: '/coordination?vue=journal', role: 'coordination' },
   { name: 'coordination-export', path: '/coordination/export', role: 'coordination' },
   { name: 'coordination-invitation', path: '/coordination/invitation', role: 'coordination' },
   { name: 'grossiste', path: '/grossiste', role: 'grossiste' },
   { name: 'hopital', path: '/hopital', role: 'hopital' },
   { name: 'scenario', path: '/scenario' },
+  // Pilot-4 step 6: the stepper rail and the level chart at « confirmée » (five steps in).
+  { name: 'scenario-etape', path: '/scenario#scenario-complet', before: async (page) => {
+    for (let i = 0; i < 5; i++) await page.keyboard.press('ArrowRight');
+    await page.locator('[data-step="5"]').waitFor();
+  } },
   { name: 'vues', path: '/vues' },
   { name: 'methode', path: '/methode' },
   { name: 'retour', path: '/retour' },
@@ -133,6 +150,18 @@ export const SHOTS: Shot[] = [
     await page.getByRole('searchbox').fill('zzqxw');
     await page.locator('[role="status"] a[href^="/avis?depuis="]').waitFor();
   } },
+  // Pilot-4 step 3: the patient screens with results, and in Arabic. Searches only read.
+  { name: 'recherche-resultats', path: '/medicaments?recherche=1', before: async (page) => {
+    await page.getByRole('searchbox').fill('levetiracetam');
+    await page.locator('main [role="region"] a').first().waitFor();
+  } },
+  { name: 'recherche-resultats-ar', path: '/medicaments?recherche=1', locale: 'ar', before: async (page) => {
+    await page.getByRole('searchbox').fill('levetiracetam');
+    await page.locator('main [role="region"] a').first().waitFor();
+  } },
+  { name: 'demande-ar', path: `/medicaments/${SHOWCASE_ID}/demande`, locale: 'ar' },
+  { name: 'ruptures-passees-ar', path: '/ruptures-passees', locale: 'ar' },
+  { name: 'pharmacies-ar', path: '/pharmacies', locale: 'ar' },
   // Pilot-1 item 7: the pharmacy tab bar (« Demandes »), the coordination tiles, the scenario line.
   { name: 'pharmacie-barre', path: '/pharmacie', role: 'pharmacie-tunis', fullPage: false },
   { name: 'coordination-chiffres', path: '/coordination', role: 'coordination', fullPage: false },
@@ -188,6 +217,9 @@ async function take(browser: Browser, shot: Shot, width: number, out: string, qu
     await page.goto(`${BASE}${shot.path}`, { waitUntil: 'domcontentloaded', timeout: 60_000 });
     await settle(page);
     if (shot.before) await shot.before(page);
+    // Every shot: say when the page scrolls sideways (the ux-audit viewport check).
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+    if (overflow > 0) console.warn(`OVERFLOW ${shot.name} @${width}: ${overflow}px`);
     if (shot.name.startsWith('s7-')) {
       const reflows = await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
       if (!reflows) throw new Error('Horizontal overflow');

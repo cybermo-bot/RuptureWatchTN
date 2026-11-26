@@ -22,7 +22,7 @@ function SourceLink({ href, children }: { href: string; children: React.ReactNod
   return (
     <a href={href} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center gap-1.5 text-brand underline">
       {children}
-      <ExternalLink size={14} aria-hidden="true" />
+      <ExternalLink size={16} aria-hidden="true" />
     </a>
   );
 }
@@ -40,10 +40,10 @@ export default async function PastShortagesPage() {
         <EmptyState title={t('public.past.building')} />
       ) : (
         <>
-          <ul className="panel hairline-list overflow-hidden">
+          <ul className="hairline-list border-y border-line">
             {episodes.map((e) => (
               <li key={e.line} className="flex flex-col gap-1 px-4 py-4">
-                <h2 className="font-semibold text-ink">
+                <h2 className="title-3 text-ink">
                   <Ltr>{e.label}</Ltr>
                 </h2>
                 <p className="text-ink">{t('public.past.started', { date: date(e.tnFirstReport.date) })}</p>

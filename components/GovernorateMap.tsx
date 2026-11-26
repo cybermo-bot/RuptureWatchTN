@@ -19,7 +19,7 @@ interface GovernorateMapProps {
   /** Draw names on the map. Governorates too small to hold a name keep their <title> label. */
   showLabels?: boolean;
   className?: string;
-  /** "stage": drawn on the plum stage (home, scenario). */
+  /** "stage": drawn on the petrol stage (home, scenario). */
   tone?: 'light' | 'stage';
   /** Highlight only the governorate that changed the level. */
   pulseCode?: string | null;

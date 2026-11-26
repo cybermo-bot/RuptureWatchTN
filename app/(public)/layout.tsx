@@ -6,6 +6,7 @@ import { isPilot } from '@/lib/env';
 import { fontVariables, plexArabic } from '@/lib/fonts';
 import { getTranslator } from '@/lib/i18n-server';
 import '../globals.css';
+import { PageEnter } from '@/components/ui/PageEnter';
 
 // Root layout of the public pages: no sign-in, French or Arabic from the visitor's choice
 // (cookie), lang and dir set on the document. The professional spaces have their own root
@@ -30,17 +31,17 @@ export default async function PublicLayout({ children }: { children: React.React
   const { locale, dir, t } = await getTranslator();
   return (
     <html lang={locale} dir={dir} className={`${fontVariables} ${plexArabic.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col bg-surface text-ink">
+      <body className="flex min-h-full flex-col bg-page text-ink">
         <a
           href="#contenu"
-          className="sr-only focus:not-sr-only focus:absolute focus:start-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-surface focus:px-4 focus:py-3"
+          className="sr-only focus:not-sr-only focus:absolute focus:start-4 focus:top-4 focus:z-50 focus:rounded-sm focus:bg-surface focus:px-4 focus:py-3"
         >
           {t('public.shell.skipToContent')}
         </a>
         {isPilot() ? <PilotLine text={t('public.pilot.line')} /> : null}
         <PublicHeader locale={locale} />
         <FollowBanner locale={locale} />
-        {children}
+        <PageEnter className="flex flex-1 flex-col">{children}</PageEnter>
         <PublicFooter locale={locale} />
       </body>
     </html>

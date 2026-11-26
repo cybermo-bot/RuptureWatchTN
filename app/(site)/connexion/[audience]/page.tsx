@@ -21,7 +21,7 @@ const PHARMACY_DEMOS = [
   { key: 'pharmacie-sfax', label: 'core.access.pharmacie.demoSfax' },
 ] as const satisfies readonly { key: DemoRoleKey; label: MessageKey }[];
 
-const inputClass = 'min-h-12 w-full rounded-md border border-ink-muted bg-surface px-3 text-base font-normal text-ink';
+const inputClass = 'min-h-12 w-full rounded-sm border border-ink-muted bg-surface px-3 text-base font-normal text-ink';
 
 export default async function SignInPage({ params, searchParams }: PageProps<'/connexion/[audience]'>) {
   const { audience } = await params;
@@ -41,7 +41,7 @@ export default async function SignInPage({ params, searchParams }: PageProps<'/c
       <SiteHeader compact />
       <SiteMain narrow>
         <Link href="/#roles" className="inline-flex min-h-12 w-fit items-center gap-2">
-          <ArrowLeft size={17} aria-hidden="true" />{t('core.access.home')}
+          <ArrowLeft size={20} aria-hidden="true" />{t('core.access.home')}
         </Link>
         <section className="panel mx-auto w-full max-w-lg p-5 sm:p-8" aria-labelledby="connexion-titre">
           <h1 id="connexion-titre" className="text-3xl font-semibold tracking-tight text-ink">{t(`core.access.${audience}.title`)}</h1>
@@ -83,7 +83,7 @@ export default async function SignInPage({ params, searchParams }: PageProps<'/c
           <details open={erreur || pilot ? true : undefined} className={`group mt-6 ${pilot ? '' : 'border-t border-line'}`}>
             <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 py-2 font-medium text-brand [&::-webkit-details-marker]:hidden">
               {t('core.access.haveAccount')}
-              <ChevronDown size={18} aria-hidden="true" className="shrink-0 group-open:rotate-180" />
+              <ChevronDown size={20} aria-hidden="true" className="shrink-0 group-open:rotate-180" />
             </summary>
             <p className="mt-1 text-sm text-ink-muted">{t('core.access.invitation')}</p>
             {erreur ? <p role="alert" className="mt-4 text-level-confirmed">{t(erreur === 'occupe' ? 'core.access.busy' : 'core.access.invalid')}</p> : null}

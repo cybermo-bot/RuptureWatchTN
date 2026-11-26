@@ -58,7 +58,7 @@ export function RecentChangesList({
         <li key={e.id}>
           <Link
             href={href(e.molecule_id)}
-            className="flex min-h-12 flex-col gap-1 px-4 py-3 no-underline transition-colors duration-150 hover:bg-surface-subtle"
+            className="flex min-h-12 flex-col gap-1 px-4 py-3 no-underline transition-colors duration-(--dur-fast) hover:bg-surface-subtle"
           >
             <span className="flex items-baseline justify-between gap-3">
               <span className="min-w-0 font-medium break-words text-ink">{e.molecule_name}</span>

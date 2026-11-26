@@ -1,4 +1,5 @@
 import {
+  House,
   Activity,
   Bell,
   Download,
@@ -21,6 +22,7 @@ import type { NavIcon } from '@/lib/nav';
 
 // One icon set for the whole product (Lucide). An icon always sits next to its word.
 export const NAV_ICONS: Record<NavIcon, LucideIcon> = {
+  today: House,
   report: Send,
   followed: ListChecks,
   alerts: Bell,

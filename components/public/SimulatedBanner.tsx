@@ -7,7 +7,7 @@ import { TriangleAlert } from 'lucide-react';
 // in the visitor's language.
 export function SimulatedBanner({ text }: { text: string }) {
   return (
-    <p role="note" data-simulated-banner className="flex items-start gap-3 rounded-md bg-stage px-4 py-4 font-semibold text-on-stage sm:px-5">
+    <p role="note" data-simulated-banner className="flex items-start gap-3 rounded-sm bg-stage px-4 py-4 font-semibold text-on-stage sm:px-5">
       <TriangleAlert size={20} strokeWidth={1.75} aria-hidden="true" className="mt-0.5 shrink-0 text-scenario-accent" />
       <span>{text}</span>
     </p>

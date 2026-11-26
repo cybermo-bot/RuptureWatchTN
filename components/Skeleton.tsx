@@ -68,7 +68,7 @@ export function PharmacySkeleton({ label }: { label: string }) {
       <p role="status" className="text-sm text-ink-muted">
         {label}
       </p>
-      <Bone className="h-14 w-full rounded-md" />
+      <Bone className="h-14 w-full rounded-sm" />
       <div aria-hidden="true" className="flex flex-col gap-3">
         <Bone className="h-6 w-52" />
         <div className="panel overflow-hidden">

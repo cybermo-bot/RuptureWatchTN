@@ -50,9 +50,9 @@ export function HintStrip({ type, hint }: { type: OrganisationType; hint: SpaceH
   return (
     <aside
       aria-label={t('core.tryHint.label')}
-      className="mb-5 flex items-center gap-3 rounded-md border border-line bg-surface py-1 ps-3 pe-1 text-sm text-ink print:hidden"
+      className="mb-5 flex items-center gap-3 rounded-sm border border-line bg-surface py-1 ps-3 pe-1 text-sm text-ink print:hidden"
     >
-      <Lightbulb size={18} strokeWidth={1.75} aria-hidden="true" className="shrink-0 text-brand" />
+      <Lightbulb size={20} strokeWidth={1.75} aria-hidden="true" className="shrink-0 text-brand" />
       <p className="min-w-0 flex-1 py-2">
         {t(hint.text, hint.vars)}
         {hint.link ? (
@@ -67,9 +67,9 @@ export function HintStrip({ type, hint }: { type: OrganisationType; hint: SpaceH
       <button
         type="button"
         onClick={dismiss}
-        className="inline-flex size-12 shrink-0 items-center justify-center rounded-md text-ink-muted hover:bg-surface-subtle hover:text-ink"
+        className="inline-flex size-12 shrink-0 items-center justify-center rounded-sm text-ink-muted hover:bg-surface-subtle hover:text-ink"
       >
-        <X size={18} aria-hidden="true" />
+        <X size={20} aria-hidden="true" />
         <span className="sr-only">{t('core.tryHint.dismiss')}</span>
       </button>
     </aside>

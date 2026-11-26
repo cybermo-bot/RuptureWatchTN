@@ -12,6 +12,7 @@ export interface AnswerMarker {
   lng: number;
   label: string;
   detail: string;
+  fresh?: boolean;
 }
 
 export function AnswersMap({ markers, centre, label, locale }: { markers: AnswerMarker[]; centre: LatLng; label: string; locale: Locale }) {

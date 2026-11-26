@@ -108,12 +108,12 @@ export function RequestForm({ molecule, presentation, list, locale }: { molecule
       {presentation ? (
         <fieldset className="flex flex-col gap-1">
           <legend className="pb-1 text-lg font-semibold text-ink">{t('public.request.product')}</legend>
-          <label className="flex min-h-12 cursor-pointer items-center gap-3 rounded-md px-2 py-1.5 font-medium has-checked:bg-surface-subtle hover:bg-surface-subtle">
+          <label className="flex min-h-12 cursor-pointer items-center gap-3 rounded-sm px-2 py-1.5 font-medium has-checked:bg-surface-subtle hover:bg-surface-subtle">
             <input type="radio" name="scope" checked={!anyBrand} onChange={() => setAnyBrand(false)} disabled={pending} className="size-5 shrink-0 accent-brand" />
             <FormPicture label={presentation.label} brand={presentation.brand} locale={locale} />
             <Ltr>{product}</Ltr>
           </label>
-          <label className="flex min-h-12 cursor-pointer items-center gap-3 rounded-md px-2 py-1.5 text-ink-muted has-checked:bg-surface-subtle hover:bg-surface-subtle">
+          <label className="flex min-h-12 cursor-pointer items-center gap-3 rounded-sm px-2 py-1.5 text-ink-muted has-checked:bg-surface-subtle hover:bg-surface-subtle">
             <input type="radio" name="scope" checked={anyBrand} onChange={() => setAnyBrand(true)} disabled={pending} className="size-5 shrink-0 accent-brand" />
             {t('public.request.anyBrand', { name: `\u2068${molecule.name}\u2069` })}
           </label>
@@ -134,7 +134,7 @@ export function RequestForm({ molecule, presentation, list, locale }: { molecule
               setCode(e.target.value);
               setError(null);
             }}
-            className="min-h-12 w-full rounded-md border border-ink-muted bg-surface px-3 text-base text-ink focus:border-brand"
+            className="min-h-12 w-full rounded-sm border border-ink-muted bg-surface px-3 text-base text-ink focus:border-brand"
           >
             <option value="">{t('public.request.choose')}</option>
             {list.map((g) => (
@@ -148,7 +148,7 @@ export function RequestForm({ molecule, presentation, list, locale }: { molecule
         </div>
         <div className="flex flex-col gap-2">
           <button type="button" onClick={locate} disabled={pending || locating === 'locating'} className={buttonClass('quiet', 'self-start')}>
-            <LocateFixed size={18} aria-hidden="true" />
+            <LocateFixed size={20} aria-hidden="true" />
             {t('public.request.nearMe')}
           </button>
           <p className="text-sm text-ink-muted" aria-live="polite">
@@ -178,7 +178,7 @@ export function RequestForm({ molecule, presentation, list, locale }: { molecule
           {code ? t('public.request.scope', { name: requestedName, governorate: nameOf(code) }) : t('public.request.scopeBeforeArea', { name: requestedName })}
         </p>
         <button type="submit" disabled={pending} className={buttonClass('primary', 'w-full sm:w-auto sm:self-start')}>
-          <Send size={18} aria-hidden="true" className="rtl:-scale-x-100" />
+          <Send size={20} aria-hidden="true" className="rtl:-scale-x-100" />
           {pending ? t('public.request.sending') : t('public.request.send')}
         </button>
       </div>

@@ -18,6 +18,11 @@ export function pgliteDemoStore(db: PGlite): DemoStore {
     async moleculeIdByName(name) {
       return (await q<{ id: string }>('select id from public.molecules where name = $1', [name]))[0]?.id ?? null;
     },
+    async medicineIdsByCode(moleculeId, codes) {
+      const rows = await q<{ id: string; code_pct: string }>('select id, code_pct from public.medicines where molecule_id = $1 and code_pct = any($2::text[])', [moleculeId, [...codes]]);
+      const byCode = new Map(rows.map((m) => [m.code_pct, m.id]));
+      return codes.flatMap((code) => (byCode.has(code) ? [byCode.get(code)!] : []));
+    },
     async governorateNames() {
       return new Map((await q<{ code: string; name_fr: string }>('select code, name_fr from public.governorates')).map((g) => [g.code, g.name_fr]));
     },
@@ -44,9 +49,9 @@ export function pgliteDemoStore(db: PGlite): DemoStore {
         }
         for (const r of plan.reports) {
           await tx.query(
-            `insert into public.reports (id, organisation_id, governorate_code, molecule_id, kind, ordered_at, reported_at, channel, origin)
-             values ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
-            [r.id, r.organisation_id, r.governorate_code, r.molecule_id, r.kind, r.ordered_at, r.reported_at, r.channel, r.origin],
+            `insert into public.reports (id, organisation_id, governorate_code, molecule_id, medicine_id, kind, ordered_at, reported_at, channel, origin)
+             values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+            [r.id, r.organisation_id, r.governorate_code, r.molecule_id, r.medicine_id, r.kind, r.ordered_at, r.reported_at, r.channel, r.origin],
           );
         }
         for (const r of plan.requests) {
@@ -97,6 +102,11 @@ export function pgliteNationalStore(db: PGlite): NationalStore {
     async moleculeIdByName(name) {
       return (await q<{ id: string }>('select id from public.molecules where name = $1', [name]))[0]?.id ?? null;
     },
+    async medicineIdsByCode(moleculeId, codes) {
+      const rows = await q<{ id: string; code_pct: string }>('select id, code_pct from public.medicines where molecule_id = $1 and code_pct = any($2::text[])', [moleculeId, [...codes]]);
+      const byCode = new Map(rows.map((m) => [m.code_pct, m.id]));
+      return codes.flatMap((code) => (byCode.has(code) ? [byCode.get(code)!] : []));
+    },
     async governorateNames() {
       return new Map((await q<{ code: string; name_fr: string }>('select code, name_fr from public.governorates')).map((g) => [g.code, g.name_fr]));
     },
@@ -130,9 +140,9 @@ export function pgliteNationalStore(db: PGlite): NationalStore {
         }
         for (const r of plan.reports) {
           await tx.query(
-            `insert into public.reports (id, organisation_id, governorate_code, molecule_id, kind, ordered_at, reported_at, channel, origin)
-             values ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
-            [r.id, r.organisation_id, r.governorate_code, r.molecule_id, r.kind, r.ordered_at, r.reported_at, r.channel, r.origin],
+            `insert into public.reports (id, organisation_id, governorate_code, molecule_id, medicine_id, kind, ordered_at, reported_at, channel, origin)
+             values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+            [r.id, r.organisation_id, r.governorate_code, r.molecule_id, r.medicine_id, r.kind, r.ordered_at, r.reported_at, r.channel, r.origin],
           );
         }
         for (const x of plan.notices) {

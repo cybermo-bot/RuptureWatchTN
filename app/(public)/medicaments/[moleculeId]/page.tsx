@@ -1,10 +1,12 @@
-import { ArrowLeft, ChevronDown, Info, MapPin, PackageCheck } from 'lucide-react';
+import { ChevronDown, Info, MapPin, PackageCheck } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ButtonLink } from '@/components/Button';
 import { LevelShape } from '@/components/LevelBadge';
 import { OriginBadge } from '@/components/OriginBadge';
+import { PageHeader } from '@/components/PageHeader';
+import { Section } from '@/components/ui/Section';
 import { FormPicture } from '@/components/medicine/FormPicture';
 import { FollowButton } from '@/components/public/FollowButton';
 import { Ltr } from '@/components/public/Ltr';
@@ -18,9 +20,10 @@ import { createAnonClient } from '@/lib/db/server';
 import { publicArrival } from '@/lib/institutions/data';
 import { LevelBand } from '@/components/charts/LevelBand';
 import { getBrands, getPublicHistory, getPublicMolecule, getPublicPresentation, getPublicStatus } from '@/lib/public/medicine';
+import { presentationsReportedPublic } from '@/lib/presentations/reported';
 import { ShareStatus } from '@/components/public/ShareStatus';
 import { OG_BASE } from '@/lib/og/meta';
-import { publicStatusSentence, shareText, simulatedBanner, statusLines } from '@/lib/public/share';
+import { publicStatusSentence, shareText, simulatedBanner, statusLines, isSimulatedStatus } from '@/lib/public/share';
 import { SimulatedBanner } from '@/components/public/SimulatedBanner';
 import { presentationText } from '@/lib/public/presentation';
 import { siteUrl } from '@/lib/site';
@@ -49,6 +52,14 @@ export async function generateMetadata(props: PageProps<'/medicaments/[moleculeI
   };
 }
 
+/**
+ * « signalée »: a presentation named on the reports behind a confirmed shortage (pilot-3 item 2).
+ * A word, no level shape: the level belongs to the molecule, not to one product.
+ */
+function ReportedTag({ text }: { text: string }) {
+  return <span className="inline-flex shrink-0 items-center rounded-sm border border-ink-muted px-1.5 text-xs font-medium text-ink">{text}</span>;
+}
+
 export default async function MedicinePage(props: PageProps<'/medicaments/[moleculeId]'>) {
   const { t, locale } = await getTranslator();
   const molecule = await getPublicMolecule((await props.params).moleculeId);
@@ -64,6 +75,9 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
     requestedPresentation === undefined ? null : getPublicPresentation(molecule.id, requestedPresentation),
   ]);
   if (requestedPresentation !== undefined && !presentation) notFound();
+  // Pilot-3 item 2: once « confirmée » on real data, the products pharmacies named (names only).
+  const reported = status.level === 'confirmed' && !isSimulatedStatus(status) ? await presentationsReportedPublic(molecule.id) : [];
+  const reportedIds = new Set(reported.map((r) => r.medicine_id));
   const requestHref = `/medicaments/${molecule.id}/demande${presentation ? `?presentation=${presentation.id}` : ''}`;
 
   const shown = status.level === 'confirmed' || status.level === 'cleared';
@@ -79,30 +93,16 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
 
   return (
     <PublicMain narrow>
-      <Link href="/medicaments" className="-mb-3 inline-flex min-h-12 items-center gap-2 self-start text-sm font-medium text-brand underline">
-        <ArrowLeft size={18} aria-hidden="true" className="rtl:-scale-x-100" />
-        {t('public.medicine.back')}
-      </Link>
-
-      <header className="flex flex-col gap-2">
-        <div className="flex items-center gap-3">
-          <FormPicture label={presentation?.label} brand={presentation?.brand} locale={locale} className="size-14" />
-          <div className="min-w-0">
-            <h1 className="text-2xl leading-tight font-semibold tracking-tight break-words text-ink sm:text-3xl">
-              <Ltr>{presentation ? presentationText(presentation, t) : molecule.name}</Ltr>
-            </h1>
-            {presentation ? (
-              <p className="mt-1 text-sm text-ink-muted">
-                {t('public.medicine.selectedMolecule', { name: `\u2068${molecule.name}\u2069` })}
-              </p>
-            ) : null}
-          </div>
-        </div>
-      </header>
+      <PageHeader
+        back={{ href: '/medicaments', label: t('public.medicine.back') }}
+        picture={<FormPicture label={presentation?.label} brand={presentation?.brand} locale={locale} className="size-16 sm:size-20" />}
+        title={<Ltr>{presentation ? presentationText(presentation, t) : molecule.name}</Ltr>}
+        description={presentation ? t('public.medicine.selectedMolecule', { name: `\u2068${molecule.name}\u2069` }) : undefined}
+      />
 
       {banner ? <SimulatedBanner text={banner} /> : null}
 
-      <section aria-labelledby="status-title" className="flex flex-col gap-2.5 rounded-xl bg-surface-subtle p-4 sm:p-6">
+      <section aria-labelledby="status-title" data-status-card className="flex flex-col gap-3 rounded-lg bg-powder-blue p-4 sm:p-6">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <p className="text-sm font-medium text-ink-muted">{t('public.medicine.statusTitle')}</p>
           {status.origins.map((origin) => (
@@ -117,20 +117,32 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
           ) : null}
           <span>{publicStatusSentence(status, t, locale)}</span>
         </h2>
-        <p className="max-w-[60ch] text-sm text-ink-muted">{t('public.medicine.statusScope')}</p>
         {arrival && status.level === 'confirmed' ? (
           <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink">
-            <PackageCheck size={18} aria-hidden="true" className="shrink-0 text-brand" />
+            <PackageCheck size={20} aria-hidden="true" className="shrink-0 text-brand" />
             <span>{t('public.medicine.arrival', { date: formatPublicDate(arrival.expectedOn, locale) })}</span>
             <OriginBadge origin={arrival.origin} locale={locale} />
           </p>
+        ) : null}
+        {reported.length > 0 ? (
+          <div data-reported-presentations className="flex flex-col gap-1.5 border-t border-line pt-3">
+            <h3 className="text-sm font-medium text-ink">{t('public.medicine.reported.title')}</h3>
+            <ul className="flex flex-col gap-1">
+              {reported.map((r) => (
+                <li key={r.medicine_id} className="flex min-h-10 items-center gap-3">
+                  <FormPicture label={r.label} brand={r.brand} locale={locale} />
+                  <Ltr className="text-sm break-words text-ink">{r.label}</Ltr>
+                </li>
+              ))}
+            </ul>
+          </div>
         ) : null}
         <p className="text-sm text-ink-muted">{t('public.medicine.disclaimer')}</p>
       </section>
 
       <div className="flex flex-col gap-2">
         <ButtonLink href={requestHref} className="w-full sm:w-auto sm:self-start">
-          <MapPin size={18} aria-hidden="true" />
+          <MapPin size={20} aria-hidden="true" />
           {t('public.medicine.ask')}
         </ButtonLink>
         <div className="flex flex-wrap items-start gap-x-4">
@@ -150,13 +162,14 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
         </div>
       </div>
 
-      {history || shown ? (
+      {
         <details className="group border-y border-line">
           <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 py-2 font-medium text-brand [&::-webkit-details-marker]:hidden">
             {t('public.medicine.statusDetails')}
-            <ChevronDown size={18} aria-hidden="true" className="shrink-0 group-open:rotate-180" />
+            <ChevronDown size={20} aria-hidden="true" className="shrink-0 group-open:rotate-180" />
           </summary>
           <div className="flex flex-col gap-2 pb-4 text-sm text-ink-muted">
+            <p className="max-w-[60ch]">{t('public.medicine.statusScope')}</p>
             {body ? <p>{body}</p> : null}
             {fresh && status.evaluatedAt ? (
               <p>
@@ -190,25 +203,25 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
             ) : null}
           </div>
         </details>
-      ) : null}
+      }
 
-      <section aria-labelledby="brands-title" className="flex flex-col gap-3">
-        <h2 id="brands-title" className="text-lg font-semibold text-ink">
-          {t('public.medicine.brandsTitle')}
-        </h2>
+      <Section id="brands-title" title={t('public.medicine.brandsTitle')}>
         {brands.length > 0 ? (
           <>
             <p className="flex items-start gap-2 text-sm text-ink-muted">
-              <Info size={17} aria-hidden="true" className="mt-0.5 shrink-0 text-brand" />
+              <Info size={20} aria-hidden="true" className="mt-0.5 shrink-0 text-brand" />
               {t('public.medicine.brandsCaution')}
             </p>
             <ul className="hairline-list border-y border-line">
               {groups.map(([brand, items]) => (
                 <li key={brand}>
                   <details className="group">
-                    <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-2 py-2 hover:bg-surface-subtle [&::-webkit-details-marker]:hidden">
+                    <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 transition-colors duration-(--dur-instant) hover:bg-powder-blue [&::-webkit-details-marker]:hidden">
                       <span className="flex min-w-0 flex-col gap-0.5">
-                        <Ltr className="self-start font-medium break-words text-ink">{brand}</Ltr>
+                        <span className="flex flex-wrap items-center gap-2">
+                          <Ltr className="font-medium break-words text-ink">{brand}</Ltr>
+                          {items.some((b) => reportedIds.has(b.id)) ? <ReportedTag text={t('public.medicine.reported.tag')} /> : null}
+                        </span>
                         <span className="text-sm text-ink-muted">
                           {items.length === 1
                             ? t('public.medicines.presentationsOne')
@@ -221,7 +234,7 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
                         </span>
                       </span>
                       <ChevronDown
-                        size={18}
+                        size={20}
                         aria-hidden="true"
                         className="shrink-0 text-ink-muted transition-transform group-open:rotate-180 motion-reduce:transition-none"
                       />
@@ -232,6 +245,7 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
                           <Link href={`/medicaments/${molecule.id}?presentation=${b.id}`} prefetch={false} aria-current={b.id === presentation?.id ? 'page' : undefined} className="inline-flex min-h-12 items-center gap-3">
                             <FormPicture label={b.label} brand={b.brand} locale={locale} />
                             <Ltr className="text-sm break-words">{b.label}</Ltr>
+                            {reportedIds.has(b.id) ? <ReportedTag text={t('public.medicine.reported.tag')} /> : null}
                           </Link>
                         </li>
                       ))}
@@ -245,7 +259,7 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
         ) : (
           <p className="text-ink-muted">{t('public.medicine.brandsNone')}</p>
         )}
-      </section>
+      </Section>
     </PublicMain>
   );
 }

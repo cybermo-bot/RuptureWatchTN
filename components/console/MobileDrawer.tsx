@@ -41,7 +41,7 @@ export function MobileDrawer({ children }: { children: ReactNode }) {
         aria-expanded={open}
         aria-controls={id}
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex min-h-12 min-w-12 items-center justify-center gap-2 rounded-md px-2 text-sm font-medium text-sidebar-text hover:bg-sidebar-raised focus-visible:outline-sidebar-accent"
+        className="inline-flex min-h-12 min-w-12 items-center justify-center gap-2 rounded-sm px-2 text-sm font-medium text-ink hover:bg-surface-subtle"
       >
         {open ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
         <span>{open ? t('core.nav.closeMenu') : t('core.nav.menu')}</span>

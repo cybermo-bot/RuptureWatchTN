@@ -39,7 +39,7 @@ export default async function PharmacyMore() {
                 {/* The pilot's home has no other roles and no scenario (pilot-2 item 1). */}
                 <span className="text-sm text-ink-muted">{t(href === '/' && isPilot() ? 'core.pilot.moreHomeHint' : hint)}</span>
               </span>
-              <ChevronRight size={18} aria-hidden="true" className="shrink-0 text-ink-muted rtl:-scale-x-100" />
+              <ChevronRight size={20} aria-hidden="true" className="shrink-0 text-ink-muted rtl:-scale-x-100" />
             </Link>
           </li>
         ))}

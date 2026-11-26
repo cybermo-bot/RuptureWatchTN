@@ -30,10 +30,10 @@ export function FormPicture({ label, brand, locale = 'fr', className = '' }: {
       viewBox="0 0 40 40"
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.65}
+      strokeWidth={1.75}
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={`size-10 shrink-0 rounded-md bg-surface-subtle text-brand ${className}`}
+      className={`size-12 shrink-0 rounded-md bg-powder-blue p-1 text-brand ${className}`}
     >
       {shapes[form]}
     </svg>

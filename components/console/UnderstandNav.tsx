@@ -18,7 +18,7 @@ export function UnderstandNav() {
               <Link
                 href={u.href}
                 aria-current={current ? 'page' : undefined}
-                className={`relative inline-flex min-h-12 items-center px-2.5 text-sm no-underline transition-colors duration-150 ${
+                className={`relative inline-flex min-h-12 items-center px-2.5 text-sm no-underline transition-colors duration-(--dur-fast) ${
                   current
                     ? 'font-medium text-ink after:absolute after:inset-x-2.5 after:bottom-0 after:h-0.5 after:bg-brand'
                     : 'text-ink-muted hover:text-ink'

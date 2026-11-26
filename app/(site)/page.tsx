@@ -37,7 +37,7 @@ function PilotHome({ signInError }: { signInError: string | null }) {
     <>
       <header className="home-masthead">
         <div className="home-wrap home-nav">
-          <Wordmark />
+          <Wordmark named />
           <nav aria-label={t('core.redesign.navLabel')} className="flex items-center gap-x-6">
             <Link href="/medicaments?recherche=1" className="home-nav-link hidden md:inline-flex">{t('core.redesign.search')}</Link>
             <Link href="/connexion/pharmacie" className="home-nav-link">{t('core.pilot.signIn')}</Link>
@@ -54,10 +54,10 @@ function PilotHome({ signInError }: { signInError: string | null }) {
               {signInError ? <p role="alert" className="text-level-confirmed">{signInError}</p> : null}
               <div id="roles" className="flex scroll-mt-4 flex-wrap gap-2.5">
                 <Link href="/connexion/pharmacie" className={buttonClass('primary', 'min-h-12 rounded-full')}>
-                  <BriefcaseMedical size={18} aria-hidden="true" /> {t('core.pilot.home.pharmacist')}
+                  <BriefcaseMedical size={20} aria-hidden="true" /> {t('core.pilot.home.pharmacist')}
                 </Link>
                 <Link href="/medicaments?recherche=1" className={buttonClass('secondary', 'home-search-action rounded-full')}>
-                  <Search size={18} aria-hidden="true" /> {t('core.pilot.home.patient')}
+                  <Search size={20} aria-hidden="true" /> {t('core.pilot.home.patient')}
                 </Link>
               </div>
               <p>{t('core.pilot.home.invitation')}</p>
@@ -92,9 +92,9 @@ function ExploreSection() {
         {EXPLORE.map(({ key, href, icon: Icon }) => (
           <li key={key}>
             <Link href={href} className="home-explore-link">
-              <Icon size={21} strokeWidth={1.7} aria-hidden="true" />
+              <Icon size={20} strokeWidth={1.75} aria-hidden="true" />
               <span>{t(`core.redesign.explore.${key}`)}</span>
-              <ArrowRight size={17} aria-hidden="true" className="home-arrow" />
+              <ArrowRight size={20} aria-hidden="true" className="home-arrow" />
             </Link>
           </li>
         ))}
@@ -129,7 +129,7 @@ export default async function HomePage({ searchParams }: PageProps<'/'>) {
               <p>{t('core.redesign.lead')}</p>
               <div className="flex flex-wrap gap-2.5">
                 <Link href="/scenario" className={buttonClass('primary', 'min-h-12 rounded-full')}>
-                  {t('core.home.entry.demo')} <ArrowRight size={18} aria-hidden="true" />
+                  {t('core.home.entry.demo')} <ArrowRight size={20} aria-hidden="true" />
                 </Link>
                 <Link href="/medicaments?recherche=1" className={buttonClass('secondary', 'home-search-action rounded-full')}>
                   {t('core.redesign.search')}
@@ -153,7 +153,7 @@ export default async function HomePage({ searchParams }: PageProps<'/'>) {
               <h2 id="scenario-titre">{t('core.redesign.storyTitle')}</h2>
               <p>{t('core.redesign.storyBody')}</p>
               <Link href="/scenario" className="home-inline-link">
-                {t('core.redesign.storyLink')} <ArrowRight size={17} aria-hidden="true" />
+                {t('core.redesign.storyLink')} <ArrowRight size={20} aria-hidden="true" />
               </Link>
             </div>
             <div className="home-story-process">
@@ -164,7 +164,7 @@ export default async function HomePage({ searchParams }: PageProps<'/'>) {
               <ol className="home-process">
                 {STEPS.map(({ key, icon: Icon }) => (
                   <li key={key}>
-                    <span className="home-process-stop"><Icon size={17} aria-hidden="true" /></span>
+                    <span className="home-process-stop"><Icon size={20} aria-hidden="true" /></span>
                     <span>{t(`core.redesign.steps.${key}`)}</span>
                   </li>
                 ))}
@@ -179,12 +179,12 @@ export default async function HomePage({ searchParams }: PageProps<'/'>) {
               {PATHS.map(({ key, href, icon: Icon, title, body }) => (
                 <li key={key}>
                   <Link href={href} className="home-role-link">
-                    <Icon size={25} strokeWidth={1.6} aria-hidden="true" />
+                    <Icon size={24} strokeWidth={1.75} aria-hidden="true" />
                     <span className="min-w-0">
                       <strong>{t(title)}</strong>
                       <span>{t(body)}</span>
                     </span>
-                    <ArrowRight size={19} aria-hidden="true" className="home-arrow" />
+                    <ArrowRight size={20} aria-hidden="true" className="home-arrow" />
                   </Link>
                 </li>
               ))}

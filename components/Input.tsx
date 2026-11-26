@@ -28,7 +28,7 @@ export function Input({ label, hint, id, icon, large = false, className = '', ..
         <input
           id={inputId}
           aria-describedby={hintId}
-          className={`w-full rounded-md border border-ink-muted bg-surface text-ink placeholder:text-ink-muted focus:border-brand ${
+          className={`w-full rounded-sm border border-ink-muted bg-surface text-ink placeholder:text-ink-muted focus:border-brand ${
             large ? 'min-h-14 text-[1.0625rem]' : 'min-h-12 text-base'
           } ${icon ? 'ps-11 pe-3.5' : 'px-3.5'} ${className}`}
           {...rest}

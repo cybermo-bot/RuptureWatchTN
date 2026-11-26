@@ -2,6 +2,61 @@
 
 Newest first. Each entry: what was decided, and why.
 
+## 2026-11-26, session B (branch `pilot-b`)
+
+### The scenario's stepper rail and level chart; the wholesaler's decisions as rows (pilot-4, step 6)
+
+- `lib/landing/tour.ts` and its test are ported from `origin/olfa` (`git show`). The test's message check now reads `core.rules`, because this branch has no `core.landing` texts. `tourStops()` gives six stops: the start, the foreign notice (J0), the first report (J2), the step where one governorate is not enough (J4), « confirmée » (J5) and the stand-down (J22).
+- On `/scenario` they drive `StopRail`, which replaces the coloured band (`StateTimeline`, removed):
+  - one 48 px node per stop, the level's shape inside;
+  - `--scenario-accent` for the walked path and the current stop, on petrol, with no glow;
+  - stops still to come show an empty ring and no level, as the band did.
+  - A node jumps to its step. Play, the arrow keys, `data-step` and `data-done` are unchanged, so e2e test 3 still holds.
+- `LevelStepChart` is Olfa's step curve in `var(--level-*)`, with no gradient, glow or drawing animation. It is one chart, shown up to the step on screen; the steps still to come stay empty, like the rail. It uses percentage coordinates, so its labels keep their size at 360 px. Each row carries its level's shape and word, and the change list under it is the text version.
+- Ordre and hospital already used the console shell, `PageHeader` and `Button`. The Ordre's lists are tables of counts, which stay tables. The wholesaler's « Vos dernières décisions » moves to `List`/`ListRow` (one tappable row per decision, with date, outcome and origin). No new feature.
+
+### Coordination in tabs; the centrale with key figures (pilot-4, step 5)
+
+- Coordination: the figures, the map and the recent changes stay on the first screen; below them `Tabs` « Signaux » (the default: the list, `section[aria-labelledby="signaux"]`, and the selected medicine's detail, `?m=<id>#detail` unchanged), « Demande des patients » (the national demand chart, moved out of « À examiner », and the selected medicine's demand by governorate) and « Journal » (the decision log). The tab is `?vue=` in the URL, keeping the selection; « Voir le journal » links to `?vue=journal#journal-decisions`. The other users of `SignalsDashboard` (hospital) get no tabs and see everything as before.
+- The level history (« Historique des niveaux ») is drawn with `Journal`: dated rows, the new level's shape in each dot, a connecting line, the change in words.
+- Centrale: a `StatRow` over the list, computed from it (medicines at each level, with the level's shape and word, and arrivals announced). The `#m-<id>` anchors and the « Annoncer un arrivage » / « Annoncer l'arrivage » labels are unchanged.
+
+### Page transitions use the fallback; shells share one header style (pilot-4, step 2)
+
+- **Fallback, not React `<ViewTransition>`.** React 19.3 ships `ViewTransition` and Next 16.4 needs no flag, but its own guide says enter and exit never fire for a wrapper in a layout, and a layout-level wrapper animates every `router.refresh()`: « Aujourd'hui » and the answers page refresh every 10–15 s and would fade each time. The brief says to switch at the first such problem. A family `template.tsx` only remounts when its own child segment changes (Next docs: deeper navigations do not remount higher templates), so the fallback is one `PageEnter` in each shell (public layout, `SiteMain`, the console's `<main>`), keyed on the path: the new page fades in rising 8 px (`--dur-base`, enter easing, fill `backwards` so fixed toasts are never held in a transformed box). No animation on the first page, on a refresh or on a query change. Header, rail and bottom bar sit outside it and stay still.
+- Between the two root layouts (a full load): `@view-transition { navigation: auto; }`, the old page out in `--dur-fast`, the new in `--dur-base`, the header wordmark named `wordmark` (the home's second wordmark is not named: a name must be unique on a page). Reduced motion stops both.
+- Not done: the shared-element morphs (`product-<code_pct>`, the medicine row, the coordination row, the level badge); they need `<ViewTransition>` pairs and prefetched pages, and the search rows are not prefetched.
+- Shells: public pages sit on `--page` with a footer without its own background; every console role gets the same white phone header (mark, organisation, origin badge, then « Menu » for roles other than the pharmacy), replacing the dark one. `SiteHeader` was not rebuilt from the home masthead (the home must not move); it keeps its markup.
+
+### Patient screens on the shared parts (pilot-4, step 3)
+
+- Search, medicine, request, answers and past shortages use `PageHeader` (back link, picture, `title-1`), `RowLink` rows and `Section`. The search loses its panel; the medicine status is the screen's one powder-blue card (`--radius-lg`, the public status hero); the answers page's request state is its one card, and the answers a hairline list.
+- Fewer words on the status card: « Ce signal regroupe les signalements par molécule… » moved into « Détails du signal », now always present. The « Démonstration » band stays (pilot-1 item 1): it is about the whole page, the origin badge about the status.
+- A patient's answer is new when it is less than 15 s old (the page refreshes every 10 s): computed on the server from `answered_at`, so a list row slides in and its pin drops on both maps (Google and OpenStreetMap) without any client state. An older answer, or one already shown, never moves.
+
+### The pharmacy home becomes « Aujourd'hui »; the result's actions return to the page (pilot-4, step 4)
+
+- `/pharmacie` shows, in order, the patients waiting (the first two answered in one tap from there, the rest on « Demandes »), « Vos médicaments », then the large report button. Medicines with a level, an active foreign notice or an unread alert come first; the ones with no signal fold behind « N médicaments sans signal ». A foreign notice is a tag (« avis étranger »), never a higher place than the level gives.
+- « nouveau » means an alert this pharmacy has not opened yet (`alerts.read_at` is null); it clears under Plus › Alertes. A per-device "last visit" would have marked the same change new again on another phone.
+- Bottom bar: Accueil · Signaler · Demandes · Plus (keys `core.pharmacy.tabs.*`); the sidebar starts with « Aujourd'hui ». The home rows lost their `aria-label`, which hid the level from screen readers behind « Ouvrir la fiche de … ».
+- **Reversed (session 6):** the report result's two buttons were fixed above the tab bar "in reach of the thumb". With the tab bar they repeated « Accueil » and « Signaler » and covered 40 % of a 360 × 800 screen, so they sit at the end of the page now.
+- The result moment is plain CSS (`rw-check`, `rw-step`, `rw-level-in`): the check pops in, « Avant → Après » rises 8 px, 30 ms apart, and the new level fades and scales in. A new request while « Aujourd'hui » is open (it polls every 15 s) shows a toast and pulses the « Demandes » badge once. Reduced motion also cancels animation delays now, so nothing waits hidden.
+
+### One set of scales: type, radii, motion, shells (pilot-4, step 0)
+
+- Tokens in `app/globals.css` (`@theme static`, so CSS and components read the same variables): `title-1/2/3`, `eyebrow` and `figure` utilities, body 1rem/1.55 and small 0.875rem/1.45; radii `--radius-sm` 6 px, `--radius-md` 12 px, `--radius-lg` 22 px, `--radius-pill`; motion `--dur-instant` 100, `--dur-fast` 150, `--dur-base` 200, `--dur-slow` 300 ms, `--ease-out` (enter) and `--ease-exit` (exit); shells `--shell-wide` 82rem, `--shell-narrow` 48rem, `--shell-console` 90rem. Spacing stays on the 4 px grid.
+- **One timing exception, `--dur-emph` 600 ms:** a chart line or bar drawing itself once (`rw-grow`). A drawing shorter than that reads as a jump, not as a trend arriving. Nothing else may use it.
+- Radius classes were renamed so their pixels stay put (`rounded-md` 6 px became `rounded-sm`, `rounded-xl` 12 px became `rounded-md`); the two odd radii joined the scale (4 px badges now 6 px, 8 px boxes now 12 px). The single highlights (`rw-pulse-*`, the scenario's stage pulse) went from 0.9–1.2 s to `--dur-slow`; the hover transitions from 180 ms to the tokens. Reduced motion now also stops view transitions.
+- The plum-palette note further down this file is out of date: the stage is petrol (`--stage`), and the comments saying "plum" were corrected.
+
+### Reports name the product; the level stays per molecule (pilot-3)
+
+- Shortages hit products (EPITAM syrup missing, EPITAM 500 mg tablets fine), and professionals order by `code_pct`. Step 2 of « Signaler » now asks « Quelle présentation ? » above the delay buttons, preselected with the last product this pharmacy reported for the molecule, or « Plusieurs ou je ne sais pas ». A delay button still sends the report: two taps after the medicine is found.
+- `reports.medicine_id` (already in the schema, nullable) is stored when a product is chosen. The server action and the insert policy (migration `20261126010000_report_medicine.sql`) both require it to be a presentation of the reported molecule; `tests/db/pharmacy-flow.test.ts` and `tests/db/access.test.ts` stayed green with the policy, so it stays in the database.
+- Which presentations are reported (migration `20261126020000_presentations_reported.sql`): `presentations_reported` gives the coordination unit, the centrale and hospitals each product named on a « non livré » report in the last 14 days, with its distinct pharmacies (`<3` below 3, and the `<3` rows keep the catalogue order so their order never tells 1 from 2), never an organisation. Pharmacies stay out of counts (session 5): their result screen names only the product they just reported. The public page lists product names only, and only while the level is « confirmée » on non-simulated data (`presentations_reported_public`, gated like `public_arrival`), so the demo site never shows it publicly. The « signalée » tag is a word, with no level shape: the level belongs to the molecule.
+- The demo seeds name real CNAM presentations (`lib/demo/presentations.ts`, two or three per molecule, looked up by `code_pct` within the molecule) so the professional panels show the lists after `demo:reset`.
+- The signal is unchanged: `lib/signal/` still keys on the molecule, and « Livré à nouveau » stays per molecule. A signal per presentation group (molecule + strength + form) is planned before 15 December in a separate brief. WhatsApp reports, the seeds and the molecule page's own report form still insert without a product.
+
 ## 2026-11-26, session A (branch `pilot-a`)
 
 ### « Un problème ? Une idée ? » keeps no visitor identifier (pilot-2, item 3)

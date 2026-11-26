@@ -27,8 +27,8 @@ function TileBody({ icon, label, hint }: { icon: LucideIcon; label: string; hint
   const Icon = icon;
   return (
     <span className="flex flex-1 items-start gap-3 p-4">
-      <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-md bg-surface-subtle text-brand">
-        <Icon size={18} strokeWidth={1.75} aria-hidden="true" />
+      <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-sm bg-surface-subtle text-brand">
+        <Icon size={20} strokeWidth={1.75} aria-hidden="true" />
       </span>
       <span className="flex min-w-0 flex-col gap-0.5">
         <span className="font-semibold text-ink">{label}</span>
@@ -39,7 +39,7 @@ function TileBody({ icon, label, hint }: { icon: LucideIcon; label: string; hint
 }
 
 const TILE =
-  'group panel flex h-full w-full flex-col overflow-hidden text-start no-underline transition-colors duration-150 hover:border-ink-muted disabled:cursor-wait';
+  'group panel flex h-full w-full flex-col overflow-hidden text-start no-underline transition-colors duration-(--dur-fast) hover:border-ink-muted disabled:cursor-wait';
 
 function RoleTile({ role }: { role: DemoRole }) {
   const { pending, data } = useFormStatus();

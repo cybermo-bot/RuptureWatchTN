@@ -3,6 +3,7 @@
 import { useActionState, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { confirmLinkCode, requestLinkCode, type LinkState } from '@/app/actions/whatsapp';
+import { buttonClass } from '@/components/Button';
 import { t } from '@/lib/i18n';
 
 // Linking a WhatsApp number: the number, then the 6-digit code received on WhatsApp.
@@ -13,7 +14,7 @@ function Submit({ label }: { label: string }) {
     <button
       type="submit"
       disabled={pending}
-      className="flex min-h-12 w-full items-center justify-center rounded-md bg-brand px-5 font-medium text-white hover:bg-brand/90 disabled:cursor-wait disabled:opacity-70 sm:w-auto"
+      className={buttonClass('primary', 'w-full disabled:cursor-wait sm:w-auto')}
     >
       {pending ? t('core.common.sending') : label}
     </button>
@@ -55,7 +56,7 @@ export function WhatsAppLinkForm() {
           autoComplete="tel"
           required
           aria-describedby="wa-phone-hint"
-          className="min-h-12 rounded-md border border-line bg-surface px-4 text-lg text-ink"
+          className="min-h-12 rounded-sm border border-line bg-surface px-4 text-lg text-ink"
         />
         <p id="wa-phone-hint" className="text-sm text-ink-muted">
           {t('core.whatsappLink.phoneHint')}
@@ -83,7 +84,7 @@ export function WhatsAppLinkForm() {
           maxLength={7}
           required
           aria-describedby="wa-code-hint"
-          className="min-h-12 rounded-md border border-line bg-surface px-4 font-mono text-lg tracking-widest text-ink"
+          className="min-h-12 rounded-sm border border-line bg-surface px-4 font-mono text-lg tracking-widest text-ink"
         />
         <p id="wa-code-hint" className="text-sm text-ink-muted">
           {t('core.whatsappLink.codeHint')}
@@ -91,7 +92,7 @@ export function WhatsAppLinkForm() {
         <Submit label={t('core.whatsappLink.confirm')} />
         <StateLine state={confirmState} />
       </form>
-      <button type="button" onClick={() => setDismissed(requestState)} className="flex min-h-12 w-fit items-center text-brand underline underline-offset-2">
+      <button type="button" onClick={() => setDismissed(requestState)} className={buttonClass('quiet', 'w-fit px-0 underline-offset-2')}>
         {t('core.whatsappLink.otherNumber')}
       </button>
     </div>

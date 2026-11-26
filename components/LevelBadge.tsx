@@ -12,7 +12,7 @@ const COLOR: Record<Level, string> = {
   cleared: 'text-level-cleared',
 };
 
-/** On the plum stage (home, scenario): lighter tints, 7:1 or more on plum. */
+/** On the petrol stage (home, scenario): lighter tints, 7:1 or more on petrol. */
 const COLOR_ON_STAGE: Record<Level, string> = {
   none: 'text-on-stage-muted',
   watch: 'text-level-watch-on-stage',
@@ -75,12 +75,29 @@ export function LevelShape({ level, size = 14, tone = 'light' }: { level: Level;
   }
 }
 
-export function LevelBadge({ level, className = '', tone = 'light' }: { level: Level; className?: string; tone?: LevelTone }) {
+/** sm in dense tables, md everywhere else, lg in the StatusCard. The shape never changes. */
+const SIZE = {
+  sm: { text: 'gap-1 text-xs font-medium', shape: 12 },
+  md: { text: 'gap-1.5 text-sm font-medium', shape: 14 },
+  lg: { text: 'gap-2 text-lg font-semibold', shape: 20 },
+} as const;
+
+export function LevelBadge({
+  level,
+  className = '',
+  tone = 'light',
+  size = 'md',
+}: {
+  level: Level;
+  className?: string;
+  tone?: LevelTone;
+  size?: keyof typeof SIZE;
+}) {
   return (
     <span
-      className={`inline-flex items-center gap-1.5 whitespace-nowrap text-sm font-medium ${tone === 'stage' ? 'text-on-stage' : 'text-ink'} ${className}`}
+      className={`inline-flex items-center whitespace-nowrap ${SIZE[size].text} ${tone === 'stage' ? 'text-on-stage' : 'text-ink'} ${className}`}
     >
-      <LevelShape level={level} tone={tone} />
+      <LevelShape level={level} tone={tone} size={SIZE[size].shape} />
       <span>{t(`core.levels.${level}`)}</span>
     </span>
   );

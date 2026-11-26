@@ -23,6 +23,12 @@ export function supabaseNationalStore(client: SupabaseClient): NationalStore {
       const data = must('molecules', await client.from('molecules').select('id').eq('name', name).maybeSingle());
       return (data?.id as string | undefined) ?? null;
     },
+    async medicineIdsByCode(moleculeId, codes) {
+      if (codes.length === 0) return [];
+      const data = must('medicines', await client.from('medicines').select('id, code_pct').eq('molecule_id', moleculeId).in('code_pct', [...codes]));
+      const byCode = new Map((data ?? []).map((m) => [m.code_pct as string, m.id as string]));
+      return codes.flatMap((code) => (byCode.has(code) ? [byCode.get(code)!] : []));
+    },
 
     async governorateNames() {
       const data = must('governorates', await client.from('governorates').select('code, name_fr'));
