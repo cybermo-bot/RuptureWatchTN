@@ -146,7 +146,6 @@
     "continue": "Continuer dans cet espace",
     "signInError": "La connexion au rôle de démonstration a échoué. Réessayez dans un instant.",
     "footer": "Prototype étudiant, AOTN TSYP 14. Aucun statut officiel. Données de démonstration signalées comme simulées.",
-    "statusLink": "État du service",
     "jumpToRoles": "Choisir un rôle de démonstration",
     "signInBusy": "Trop de connexions de démonstration en même temps. Réessayez dans une minute.",
     "publicLink": "Je cherche un médicament",
@@ -304,7 +303,6 @@
     "checkedAt": "Vérifié le",
     "unknown": "Inconnue",
     "mapTitle": "Les 24 gouvernorats",
-    "mapIntro": "Contour des gouvernorats, utilisé plus tard par la carte des signaux.",
     "mapSource": "Limites administratives : {source}."
   },
   "map": {

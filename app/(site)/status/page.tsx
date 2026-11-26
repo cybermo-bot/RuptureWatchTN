@@ -58,7 +58,6 @@ export default async function StatusPage() {
             <h2 id="carte" className="text-xl font-semibold tracking-tight">
               {t('core.status.mapTitle')}
             </h2>
-            <p className="text-ink-muted">{t('core.status.mapIntro')}</p>
           </div>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-[minmax(0,26rem)_1fr] md:gap-16">
             <GovernorateMap showLabels className="mx-auto w-full max-w-[22rem] md:max-w-none" />

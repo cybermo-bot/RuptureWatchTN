@@ -16,3 +16,11 @@ export function publicSupabaseEnv(): { url: string; anonKey: string } {
   if (!anonKey) throw new Error('Missing environment variable NEXT_PUBLIC_SUPABASE_ANON_KEY. See .env.example.');
   return { url, anonKey };
 }
+
+/**
+ * Developer check pages (/dev/carte, /dev/search) answer 404 on the production deployment, so a
+ * juror never lands on them (pilot-1 item 5). Previews and local runs keep them.
+ */
+export function devPagesHidden(): boolean {
+  return process.env.VERCEL_ENV === 'production';
+}

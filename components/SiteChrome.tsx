@@ -49,9 +49,6 @@ export function SiteFooter() {
           <Link href="/medicaments" className="text-ink-muted underline hover:text-ink">
             {t('core.site.public')}
           </Link>
-          <Link href="/status" className="text-ink-muted underline hover:text-ink">
-            {t('core.home.statusLink')}
-          </Link>
         </div>
       </div>
     </footer>
