@@ -4,6 +4,12 @@ Newest first. Each entry: what was decided, and why.
 
 ## 2026-11-26, session B (branch `pilot-b`)
 
+### Patient screens on the shared parts (pilot-4, step 3)
+
+- Search, medicine, request, answers and past shortages use `PageHeader` (back link, picture, `title-1`), `RowLink` rows and `Section`. The search loses its panel; the medicine status is the screen's one powder-blue card (`--radius-lg`, the public status hero); the answers page's request state is its one card, and the answers a hairline list.
+- Fewer words on the status card: « Ce signal regroupe les signalements par molécule… » moved into « Détails du signal », now always present. The « Démonstration » band stays (pilot-1 item 1): it is about the whole page, the origin badge about the status.
+- A patient's answer is new when it is less than 15 s old (the page refreshes every 10 s): computed on the server from `answered_at`, so a list row slides in and its pin drops on both maps (Google and OpenStreetMap) without any client state. An older answer, or one already shown, never moves.
+
 ### The pharmacy home becomes « Aujourd'hui »; the result's actions return to the page (pilot-4, step 4)
 
 - `/pharmacie` shows, in order, the patients waiting (the first two answered in one tap from there, the rest on « Demandes »), « Vos médicaments », then the large report button. Medicines with a level, an active foreign notice or an unread alert come first; the ones with no signal fold behind « N médicaments sans signal ». A foreign notice is a tag (« avis étranger »), never a higher place than the level gives.

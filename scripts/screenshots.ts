@@ -142,6 +142,18 @@ export const SHOTS: Shot[] = [
     await page.getByRole('searchbox').fill('zzqxw');
     await page.locator('[role="status"] a[href^="/avis?depuis="]').waitFor();
   } },
+  // Pilot-4 step 3: the patient screens with results, and in Arabic. Searches only read.
+  { name: 'recherche-resultats', path: '/medicaments?recherche=1', before: async (page) => {
+    await page.getByRole('searchbox').fill('levetiracetam');
+    await page.locator('main [role="region"] a').first().waitFor();
+  } },
+  { name: 'recherche-resultats-ar', path: '/medicaments?recherche=1', locale: 'ar', before: async (page) => {
+    await page.getByRole('searchbox').fill('levetiracetam');
+    await page.locator('main [role="region"] a').first().waitFor();
+  } },
+  { name: 'demande-ar', path: `/medicaments/${SHOWCASE_ID}/demande`, locale: 'ar' },
+  { name: 'ruptures-passees-ar', path: '/ruptures-passees', locale: 'ar' },
+  { name: 'pharmacies-ar', path: '/pharmacies', locale: 'ar' },
   // Pilot-1 item 7: the pharmacy tab bar (« Demandes »), the coordination tiles, the scenario line.
   { name: 'pharmacie-barre', path: '/pharmacie', role: 'pharmacie-tunis', fullPage: false },
   { name: 'coordination-chiffres', path: '/coordination', role: 'coordination', fullPage: false },

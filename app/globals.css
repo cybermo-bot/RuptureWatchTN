@@ -667,6 +667,20 @@ path.rw-pulse {
     transform: scale(0.85);
   }
 }
+/* A patient's new answer (step 3): its row slides in, its pin drops 12 px, once. */
+.rw-arrive {
+  animation: rw-step-in var(--dur-base) var(--ease-out) both;
+}
+.rw-pin-drop {
+  transform-box: fill-box;
+  animation: rw-pin-drop var(--dur-slow) var(--ease-out) both;
+}
+@keyframes rw-pin-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
 /* A new count on a bottom-bar tab: one pulse. */
 .rw-badge-pulse {
   animation: rw-badge-pulse var(--dur-slow) var(--ease-out) 1;

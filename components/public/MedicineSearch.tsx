@@ -1,11 +1,13 @@
 'use client';
 
-import { ArrowUpLeft, ChevronRight, Search } from 'lucide-react';
+import { ArrowUpLeft, Search } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useId, useState } from 'react';
 import { Input } from '@/components/Input';
 import { FormPicture } from '@/components/medicine/FormPicture';
+import { PageHeader } from '@/components/PageHeader';
+import { RowLink } from '@/components/ui/ListRow';
 import { translator, type Locale } from '@/lib/i18n';
 import { presentationText } from '@/lib/public/presentation';
 import { Ltr } from './Ltr';
@@ -30,19 +32,22 @@ function ResultRow({ href, title, description, medicine, locale }: {
 }) {
   return (
     <li>
-      <Link href={href} prefetch={false} className="flex min-h-14 items-center gap-3 rounded-sm px-2 py-2.5 no-underline hover:bg-surface-subtle sm:px-3">
-        <FormPicture label={medicine?.label} brand={medicine?.brand} locale={locale} />
-        <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-          <Ltr className="self-start font-semibold break-words text-ink">{title}</Ltr>
-          {medicine ? (
+      <RowLink
+        href={href}
+        prefetch={false}
+        leading={<FormPicture label={medicine?.label} brand={medicine?.brand} locale={locale} />}
+        title={<Ltr className="break-words">{title}</Ltr>}
+        meta={
+          medicine ? (
             <>
-              <Ltr className="self-start text-sm break-words text-ink-muted">{description}</Ltr>
-              <Ltr className="self-start text-sm break-words text-ink-muted">{medicine.molecule_name}</Ltr>
+              <Ltr className="break-words">{description}</Ltr>
+              <Ltr className="break-words">{medicine.molecule_name}</Ltr>
             </>
-          ) : <span className="text-sm text-ink-muted">{description}</span>}
-        </span>
-        <ChevronRight size={20} aria-hidden="true" className="shrink-0 text-ink-muted rtl:-scale-x-100" />
-      </Link>
+          ) : (
+            <span>{description}</span>
+          )
+        }
+      />
     </li>
   );
 }
@@ -95,13 +100,8 @@ export function MedicineSearch({ locale, linkPrefix = '/medicaments/', label, au
 
   return (
     <div className="flex flex-col gap-5">
-      <div className={title ? 'flex flex-col gap-4 rounded-md bg-surface-subtle p-5 sm:gap-6 sm:p-8' : undefined}>
-        {title ? (
-          <header className="flex flex-col gap-1.5">
-            <h1 className="text-3xl leading-tight font-semibold tracking-tight text-ink sm:text-4xl">{title}</h1>
-            <p className="text-ink-muted">{t('public.medicines.intro')}</p>
-          </header>
-        ) : null}
+      <div className={title ? 'flex flex-col gap-5' : undefined}>
+        {title ? <PageHeader title={title} description={t('public.medicines.intro')} /> : null}
         <Input
           id={inputId}
           label={label ?? t('public.medicines.searchLabel')}
@@ -128,7 +128,7 @@ export function MedicineSearch({ locale, linkPrefix = '/medicaments/', label, au
                 <button type="button" onClick={() => {
                   changeQuery(example);
                   document.getElementById(inputId)?.focus();
-                }} className="inline-flex min-h-12 items-center gap-2 rounded-sm border border-line px-3 font-medium text-brand hover:border-brand hover:bg-surface-subtle">
+                }} className="inline-flex min-h-12 items-center gap-2 rounded-sm border border-line bg-surface px-3 font-medium text-brand transition-colors duration-(--dur-instant) hover:border-brand hover:bg-powder-blue">
                   <Ltr>{example}</Ltr>
                   <ArrowUpLeft size={16} aria-hidden="true" className="rtl:-scale-x-100" />
                 </button>
@@ -169,8 +169,8 @@ export function MedicineSearch({ locale, linkPrefix = '/medicaments/', label, au
         <div className="flex flex-col gap-5" role="region" aria-label={t('public.medicines.resultsLabel')}>
           {data.molecules.length > 0 ? (
             <section aria-labelledby={id + '-molecules'}>
-              <h2 id={id + '-molecules'} className="pb-2 font-semibold text-ink">{t('public.medicines.moleculesTitle')}</h2>
-              <ul className="hairline-list border-t border-line">
+              <h2 id={id + '-molecules'} className="title-3 pb-2 text-ink">{t('public.medicines.moleculesTitle')}</h2>
+              <ul className="hairline-list border-y border-line">
                 {data.molecules.map((m) => (
                   <ResultRow key={m.id} locale={locale} href={linkPrefix + m.id} title={m.name} description={m.medicines === 1
                     ? t('public.medicines.presentationsOne')
@@ -181,8 +181,8 @@ export function MedicineSearch({ locale, linkPrefix = '/medicaments/', label, au
           ) : null}
           {data.results.length > 0 ? (
             <section aria-labelledby={id + '-brands'}>
-              <h2 id={id + '-brands'} className="pb-2 font-semibold text-ink">{t('public.medicines.brandsTitle')}</h2>
-              <ul className="hairline-list border-t border-line">
+              <h2 id={id + '-brands'} className="title-3 pb-2 text-ink">{t('public.medicines.brandsTitle')}</h2>
+              <ul className="hairline-list border-y border-line">
                 {data.results.map((m) => {
                   const fullLabel = presentationText(m, t);
                   const description = fullLabel.toUpperCase().startsWith(`${m.brand.toUpperCase()} `)

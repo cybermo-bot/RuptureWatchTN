@@ -30,6 +30,8 @@ export interface MapMarker extends LatLng {
   /** Shown on hover and in the marker's popup, as plain text. */
   label: string;
   detail?: string;
+  /** Just arrived (a patient's answer): its pin drops once. */
+  fresh?: boolean;
 }
 
 export type MapProvider = 'google' | 'osm';
@@ -137,6 +139,7 @@ async function createGoogleMap(el: HTMLElement, center: LatLng, zoom: number, ma
       for (const p of pins) p.map = null;
       pins = markers.map((m) => {
         const pin = new PinElement({ background: BRAND, borderColor: INK, glyphColor: '#FFFFFF' });
+        if (m.fresh) pin.element.classList.add('rw-pin-drop');
         const marker = new AdvancedMarkerElement({ map, position: m, title: m.label, content: pin.element, gmpClickable: true });
         marker.addListener('click', () => {
           info.setContent(popupNode(m));
@@ -184,7 +187,7 @@ async function createOsmMap(el: HTMLElement, center: LatLng, zoom: number, isCan
     setMarkers(markers, fit = false) {
       layer.clearLayers();
       for (const m of markers) {
-        L.circleMarker([m.lat, m.lng], { radius: 9, color: INK, weight: 2, fillColor: BRAND, fillOpacity: 0.9 })
+        L.circleMarker([m.lat, m.lng], { radius: 9, color: INK, weight: 2, fillColor: BRAND, fillOpacity: 0.9, className: m.fresh ? 'rw-pin-drop' : '' })
           .bindTooltip(m.label)
           .bindPopup(popupNode(m))
           .addTo(layer);

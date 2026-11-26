@@ -31,7 +31,7 @@ export function PageHeader({ title, description, meta, eyebrow, actions, back, p
         </Link>
       ) : null}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="flex min-w-0 items-start gap-4">
+        <div className={`flex min-w-0 gap-4 ${picture ? 'items-center' : 'items-start'}`}>
           {picture ? <div className="shrink-0">{picture}</div> : null}
           <div className="flex min-w-0 flex-col gap-1.5">
             {eyebrow ? <p className="eyebrow text-ink-muted">{eyebrow}</p> : null}

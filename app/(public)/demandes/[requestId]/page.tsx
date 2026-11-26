@@ -1,4 +1,4 @@
-import { ArrowLeft, Clock, MapPin, Phone } from 'lucide-react';
+import { Clock, MapPin, Phone } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { EmptyState } from '@/components/EmptyState';
@@ -8,6 +8,7 @@ import { AnswersMap } from '@/components/public/AnswersMap';
 import { AutoRefresh } from '@/components/public/AutoRefresh';
 import { Ltr } from '@/components/public/Ltr';
 import { PublicMain } from '@/components/public/PublicChrome';
+import { PageHeader } from '@/components/PageHeader';
 import { freshness } from '@/lib/freshness';
 import { plural, type Translate } from '@/lib/i18n';
 import { getTranslator } from '@/lib/i18n-server';
@@ -38,6 +39,9 @@ function timeLeft(expiresAt: string, t: Translate): string {
   if (h === 0) return t('public.request.minutes', { m });
   return m === 0 ? t('public.request.hours', { h }) : t('public.request.hoursMinutes', { h, m });
 }
+
+/** An answer this recent is new to whoever has the page open. */
+const FRESH_MS = 15_000;
 
 export default async function RequestPage(props: PageProps<'/demandes/[requestId]'>) {
   const { t, locale } = await getTranslator();
@@ -70,11 +74,14 @@ export default async function RequestPage(props: PageProps<'/demandes/[requestId
   const nobody = request.asked === '0';
   const shown = [...request.available].sort((a, b) => b.answered_at.localeCompare(a.answered_at));
   const now = new Date();
+  // Answered since the last refresh or so (the page refreshes every 10 s): slides in, pin drops.
+  const fresh = (at: string) => now.getTime() - Date.parse(at) < FRESH_MS;
   const product = presentation ? presentationText(presentation, t) : molecule?.name ?? '';
   const markers = shown
     .filter((a) => a.latitude !== null && a.longitude !== null)
     .map((a, i) => ({
       id: `${i}-${a.answered_at}`,
+      fresh: fresh(a.answered_at),
       lat: a.latitude as number,
       lng: a.longitude as number,
       label: a.display_name,
@@ -91,31 +98,25 @@ export default async function RequestPage(props: PageProps<'/demandes/[requestId
   return (
     <PublicMain narrow>
       {!expired && !nobody ? <AutoRefresh seconds={10} until={request.expires_at} /> : null}
-      {molecule ? (
-        <Link href={`/medicaments/${molecule.id}${presentation ? `?presentation=${presentation.id}` : ''}`} className="inline-flex min-h-12 items-center gap-2 self-start text-brand underline">
-          <ArrowLeft size={20} aria-hidden="true" className="rtl:-scale-x-100" />
-          {t('public.request.backToMedicine')}
-        </Link>
-      ) : null}
-
-      <header className="flex flex-col gap-1.5">
-        <h1 className="text-2xl leading-tight font-semibold tracking-tight text-ink sm:text-[1.75rem]">{t('public.request.pageTitle')}</h1>
-        <div className="flex items-center gap-3">
-          <FormPicture label={presentation?.label} brand={presentation?.brand} locale={locale} />
-          <p className="text-ink-muted">
-          {t('public.request.for', {
-            name: `\u2068${product}\u2069`,
-            governorate: gov?.name ?? request.governorate_code,
-          })}
+      <PageHeader
+        back={molecule ? { href: `/medicaments/${molecule.id}${presentation ? `?presentation=${presentation.id}` : ''}`, label: t('public.request.backToMedicine') } : undefined}
+        picture={<FormPicture label={presentation?.label} brand={presentation?.brand} locale={locale} />}
+        title={t('public.request.pageTitle')}
+        description={
+          <p>
+            {t('public.request.for', {
+              name: `\u2068${product}\u2069`,
+              governorate: gov?.name ?? request.governorate_code,
+            })}
           </p>
-        </div>
-      </header>
+        }
+      />
 
       {expired ? (
         <EmptyState title={t('public.request.expiredTitle')} body={t('public.request.expiredBody')} />
       ) : nobody ? (
-        <section aria-labelledby="aucune-pharmacie" data-no-recipient className="panel flex flex-col gap-2 p-5">
-          <h2 id="aucune-pharmacie" className="text-lg font-semibold text-ink">
+        <section aria-labelledby="aucune-pharmacie" data-no-recipient className="flex flex-col gap-2 rounded-md bg-powder-blue p-4 sm:p-5">
+          <h2 id="aucune-pharmacie" className="title-3 text-ink">
             {t('public.request.noneParticipating')}
           </h2>
           <Link href="/pharmacies" className="inline-flex min-h-12 items-center gap-2 self-start text-brand underline">
@@ -129,7 +130,7 @@ export default async function RequestPage(props: PageProps<'/demandes/[requestId
           ) : null}
         </section>
       ) : (
-        <section aria-label={t('public.request.pageTitle')} className="panel flex flex-col gap-4 p-5" aria-live="polite">
+        <section aria-label={t('public.request.pageTitle')} data-status-card className="flex flex-col gap-4 rounded-md bg-powder-blue p-4 sm:p-5" aria-live="polite">
           <dl className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-0.5">
               <dt className="text-sm text-ink-muted">{t('public.request.asked')}</dt>
@@ -143,7 +144,7 @@ export default async function RequestPage(props: PageProps<'/demandes/[requestId
               </dd>
             </div>
           </dl>
-          <p className="inline-flex items-center gap-2 border-t border-line pt-3 text-sm text-ink-muted">
+          <p className="inline-flex items-center gap-2 border-t border-ink/15 pt-3 text-sm text-ink-muted">
             <Clock size={16} aria-hidden="true" />
             {t('public.request.expiresIn', {
               time: timeLeft(request.expires_at, t),
@@ -155,17 +156,17 @@ export default async function RequestPage(props: PageProps<'/demandes/[requestId
 
       {nobody ? null : (
       <section aria-labelledby="available-title" className="flex flex-col gap-3">
-        <h2 id="available-title" className="text-lg font-semibold text-ink">
+        <h2 id="available-title" className="title-2 text-ink">
           {t('public.request.availableTitle')}
         </h2>
         {shown.length > 0 ? (
           <>
-            <ul className="panel hairline-list overflow-hidden" aria-label={t('public.request.listLabel')}>
+            <ul className="hairline-list border-y border-line" aria-label={t('public.request.listLabel')}>
               {shown.map((a, i) => {
                 const answerAge = freshness(a.answered_at, now);
                 const exactTime = t('public.request.answeredAt', { time: formatPublicTime(a.answered_at, locale) });
                 return (
-                <li key={`${i}-${a.answered_at}`} className="flex flex-col gap-1 px-4 py-3">
+                <li key={`${i}-${a.answered_at}`} data-fresh={fresh(a.answered_at) ? '' : undefined} className={`flex flex-col gap-1 px-4 py-3 ${fresh(a.answered_at) ? 'rw-arrive' : ''}`}>
                   <span className="flex flex-wrap items-center gap-2">
                     <Ltr className="font-medium text-ink">{a.display_name}</Ltr>
                     <span className="text-sm font-medium text-level-cleared">{t('public.request.available')}</span>
