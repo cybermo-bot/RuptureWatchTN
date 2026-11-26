@@ -12,7 +12,7 @@ export async function PhoneQr() {
   return (
     <figure className="panel m-0 flex h-full flex-col gap-3 p-4">
       <p className="flex items-center gap-2 font-semibold text-ink">
-        <Smartphone size={18} strokeWidth={1.75} aria-hidden="true" className="shrink-0 text-brand" />
+        <Smartphone size={20} strokeWidth={1.75} aria-hidden="true" className="shrink-0 text-brand" />
         {t('core.home.phoneQr.title')}
       </p>
       <div className="flex items-start gap-4">

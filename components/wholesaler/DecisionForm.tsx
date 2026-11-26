@@ -1,6 +1,7 @@
 'use client';
 
 import { useActionState, useId } from 'react';
+import { buttonClass } from '@/components/Button';
 import { recordDecision, type DecisionState } from '@/app/(site)/(espace)/grossiste/actions';
 import { t } from '@/lib/i18n';
 
@@ -50,7 +51,7 @@ export function DecisionForm({ moleculeId, stock }: { moleculeId: string; stock:
           name="decision"
           value="apply"
           disabled={pending}
-          className="min-h-12 rounded-sm bg-brand px-5 font-medium text-white hover:opacity-90 disabled:opacity-50"
+          className={buttonClass()}
         >
           {t('wholesaler.split.apply')}
         </button>
@@ -59,7 +60,7 @@ export function DecisionForm({ moleculeId, stock }: { moleculeId: string; stock:
           name="decision"
           value="reject"
           disabled={pending}
-          className="min-h-12 rounded-sm border border-ink px-5 font-medium text-ink hover:bg-surface-subtle disabled:opacity-50"
+          className={buttonClass('secondary')}
         >
           {t('wholesaler.split.reject')}
         </button>

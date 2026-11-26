@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { Button } from '@/components/Button';
+import { Button, buttonClass } from '@/components/Button';
 import { Panel } from '@/components/console/Panel';
 import { MedicineDecision } from '@/components/coordination/MedicineDecision';
 import { presentationsReported } from '@/lib/presentations/reported';
@@ -72,7 +72,7 @@ export default async function CentralHome({ searchParams }: PageProps<'/centrale
                   <span className="font-medium break-words text-ink">{s.molecule_name}</span>
                   <MedicineDecision signal={s} presentations={presentations.get(s.molecule_id)} action={eligible ? (
                     <details className="group mt-1" open={m === s.molecule_id && Boolean(erreur)}>
-                      <summary className="min-h-12 w-fit cursor-pointer content-center rounded-sm bg-brand px-5 font-medium text-white hover:bg-brand-strong">
+                      <summary className={buttonClass('primary', 'w-fit cursor-pointer list-none [&::-webkit-details-marker]:hidden')}>
                         {t('core.central.announceTitle')}
                       </summary>
                       <form action={announceArrival} aria-labelledby={`${formId}-titre`} className="mt-2 flex max-w-xl flex-col gap-4 rounded-sm border border-line p-4">

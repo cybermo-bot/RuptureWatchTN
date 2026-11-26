@@ -90,12 +90,12 @@ export default async function PrescribersPage(props: PageProps<'/prescripteurs'>
         <>
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4">
             <p className="inline-flex items-center gap-2 text-sm text-ink">
-              <Stethoscope size={18} aria-hidden="true" className="text-brand" />
+              <Stethoscope size={20} aria-hidden="true" className="text-brand" />
               {t('public.prescribers.signedInAs', { organisation: String.fromCharCode(0x2068) + session.organisation.displayName + String.fromCharCode(0x2069) })}
             </p>
             <form action={switchRole}>
               <button type="submit" className={buttonClass('quiet', 'min-h-12')}>
-                <LogOut size={18} aria-hidden="true" className="rtl:-scale-x-100" />
+                <LogOut size={20} aria-hidden="true" className="rtl:-scale-x-100" />
                 {t('public.prescribers.changeRole')}
               </button>
             </form>
@@ -106,7 +106,7 @@ export default async function PrescribersPage(props: PageProps<'/prescripteurs'>
             <MoleculeCheck moleculeId={moleculeId} />
           ) : (
             <Link href="/methode" className="inline-flex min-h-12 items-center gap-2 self-start text-brand underline">
-              <BookOpen size={18} aria-hidden="true" />
+              <BookOpen size={20} aria-hidden="true" />
               {t('public.prescribers.method')}
             </Link>
           )}
@@ -125,7 +125,7 @@ export default async function PrescribersPage(props: PageProps<'/prescripteurs'>
               <form action={signInAsDemoRole}>
                 <input type="hidden" name="role" value="medecin" />
                 <button type="submit" className={buttonClass('primary', 'w-full sm:w-auto')}>
-                  <Stethoscope size={18} aria-hidden="true" />
+                  <Stethoscope size={20} aria-hidden="true" />
                   {t('public.prescribers.demoButton')}
                 </button>
               </form>

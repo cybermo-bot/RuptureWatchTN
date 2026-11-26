@@ -38,7 +38,7 @@ export function FeedbackForm({
     return (
       <section aria-labelledby="avis-envoye" className="panel flex flex-col items-start gap-3 p-5">
         <h2 id="avis-envoye" className="inline-flex items-center gap-2 text-lg font-semibold text-ink">
-          <CircleCheck size={22} aria-hidden="true" className="shrink-0 text-level-cleared" />
+          <CircleCheck size={24} aria-hidden="true" className="shrink-0 text-level-cleared" />
           {texts.sentTitle}
         </h2>
         <p className="max-w-prose text-ink-muted">{texts.sentBody}</p>
@@ -94,7 +94,7 @@ export function FeedbackForm({
         </div>
       </fieldset>
       <Button type="submit" className="self-start">
-        <Send size={18} aria-hidden="true" className="rtl:-scale-x-100" />
+        <Send size={20} aria-hidden="true" className="rtl:-scale-x-100" />
         {texts.submit}
       </Button>
     </form>

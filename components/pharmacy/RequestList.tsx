@@ -52,7 +52,7 @@ function Answers({ request, onDone }: { request: OpenRequest; onDone: (choice: C
         onClick={() => send('show')}
         className={buttonClass('primary', 'w-full justify-start text-start')}
       >
-        <MapPin size={18} aria-hidden="true" />
+        <MapPin size={20} aria-hidden="true" />
         {label('show', 'core.requests.showMe')}
       </button>
       <p className="px-1 pb-1 text-sm text-ink-muted">{t('core.requests.showMeHint')}</p>
@@ -62,7 +62,7 @@ function Answers({ request, onDone }: { request: OpenRequest; onDone: (choice: C
         onClick={() => send('anonymous')}
         className={buttonClass('secondary', 'w-full justify-start text-start')}
       >
-        <EyeOff size={18} aria-hidden="true" />
+        <EyeOff size={20} aria-hidden="true" />
         {label('anonymous', 'core.requests.anonymous')}
       </button>
       <p className="px-1 pb-1 text-sm text-ink-muted">{t('core.requests.anonymousHint')}</p>
@@ -72,7 +72,7 @@ function Answers({ request, onDone }: { request: OpenRequest; onDone: (choice: C
         onClick={() => send('no')}
         className={buttonClass('secondary', 'w-full justify-start text-start')}
       >
-        <X size={18} aria-hidden="true" />
+        <X size={20} aria-hidden="true" />
         {label('no', 'core.requests.no')}
       </button>
       <div aria-live="polite">
@@ -133,7 +133,7 @@ export function RequestList({ requests }: { requests: OpenRequest[] }) {
                   </p>
                 ) : null}
                 <p className="inline-flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink-muted">
-                  <Clock size={14} aria-hidden="true" />
+                  <Clock size={16} aria-hidden="true" />
                   <span>
                     {t('core.requests.asked', {
                       time: formatTime(r.created_at),

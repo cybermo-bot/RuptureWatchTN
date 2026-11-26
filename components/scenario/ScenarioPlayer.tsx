@@ -106,7 +106,7 @@ export function ScenarioPlayer() {
             <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
               {running ? (
                 <button type="button" onClick={() => setPlaying(false)} className={`${STAGE_BUTTON} col-span-2 bg-on-stage text-stage hover:bg-white`}>
-                  <Pause size={18} aria-hidden="true" />
+                  <Pause size={20} aria-hidden="true" />
                   {t('core.scenario.pause')}
                 </button>
               ) : (
@@ -117,7 +117,7 @@ export function ScenarioPlayer() {
                   data-action="play"
                   className={`${STAGE_BUTTON} col-span-2 bg-on-stage text-stage hover:bg-white`}
                 >
-                  <Play size={18} aria-hidden="true" />
+                  <Play size={20} aria-hidden="true" />
                   {index === 0 ? t('core.scenario.play') : t('core.scenario.resume')}
                 </button>
               )}
@@ -127,7 +127,7 @@ export function ScenarioPlayer() {
                 disabled={index === 0}
                 className={`${STAGE_BUTTON} border border-stage-line text-on-stage hover:bg-stage-raised`}
               >
-                <ChevronLeft size={18} aria-hidden="true" />
+                <ChevronLeft size={20} aria-hidden="true" />
                 {t('core.scenario.previous')}
               </button>
               <button
@@ -137,7 +137,7 @@ export function ScenarioPlayer() {
                 className={`${STAGE_BUTTON} border border-stage-line text-on-stage hover:bg-stage-raised`}
               >
                 {t('core.scenario.step')}
-                <ChevronRight size={18} aria-hidden="true" />
+                <ChevronRight size={20} aria-hidden="true" />
               </button>
               <button
                 type="button"
@@ -276,7 +276,7 @@ export function ScenarioPlayer() {
                     <span className="font-medium text-ink">{stepText(f)}</span>
                     <LevelBadge level={f.level} />
                   </span>
-                  <ChevronRight size={18} aria-hidden="true" className="text-brand" />
+                  <ChevronRight size={20} aria-hidden="true" className="text-brand" />
                 </button>
               </li>
             ))}

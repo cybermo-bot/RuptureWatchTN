@@ -45,7 +45,7 @@ export function SwitchRole({ session, tone = 'dark' }: { session: CurrentSession
             : 'flex min-h-14 w-full items-center gap-3 px-4 text-start text-ink hover:bg-surface-subtle'
         }
       >
-        <Icon size={18} strokeWidth={1.75} aria-hidden="true" className={dark ? 'text-sidebar-muted' : 'text-ink-muted'} />
+        <Icon size={20} strokeWidth={1.75} aria-hidden="true" className={dark ? 'text-sidebar-muted' : 'text-ink-muted'} />
         {t(demo ? 'core.roles.switch' : 'core.access.signOut')}
       </button>
     </form>
@@ -149,7 +149,7 @@ export function ConsoleShell({
 
       <main
         id="contenu"
-        className={`mx-auto w-full max-w-[90rem] flex-1 px-4 py-5 sm:px-6 lg:px-8 lg:py-8 print:max-w-none print:p-0 ${pharmacy ? 'pb-28 lg:pb-8' : ''}`}
+        className={`mx-auto w-full max-w-[90rem] flex-1 px-4 py-5 sm:px-6 lg:px-8 lg:py-8 print:max-w-none print:p-0 ${pharmacy ? 'pb-[calc(3.5rem+env(safe-area-inset-bottom)+1.25rem)] lg:pb-8' : ''}`}
       >
         {children}
         {hint ? (

@@ -28,7 +28,7 @@ export default async function RequestCreatePage(props: PageProps<'/medicaments/[
   return (
     <PublicMain narrow>
       <Link href={`/medicaments/${molecule.id}${presentation ? `?presentation=${presentation.id}` : ''}`} className="-mb-3 inline-flex min-h-12 items-center gap-2 self-start text-sm font-medium text-brand underline">
-        <ArrowLeft size={18} aria-hidden="true" className="rtl:-scale-x-100" />
+        <ArrowLeft size={20} aria-hidden="true" className="rtl:-scale-x-100" />
         <Ltr>{molecule.name}</Ltr>
       </Link>
       <header className="flex flex-col gap-1.5">

@@ -50,11 +50,11 @@ export function FollowButton({
       {following ? (
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
           <p className="inline-flex items-center gap-2 font-medium text-ink" role="status">
-            <Bell size={18} aria-hidden="true" className="text-brand" />
+            <Bell size={20} aria-hidden="true" className="text-brand" />
             {t('public.watch.following')}
           </p>
           <button type="button" className={buttonClass('quiet', 'min-h-12')} onClick={() => setFollowed(moleculeId, null)}>
-            <BellOff size={18} aria-hidden="true" />
+            <BellOff size={20} aria-hidden="true" />
             {t('public.watch.stop')}
           </button>
         </div>
@@ -64,7 +64,7 @@ export function FollowButton({
           className={buttonClass('quiet', 'self-start')}
           onClick={() => setFollowed(moleculeId, { name, level, since })}
         >
-          <Bell size={18} aria-hidden="true" />
+          <Bell size={20} aria-hidden="true" />
           {t('public.watch.follow')}
         </button>
       )}

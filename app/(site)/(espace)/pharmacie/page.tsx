@@ -41,7 +41,7 @@ export default async function PharmacyHome() {
           </span>
           <span className="inline-flex items-center gap-1 font-medium text-brand">
             {t('core.requests.answerNow')}
-            <ChevronRight size={18} aria-hidden="true" />
+            <ChevronRight size={20} aria-hidden="true" />
           </span>
         </Link>
       ) : null}

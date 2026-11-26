@@ -92,7 +92,7 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
   return (
     <PublicMain narrow>
       <Link href="/medicaments" className="-mb-3 inline-flex min-h-12 items-center gap-2 self-start text-sm font-medium text-brand underline">
-        <ArrowLeft size={18} aria-hidden="true" className="rtl:-scale-x-100" />
+        <ArrowLeft size={20} aria-hidden="true" className="rtl:-scale-x-100" />
         {t('public.medicine.back')}
       </Link>
 
@@ -132,7 +132,7 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
         <p className="max-w-[60ch] text-sm text-ink-muted">{t('public.medicine.statusScope')}</p>
         {arrival && status.level === 'confirmed' ? (
           <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink">
-            <PackageCheck size={18} aria-hidden="true" className="shrink-0 text-brand" />
+            <PackageCheck size={20} aria-hidden="true" className="shrink-0 text-brand" />
             <span>{t('public.medicine.arrival', { date: formatPublicDate(arrival.expectedOn, locale) })}</span>
             <OriginBadge origin={arrival.origin} locale={locale} />
           </p>
@@ -155,7 +155,7 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
 
       <div className="flex flex-col gap-2">
         <ButtonLink href={requestHref} className="w-full sm:w-auto sm:self-start">
-          <MapPin size={18} aria-hidden="true" />
+          <MapPin size={20} aria-hidden="true" />
           {t('public.medicine.ask')}
         </ButtonLink>
         <div className="flex flex-wrap items-start gap-x-4">
@@ -179,7 +179,7 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
         <details className="group border-y border-line">
           <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 py-2 font-medium text-brand [&::-webkit-details-marker]:hidden">
             {t('public.medicine.statusDetails')}
-            <ChevronDown size={18} aria-hidden="true" className="shrink-0 group-open:rotate-180" />
+            <ChevronDown size={20} aria-hidden="true" className="shrink-0 group-open:rotate-180" />
           </summary>
           <div className="flex flex-col gap-2 pb-4 text-sm text-ink-muted">
             {body ? <p>{body}</p> : null}
@@ -224,7 +224,7 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
         {brands.length > 0 ? (
           <>
             <p className="flex items-start gap-2 text-sm text-ink-muted">
-              <Info size={17} aria-hidden="true" className="mt-0.5 shrink-0 text-brand" />
+              <Info size={20} aria-hidden="true" className="mt-0.5 shrink-0 text-brand" />
               {t('public.medicine.brandsCaution')}
             </p>
             <ul className="hairline-list border-y border-line">
@@ -249,7 +249,7 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
                         </span>
                       </span>
                       <ChevronDown
-                        size={18}
+                        size={20}
                         aria-hidden="true"
                         className="shrink-0 text-ink-muted transition-transform group-open:rotate-180 motion-reduce:transition-none"
                       />

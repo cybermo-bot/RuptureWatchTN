@@ -39,7 +39,7 @@ export function ShareStatus({ title, text, url, labels }: { title: string; text:
           navigator.share({ title, text, url }).catch(() => undefined);
         }}
       >
-        <Share2 size={18} aria-hidden="true" className="text-brand" />
+        <Share2 size={20} aria-hidden="true" className="text-brand" />
         {labels.share}
       </button>
     );
@@ -48,12 +48,12 @@ export function ShareStatus({ title, text, url, labels }: { title: string; text:
   return (
     <details>
       <summary className={`${actionClass} cursor-pointer list-none [&::-webkit-details-marker]:hidden`}>
-        <Share2 size={18} aria-hidden="true" />
+        <Share2 size={20} aria-hidden="true" />
         {labels.share}
       </summary>
       <div className="flex flex-wrap gap-x-2">
         <a href={`https://wa.me/?text=${encodeURIComponent(`${text}\n${url}`)}`} target="_blank" rel="noopener noreferrer" className={actionClass}>
-          <MessageCircle size={18} aria-hidden="true" className="text-brand" />
+          <MessageCircle size={20} aria-hidden="true" className="text-brand" />
           {labels.whatsapp}
         </a>
         <button
@@ -66,7 +66,7 @@ export function ShareStatus({ title, text, url, labels }: { title: string; text:
               .catch(() => setCopy('failed'));
           }}
         >
-          <Copy size={18} aria-hidden="true" className="text-brand" />
+          <Copy size={20} aria-hidden="true" className="text-brand" />
           {labels.copy}
         </button>
       </div>

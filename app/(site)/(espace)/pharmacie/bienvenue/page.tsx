@@ -44,7 +44,7 @@ export default async function Guide({ searchParams }: PageProps<'/pharmacie/bien
       </header>
       <section aria-live="polite" className="panel flex flex-col items-start gap-5 p-6">
         <span className="inline-flex size-14 items-center justify-center rounded-full bg-surface-subtle text-brand">
-          <Icon size={28} strokeWidth={1.75} aria-hidden="true" />
+          <Icon size={24} strokeWidth={1.75} aria-hidden="true" />
         </span>
         <p className="max-w-prose text-xl leading-snug text-ink">{t(step.text, { days })}</p>
       </section>
@@ -56,7 +56,7 @@ export default async function Guide({ searchParams }: PageProps<'/pharmacie/bien
       <div className="flex flex-col gap-2 sm:flex-row sm:justify-between">
         <ButtonLink href={last ? '/pharmacie' : `/pharmacie/bienvenue?etape=${index + 2}`} className="sm:order-2">
           {t(last ? 'core.onboarding.start' : 'core.onboarding.next')}
-          <ArrowRight size={18} aria-hidden="true" />
+          <ArrowRight size={20} aria-hidden="true" />
         </ButtonLink>
         {last ? null : (
           <ButtonLink href="/pharmacie" variant="quiet" className="sm:order-1">

@@ -93,7 +93,7 @@ export default async function RequestPage(props: PageProps<'/demandes/[requestId
       {!expired && !nobody ? <AutoRefresh seconds={10} until={request.expires_at} /> : null}
       {molecule ? (
         <Link href={`/medicaments/${molecule.id}${presentation ? `?presentation=${presentation.id}` : ''}`} className="inline-flex min-h-12 items-center gap-2 self-start text-brand underline">
-          <ArrowLeft size={18} aria-hidden="true" className="rtl:-scale-x-100" />
+          <ArrowLeft size={20} aria-hidden="true" className="rtl:-scale-x-100" />
           {t('public.request.backToMedicine')}
         </Link>
       ) : null}
@@ -119,7 +119,7 @@ export default async function RequestPage(props: PageProps<'/demandes/[requestId
             {t('public.request.noneParticipating')}
           </h2>
           <Link href="/pharmacies" className="inline-flex min-h-12 items-center gap-2 self-start text-brand underline">
-            <MapPin size={18} aria-hidden="true" />
+            <MapPin size={20} aria-hidden="true" />
             {t('public.request.openPharmacies')}
           </Link>
           {molecule ? (
@@ -185,7 +185,7 @@ export default async function RequestPage(props: PageProps<'/demandes/[requestId
               <AnswersMap markers={markers} centre={gov.centre} label={t('public.request.mapLabel')} locale={locale} />
             ) : null}
             <p className="inline-flex items-center gap-2 text-sm text-ink-muted">
-              <Phone size={18} aria-hidden="true" />
+              <Phone size={20} aria-hidden="true" />
               {t('public.request.callFirst')}
             </p>
             {status.level === 'confirmed' ? <p className="text-sm text-ink-muted">{t('public.request.prescription')}</p> : null}

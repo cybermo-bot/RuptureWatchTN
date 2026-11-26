@@ -102,7 +102,7 @@ export function FollowBanner({ locale }: { locale: Locale }) {
                   onClick={() => acknowledge(c)}
                   className="inline-flex min-h-12 min-w-12 items-center justify-center rounded-sm text-ink-muted hover:text-ink"
                 >
-                  <X size={18} aria-hidden="true" />
+                  <X size={20} aria-hidden="true" />
                   <span className="sr-only">{t('public.watch.dismiss')}</span>
                 </button>
               </span>

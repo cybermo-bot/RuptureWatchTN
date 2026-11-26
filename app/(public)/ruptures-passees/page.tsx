@@ -22,7 +22,7 @@ function SourceLink({ href, children }: { href: string; children: React.ReactNod
   return (
     <a href={href} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center gap-1.5 text-brand underline">
       {children}
-      <ExternalLink size={14} aria-hidden="true" />
+      <ExternalLink size={16} aria-hidden="true" />
     </a>
   );
 }

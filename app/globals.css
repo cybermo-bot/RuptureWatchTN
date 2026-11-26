@@ -42,6 +42,8 @@
   --color-surface: var(--surface);
   --color-surface-subtle: var(--surface-subtle);
   --color-page: var(--page);
+  --color-powder-blue: var(--powder-blue);
+  --color-band: var(--band);
   --color-sidebar: var(--sidebar);
   --color-sidebar-raised: var(--sidebar-raised);
   --color-sidebar-line: var(--sidebar-line);
@@ -229,6 +231,10 @@
   /* Bottom tab bar on phones: clears the home indicator. */
   .safe-bottom {
     padding-bottom: env(safe-area-inset-bottom);
+  }
+  /* Icons: 16, 20 or 24 px, stroke 1.75 (Lucide draws 2 unless told otherwise). */
+  svg.lucide[stroke-width="2"] {
+    stroke-width: 1.75;
   }
 }
 

@@ -88,7 +88,7 @@ export default async function ReportResult({ params, searchParams }: PageProps<'
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-5 pb-24 lg:pb-0">
       <header className="flex flex-col items-start gap-3 pt-2">
         <span className="rw-rise inline-flex size-12 items-center justify-center rounded-full bg-brand text-white">
-          <Check size={26} strokeWidth={2.5} aria-hidden="true" />
+          <Check size={24} strokeWidth={2.5} aria-hidden="true" />
         </span>
         <h1 className="text-2xl font-semibold tracking-tight text-ink">
           {delivered ? t('core.result.titleDelivered') : t('core.result.title')}

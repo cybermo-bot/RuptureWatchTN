@@ -31,7 +31,7 @@ export function PublicFooter({ locale }: { locale: Locale }) {
   const t = translator(locale);
   return (
     <>
-      <footer className="mt-auto border-t border-line bg-surface-subtle pb-20 sm:pb-0">
+      <footer className="mt-auto border-t border-line bg-surface-subtle pb-[calc(3.5rem+env(safe-area-inset-bottom))] sm:pb-0">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-ink-muted sm:flex-row sm:items-start sm:justify-between sm:px-8">
           <p className="flex max-w-prose items-start gap-3">
             <LogoMark size={20} className="mt-0.5 text-ink-muted" />

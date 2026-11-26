@@ -41,7 +41,7 @@ function ResultRow({ href, title, description, medicine, locale }: {
             </>
           ) : <span className="text-sm text-ink-muted">{description}</span>}
         </span>
-        <ChevronRight size={18} aria-hidden="true" className="shrink-0 text-ink-muted rtl:-scale-x-100" />
+        <ChevronRight size={20} aria-hidden="true" className="shrink-0 text-ink-muted rtl:-scale-x-100" />
       </Link>
     </li>
   );
@@ -130,7 +130,7 @@ export function MedicineSearch({ locale, linkPrefix = '/medicaments/', label, au
                   document.getElementById(inputId)?.focus();
                 }} className="inline-flex min-h-12 items-center gap-2 rounded-sm border border-line px-3 font-medium text-brand hover:border-brand hover:bg-surface-subtle">
                   <Ltr>{example}</Ltr>
-                  <ArrowUpLeft size={15} aria-hidden="true" className="rtl:-scale-x-100" />
+                  <ArrowUpLeft size={16} aria-hidden="true" className="rtl:-scale-x-100" />
                 </button>
               </li>
             ))}

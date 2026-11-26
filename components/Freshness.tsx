@@ -5,7 +5,7 @@ import { RefreshCw } from 'lucide-react';
 export function FreshnessLine({ at, text, title, className = '' }: { at: string; text: string; title: string; className?: string }) {
   return (
     <span className={`inline-flex items-center gap-1.5 ${className}`}>
-      <RefreshCw size={14} aria-hidden="true" className="shrink-0" />
+      <RefreshCw size={16} aria-hidden="true" className="shrink-0" />
       <time dateTime={new Date(at).toISOString()} title={title}>
         {text}
       </time>

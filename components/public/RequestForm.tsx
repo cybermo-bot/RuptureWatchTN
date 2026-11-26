@@ -148,7 +148,7 @@ export function RequestForm({ molecule, presentation, list, locale }: { molecule
         </div>
         <div className="flex flex-col gap-2">
           <button type="button" onClick={locate} disabled={pending || locating === 'locating'} className={buttonClass('quiet', 'self-start')}>
-            <LocateFixed size={18} aria-hidden="true" />
+            <LocateFixed size={20} aria-hidden="true" />
             {t('public.request.nearMe')}
           </button>
           <p className="text-sm text-ink-muted" aria-live="polite">
@@ -178,7 +178,7 @@ export function RequestForm({ molecule, presentation, list, locale }: { molecule
           {code ? t('public.request.scope', { name: requestedName, governorate: nameOf(code) }) : t('public.request.scopeBeforeArea', { name: requestedName })}
         </p>
         <button type="submit" disabled={pending} className={buttonClass('primary', 'w-full sm:w-auto sm:self-start')}>
-          <Send size={18} aria-hidden="true" className="rtl:-scale-x-100" />
+          <Send size={20} aria-hidden="true" className="rtl:-scale-x-100" />
           {pending ? t('public.request.sending') : t('public.request.send')}
         </button>
       </div>

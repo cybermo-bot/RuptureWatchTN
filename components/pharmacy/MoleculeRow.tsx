@@ -47,7 +47,7 @@ export function MoleculeRow({
           ) : null}
         </span>
       </span>
-      <ChevronRight size={18} aria-hidden="true" className="shrink-0 text-ink-muted rtl:-scale-x-100" />
+      <ChevronRight size={20} aria-hidden="true" className="shrink-0 text-ink-muted rtl:-scale-x-100" />
     </Link>
   );
 }

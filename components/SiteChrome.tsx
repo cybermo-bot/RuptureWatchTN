@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { buttonClass } from '@/components/Button';
 import type { ReactNode } from 'react';
 import { Logo, LogoMark } from '@/components/brand/Logo';
 import { UnderstandNav } from '@/components/console/UnderstandNav';
@@ -29,7 +30,7 @@ export function SiteHeader({ children, compact = false }: { children?: ReactNode
         {children ?? (!compact && (
           <Link
             href={isPilot() ? '/connexion/pharmacie' : '/#roles'}
-            className="inline-flex min-h-11 items-center rounded-sm bg-brand px-4 text-sm font-medium text-white no-underline hover:bg-brand-strong hover:text-white"
+            className={buttonClass('primary', 'px-4 text-sm')}
           >
             {t(isPilot() ? 'core.pilot.signIn' : 'core.site.chooseRole')}
           </Link>
