@@ -9,6 +9,7 @@ import { FormPicture } from '@/components/medicine/FormPicture';
 import { FollowButton } from '@/components/public/FollowButton';
 import { Ltr } from '@/components/public/Ltr';
 import { PublicMain } from '@/components/public/PublicChrome';
+import { plural } from '@/lib/i18n';
 import { getTranslator } from '@/lib/i18n-server';
 import { FreshnessLine } from '@/components/Freshness';
 import { freshness } from '@/lib/freshness';
@@ -161,7 +162,7 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
               <p>
                 <FreshnessLine
                   at={status.evaluatedAt}
-                  text={fresh.unit === 'now' ? t('public.freshness.now') : t(`public.freshness.${fresh.unit}`, { n: fresh.n })}
+                  text={fresh.unit === 'now' ? t('public.freshness.now') : plural(locale, `public.freshness.${fresh.unit}`, fresh.n)}
                   title={t('public.freshness.title', {
                     date: formatPublicDate(status.evaluatedAt, locale),
                     time: formatPublicTime(status.evaluatedAt, locale),

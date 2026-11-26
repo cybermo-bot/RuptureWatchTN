@@ -106,6 +106,12 @@ export const SHOTS: Shot[] = [
   { name: 'pharmacie-alertes-sfax', path: '/pharmacie/alertes', role: 'pharmacie-sfax' },
   { name: 'pharmacie-medicament', path: `/pharmacie/molecule/${SHOWCASE_ID}`, role: 'pharmacie-tunis' },
   { name: 'vues-showcase', path: `/vues/${SHOWCASE_ID}` },
+  // Pilot-1 item 7: the pharmacy tab bar (« Demandes »), the coordination tiles, the scenario line.
+  { name: 'pharmacie-barre', path: '/pharmacie', role: 'pharmacie-tunis', fullPage: false },
+  { name: 'coordination-chiffres', path: '/coordination', role: 'coordination', fullPage: false },
+  { name: 'scenario-ligne', path: '/scenario#scenario-complet', fullPage: false, before: async (page) => {
+    await page.locator('#scenario-complet-titre').scrollIntoViewIfNeeded();
+  } },
 ];
 
 /** One preview per role tile on the home page (role key: path). */

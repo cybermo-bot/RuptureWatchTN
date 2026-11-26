@@ -128,9 +128,30 @@
     "available": "Disponible",
     "answeredAgo": {
       "now": "à l’instant",
-      "minutes": "il y a {n} min",
-      "hours": "il y a {n} h",
-      "days": "il y a {n} j"
+      "minutes": {
+        "zero": "il y a {n} min",
+        "one": "il y a {n} min",
+        "two": "il y a {n} min",
+        "few": "il y a {n} min",
+        "many": "il y a {n} min",
+        "other": "il y a {n} min"
+      },
+      "hours": {
+        "zero": "il y a {n} h",
+        "one": "il y a {n} h",
+        "two": "il y a {n} h",
+        "few": "il y a {n} h",
+        "many": "il y a {n} h",
+        "other": "il y a {n} h"
+      },
+      "days": {
+        "zero": "il y a {n} j",
+        "one": "il y a {n} j",
+        "two": "il y a {n} j",
+        "few": "il y a {n} j",
+        "many": "il y a {n} j",
+        "other": "il y a {n} j"
+      }
     },
     "title": "Demander aux pharmacies proches",
     "intro": "Votre demande est anonyme. Seules les pharmacies participantes la reçoivent.",
@@ -156,6 +177,7 @@
     "asked": "Pharmacies interrogées",
     "answered": "Réponses",
     "lessThanThree": "moins de 3",
+    "oneOrTwoAnswers": "1 ou 2 réponses",
     "expiresIn": "Ouverte encore {time}",
     "hoursMinutes": "{h} h {m} min",
     "minutes": "{m} min",
@@ -234,9 +256,30 @@
   },
   "freshness": {
     "now": "Mis à jour à l’instant",
-    "minutes": "Mis à jour il y a {n} min",
-    "hours": "Mis à jour il y a {n} h",
-    "days": "Mis à jour il y a {n} j",
+    "minutes": {
+      "zero": "Mis à jour il y a {n} min",
+      "one": "Mis à jour il y a {n} min",
+      "two": "Mis à jour il y a {n} min",
+      "few": "Mis à jour il y a {n} min",
+      "many": "Mis à jour il y a {n} min",
+      "other": "Mis à jour il y a {n} min"
+    },
+    "hours": {
+      "zero": "Mis à jour il y a {n} h",
+      "one": "Mis à jour il y a {n} h",
+      "two": "Mis à jour il y a {n} h",
+      "few": "Mis à jour il y a {n} h",
+      "many": "Mis à jour il y a {n} h",
+      "other": "Mis à jour il y a {n} h"
+    },
+    "days": {
+      "zero": "Mis à jour il y a {n} j",
+      "one": "Mis à jour il y a {n} j",
+      "two": "Mis à jour il y a {n} j",
+      "few": "Mis à jour il y a {n} j",
+      "many": "Mis à jour il y a {n} j",
+      "other": "Mis à jour il y a {n} j"
+    },
     "title": "Dernière vérification : {date} à {time}"
   },
   "history": {

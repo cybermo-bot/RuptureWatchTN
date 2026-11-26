@@ -451,6 +451,7 @@
     "tabsLabel": "Sections de l’espace pharmacie",
     "tabs": {
       "followed": "Mes médicaments suivis",
+      "requests": "Demandes",
       "alerts": "Alertes",
       "unreadCount": "{count} non lues",
       "unreadOne": "1 non lue"
@@ -522,6 +523,8 @@
     "impactFew": "Avec la vôtre, moins de 3 pharmacies signalent ce médicament sur les {days} derniers jours.",
     "impactDelivered": "Votre signalement de livraison compte pour lever l’alerte quand d’autres pharmacies le confirment.",
     "impactUnavailable": "Le décompte national n’est pas disponible pour l’instant.",
+    "belowThresholdOne": "Votre signalement est enregistré. Il faut le signalement d’une deuxième pharmacie pour passer à « Probable ».",
+    "belowThresholdMany": "Votre signalement est enregistré. Il faut les signalements de {count} pharmacies sur {days} jours pour passer à « Probable ».",
     "toMolecule": "Voir la fiche du médicament",
     "toHome": "Retour à mes médicaments",
     "countLabelMany": "pharmacies signalent ce médicament",
@@ -959,6 +962,7 @@
     "title": "Le scénario : une rupture simulée, du premier signe à la levée",
     "intro": "Trois semaines de signalements fictifs pour un médicament fictif, joués pas à pas par les vraies règles d’alerte. Tout se passe dans votre navigateur : rien n’est écrit dans la base de données.",
     "molecule": "Médicament de démonstration (fictif)",
+    "showcaseLine": "Les mêmes règles s’appliquent à {molecule} dans les espaces de démonstration.",
     "noticeSource": "Autorité étrangère fictive",
     "play": "Lancer le scénario",
     "resume": "Reprendre",
@@ -1334,7 +1338,7 @@
     "figuresLabel": "Situation nationale",
     "vitalConfirmed": "Médicaments vitaux confirmés",
     "governorates": "Gouvernorats touchés",
-    "governoratesNote": "Pharmacies signalant sur {days} jours",
+    "governoratesNote": "Gouvernorats avec au moins un signalement sur {days} jours",
     "unanswered": "Demandes de patients sans réponse, {days} jours",
     "unansweredNote": "Sur {requests} demandes",
     "mapTitle": "Carte nationale",

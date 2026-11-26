@@ -64,11 +64,15 @@ export const NAV: Record<OrganisationType, NavItem[]> = {
   ],
 };
 
-/** The pharmacy's bottom tab bar on phones: four tabs, the report first. */
+/**
+ * The pharmacy's bottom tab bar on phones: four tabs, the report first. The requests tab reads
+ * « Demandes » (its own key): « Demandes de patients », shared with the sidebar, overlapped its
+ * neighbour at 375 px (pilot-1 item 7).
+ */
 export const PHARMACY_TABS: NavItem[] = [
   { href: '/pharmacie/signaler', label: 'core.nav.items.report', icon: 'report', match: PHARMACY_REPORT },
   { href: '/pharmacie', label: 'core.nav.items.followed', icon: 'followed', match: PHARMACY_HOME },
-  { href: '/pharmacie/demandes', label: 'core.nav.items.requests', icon: 'requests', badge: 'requests' },
+  { href: '/pharmacie/demandes', label: 'core.pharmacy.tabs.requests', icon: 'requests', badge: 'requests' },
   {
     href: '/pharmacie/plus',
     label: 'core.nav.items.more',
