@@ -1,10 +1,12 @@
-import { Check, Send } from 'lucide-react';
+import { ArrowRight, Check, Send } from 'lucide-react';
+import type { CSSProperties } from 'react';
 import { notFound } from 'next/navigation';
 import { ButtonLink } from '@/components/Button';
 import { Guidance } from '@/components/Guidance';
 import { LevelBadge } from '@/components/LevelBadge';
 import { LevelExplanation } from '@/components/LevelExplanation';
 import { Origins } from '@/components/Origins';
+import { Section } from '@/components/ui/Section';
 import { getCurrentSession } from '@/lib/auth/session';
 import { createUserClient } from '@/lib/db/server';
 import { t } from '@/lib/i18n';
@@ -48,7 +50,7 @@ function ImpactFigure({ impact }: { impact: Impact }) {
   return (
     <p className="flex flex-col gap-1 text-ink">
       <span className="flex items-baseline gap-2">
-        <span className="font-mono text-4xl leading-none font-semibold tabular-nums">{n}</span>
+        <span className="figure">{n}</span>
         <span className="text-lg font-medium">{t('core.result.countLabelMany')}</span>
       </span>
       <span className="text-ink-muted">
@@ -64,7 +66,8 @@ function ImpactFigure({ impact }: { impact: Impact }) {
 
 // What the pharmacist sees right after a report, in three steps (session 6): "Signalement reçu",
 // "Ce que votre signalement a changé" (the level before and after, the national count it added
-// to, why), then "Prochaine action" (the team's guidance and the next button).
+// to, why), then "Prochaine action" (the team's guidance and the next button). Pilot-4 step 4:
+// the check pops in, then « Avant → Après » rises in sequence and the new level scales in.
 export default async function ReportResult({ params, searchParams }: PageProps<'/pharmacie/molecule/[id]/resultat'>) {
   const { id } = await params;
   if (!UUID.test(id)) notFound();
@@ -84,15 +87,16 @@ export default async function ReportResult({ params, searchParams }: PageProps<'
   // rule sentence under « Pourquoi ce niveau » then says the count once (pilot-1 item 7).
   const belowThreshold = !delivered && view.signal?.rule === 'local_reports_below_threshold';
 
+  const changed = before !== after;
+  const step = (n: number) => ({ '--step': n }) as CSSProperties;
+
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-5 pb-24 lg:pb-0">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <header className="flex flex-col items-start gap-3 pt-2">
-        <span className="rw-rise inline-flex size-12 items-center justify-center rounded-full bg-brand text-white">
+        <span className="rw-check inline-flex size-12 items-center justify-center rounded-full bg-brand text-white">
           <Check size={24} strokeWidth={2.5} aria-hidden="true" />
         </span>
-        <h1 className="text-2xl font-semibold tracking-tight text-ink">
-          {delivered ? t('core.result.titleDelivered') : t('core.result.title')}
-        </h1>
+        <h1 className="title-1 text-ink">{delivered ? t('core.result.titleDelivered') : t('core.result.title')}</h1>
         <p className="text-lg break-words text-ink">{view.name}</p>
         {product ? (
           <p data-reported-product className="text-ink-muted">
@@ -101,24 +105,29 @@ export default async function ReportResult({ params, searchParams }: PageProps<'
         ) : null}
       </header>
 
-      <section aria-labelledby="change" className="panel flex flex-col gap-4 p-4">
-        <h2 id="change" className="text-lg font-semibold text-ink">
+      <section aria-labelledby="change" data-status-card className="flex flex-col gap-4 rounded-md bg-powder-blue p-4 sm:p-5">
+        <h2 id="change" className="title-3 text-ink">
           {t('core.result.impactTitle')}
         </h2>
-        <dl aria-label={t('core.result.levelChange')} className="grid grid-cols-[auto_1fr] items-center gap-x-6 gap-y-3">
-          <dt className="text-ink-muted">{t('core.result.before')}</dt>
-          <dd>
-            <LevelBadge level={before} className="text-base" />
-          </dd>
-          <dt className="text-ink-muted">{t('core.result.after')}</dt>
-          <dd className={before !== after ? 'rw-rise' : ''}>
-            <span className="flex flex-wrap items-center gap-2">
-              <LevelBadge level={after} className="text-base" />
+        <dl aria-label={t('core.result.levelChange')} data-level-change className="flex flex-col gap-2 sm:flex-row sm:items-end sm:gap-4">
+          <div className="rw-step flex flex-col gap-1" style={step(0)}>
+            <dt className="eyebrow text-ink-muted">{t('core.result.before')}</dt>
+            <dd>
+              <LevelBadge level={before} />
+            </dd>
+          </div>
+          <ArrowRight size={20} aria-hidden="true" className="rw-step ms-0.5 rotate-90 text-ink-muted sm:ms-0 sm:mb-0.5 sm:rotate-0 rtl:sm:-scale-x-100" style={step(1)} />
+          <div className="rw-step flex flex-col gap-1" style={step(2)}>
+            <dt className="eyebrow text-ink-muted">{t('core.result.after')}</dt>
+            <dd className="flex flex-wrap items-center gap-2">
+              <span className={changed ? 'rw-level-in' : undefined}>
+                <LevelBadge level={after} size="lg" />
+              </span>
               <Origins origins={view.signal?.evidence.origins} />
-            </span>
-          </dd>
+            </dd>
+          </div>
         </dl>
-        {before === after ? <p className="text-sm text-ink-muted">{t('core.result.unchanged')}</p> : null}
+        {changed ? null : <p className="text-sm text-ink-muted">{t('core.result.unchanged')}</p>}
         <div className="border-t border-line pt-4">
           {delivered ? (
             <p className="max-w-prose text-lg text-ink">{t('core.result.impactDelivered')}</p>
@@ -141,16 +150,13 @@ export default async function ReportResult({ params, searchParams }: PageProps<'
         ) : null}
       </section>
 
-      <section aria-labelledby="prochaine" className="panel flex flex-col gap-3 p-4">
-        <h2 id="prochaine" className="text-lg font-semibold text-ink">
-          {t('core.result.nextTitle')}
-        </h2>
+      <Section id="prochaine" title={t('core.result.nextTitle')}>
         <Guidance level={after} headingLevel={3} />
-      </section>
+      </Section>
 
-      {/* The next step stays in reach of the thumb on phones. */}
-      <div className="safe-bottom fixed inset-x-0 bottom-16 z-20 border-t border-line bg-surface px-4 py-3 lg:static lg:border-0 lg:bg-transparent lg:p-0">
-        <div className="mx-auto flex max-w-3xl flex-col gap-2 sm:flex-row">
+      {/* In the flow: on phones the bottom bar's « Accueil » and « Signaler » are the thumb's next step. */}
+      <div>
+        <div className="flex flex-col gap-2 sm:flex-row">
           <ButtonLink href="/pharmacie" className="flex-1 sm:flex-none">
             {t('core.result.toHome')}
           </ButtonLink>

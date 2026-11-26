@@ -1,13 +1,16 @@
-import { ChevronRight } from 'lucide-react';
-import Link from 'next/link';
 import { LevelBadge } from '@/components/LevelBadge';
 import { Origins } from '@/components/Origins';
 import { FormPicture } from '@/components/medicine/FormPicture';
+import { RowLink } from '@/components/ui/ListRow';
 import { formatDate } from '@/lib/format';
 import { t } from '@/lib/i18n';
 import type { FollowedMolecule } from '@/lib/pharmacy/data';
 
-// A medicine as a row you tap across the whole width: name, level with its origin, since when.
+const TAG = 'inline-flex items-center rounded-sm px-1.5 text-xs leading-5';
+
+// A followed medicine as a ListRow: name, level with its origin, since when.
+// isNew: the pharmacy has an unread alert for it (its level changed since it last looked).
+// notice: a foreign regulator's notice is active for it (it never raises a level on its own).
 // showcase: a medicine of the demonstration that this one-click demo pharmacy cannot report
 // (pilot-1 item 3), tagged « démonstration »; the caller points the row at the medicine page.
 export function MoleculeRow({
@@ -16,38 +19,43 @@ export function MoleculeRow({
   large = false,
   label,
   showcase = false,
+  isNew = false,
 }: {
   molecule: FollowedMolecule;
   href: string;
   large?: boolean;
   label?: string;
   showcase?: boolean;
+  isNew?: boolean;
 }) {
   const level = molecule.signal?.level ?? 'none';
+  const notice = (molecule.signal?.evidence.notices.length ?? 0) > 0;
   return (
-    <Link
+    <RowLink
       href={href}
-      aria-label={label}
-      data-pulse={molecule.moleculeId}
-      data-showcase={showcase ? '' : undefined}
-      className="flex min-h-16 items-center justify-between gap-4 px-4 py-3 no-underline transition-colors duration-(--dur-fast) hover:bg-surface-subtle active:bg-surface-subtle"
-    >
-      <FormPicture />
-      <span className="flex min-w-0 flex-1 flex-col gap-1">
-        <span className={`font-medium break-words text-ink ${large ? 'text-lg' : ''}`}>{molecule.name}</span>
-        <span className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-muted">
+      ariaLabel={label}
+      data={{ 'data-pulse': molecule.moleculeId, 'data-showcase': showcase ? '' : undefined, 'data-new': isNew ? '' : undefined }}
+      leading={<FormPicture />}
+      title={
+        <>
+          <span className={large ? 'text-lg' : undefined}>{molecule.name}</span>
+          {isNew ? <span className={`${TAG} ms-2 bg-brand align-[0.125em] font-medium text-white`}>{t('core.pharmacy.today.new')}</span> : null}
+        </>
+      }
+      meta={
+        <>
           <LevelBadge level={level} />
           <Origins origins={molecule.signal?.evidence.origins} />
           {molecule.signal && level !== 'none' ? <span>{t('core.pharmacy.since', { date: formatDate(molecule.signal.since) })}</span> : null}
+          {notice ? <span className={`${TAG} border border-ink-muted text-ink`}>{t('core.pharmacy.today.notice')}</span> : null}
           {showcase ? (
-            <span title={t('core.showcase.tagLabel')} className="inline-flex items-center rounded-sm border border-ink-muted px-1.5 text-xs leading-5 text-ink">
+            <span title={t('core.showcase.tagLabel')} className={`${TAG} border border-ink-muted text-ink`}>
               <span className="sr-only">{t('core.showcase.tagLabel')}</span>
               <span aria-hidden="true">{t('core.showcase.tag')}</span>
             </span>
           ) : null}
-        </span>
-      </span>
-      <ChevronRight size={20} aria-hidden="true" className="shrink-0 text-ink-muted rtl:-scale-x-100" />
-    </Link>
+        </>
+      }
+    />
   );
 }

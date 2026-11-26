@@ -111,11 +111,11 @@ export function RequestList({ requests }: { requests: OpenRequest[] }) {
 
   return (
     <>
-      <ul className="flex flex-col gap-4">
+      <ul className="hairline-list border-y border-line">
         {rows.map((r) => {
           const done = answered[r.request_id];
           return (
-            <li key={r.request_id} data-request-id={r.request_id} className="panel flex flex-col gap-4 p-4">
+            <li key={r.request_id} data-request-id={r.request_id} className="flex flex-col gap-4 py-4">
               <div className="flex items-start gap-3">
                 <FormPicture label={r.medicine_label} />
                 <div className="flex min-w-0 flex-col gap-1">

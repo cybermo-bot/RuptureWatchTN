@@ -14,29 +14,43 @@ export function List({ children, label, className = '' }: { children: ReactNode;
   );
 }
 
-export interface ListRowProps {
-  href?: string;
+interface RowContent {
   leading?: ReactNode;
   title: ReactNode;
   meta?: ReactNode;
   /** A level badge, a count or a tag, before the chevron. */
   trailing?: ReactNode;
-  current?: boolean;
-  prefetch?: boolean;
-  /** data-* attributes for tests and anchors, set on the link or the row. */
-  data?: Record<`data-${string}`, string>;
 }
 
-export function ListRow({ href, leading, title, meta, trailing, current, prefetch, data }: ListRowProps) {
-  const body = (
+export interface RowLinkProps extends RowContent {
+  href: string;
+  current?: boolean;
+  prefetch?: boolean;
+  ariaLabel?: string;
+  /** data-* attributes for tests, anchors and the live highlight, set on the link. */
+  data?: Record<`data-${string}`, string | undefined>;
+}
+
+export interface ListRowProps extends RowContent {
+  href?: string;
+  current?: boolean;
+  prefetch?: boolean;
+  ariaLabel?: string;
+  data?: Record<`data-${string}`, string | undefined>;
+}
+
+const ROW = 'group flex min-h-14 items-center gap-3 px-4 py-3';
+
+function Body({ leading, title, meta, trailing, linked }: RowContent & { linked: boolean }) {
+  return (
     <>
       {leading ? <span className="flex shrink-0">{leading}</span> : null}
-      <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+      <span className="flex min-w-0 flex-1 flex-col gap-1">
         <span className="font-medium break-words text-ink">{title}</span>
-        {meta ? <span className="text-sm text-ink-muted">{meta}</span> : null}
+        {meta ? <span className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-muted">{meta}</span> : null}
       </span>
       {trailing ? <span className="flex shrink-0 items-center">{trailing}</span> : null}
-      {href ? (
+      {linked ? (
         <ChevronRight
           size={20}
           aria-hidden="true"
@@ -45,22 +59,32 @@ export function ListRow({ href, leading, title, meta, trailing, current, prefetc
       ) : null}
     </>
   );
-  const row = 'group flex min-h-14 items-center gap-3 px-4 py-3';
+}
+
+/** The row as a link, for callers that render their own <li>. */
+export function RowLink({ href, current, prefetch, ariaLabel, data, ...content }: RowLinkProps) {
+  return (
+    <Link
+      href={href}
+      prefetch={prefetch}
+      aria-label={ariaLabel}
+      aria-current={current ? 'page' : undefined}
+      className={`${ROW} no-underline transition-colors duration-(--dur-instant) hover:bg-powder-blue active:bg-powder-blue aria-[current=page]:bg-surface-subtle`}
+      {...data}
+    >
+      <Body {...content} linked />
+    </Link>
+  );
+}
+
+export function ListRow({ href, current, prefetch, ariaLabel, data, ...content }: ListRowProps) {
   return (
     <li>
       {href ? (
-        <Link
-          href={href}
-          prefetch={prefetch}
-          aria-current={current ? 'page' : undefined}
-          className={`${row} no-underline transition-colors duration-(--dur-instant) hover:bg-powder-blue aria-[current=page]:bg-surface-subtle`}
-          {...data}
-        >
-          {body}
-        </Link>
+        <RowLink href={href} current={current} prefetch={prefetch} ariaLabel={ariaLabel} data={data} {...content} />
       ) : (
-        <div className={row} {...data}>
-          {body}
+        <div className={ROW} {...data}>
+          <Body {...content} linked={false} />
         </div>
       )}
     </li>

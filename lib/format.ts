@@ -13,6 +13,13 @@ export function formatDate(d: Date | string): string {
   return dateFormat.format(toDate(d)).replace(/^1 /, '1er ');
 }
 
+const weekdayFormat = new Intl.DateTimeFormat('fr', { weekday: 'long', day: 'numeric', month: 'long', timeZone: TIME_ZONE });
+
+/** "jeudi 26 novembre", in Tunis time. */
+export function formatWeekday(d: Date | string): string {
+  return weekdayFormat.format(toDate(d)).replace(/ 1 /, ' 1er ');
+}
+
 /** "09:30" */
 export function formatTime(d: Date | string): string {
   return timeFormat.format(toDate(d));

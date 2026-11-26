@@ -450,6 +450,9 @@
     "reportCta": "Signaler une commande non livrée",
     "tabsLabel": "Sections de l’espace pharmacie",
     "tabs": {
+      "home": "Accueil",
+      "report": "Signaler",
+      "more": "Plus",
       "followed": "Mes médicaments suivis",
       "requests": "Demandes",
       "alerts": "Alertes",
@@ -461,11 +464,23 @@
     "since": "depuis le {date}",
     "addTitle": "Suivre un médicament",
     "openMolecule": "Ouvrir la fiche de {molecule}",
-    "homeTitle": "Mes médicaments",
+    "homeTitle": "Vos médicaments",
     "followedCount": "{count} médicaments suivis",
     "followedCountOne": "1 médicament suivi",
     "levelsCount": "dont {count} avec un niveau",
-    "searchTitle": "Suivre un autre médicament"
+    "searchTitle": "Suivre un autre médicament",
+    "today": {
+      "title": "Aujourd’hui",
+      "nav": "Aujourd’hui",
+      "noRequests": "Aucun patient n’attend votre réponse.",
+      "allRequests": "Toutes les demandes ({count})",
+      "new": "nouveau",
+      "notice": "avis étranger",
+      "quiet": "{count} médicaments sans signal",
+      "quietOne": "1 médicament sans signal",
+      "toastOne": "Un patient demande un médicament.",
+      "toastMany": "{count} nouvelles demandes de patients."
+    }
   },
   "follow": {
     "searchLabel": "Rechercher un médicament",
@@ -538,7 +553,7 @@
     "belowThresholdOne": "Votre signalement est enregistré. Il faut le signalement d’une deuxième pharmacie pour passer à « Probable ».",
     "belowThresholdMany": "Votre signalement est enregistré. Il faut les signalements de {count} pharmacies sur {days} jours pour passer à « Probable ».",
     "toMolecule": "Voir la fiche du médicament",
-    "toHome": "Retour à mes médicaments",
+    "toHome": "Retour à l’accueil",
     "countLabelMany": "pharmacies signalent ce médicament",
     "countLabelFew": "Moins de 3 pharmacies signalent ce médicament",
     "countGovernorates": "dans {count} gouvernorats",

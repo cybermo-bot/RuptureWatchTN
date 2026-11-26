@@ -4,6 +4,14 @@ Newest first. Each entry: what was decided, and why.
 
 ## 2026-11-26, session B (branch `pilot-b`)
 
+### The pharmacy home becomes « Aujourd'hui »; the result's actions return to the page (pilot-4, step 4)
+
+- `/pharmacie` shows, in order, the patients waiting (the first two answered in one tap from there, the rest on « Demandes »), « Vos médicaments », then the large report button. Medicines with a level, an active foreign notice or an unread alert come first; the ones with no signal fold behind « N médicaments sans signal ». A foreign notice is a tag (« avis étranger »), never a higher place than the level gives.
+- « nouveau » means an alert this pharmacy has not opened yet (`alerts.read_at` is null); it clears under Plus › Alertes. A per-device "last visit" would have marked the same change new again on another phone.
+- Bottom bar: Accueil · Signaler · Demandes · Plus (keys `core.pharmacy.tabs.*`); the sidebar starts with « Aujourd'hui ». The home rows lost their `aria-label`, which hid the level from screen readers behind « Ouvrir la fiche de … ».
+- **Reversed (session 6):** the report result's two buttons were fixed above the tab bar "in reach of the thumb". With the tab bar they repeated « Accueil » and « Signaler » and covered 40 % of a 360 × 800 screen, so they sit at the end of the page now.
+- The result moment is plain CSS (`rw-check`, `rw-step`, `rw-level-in`): the check pops in, « Avant → Après » rises 8 px, 30 ms apart, and the new level fades and scales in. A new request while « Aujourd'hui » is open (it polls every 15 s) shows a toast and pulses the « Demandes » badge once. Reduced motion also cancels animation delays now, so nothing waits hidden.
+
 ### One set of scales: type, radii, motion, shells (pilot-4, step 0)
 
 - Tokens in `app/globals.css` (`@theme static`, so CSS and components read the same variables): `title-1/2/3`, `eyebrow` and `figure` utilities, body 1rem/1.55 and small 0.875rem/1.45; radii `--radius-sm` 6 px, `--radius-md` 12 px, `--radius-lg` 22 px, `--radius-pill`; motion `--dur-instant` 100, `--dur-fast` 150, `--dur-base` 200, `--dur-slow` 300 ms, `--ease-out` (enter) and `--ease-exit` (exit); shells `--shell-wide` 82rem, `--shell-narrow` 48rem, `--shell-console` 90rem. Spacing stays on the 4 px grid.

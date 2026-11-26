@@ -632,12 +632,58 @@ path.rw-pulse {
   animation: rw-stage-pulse var(--dur-slow) var(--ease-out) 1;
 }
 
+/*
+ * The report result (pilot-4 step 4), the video's key moment, in plain CSS: the check pops in,
+ * then « Avant → Après » rises in sequence (30 ms apart) and the new level fades and scales in.
+ * Transform and opacity only, 8 px at most; reduced motion shows it all at once.
+ */
+.rw-check {
+  animation: rw-check-in var(--dur-base) var(--ease-out) both;
+}
+@keyframes rw-check-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+.rw-step {
+  animation: rw-step-in var(--dur-base) var(--ease-out) both;
+  animation-delay: calc(var(--dur-base) + var(--step, 0) * 30ms);
+}
+@keyframes rw-step-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.rw-level-in {
+  display: inline-flex;
+  animation: rw-level-in var(--dur-slow) var(--ease-out) both;
+  animation-delay: calc(var(--dur-base) + 90ms);
+}
+@keyframes rw-level-in {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+}
+/* A new count on a bottom-bar tab: one pulse. */
+.rw-badge-pulse {
+  animation: rw-badge-pulse var(--dur-slow) var(--ease-out) 1;
+}
+@keyframes rw-badge-pulse {
+  40% {
+    transform: scale(1.3);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
   }
   /* Page transitions too (pilot-4): no animation, the new page simply appears. */
   ::view-transition-group(*),

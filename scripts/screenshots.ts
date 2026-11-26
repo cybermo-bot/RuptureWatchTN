@@ -75,6 +75,9 @@ export const SHOTS: Shot[] = [
     await page.locator('section[aria-labelledby="choix-suivis"] a:not([data-showcase])').first().click();
     await page.locator('[data-presentations]').waitFor();
   } },
+  // Pilot-4 step 4: the report result, opened by its URL (« Avant » from the query, « Après » the
+  // live level); it only reads, nothing is reported.
+  { name: 'resultat', path: `/pharmacie/molecule/${SHOWCASE_ID}/resultat?avant=likely`, role: 'pharmacie-tunis' },
   { name: 'pharmacie-whatsapp', path: '/pharmacie/whatsapp', role: 'pharmacie-tunis' },
   { name: 'coordination', path: '/coordination', role: 'coordination' },
   { name: 'coordination-export', path: '/coordination/export', role: 'coordination' },

@@ -2,6 +2,7 @@
 
 import type { LucideIcon } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
 
 // One bottom tab bar for the public side and the pharmacy (rw-design-system): 56 px tall plus the
 // safe area, icons 24 px, the current tab in brand with a thicker stroke and aria-current. The
@@ -16,6 +17,27 @@ export interface BottomBarItem {
   badge?: number;
   /** What the count means, for screen readers. */
   badgeText?: string;
+}
+
+/** The count on a tab. When it rises while the page is open, it pulses once (no loop). */
+function Badge({ count }: { count: number }) {
+  const [previous, setPrevious] = useState(count);
+  const [pulses, setPulses] = useState(0);
+  if (count !== previous) {
+    setPrevious(count);
+    if (count > previous) setPulses(pulses + 1);
+  }
+  if (count <= 0) return null;
+  return (
+    <span
+      key={pulses}
+      aria-hidden="true"
+      data-badge
+      className={`absolute -end-2.5 -top-1.5 min-w-5 rounded-full bg-level-confirmed px-1 text-center font-mono text-xs leading-5 font-medium text-white ${pulses > 0 ? 'rw-badge-pulse' : ''}`}
+    >
+      {count}
+    </span>
+  );
 }
 
 const HIDE = { sm: 'sm:hidden', lg: 'lg:hidden' } as const;
@@ -37,15 +59,7 @@ export function BottomBar({ label, items, hideFrom }: { label: string; items: Bo
             >
               <span className="relative">
                 <Icon size={24} strokeWidth={current ? 2.25 : 1.75} aria-hidden="true" />
-                {badge > 0 ? (
-                  <span
-                    aria-hidden="true"
-                    data-badge
-                    className="absolute -end-2.5 -top-1.5 min-w-5 rounded-full bg-level-confirmed px-1 text-center font-mono text-xs leading-5 font-medium text-white"
-                  >
-                    {badge}
-                  </span>
-                ) : null}
+                <Badge count={badge} />
               </span>
               <span>{text}</span>
               {badge > 0 && badgeText ? <span className="sr-only">{badgeText}</span> : null}
