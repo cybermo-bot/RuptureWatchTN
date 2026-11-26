@@ -10,7 +10,11 @@
 // -> one tap answers. Ids: "rw:demandes", "rw:q:<request id>", "rw:a:<request id>:<show|anon|no>".
 // Never anything about a patient, never the name of another pharmacy: counts below 3 read
 // "moins de 3", as on every screen.
+// The one-click demo pharmacies cannot report a showcase medicine (lib/demo/showcase.ts), here as
+// on the web: the delay list is not offered and a report tap is refused (pilot-1 item 3).
 
+import { HINT_MOLECULE } from '@/lib/demo/hints';
+import { showcaseLocked } from '@/lib/demo/showcase';
 import { t } from '@/lib/i18n';
 import { DELAY_CHOICES, isDelayChoice, type CountedDelay } from '@/lib/pharmacy/delay';
 import type { Level, RuleId } from '@/lib/signal';
@@ -189,9 +193,15 @@ function explanation(status: { rule: RuleId | null; evidence: ShownEvidence | nu
   return status.rule && status.evidence ? explanationText(status.rule, status.evidence) : '';
 }
 
-async function delayList(moleculeId: string, deps: BotDeps): Promise<Outbound> {
+/** The answer to a one-click demo pharmacy about a showcase medicine. */
+function showcaseRefusal(name: string): Outbound {
+  return { type: 'text', body: `${name} : ${t('core.showcase.locked')} ${t('core.showcase.tryOther', { molecule: HINT_MOLECULE })}` };
+}
+
+async function delayList(pharmacy: LinkedPharmacy, moleculeId: string, deps: BotDeps): Promise<Outbound> {
   const status = await deps.molecule(moleculeId);
   if (!status) return { type: 'text', body: t('core.whatsapp.moleculeUnknown') };
+  if (showcaseLocked(pharmacy.organisationId, status.name)) return showcaseRefusal(status.name);
   const body =
     status.level === 'none'
       ? t('core.whatsapp.moleculeBodyNone', { name: status.name })
@@ -217,6 +227,7 @@ async function report(pharmacy: LinkedPharmacy, moleculeId: string, delay: strin
   }
   const status = await deps.molecule(moleculeId);
   if (!status) return [{ type: 'text', body: t('core.whatsapp.moleculeUnknown') }];
+  if (showcaseLocked(pharmacy.organisationId, status.name)) return [showcaseRefusal(status.name)];
   let outcome: ReportOutcome | null;
   try {
     outcome = await deps.report(pharmacy, moleculeId, delay);
@@ -259,7 +270,7 @@ export async function botReply(message: InboundMessage, pharmacy: LinkedPharmacy
   if (message.replyId) {
     const parts = message.replyId.split(':');
     if (parts[0] === 'rw' && parts[1] === 'signaler') return [await followedList(pharmacy, deps)];
-    if (parts[0] === 'rw' && parts[1] === 'm' && UUID.test(parts[2] ?? '')) return [await delayList(parts[2], deps)];
+    if (parts[0] === 'rw' && parts[1] === 'm' && UUID.test(parts[2] ?? '')) return [await delayList(pharmacy, parts[2], deps)];
     if (parts[0] === 'rw' && parts[1] === 'd' && UUID.test(parts[2] ?? '')) return report(pharmacy, parts[2], parts[3] ?? '', deps, ctx);
     if (parts[0] === 'rw' && parts[1] === 'demandes') return [await requestList(pharmacy, deps)];
     if (parts[0] === 'rw' && parts[1] === 'q' && UUID.test(parts[2] ?? '')) return [await requestQuestion(pharmacy, parts[2], deps)];

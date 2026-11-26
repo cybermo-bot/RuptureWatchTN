@@ -25,3 +25,22 @@ describe('impact sentence on the result screen', () => {
     expect(impactText(null)).toBe('Le décompte national n’est pas disponible pour l’instant.');
   });
 });
+
+// Pilot-1 item 7: below « Probable », one plain line, its threshold read from params.ts.
+describe('below-threshold line on the result screen', () => {
+  it('says a second pharmacy is needed with the default threshold of two', async () => {
+    const { belowThresholdText } = await import('@/lib/pharmacy/impact-text');
+    const { DEFAULT_PARAMS } = await import('@/lib/signal');
+    expect(DEFAULT_PARAMS.likelyMinPharmacies).toBe(2);
+    expect(belowThresholdText()).toBe(
+      'Votre signalement est enregistré. Il faut le signalement d’une deuxième pharmacie pour passer à « Probable ».',
+    );
+  });
+
+  it('gives the count and the window when the threshold is higher', async () => {
+    const { belowThresholdText } = await import('@/lib/pharmacy/impact-text');
+    expect(belowThresholdText(3, 7)).toBe(
+      'Votre signalement est enregistré. Il faut les signalements de 3 pharmacies sur 7 jours pour passer à « Probable ».',
+    );
+  });
+});

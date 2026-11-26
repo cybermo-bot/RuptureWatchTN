@@ -66,6 +66,11 @@ export function ReportTimingForm({ moleculeId, headingId }: { moleculeId: string
             {t('core.report.rateLimited')}
           </p>
         ) : null}
+        {state.status === 'showcase' ? (
+          <p role="alert" className="border-s-2 border-ink ps-4 text-ink">
+            {t('core.showcase.locked')}
+          </p>
+        ) : null}
         {state.status === 'error' ? (
           <p role="alert" className="border-s-2 border-level-confirmed ps-4 text-ink">
             {t('core.report.failed')}

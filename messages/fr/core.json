@@ -51,10 +51,14 @@
     "busy": "Trop de tentatives. Réessayez dans quelques minutes.",
     "demo": "Essayer avec le compte de démonstration",
     "invitation": "Utilisez le lien ou les identifiants transmis par l’équipe RuptureWatch.",
+    "haveAccount": "J’ai un compte",
     "home": "Retour à l’accueil",
     "pharmacie": {
       "title": "Espace pharmacie",
-      "description": "Accédez à vos signalements, aux médicaments suivis et aux demandes reçues."
+      "description": "Accédez à vos signalements, aux médicaments suivis et aux demandes reçues.",
+      "demoTunis": "Pharmacie démo, Tunis",
+      "demoSfax": "Pharmacie démo, Sfax",
+      "demoNote": "Deux pharmacies de gouvernorats différents : essayez-les l’une après l’autre."
     },
     "grossiste": {
       "title": "Espace grossiste",
@@ -142,7 +146,6 @@
     "continue": "Continuer dans cet espace",
     "signInError": "La connexion au rôle de démonstration a échoué. Réessayez dans un instant.",
     "footer": "Prototype étudiant, AOTN TSYP 14. Aucun statut officiel. Données de démonstration signalées comme simulées.",
-    "statusLink": "État du service",
     "jumpToRoles": "Choisir un rôle de démonstration",
     "signInBusy": "Trop de connexions de démonstration en même temps. Réessayez dans une minute.",
     "publicLink": "Je cherche un médicament",
@@ -300,7 +303,6 @@
     "checkedAt": "Vérifié le",
     "unknown": "Inconnue",
     "mapTitle": "Les 24 gouvernorats",
-    "mapIntro": "Contour des gouvernorats, utilisé plus tard par la carte des signaux.",
     "mapSource": "Limites administratives : {source}."
   },
   "map": {
@@ -449,6 +451,7 @@
     "tabsLabel": "Sections de l’espace pharmacie",
     "tabs": {
       "followed": "Mes médicaments suivis",
+      "requests": "Demandes",
       "alerts": "Alertes",
       "unreadCount": "{count} non lues",
       "unreadOne": "1 non lue"
@@ -466,7 +469,7 @@
   },
   "follow": {
     "searchLabel": "Rechercher un médicament",
-    "searchPlaceholder": "Nom commercial ou DCI, ex. levetiracetam",
+    "searchPlaceholder": "Nom commercial ou DCI, ex. carbamazepine",
     "follow": "Suivre",
     "following": "Suivi",
     "unfollow": "Ne plus suivre",
@@ -520,6 +523,8 @@
     "impactFew": "Avec la vôtre, moins de 3 pharmacies signalent ce médicament sur les {days} derniers jours.",
     "impactDelivered": "Votre signalement de livraison compte pour lever l’alerte quand d’autres pharmacies le confirment.",
     "impactUnavailable": "Le décompte national n’est pas disponible pour l’instant.",
+    "belowThresholdOne": "Votre signalement est enregistré. Il faut le signalement d’une deuxième pharmacie pour passer à « Probable ».",
+    "belowThresholdMany": "Votre signalement est enregistré. Il faut les signalements de {count} pharmacies sur {days} jours pour passer à « Probable ».",
     "toMolecule": "Voir la fiche du médicament",
     "toHome": "Retour à mes médicaments",
     "countLabelMany": "pharmacies signalent ce médicament",
@@ -602,6 +607,7 @@
     "linkLabel": "Lien d’invitation",
     "qrLabel": "Code QR du lien d’invitation",
     "missing": "Le code d’invitation n’est pas configuré sur le serveur.",
+    "hiddenInDemo": "Lien d’invitation masqué dans la démonstration.",
     "back": "Retour"
   },
   "coordination": {
@@ -956,6 +962,7 @@
     "title": "Le scénario : une rupture simulée, du premier signe à la levée",
     "intro": "Trois semaines de signalements fictifs pour un médicament fictif, joués pas à pas par les vraies règles d’alerte. Tout se passe dans votre navigateur : rien n’est écrit dans la base de données.",
     "molecule": "Médicament de démonstration (fictif)",
+    "showcaseLine": "Les mêmes règles s’appliquent à {molecule} dans les espaces de démonstration.",
     "noticeSource": "Autorité étrangère fictive",
     "play": "Lancer le scénario",
     "resume": "Reprendre",
@@ -1331,7 +1338,7 @@
     "figuresLabel": "Situation nationale",
     "vitalConfirmed": "Médicaments vitaux confirmés",
     "governorates": "Gouvernorats touchés",
-    "governoratesNote": "Pharmacies signalant sur {days} jours",
+    "governoratesNote": "Gouvernorats avec au moins un signalement sur {days} jours",
     "unanswered": "Demandes de patients sans réponse, {days} jours",
     "unansweredNote": "Sur {requests} demandes",
     "mapTitle": "Carte nationale",
@@ -1522,7 +1529,7 @@
   "tryHint": {
     "label": "Par où commencer",
     "dismiss": "Masquer ce conseil",
-    "pharmacy": "Essayez : signaler un médicament commandé et non livré, en deux gestes.",
+    "pharmacy": "Essayez : signaler {molecule}, commandé et non livré, en deux gestes.",
     "pharmacyLink": "Signaler",
     "wholesaler": "Essayez : changer le stock et comparer les deux répartitions.",
     "wholesalerLink": "Proposer une répartition",
@@ -1530,6 +1537,14 @@
     "central": "Essayez : annoncer un arrivage pour un médicament en tension, puis voir ce qu’en lisent les pharmacies.",
     "order": "Essayez : écrire aux pharmacies d’un gouvernorat.",
     "orderLink": "Écrire un message"
+  },
+  "showcase": {
+    "tag": "démonstration",
+    "tagLabel": "Médicament de la démonstration, que les pharmacies démo ne peuvent pas signaler",
+    "locked": "Médicament de la démonstration : son niveau reste le même pour tous les visiteurs, les pharmacies démo ne peuvent pas le signaler.",
+    "scenario": "Pour voir un niveau passer à « Confirmée », jouez le scénario : il ne modifie rien.",
+    "scenarioLink": "Jouer le scénario",
+    "tryOther": "Essayez plutôt {molecule}."
   },
   "freshness": {
     "now": "Mis à jour à l’instant",
@@ -1608,5 +1623,52 @@
     "pilotNote": "À l’échelle d’un pilote : {min} pharmacies dans au moins {governorates} gouvernorats suffisent pour « confirmée » tant que le réseau compte au plus {members} pharmacies membres actives. Au-delà, il en faut {pct} % des pharmacies membres actives.",
     "memoryNote": "La comparaison se calcule dans votre navigateur avec les règles du site. Rien n’est enregistré.",
     "explorerLink": "Faire varier les seuils sur la page Méthode"
+  },
+  "feedback": {
+    "link": "Un problème ? Une idée ?",
+    "title": "Un problème ? Une idée ?",
+    "intro": "Dites-nous en quelques mots ce qui marche et ce qui bloque dans votre espace.",
+    "messageLabel": "Votre message",
+    "noPatient": "N’écrivez ni nom ni numéro de patient.",
+    "limit": "1 000 caractères au plus.",
+    "ratingLegend": "Votre impression (facultatif)",
+    "ratings": {
+      "easy": "Facile",
+      "unclear": "Pas clair",
+      "broken": "Ne marche pas"
+    },
+    "submit": "Envoyer",
+    "sentTitle": "Merci, votre message est envoyé.",
+    "sentBody": "L’équipe RuptureWatch le lit, avec le nom de votre pharmacie.",
+    "back": "Revenir à la page précédente",
+    "errorEmpty": "Écrivez un message avant d’envoyer.",
+    "errorLimit": "Trop de messages pour l’instant. Réessayez dans une heure.",
+    "errorFailed": "Le message n’a pas pu être envoyé. Réessayez.",
+    "moreHint": "Un souci, une idée : écrivez à l’équipe RuptureWatch."
+  },
+  "onboarding": {
+    "title": "Comment ça marche",
+    "step": "Écran {n} sur {total}",
+    "steps": {
+      "report": "Une commande n’arrive pas depuis plus de {days} jours ? Signalez-la en deux gestes.",
+      "level": "Quand plusieurs pharmacies signalent le même médicament, un niveau apparaît et tout le monde est prévenu.",
+      "patients": "Des patients près de chez vous cherchent un médicament : répondez en un geste, et choisissez si votre pharmacie s’affiche."
+    },
+    "next": "Suivant",
+    "skip": "Passer",
+    "start": "Commencer",
+    "keepBrowser": "Gardez ce navigateur : votre accès est lié à ce téléphone et à ce navigateur.",
+    "moreLink": "Comment ça marche",
+    "moreHint": "Les trois idées de RuptureWatch, en trois écrans."
+  },
+  "pilot": {
+    "signIn": "Se connecter",
+    "moreHomeHint": "La recherche de médicaments, les pharmacies, la méthode.",
+    "footer": "Prototype étudiant, AOTN TSYP 14. Aucun statut officiel. Signalements réels de pharmacies testeuses.",
+    "home": {
+      "pharmacist": "Je suis pharmacien·ne",
+      "patient": "Je cherche un médicament",
+      "invitation": "Pharmacies : inscription sur invitation de l’équipe RuptureWatch, puis connexion par cette porte."
+    }
   }
 }

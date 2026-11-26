@@ -7,7 +7,7 @@ import { LevelExplanation } from '@/components/LevelExplanation';
 import { Origins } from '@/components/Origins';
 import { t } from '@/lib/i18n';
 import { getImpact, getMoleculeView } from '@/lib/pharmacy/data';
-import { impactText, type Impact } from '@/lib/pharmacy/impact-text';
+import { belowThresholdText, impactText, type Impact } from '@/lib/pharmacy/impact-text';
 import type { Level } from '@/lib/signal';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -51,6 +51,9 @@ export default async function ReportResult({ params, searchParams }: PageProps<'
 
   const after = view.signal?.level ?? asLevel(query.apres) ?? 'none';
   const before = asLevel(query.avant) ?? after;
+  // Below « Probable »: one plain line says what the report did and what is missing; the team's
+  // rule sentence under « Pourquoi ce niveau » then says the count once (pilot-1 item 7).
+  const belowThreshold = !delivered && view.signal?.rule === 'local_reports_below_threshold';
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-5 pb-24 lg:pb-0">
@@ -85,6 +88,8 @@ export default async function ReportResult({ params, searchParams }: PageProps<'
         <div className="border-t border-line pt-4">
           {delivered ? (
             <p className="max-w-prose text-lg text-ink">{t('core.result.impactDelivered')}</p>
+          ) : belowThreshold ? (
+            <p className="max-w-prose text-lg text-ink">{belowThresholdText()}</p>
           ) : impact ? (
             <>
               <ImpactFigure impact={impact} />

@@ -14,6 +14,7 @@ import { PublicMain } from '@/components/public/PublicChrome';
 import { getCurrentSession } from '@/lib/auth/session';
 import { createUserClient } from '@/lib/db/server';
 import { formatDate } from '@/lib/format';
+import { isPilot } from '@/lib/env';
 import { t as french } from '@/lib/i18n';
 import { getTranslator } from '@/lib/i18n-server';
 import { getPublicMolecule } from '@/lib/public/medicine';
@@ -115,15 +116,22 @@ export default async function PrescribersPage(props: PageProps<'/prescripteurs'>
           <h2 id="signed-out" className="text-lg font-semibold text-ink">
             {t('public.prescribers.signedOutTitle')}
           </h2>
-          <p className="text-ink">{t('public.prescribers.signedOutBody')}</p>
-          <form action={signInAsDemoRole}>
-            <input type="hidden" name="role" value="medecin" />
-            <button type="submit" className={buttonClass('primary', 'w-full sm:w-auto')}>
-              <Stethoscope size={18} aria-hidden="true" />
-              {t('public.prescribers.demoButton')}
-            </button>
-          </form>
-          <p className="text-sm text-ink-muted">{t('public.prescribers.demoNote')}</p>
+          {/* The pilot site has no demo account (pilot-2 item 1). */}
+          {isPilot() ? (
+            <p className="text-ink">{t('public.prescribers.signedOutBodyPilot')}</p>
+          ) : (
+            <>
+              <p className="text-ink">{t('public.prescribers.signedOutBody')}</p>
+              <form action={signInAsDemoRole}>
+                <input type="hidden" name="role" value="medecin" />
+                <button type="submit" className={buttonClass('primary', 'w-full sm:w-auto')}>
+                  <Stethoscope size={18} aria-hidden="true" />
+                  {t('public.prescribers.demoButton')}
+                </button>
+              </form>
+              <p className="text-sm text-ink-muted">{t('public.prescribers.demoNote')}</p>
+            </>
+          )}
         </section>
       )}
     </PublicMain>

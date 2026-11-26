@@ -10,5 +10,5 @@ export default async function OrderInvitationPage() {
   const session = await getCurrentSession();
   if (!session) redirect('/#roles');
   if (session.organisation.type !== 'pharmacists_order') redirect('/');
-  return <TesterInvitation backHref="/ordre" intro={t('core.order.inviteIntro')} />;
+  return <TesterInvitation backHref="/ordre" intro={t('core.order.inviteIntro')} origin={session.organisation.origin} />;
 }

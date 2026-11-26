@@ -32,7 +32,7 @@ import {
   type HoursFilter,
 } from '@/lib/directory/hours';
 import { parseOsmFile, type OsmFile } from '@/lib/directory/osm';
-import { translator, type Locale } from '@/lib/i18n';
+import { plural, translator, type Locale } from '@/lib/i18n';
 
 const NO_PHARMACY_PINS: MapMarker[] = [];
 
@@ -209,11 +209,11 @@ export function PharmacyFinder({ locale, areas }: { locale: Locale; areas: Area[
   const summary = (() => {
     if (!done) return null;
     const count = done.entries.length;
-    if (done.origin.kind === 'position') return t('directory.list.aroundYou', { count });
+    if (done.origin.kind === 'position') return plural(locale, 'directory.list.aroundYou', count);
     const name = areaName(done.origin.code);
     return done.centred
-      ? t('directory.list.aroundGovernorateCentre', { count, name })
-      : t('directory.list.aroundGovernorate', { count, name });
+      ? plural(locale, 'directory.list.aroundGovernorateCentre', count, { name })
+      : plural(locale, 'directory.list.aroundGovernorate', count, { name });
   })();
 
   const selectId = 'directory-area';

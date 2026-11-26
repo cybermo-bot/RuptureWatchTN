@@ -27,9 +27,8 @@
 
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { NATIONAL_MOLECULES } from '../lib/demo/national';
 import { DEMO_ROLES } from '../lib/demo/roles';
-import { DEMO_SHORTAGE_MOLECULE } from '../lib/demo/shortage';
+import { SHOWCASE_MOLECULES } from '../lib/demo/showcase';
 import { recomputeSignal } from '../lib/signals/recompute';
 import { supabaseSignalStore } from '../lib/signals/store';
 import { ROOT, serviceClient } from './lib/script-env';
@@ -47,7 +46,7 @@ async function main() {
     console.error('Usage: npm run verify:clean -- --since <ISO date> [--apply]');
     process.exit(1);
   }
-  const supabase = serviceClient();
+  const supabase = serviceClient({ demoOnly: true });
   const demoPharmacies = DEMO_ROLES.filter((r) => r.profileRole === 'pharmacist').map((r) => r.organisationId);
   const demoCentral = DEMO_ROLES.filter((r) => r.home === '/centrale').map((r) => r.organisationId);
   const demoOrder = DEMO_ROLES.filter((r) => r.home === '/ordre').map((r) => r.organisationId);
@@ -67,7 +66,7 @@ async function main() {
     .gte('reported_at', since);
   if (reportError) throw new Error(reportError.message);
   const touched = [...new Set((reports ?? []).map((r) => r.molecule_id as string))];
-  const showcaseNames: string[] = [DEMO_SHORTAGE_MOLECULE, ...Object.values(NATIONAL_MOLECULES)];
+  const showcaseNames: string[] = [...SHOWCASE_MOLECULES];
   const { data: showcaseRows, error: showcaseError } = await supabase.from('molecules').select('id, name').in('name', showcaseNames);
   if (showcaseError) throw new Error(`showcase molecules: ${showcaseError.message}`);
   const showcaseIds = new Set((showcaseRows ?? []).map((m) => m.id as string));

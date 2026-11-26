@@ -9,6 +9,9 @@ import { Origins } from '@/components/Origins';
 import { LevelExplanation } from '@/components/LevelExplanation';
 import { OriginBadge } from '@/components/OriginBadge';
 import { ReportTimingForm } from '@/components/ReportTimingForm';
+import { ShowcaseLocked } from '@/components/pharmacy/ShowcaseLocked';
+import { getCurrentSession } from '@/lib/auth/session';
+import { showcaseLocked } from '@/lib/demo/showcase';
 import { formatDate } from '@/lib/format';
 import { t } from '@/lib/i18n';
 import { DEFAULT_PARAMS } from '@/lib/signal';
@@ -23,7 +26,7 @@ export default async function MoleculePage({ params, searchParams }: PageProps<'
   const { id } = await params;
   const { erreur } = await searchParams;
   if (!UUID.test(id)) notFound();
-  const view = await getMoleculeView(id);
+  const [view, session] = await Promise.all([getMoleculeView(id), getCurrentSession()]);
   // An arrival announced by the centrale (shown beside the level, never changing it).
   const arrival = view
     ? await upcomingArrivals(await createUserClient(), [view.id])
@@ -34,7 +37,9 @@ export default async function MoleculePage({ params, searchParams }: PageProps<'
 
   const level = view.signal?.level ?? 'none';
   const reportedBefore = view.reports.some((r) => r.kind === 'not_delivered');
-  const canSayDelivered = (level === 'likely' || level === 'confirmed') && reportedBefore;
+  // A one-click demo pharmacy cannot report a showcase medicine (pilot-1 item 3); the page still opens.
+  const locked = session ? showcaseLocked(session.organisation.id, view.name) : false;
+  const canSayDelivered = !locked && (level === 'likely' || level === 'confirmed') && reportedBefore;
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-5">
@@ -44,7 +49,7 @@ export default async function MoleculePage({ params, searchParams }: PageProps<'
           {t('core.molecule.backHome')}
         </Link>
         <h1 className="text-2xl font-semibold tracking-tight break-words text-ink sm:text-3xl">{view.name}</h1>
-        {erreur ? (
+        {erreur && erreur !== 'demo' ? (
           <p role="alert" className="border-s-2 border-level-confirmed ps-4 text-ink">
             {erreur === 'limite' ? t('core.report.rateLimited') : t('core.report.failed')}
           </p>
@@ -84,14 +89,18 @@ export default async function MoleculePage({ params, searchParams }: PageProps<'
           <h2 id="signaler" className="text-lg font-semibold text-ink">
             {t('core.report.title')}
           </h2>
-          <p className="text-sm text-ink-muted">
-            {t('core.report.whenTitle')} {t('core.report.whenIntro')}
-          </p>
-          <p className="max-w-prose text-sm text-ink">
-            {t('core.report.rule72', { hours: DEFAULT_PARAMS.minUndeliveredHours })}
-          </p>
+          {locked ? null : (
+            <>
+              <p className="text-sm text-ink-muted">
+                {t('core.report.whenTitle')} {t('core.report.whenIntro')}
+              </p>
+              <p className="max-w-prose text-sm text-ink">
+                {t('core.report.rule72', { hours: DEFAULT_PARAMS.minUndeliveredHours })}
+              </p>
+            </>
+          )}
         </div>
-        <ReportTimingForm moleculeId={view.id} headingId="signaler" />
+        {locked ? <ShowcaseLocked /> : <ReportTimingForm moleculeId={view.id} headingId="signaler" />}
         {canSayDelivered ? (
           <form action={reportDeliveredAgain} className="flex flex-col gap-2 border-t border-line pt-5">
             <input type="hidden" name="molecule_id" value={view.id} />

@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { connection } from 'next/server';
 import { EmptyState } from '@/components/EmptyState';
 import { LevelBadge } from '@/components/LevelBadge';
 import { PageHeader } from '@/components/PageHeader';
 import { SiteFooter, SiteHeader, SiteMain } from '@/components/SiteChrome';
+import { isPilot } from '@/lib/env';
 import { t } from '@/lib/i18n';
 import { getFollowed } from '@/lib/pharmacy/data';
 import { listSignals, sortSignals } from '@/lib/signals/views';
@@ -16,6 +18,8 @@ export const metadata: Metadata = { title: t('core.views.indexTitle') };
 // those the demo pharmacy follows, as it sees them. Public, no sign-in.
 export default async function ViewsIndex() {
   await connection();
+  // The four views sign in with the demo accounts: none on the pilot site (pilot-2 item 1).
+  if (isPilot()) notFound();
   let signals: Awaited<ReturnType<typeof listSignals>> = [];
   let followed: Awaited<ReturnType<typeof getFollowed>> = [];
   let failed = false;

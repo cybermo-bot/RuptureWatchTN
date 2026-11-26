@@ -5,8 +5,10 @@ import { GOVERNORATE_SHAPES } from '@/components/GovernorateMap';
 import { LevelBadge } from '@/components/LevelBadge';
 import { LevelExplanation } from '@/components/LevelExplanation';
 import { OriginBadge } from '@/components/OriginBadge';
+import { SimulatedBanner } from '@/components/public/SimulatedBanner';
 import { formatDate } from '@/lib/format';
 import { t } from '@/lib/i18n';
+import { simulatedBanner } from '@/lib/public/share';
 import { DEFAULT_PARAMS, type Level, type RuleId } from '@/lib/signal';
 import type { ShownEvidence } from '@/lib/signals/shown';
 import { DEMAND_WINDOW_DAYS, type DemandRow, type GovernorateCount } from '@/lib/signals/views';
@@ -153,6 +155,12 @@ export function FourViewsPanels({
 }) {
   const { pharmacy, wholesaler, coordination, central, order } = data;
   const pub = data.public;
+  // The public panel shows what a visitor sees, banner included (pilot-1 item 1). The page itself
+  // already carries its demonstration line, so the other panels do not repeat it.
+  const publicBanner = simulatedBanner(
+    { level: pub.status.confirmed ? 'confirmed' : 'none', since: pub.status.since, origins: pub.status.origins, evaluatedAt: null },
+    t,
+  );
   return (
     <div className="grid gap-10 md:grid-cols-2 md:gap-8 xl:grid-cols-3 xl:gap-6">
       <Panel
@@ -264,6 +272,7 @@ export function FourViewsPanels({
       </Panel>
 
       <Panel panel="public" account={<p>{t('core.views.publicAccount')}</p>}>
+        {publicBanner ? <SimulatedBanner text={publicBanner} /> : null}
         <Block title={t('core.views.level')}>
           {pub.status.confirmed && pub.status.since ? (
             <>

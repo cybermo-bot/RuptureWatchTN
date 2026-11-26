@@ -8,7 +8,7 @@ import { supabaseDemoStore } from './lib/demo-store';
 import { serviceClient } from './lib/script-env';
 
 async function main() {
-  const result = await runDemoShortage(supabaseDemoStore(serviceClient()));
+  const result = await runDemoShortage(supabaseDemoStore(serviceClient({ demoOnly: true })));
   if (result.status === 'refused') {
     console.error(`Not created: ${result.reason}.`);
     process.exit(1);

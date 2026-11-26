@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from 'next';
+import { PilotLine } from '@/components/PilotLine';
+import { isPilot } from '@/lib/env';
 import { fontVariables } from '@/lib/fonts';
 import { dir, locale, t } from '@/lib/i18n';
 import { OG_BASE } from '@/lib/og/meta';
@@ -29,6 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           {t('core.app.skipToContent')}
         </a>
+        {isPilot() ? <PilotLine text={t('public.pilot.line')} /> : null}
         {children}
       </body>
     </html>

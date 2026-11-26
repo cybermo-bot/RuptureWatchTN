@@ -132,3 +132,20 @@ export const t: Translate = translator(DEFAULT_LOCALE);
 
 /** A list of sentences in French, such as the guidance for a level. */
 export const tList = listTranslator(DEFAULT_LOCALE);
+
+/** The CLDR plural categories. A plural message has all six as children: Arabic uses them all. */
+export const PLURAL_CATEGORIES = ['zero', 'one', 'two', 'few', 'many', 'other'] as const;
+
+/** A message whose children are the plural categories (`public.freshness.hours`). */
+export type PluralKey = { [K in MessageKey]: K extends `${infer Base}.other` ? Base : never }[MessageKey];
+
+const pluralRules: Record<Locale, Intl.PluralRules> = { fr: new Intl.PluralRules('fr'), ar: new Intl.PluralRules('ar') };
+
+/**
+ * The message for a count, in the locale's plural form, with the count as {n}: « حُدِّث قبل 8
+ * ساعات », not « 8 ساعة » (pilot-1 item 7). French has the same six keys, most of them alike.
+ */
+export function plural(target: Locale, key: PluralKey, n: number, vars?: Record<string, string | number>): string {
+  const category = pluralRules[target].select(n);
+  return translator(target)(`${key}.${category}` as MessageKey, { ...vars, n });
+}

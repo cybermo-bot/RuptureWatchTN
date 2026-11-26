@@ -2,6 +2,28 @@
 
 Newest first. Each entry: what was decided, and why.
 
+## 2026-11-26, session A (branch `pilot-a`)
+
+### « Un problème ? Une idée ? » keeps no visitor identifier (pilot-2, item 3)
+
+- Table `feedback`, written only through `submit_feedback` (security definer, `search_path = ''`), read only by the service role (the lead, in the dashboard). The path is a route pattern: the server replaces every segment that is not a plain lowercase word by `[id]` and drops the query, and the database refuses any other shape, so no medicine id, request id or invitation code is stored. Rate limits use no identifier: 5 messages per hour per organisation when signed in, 200 per hour for all anonymous visitors together (an advisory lock makes the count exact under parallel calls).
+- Origin: the organisation's own origin when signed in, as for reports (a demo account's message is `simulated`, its organisation says which); `tester` for an anonymous visitor, a real person trying the prototype; never `official_source`.
+
+### One codebase, two sites: `NEXT_PUBLIC_APP_MODE` (pilot-2, item 1)
+
+- `demo` (the default) is the jury's site, unchanged. `pilot` is the site real tester pharmacies use, on its own Supabase project with the real catalogue and no simulated row: `signInAsDemoRole` refuses on the server, no demo button anywhere (`/connexion` opens the form of real accounts, `/prescripteurs` says the view is not open yet), `/scenario` and `/vues` answer 404 and leave the « Comprendre » links, the home page leads with two doors (« Je suis pharmacien·ne », « Je cherche un médicament ») and keeps the directory, the replay and the method, and a thin petrol line at the top of every page reads « Pilote RuptureWatch : signalements réels de pharmacies testeuses. » Why: real and simulated reports share one level per molecule; a real report of LEVETIRACETAM on the demo database would be counted with 24 simulated pharmacies.
+- The mode is read at build time (a `NEXT_PUBLIC_` value is inlined), so changing it on Vercel needs a redeploy.
+- The demo-script guard is narrower than the brief's wording: the brief puts the allowlist in `serviceClient()`, but `catalogue:import` and `notices:import` use the same function and the pilot checklist runs them on the pilot database. So `serviceClient({ demoOnly: true })` checks `NEXT_PUBLIC_SUPABASE_URL` against `DEMO_SUPABASE_URL`, and only `seed:demo`, `demo:clear`, `demo:shortage`, `demo:national` and `verify:clean` (through `demo:reset` too) ask for it. With `DEMO_SUPABASE_URL` unset, they refuse everywhere: the lead adds the demo project's URL to `.env.local` before Friday's `demo:reset`.
+
+### The one-click pharmacies cannot report the showcase medicines (pilot-1, item 3)
+
+- Reverses "the one-click pharmacies stay free for a live report during the demo", for the showcase medicines only: LEVETIRACETAM and the four national situations, one list in `lib/demo/showcase.ts` (`SHOWCASE_MOLECULES`), read by the pharmacy screens, the report actions, the WhatsApp bot and `scripts/clean-verification.ts`. Why: one juror reporting TAMOXIFENE from « Pharmacie démo A, Tunis » turned "concentrated in Sfax, stays probable" into « confirmée » for every visitor. The rows are tagged « démonstration » and open the medicine page; « non livré » and « livré à nouveau » are refused on the server, and the bot offers no delay list. Every other medicine stays free to report; the hint now names CARBAMAZEPINE. Gate two is shown without writing anything in `/scenario`, which the refusal links to.
+- The database insert policy on `reports` is unchanged: a direct insert with a demo account's session is still possible. The lead's `npm run demo:reset -- --since <time>` (clean, clear, shortage, national, in that order) restores the picture.
+
+### A simulated public status says « Démonstration » first (pilot-1, item 1)
+
+- Reverses session 6's "« Simulation » sits in the heading block": when the status shown on a public page rests on simulated data (`isSimulatedStatus()`), a full-width petrol band above it reads « Démonstration : ce niveau vient de données simulées. Il ne dit rien de la situation réelle de ce médicament. », and the status sentence below it is set smaller. The same sentence is the first line of the shared text, of the page description and the headline of the share card, replacing the « Simulé : … » line. Why: LEVETIRACETAM is a real antiepileptic; a simulated « Rupture confirmée » shared to WhatsApp out of context is the rumour the product exists to stop. On `/vues` only the public panel carries it, as the visitor would see it. The share feature stays (session 6).
+
 ## 2026-11-24, session 6
 
 ### Visual direction: plum stage, lavender paper, violet action, citron accent (part 6, branch `ui-refresh`)

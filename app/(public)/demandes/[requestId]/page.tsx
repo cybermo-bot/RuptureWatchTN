@@ -1,4 +1,4 @@
-import { ArrowLeft, Clock, Phone } from 'lucide-react';
+import { ArrowLeft, Clock, MapPin, Phone } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { EmptyState } from '@/components/EmptyState';
@@ -9,7 +9,7 @@ import { AutoRefresh } from '@/components/public/AutoRefresh';
 import { Ltr } from '@/components/public/Ltr';
 import { PublicMain } from '@/components/public/PublicChrome';
 import { freshness } from '@/lib/freshness';
-import type { Translate } from '@/lib/i18n';
+import { plural, type Translate } from '@/lib/i18n';
 import { getTranslator } from '@/lib/i18n-server';
 import { formatPublicTime } from '@/lib/public/format';
 import { governorate } from '@/lib/public/governorates';
@@ -65,6 +65,9 @@ export default async function RequestPage(props: PageProps<'/demandes/[requestId
   ]);
   const gov = governorate(request.governorate_code, locale);
   const expired = hasPassed(request.expires_at);
+  // No participating pharmacy in the governorate (pilot-2 item 4): no answer can come, so no
+  // waiting and no refresh; the pharmacies open nearby and the medicine's status instead.
+  const nobody = request.asked === '0';
   const shown = [...request.available].sort((a, b) => b.answered_at.localeCompare(a.answered_at));
   const now = new Date();
   const product = presentation ? presentationText(presentation, t) : molecule?.name ?? '';
@@ -87,7 +90,7 @@ export default async function RequestPage(props: PageProps<'/demandes/[requestId
 
   return (
     <PublicMain narrow>
-      {!expired ? <AutoRefresh seconds={10} until={request.expires_at} /> : null}
+      {!expired && !nobody ? <AutoRefresh seconds={10} until={request.expires_at} /> : null}
       {molecule ? (
         <Link href={`/medicaments/${molecule.id}${presentation ? `?presentation=${presentation.id}` : ''}`} className="inline-flex min-h-12 items-center gap-2 self-start text-brand underline">
           <ArrowLeft size={18} aria-hidden="true" className="rtl:-scale-x-100" />
@@ -110,6 +113,21 @@ export default async function RequestPage(props: PageProps<'/demandes/[requestId
 
       {expired ? (
         <EmptyState title={t('public.request.expiredTitle')} body={t('public.request.expiredBody')} />
+      ) : nobody ? (
+        <section aria-labelledby="aucune-pharmacie" data-no-recipient className="panel flex flex-col gap-2 p-5">
+          <h2 id="aucune-pharmacie" className="text-lg font-semibold text-ink">
+            {t('public.request.noneParticipating')}
+          </h2>
+          <Link href="/pharmacies" className="inline-flex min-h-12 items-center gap-2 self-start text-brand underline">
+            <MapPin size={18} aria-hidden="true" />
+            {t('public.request.openPharmacies')}
+          </Link>
+          {molecule ? (
+            <Link href={`/medicaments/${molecule.id}${presentation ? `?presentation=${presentation.id}` : ''}`} className="inline-flex min-h-12 items-center self-start text-brand underline">
+              {t('public.request.statusLink')}
+            </Link>
+          ) : null}
+        </section>
       ) : (
         <section aria-label={t('public.request.pageTitle')} className="panel flex flex-col gap-4 p-5" aria-live="polite">
           <dl className="grid grid-cols-2 gap-4">
@@ -119,7 +137,10 @@ export default async function RequestPage(props: PageProps<'/demandes/[requestId
             </div>
             <div className="flex flex-col gap-0.5">
               <dt className="text-sm text-ink-muted">{t('public.request.answered')}</dt>
-              <dd className="text-xl font-semibold text-ink">{count(request.answered, t)}</dd>
+              {/* The patient sees the named pharmacies right below: "1 ou 2" says no more than that. */}
+              <dd className="text-xl font-semibold text-ink">
+                {request.answered === '<3' ? t('public.request.oneOrTwoAnswers') : count(request.answered, t)}
+              </dd>
             </div>
           </dl>
           <p className="inline-flex items-center gap-2 border-t border-line pt-3 text-sm text-ink-muted">
@@ -132,6 +153,7 @@ export default async function RequestPage(props: PageProps<'/demandes/[requestId
         </section>
       )}
 
+      {nobody ? null : (
       <section aria-labelledby="available-title" className="flex flex-col gap-3">
         <h2 id="available-title" className="text-lg font-semibold text-ink">
           {t('public.request.availableTitle')}
@@ -152,7 +174,7 @@ export default async function RequestPage(props: PageProps<'/demandes/[requestId
                   {a.public_address ? <Ltr className="self-start text-sm text-ink-muted">{a.public_address}</Ltr> : null}
                   <time dateTime={a.answered_at} title={exactTime} className="text-sm text-ink-muted">
                     {answerAge?.unit === 'now' ? t('public.request.answeredAgo.now') : answerAge
-                      ? t(`public.request.answeredAgo.${answerAge.unit}`, { n: answerAge.n })
+                      ? plural(locale, `public.request.answeredAgo.${answerAge.unit}`, answerAge.n)
                       : exactTime}
                   </time>
                 </li>
@@ -175,6 +197,7 @@ export default async function RequestPage(props: PageProps<'/demandes/[requestId
         )}
         <p className="text-sm text-ink-muted">{t('public.request.hiddenNote')}</p>
       </section>
+      )}
     </PublicMain>
   );
 }

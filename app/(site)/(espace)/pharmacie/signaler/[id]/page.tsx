@@ -3,6 +3,9 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ReportProgress } from '@/components/pharmacy/ReportProgress';
 import { ReportTimingForm } from '@/components/ReportTimingForm';
+import { ShowcaseLocked } from '@/components/pharmacy/ShowcaseLocked';
+import { getCurrentSession } from '@/lib/auth/session';
+import { showcaseLocked } from '@/lib/demo/showcase';
 import { createUserClient } from '@/lib/db/server';
 import { t } from '@/lib/i18n';
 
@@ -12,6 +15,9 @@ export default async function ReportWhen({ params }: PageProps<'/pharmacie/signa
   const supabase = await createUserClient();
   const { data: molecule } = await supabase.from('molecules').select('id, name').eq('id', id).maybeSingle();
   if (!molecule) notFound();
+  // Reached from the search: a one-click demo pharmacy cannot report a showcase medicine (pilot-1 item 3).
+  const session = await getCurrentSession();
+  const locked = session ? showcaseLocked(session.organisation.id, molecule.name as string) : false;
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
@@ -30,9 +36,9 @@ export default async function ReportWhen({ params }: PageProps<'/pharmacie/signa
           <h1 id="quand" className="text-2xl font-semibold tracking-tight text-ink">
             {t('core.report.whenTitle')}
           </h1>
-          <p className="text-ink-muted">{t('core.report.whenIntro')}</p>
+          {locked ? null : <p className="text-ink-muted">{t('core.report.whenIntro')}</p>}
         </div>
-        <ReportTimingForm moleculeId={molecule.id} headingId="quand" />
+        {locked ? <ShowcaseLocked /> : <ReportTimingForm moleculeId={molecule.id} headingId="quand" />}
       </section>
     </div>
   );

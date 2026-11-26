@@ -1,4 +1,5 @@
 import { t } from '@/lib/i18n';
+import { DEFAULT_PARAMS } from '@/lib/signal';
 
 /** What report_impact returns, as the result screen uses it. */
 export interface Impact {
@@ -22,4 +23,15 @@ export function impactText(impact: Impact | null): string {
     return t('core.result.impactOneGovernorate', { pharmacies: impact.pharmacies, days: impact.windowDays });
   }
   return t('core.result.impact', { pharmacies: impact.pharmacies, governorates: impact.governorates, days: impact.windowDays });
+}
+
+/**
+ * The one plain line of the result screen when the report stays below « Probable »
+ * (local_reports_below_threshold), above the team's rule sentence, which then shows once
+ * (pilot-1 item 7). The threshold comes from params.ts: with two pharmacies, « une deuxième ».
+ */
+export function belowThresholdText(minPharmacies = DEFAULT_PARAMS.likelyMinPharmacies, days = DEFAULT_PARAMS.likelyWindowDays): string {
+  return minPharmacies === 2
+    ? t('core.result.belowThresholdOne')
+    : t('core.result.belowThresholdMany', { count: minPharmacies, days });
 }

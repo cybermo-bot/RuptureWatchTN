@@ -59,10 +59,16 @@ export const SHOTS: Shot[] = [
     await page.getByText(/Vous demandez.*ANTIOMAL.*Tunis/).waitFor();
   } },
   { name: 'accueil', path: '/' },
+  // The three doors (pilot-1 item 4: the demo first, the form folded).
+  { name: 'connexion-pharmacie', path: '/connexion/pharmacie' },
+  { name: 'connexion-grossiste', path: '/connexion/grossiste' },
+  { name: 'connexion-institution', path: '/connexion/institution' },
   { name: 'pharmacie', path: '/pharmacie', role: 'pharmacie-tunis' },
   { name: 'pharmacie-alertes', path: '/pharmacie/alertes', role: 'pharmacie-tunis' },
   { name: 'pharmacie-plus', path: '/pharmacie/plus', role: 'pharmacie-tunis' },
   { name: 'signaler-1-recherche', path: '/pharmacie/signaler', role: 'pharmacie-tunis' },
+  // Pilot-1 item 3: a showcase medicine reached from the search, refused to the one-click pharmacy.
+  { name: 'signaler-2-showcase', path: `/pharmacie/signaler/${SHOWCASE_ID}`, role: 'pharmacie-tunis' },
   { name: 'pharmacie-whatsapp', path: '/pharmacie/whatsapp', role: 'pharmacie-tunis' },
   { name: 'coordination', path: '/coordination', role: 'coordination' },
   { name: 'coordination-export', path: '/coordination/export', role: 'coordination' },
@@ -85,15 +91,54 @@ export const SHOTS: Shot[] = [
   { name: 'demande', path: `/medicaments/${SHOWCASE_ID}/demande` },
   { name: 'pharmacie-demandes', path: '/pharmacie/demandes', role: 'pharmacie-tunis' },
   { name: 'prescripteurs-verification', path: `/prescripteurs?m=${TAMOXIFEN_ID}`, role: 'medecin' },
+  // Pilot-1 item 6: « Pourquoi ? » opened, the rule's name where its code was.
+  { name: 'prescripteurs-pourquoi', path: `/prescripteurs?m=${TAMOXIFEN_ID}`, role: 'medecin', fullPage: false, before: async (page) => {
+    await page.getByText('Pourquoi ?').first().click();
+    await page.getByText('Règle appliquée').first().scrollIntoViewIfNeeded();
+  } },
   // Part 5: the institutions' spaces, and where their work shows.
   { name: 'coordination-note', path: '/coordination/note', role: 'coordination' },
   { name: 'centrale', path: '/centrale', role: 'centrale' },
   { name: 'centrale-amont', path: '/centrale/amont', role: 'centrale' },
   { name: 'ordre', path: '/ordre', role: 'ordre' },
   { name: 'ordre-message', path: '/ordre/message', role: 'ordre' },
+  { name: 'ordre-invitation', path: '/ordre/invitation', role: 'ordre' },
   { name: 'pharmacie-alertes-sfax', path: '/pharmacie/alertes', role: 'pharmacie-sfax' },
   { name: 'pharmacie-medicament', path: `/pharmacie/molecule/${SHOWCASE_ID}`, role: 'pharmacie-tunis' },
   { name: 'vues-showcase', path: `/vues/${SHOWCASE_ID}` },
+  // Pilot-2 item 1: with NEXT_PUBLIC_APP_MODE=pilot, the home's two doors and the line on every page.
+  { name: 'pilote-accueil', path: '/', fullPage: false },
+  { name: 'pilote-prescripteurs', path: '/prescripteurs', fullPage: false },
+  // Pilot-2 item 2: the first-visit guide (first screen just after joining, last screen).
+  { name: 'guide-1', path: '/pharmacie/bienvenue?rejoint=1', role: 'pharmacie-tunis' },
+  { name: 'guide-3', path: '/pharmacie/bienvenue?etape=3', role: 'pharmacie-tunis' },
+  // Pilot-2 item 3: « Un problème ? Une idée ? », public (French, Arabic, sent) and pharmacy.
+  { name: 'avis', path: '/avis?depuis=%2Fmedicaments' },
+  { name: 'avis-ar', path: '/avis?depuis=%2Fmedicaments', locale: 'ar' },
+  { name: 'avis-envoye', path: '/avis?depuis=%2Fmedicaments&envoye=1', fullPage: false },
+  { name: 'pharmacie-avis', path: '/pharmacie/avis?erreur=limite', role: 'pharmacie-tunis' },
+  // Pilot-2 item 4: with NEXT_PUBLIC_APP_MODE=pilot, the request form says few pharmacies take part.
+  { name: 'pilote-demande', path: `/medicaments/${SHOWCASE_ID}/demande`, fullPage: false, before: async (page) => {
+    await page.locator('select').first().scrollIntoViewIfNeeded();
+  } },
+  { name: 'pilote-demande-ar', path: `/medicaments/${SHOWCASE_ID}/demande`, locale: 'ar', fullPage: false, before: async (page) => {
+    await page.locator('select').first().scrollIntoViewIfNeeded();
+  } },
+  // Pilot-2 item 5: a product outside the CNAM list, in French and Arabic.
+  { name: 'recherche-vide', path: '/medicaments?recherche=1', fullPage: false, before: async (page) => {
+    await page.getByRole('searchbox').fill('zzqxw');
+    await page.locator('[role="status"] a[href^="/avis?depuis="]').waitFor();
+  } },
+  { name: 'recherche-vide-ar', path: '/medicaments?recherche=1', locale: 'ar', fullPage: false, before: async (page) => {
+    await page.getByRole('searchbox').fill('zzqxw');
+    await page.locator('[role="status"] a[href^="/avis?depuis="]').waitFor();
+  } },
+  // Pilot-1 item 7: the pharmacy tab bar (« Demandes »), the coordination tiles, the scenario line.
+  { name: 'pharmacie-barre', path: '/pharmacie', role: 'pharmacie-tunis', fullPage: false },
+  { name: 'coordination-chiffres', path: '/coordination', role: 'coordination', fullPage: false },
+  { name: 'scenario-ligne', path: '/scenario#scenario-complet', fullPage: false, before: async (page) => {
+    await page.locator('#scenario-complet-titre').scrollIntoViewIfNeeded();
+  } },
 ];
 
 /** One preview per role tile on the home page (role key: path). */

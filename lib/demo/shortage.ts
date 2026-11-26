@@ -15,8 +15,10 @@
 
 import { createHash } from 'node:crypto';
 import { recomputeSignal, type RecomputeResult, type SignalStore } from '@/lib/signals/recompute';
+import { DEMO_SHORTAGE_MOLECULE } from './showcase';
 
-export const DEMO_SHORTAGE_MOLECULE = 'LEVETIRACETAM';
+// The molecule's name lives in the showcase list (lib/demo/showcase.ts), with the others.
+export { DEMO_SHORTAGE_MOLECULE };
 
 const HOUR = 3_600_000;
 const DAY = 24 * HOUR;

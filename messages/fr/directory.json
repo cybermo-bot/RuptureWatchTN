@@ -26,9 +26,30 @@
   },
   "list": {
     "heading": "Pharmacies",
-    "aroundYou": "Les {count} pharmacies les plus proches de vous.",
-    "aroundGovernorate": "{count} pharmacies dans le gouvernorat de {name}.",
-    "aroundGovernorateCentre": "Les {count} pharmacies les plus proches du centre du gouvernorat de {name}. Utilisez « Près de moi » pour votre quartier.",
+    "aroundYou": {
+      "zero": "Les {n} pharmacies les plus proches de vous.",
+      "one": "La pharmacie la plus proche de vous.",
+      "two": "Les {n} pharmacies les plus proches de vous.",
+      "few": "Les {n} pharmacies les plus proches de vous.",
+      "many": "Les {n} pharmacies les plus proches de vous.",
+      "other": "Les {n} pharmacies les plus proches de vous."
+    },
+    "aroundGovernorate": {
+      "zero": "{n} pharmacies dans le gouvernorat de {name}.",
+      "one": "{n} pharmacie dans le gouvernorat de {name}.",
+      "two": "{n} pharmacies dans le gouvernorat de {name}.",
+      "few": "{n} pharmacies dans le gouvernorat de {name}.",
+      "many": "{n} pharmacies dans le gouvernorat de {name}.",
+      "other": "{n} pharmacies dans le gouvernorat de {name}."
+    },
+    "aroundGovernorateCentre": {
+      "zero": "Les {n} pharmacies les plus proches du centre du gouvernorat de {name}. Utilisez « Près de moi » pour votre quartier.",
+      "one": "La pharmacie la plus proche du centre du gouvernorat de {name}. Utilisez « Près de moi » pour votre quartier.",
+      "two": "Les {n} pharmacies les plus proches du centre du gouvernorat de {name}. Utilisez « Près de moi » pour votre quartier.",
+      "few": "Les {n} pharmacies les plus proches du centre du gouvernorat de {name}. Utilisez « Près de moi » pour votre quartier.",
+      "many": "Les {n} pharmacies les plus proches du centre du gouvernorat de {name}. Utilisez « Près de moi » pour votre quartier.",
+      "other": "Les {n} pharmacies les plus proches du centre du gouvernorat de {name}. Utilisez « Près de moi » pour votre quartier."
+    },
     "shown": "{shown} sur {total} correspondent aux filtres.",
     "noMatch": "Aucune pharmacie de cette liste ne correspond aux filtres.",
     "none": "Aucune pharmacie trouvée ici.",

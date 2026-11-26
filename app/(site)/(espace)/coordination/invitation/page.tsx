@@ -9,5 +9,5 @@ export default async function InvitationPage() {
   const session = await getCurrentSession();
   if (!session) redirect('/#roles');
   if (session.organisation.type !== 'coordinator') redirect('/');
-  return <TesterInvitation backHref="/coordination" />;
+  return <TesterInvitation backHref="/coordination" origin={session.organisation.origin} />;
 }

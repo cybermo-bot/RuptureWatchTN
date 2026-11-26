@@ -2,10 +2,29 @@ import Link from 'next/link';
 import { headers } from 'next/headers';
 import QRCode from 'qrcode';
 import { t } from '@/lib/i18n';
+import type { Origin } from '@/lib/signal';
 
 // The tester invite link as a QR code, to show on a phone during a test. Shown from the ministry's
 // space and from the Ordre's: the same link, the same sign-up (only a governorate is asked).
-export async function TesterInvitation({ backHref, intro }: { backHref: string; intro?: string }) {
+// In a one-click demo space (origin "simulated") the link is never rendered: anyone can open those
+// spaces, and the link creates tester pharmacies (pilot-1 item 2). The code is not even read.
+export async function TesterInvitation({ backHref, intro, origin }: { backHref: string; intro?: string; origin: Origin }) {
+  if (origin === 'simulated') {
+    return (
+      <div className="flex flex-col gap-6">
+        <header className="flex flex-col gap-2">
+          <Link href={backHref} className="text-sm text-ink-muted">
+            {t('core.invitation.back')}
+          </Link>
+          <h1 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">{t('core.invitation.title')}</h1>
+        </header>
+        <p data-invitation-hidden className="max-w-prose text-ink">
+          {t('core.invitation.hiddenInDemo')}
+        </p>
+      </div>
+    );
+  }
+
   const code = process.env.TESTER_INVITE_CODE;
   if (!code) {
     return (

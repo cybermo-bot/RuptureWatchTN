@@ -1,7 +1,9 @@
 // What a visitor shares from a public medicine page ("Partager ce statut"), and what its share
 // card says: the status sentence the page shows (rule 10: "confirmée", "levée" after a
-// confirmation, otherwise "Aucune rupture confirmée à ce jour"), "Simulé" when the status comes
-// from demonstration data, and always "Ceci n'est pas une déclaration officielle de rupture."
+// confirmation, otherwise "Aucune rupture confirmée à ce jour") and always "Ceci n'est pas une
+// déclaration officielle de rupture." When the status comes from demonstration data, the
+// demonstration banner comes first, on the page, in the shared text and as the card's headline:
+// shared out of context, a simulated "Rupture confirmée" is the rumour the product exists to stop.
 // The rumour check, travelling into the WhatsApp groups where rumours start. Pure: no fetch.
 
 import type { Locale, Translate } from '@/lib/i18n';
@@ -20,17 +22,26 @@ export function isSimulatedStatus(status: PublicStatus): boolean {
   return (status.level === 'confirmed' || status.level === 'cleared') && status.since !== null && status.origins.includes('simulated');
 }
 
-/** The lines after the medicine's name: its status, "Simulé" when it applies, the disclaimer. */
+/** "Démonstration : ce niveau vient de données simulées…" for a simulated status, otherwise null. */
+export function simulatedBanner(status: PublicStatus, t: Translate): string | null {
+  return isSimulatedStatus(status) ? t('public.medicine.simulatedBanner') : null;
+}
+
+/** The page's description: the demonstration banner when it applies, the status, the disclaimer. */
 export function statusLines(status: PublicStatus, t: Translate, locale: Locale): string[] {
-  return [
-    publicStatusSentence(status, t, locale),
-    isSimulatedStatus(status) ? t('public.share.simulated') : null,
-    t('public.medicine.disclaimer'),
-  ].filter((line): line is string => line !== null);
+  return [simulatedBanner(status, t), publicStatusSentence(status, t, locale), t('public.medicine.disclaimer')].filter(
+    (line): line is string => line !== null,
+  );
 }
 
 /** The shared text, without the link (the share sheet or WhatsApp adds it). */
 export function shareText(name: string, status: PublicStatus, t: Translate, locale: Locale): string {
-  const [sentence, ...rest] = statusLines(status, t, locale);
-  return [t('public.share.text', { name, status: sentence }), t('public.medicine.statusScope'), ...rest].join('\n');
+  return [
+    simulatedBanner(status, t),
+    t('public.share.text', { name, status: publicStatusSentence(status, t, locale) }),
+    t('public.medicine.statusScope'),
+    t('public.medicine.disclaimer'),
+  ]
+    .filter((line): line is string => line !== null)
+    .join('\n');
 }

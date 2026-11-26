@@ -2,6 +2,8 @@ import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { Logo, LogoMark } from '@/components/brand/Logo';
 import { UnderstandNav } from '@/components/console/UnderstandNav';
+import { FeedbackLink } from '@/components/feedback/FeedbackLink';
+import { isPilot } from '@/lib/env';
 import { t } from '@/lib/i18n';
 
 // Chrome of the showcase pages (home, scenario, four views, method, replay, status): the logo,
@@ -26,10 +28,10 @@ export function SiteHeader({ children, compact = false }: { children?: ReactNode
         </div> : null}
         {children ?? (!compact && (
           <Link
-            href="/#roles"
+            href={isPilot() ? '/connexion/pharmacie' : '/#roles'}
             className="inline-flex min-h-11 items-center rounded-md bg-brand px-4 text-sm font-medium text-white no-underline hover:bg-brand-strong hover:text-white"
           >
-            {t('core.site.chooseRole')}
+            {t(isPilot() ? 'core.pilot.signIn' : 'core.site.chooseRole')}
           </Link>
         ))}
       </div>
@@ -43,15 +45,13 @@ export function SiteFooter() {
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-8 text-sm text-ink-muted sm:flex-row sm:items-start sm:justify-between sm:px-6 lg:px-8">
         <div className="flex items-start gap-3">
           <LogoMark size={20} className="mt-0.5 text-ink-muted" />
-          <p className="max-w-prose">{t('core.home.footer')}</p>
+          <p className="max-w-prose">{t(isPilot() ? 'core.pilot.footer' : 'core.home.footer')}</p>
         </div>
         <div className="flex shrink-0 gap-5">
           <Link href="/medicaments" className="text-ink-muted underline hover:text-ink">
             {t('core.site.public')}
           </Link>
-          <Link href="/status" className="text-ink-muted underline hover:text-ink">
-            {t('core.home.statusLink')}
-          </Link>
+          <FeedbackLink label={t('core.feedback.link')} className="text-ink-muted underline hover:text-ink" />
         </div>
       </div>
     </footer>

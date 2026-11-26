@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next';
+import { PilotLine } from '@/components/PilotLine';
 import { FollowBanner } from '@/components/public/FollowBanner';
 import { PublicFooter, PublicHeader } from '@/components/public/PublicChrome';
+import { isPilot } from '@/lib/env';
 import { fontVariables, plexArabic } from '@/lib/fonts';
 import { getTranslator } from '@/lib/i18n-server';
 import '../globals.css';
@@ -35,6 +37,7 @@ export default async function PublicLayout({ children }: { children: React.React
         >
           {t('public.shell.skipToContent')}
         </a>
+        {isPilot() ? <PilotLine text={t('public.pilot.line')} /> : null}
         <PublicHeader locale={locale} />
         <FollowBanner locale={locale} />
         {children}

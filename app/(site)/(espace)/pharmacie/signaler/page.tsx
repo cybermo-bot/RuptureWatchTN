@@ -1,12 +1,16 @@
 import { MoleculeSearch } from '@/components/MoleculeSearch';
 import { MoleculeRow } from '@/components/pharmacy/MoleculeRow';
 import { ReportProgress } from '@/components/pharmacy/ReportProgress';
+import { getCurrentSession } from '@/lib/auth/session';
+import { showcaseLocked } from '@/lib/demo/showcase';
 import { t } from '@/lib/i18n';
 import { getFollowed } from '@/lib/pharmacy/data';
 
 // Tap one: pick the medicine. Followed molecules first, as large rows; search below.
 export default async function ReportPick() {
-  const followed = await getFollowed();
+  const [followed, session] = await Promise.all([getFollowed(), getCurrentSession()]);
+  // One-click demo pharmacies: showcase medicines open their page, not the report (pilot-1 item 3).
+  const locked = (name: string) => (session ? showcaseLocked(session.organisation.id, name) : false);
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <header className="flex flex-col gap-4">
@@ -25,7 +29,11 @@ export default async function ReportPick() {
           <ul className="panel hairline-list overflow-hidden">
             {followed.map((m) => (
               <li key={m.moleculeId}>
-                <MoleculeRow molecule={m} href={`/pharmacie/signaler/${m.moleculeId}`} large />
+                {locked(m.name) ? (
+                  <MoleculeRow molecule={m} href={`/pharmacie/molecule/${m.moleculeId}`} large showcase />
+                ) : (
+                  <MoleculeRow molecule={m} href={`/pharmacie/signaler/${m.moleculeId}`} large />
+                )}
               </li>
             ))}
           </ul>
