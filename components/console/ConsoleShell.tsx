@@ -11,6 +11,7 @@ import type { CurrentSession } from '@/lib/auth/session';
 import { hintFor } from '@/lib/demo/hints';
 import { t } from '@/lib/i18n';
 import { MORE_NAV, NAV, PHARMACY_TABS, UNDERSTAND } from '@/lib/nav';
+import { PageEnter } from '@/components/ui/PageEnter';
 
 // The professional spaces as an operations console: a fixed dark sidebar (logo, who you are,
 // the space's sections, "Changer de rôle"), a light content area. On phones the sidebar becomes
@@ -119,39 +120,30 @@ export function ConsoleShell({
         </div>
       </aside>
 
-      {/* Phones and tablets. */}
-      {pharmacy ? (
-        <header className="sticky top-0 z-30 border-b border-line bg-surface lg:hidden print:hidden">
-          <div className="flex min-h-14 items-center justify-between gap-3 px-4">
-            <Link href="/" className="flex min-h-12 min-w-12 shrink-0 items-center no-underline">
-              <LogoMark size={26} className="text-brand" />
-              <span className="sr-only">{t('core.app.name')}, {t('core.nav.home')}</span>
-            </Link>
-            <p className="flex min-w-0 flex-1 items-center justify-end gap-2 text-sm">
-              <span className="truncate font-medium text-ink">{session.organisation.displayName}</span>
-              <OriginBadge origin={session.organisation.origin} />
-            </p>
-          </div>
-        </header>
-      ) : (
-        <header className="sticky top-0 z-30 bg-sidebar lg:hidden print:hidden">
-          <div className="relative flex min-h-14 items-center justify-between gap-3 ps-4 pe-2">
-            <Link href="/" className="flex min-h-12 items-center no-underline focus-visible:outline-sidebar-accent">
-              <Logo tone="dark" compact />
-              <span className="sr-only">, {t('core.nav.home')}</span>
-            </Link>
+      {/* Phones and tablets: one white header for every role (mark, organisation, origin, menu). */}
+      <header className="sticky top-0 z-30 border-b border-line bg-surface lg:hidden print:hidden">
+        <div className={`relative flex min-h-14 items-center justify-between gap-3 ${pharmacy ? 'px-4' : 'ps-4 pe-2'}`}>
+          <Link href="/" className="flex min-h-12 min-w-12 shrink-0 items-center no-underline">
+            <LogoMark size={24} className="text-brand" />
+            <span className="sr-only">{t('core.app.name')}, {t('core.nav.home')}</span>
+          </Link>
+          <p className="flex min-w-0 flex-1 items-center justify-end gap-2 text-sm">
+            <span className="truncate font-medium text-ink">{session.organisation.displayName}</span>
+            <OriginBadge origin={session.organisation.origin} />
+          </p>
+          {pharmacy ? null : (
             <MobileDrawer>
               <SidebarBody session={session} badges={badges} />
             </MobileDrawer>
-          </div>
-        </header>
-      )}
+          )}
+        </div>
+      </header>
 
       <main
         id="contenu"
         className={`mx-auto w-full max-w-[90rem] flex-1 px-4 py-5 sm:px-6 lg:px-8 lg:py-8 print:max-w-none print:p-0 ${pharmacy ? 'pb-[calc(3.5rem+env(safe-area-inset-bottom)+1.25rem)] lg:pb-8' : ''}`}
       >
-        {children}
+        <PageEnter>{children}</PageEnter>
         {hint ? (
           <details className="mt-4 print:hidden">
             <summary className="min-h-12 w-fit cursor-pointer content-center text-sm font-medium text-brand">{t('core.tryHint.label')}</summary>

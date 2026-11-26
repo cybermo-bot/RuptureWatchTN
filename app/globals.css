@@ -681,6 +681,27 @@ path.rw-pulse {
     transform: translateY(-12px);
   }
 }
+/* Page enter (step 2): the new page fades in rising 8 px. `backwards` only: once it has played
+ * nothing stays applied, so fixed toasts inside the page are never held in a transformed box. */
+.rw-page {
+  animation: rw-step-in var(--dur-base) var(--ease-out) backwards;
+}
+/* Between the two root layouts (a full load): the browser's cross-document transition, the
+ * wordmark staying in place. Reduced motion stops it (below). */
+@view-transition {
+  navigation: auto;
+}
+.rw-wordmark {
+  view-transition-name: wordmark;
+}
+::view-transition-old(root) {
+  animation-duration: var(--dur-fast);
+  animation-timing-function: var(--ease-exit);
+}
+::view-transition-new(root) {
+  animation-duration: var(--dur-base);
+  animation-timing-function: var(--ease-out);
+}
 /* A new count on a bottom-bar tab: one pulse. */
 .rw-badge-pulse {
   animation: rw-badge-pulse var(--dur-slow) var(--ease-out) 1;

@@ -4,6 +4,13 @@ Newest first. Each entry: what was decided, and why.
 
 ## 2026-11-26, session B (branch `pilot-b`)
 
+### Page transitions use the fallback; shells share one header style (pilot-4, step 2)
+
+- **Fallback, not React `<ViewTransition>`.** React 19.3 ships `ViewTransition` and Next 16.4 needs no flag, but its own guide says enter and exit never fire for a wrapper in a layout, and a layout-level wrapper animates every `router.refresh()`: « Aujourd'hui » and the answers page refresh every 10–15 s and would fade each time. The brief says to switch at the first such problem. A family `template.tsx` only remounts when its own child segment changes (Next docs: deeper navigations do not remount higher templates), so the fallback is one `PageEnter` in each shell (public layout, `SiteMain`, the console's `<main>`), keyed on the path: the new page fades in rising 8 px (`--dur-base`, enter easing, fill `backwards` so fixed toasts are never held in a transformed box). No animation on the first page, on a refresh or on a query change. Header, rail and bottom bar sit outside it and stay still.
+- Between the two root layouts (a full load): `@view-transition { navigation: auto; }`, the old page out in `--dur-fast`, the new in `--dur-base`, the header wordmark named `wordmark` (the home's second wordmark is not named: a name must be unique on a page). Reduced motion stops both.
+- Not done: the shared-element morphs (`product-<code_pct>`, the medicine row, the coordination row, the level badge); they need `<ViewTransition>` pairs and prefetched pages, and the search rows are not prefetched.
+- Shells: public pages sit on `--page` with a footer without its own background; every console role gets the same white phone header (mark, organisation, origin badge, then « Menu » for roles other than the pharmacy), replacing the dark one. `SiteHeader` was not rebuilt from the home masthead (the home must not move); it keeps its markup.
+
 ### Patient screens on the shared parts (pilot-4, step 3)
 
 - Search, medicine, request, answers and past shortages use `PageHeader` (back link, picture, `title-1`), `RowLink` rows and `Section`. The search loses its panel; the medicine status is the screen's one powder-blue card (`--radius-lg`, the public status hero); the answers page's request state is its one card, and the answers a hairline list.

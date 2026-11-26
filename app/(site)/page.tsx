@@ -37,7 +37,7 @@ function PilotHome({ signInError }: { signInError: string | null }) {
     <>
       <header className="home-masthead">
         <div className="home-wrap home-nav">
-          <Wordmark />
+          <Wordmark named />
           <nav aria-label={t('core.redesign.navLabel')} className="flex items-center gap-x-6">
             <Link href="/medicaments?recherche=1" className="home-nav-link hidden md:inline-flex">{t('core.redesign.search')}</Link>
             <Link href="/connexion/pharmacie" className="home-nav-link">{t('core.pilot.signIn')}</Link>
