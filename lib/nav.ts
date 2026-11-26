@@ -1,6 +1,7 @@
 // The sections of each professional space, shown in the console sidebar, the phone drawer and,
 // for the pharmacy, the bottom tab bar. Icons come from one set (Lucide), always next to a word.
 
+import { isPilot } from '@/lib/env';
 import type { OrganisationType } from '@/lib/demo/roles';
 import type { MessageKey } from '@/lib/i18n';
 
@@ -91,6 +92,11 @@ export const MORE_NAV: Partial<Record<OrganisationType, NavItem[]>> = {
 };
 
 /** Showcase pages, listed under "Comprendre" in every sidebar. */
+/** The « Comprendre » pages this site shows: the pilot has no scenario and no four views (pilot-2 item 1). */
+export function understandLinks(): typeof UNDERSTAND {
+  return isPilot() ? UNDERSTAND.filter(({ href }) => href !== '/scenario' && href !== '/vues') : UNDERSTAND;
+}
+
 export const UNDERSTAND: { href: string; label: MessageKey }[] = [
   { href: '/scenario', label: 'core.nav.items.scenario' },
   { href: '/vues', label: 'core.nav.items.views' },

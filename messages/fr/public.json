@@ -236,7 +236,8 @@
     "searchLabel": "Médicament à vérifier",
     "method": "Comment les niveaux sont calculés",
     "signedInAs": "Connecté comme {organisation}",
-    "changeRole": "Changer de rôle"
+    "changeRole": "Changer de rôle",
+    "signedOutBodyPilot": "Cette vue montre des niveaux que le public ne voit pas. Elle n’est pas encore ouverte pendant le pilote."
   },
   "origin": {
     "official_source": "Source officielle",
@@ -300,5 +301,8 @@
       "title": "Institutions",
       "body": "Espaces conçus pour le Ministère de la Santé, la Pharmacie centrale, l’Ordre des pharmaciens et les pharmacies hospitalières. Organisations fictives."
     }
+  },
+  "pilot": {
+    "line": "Pilote RuptureWatch : signalements réels de pharmacies testeuses."
   }
 }

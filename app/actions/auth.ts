@@ -5,12 +5,15 @@ import { canEnterAudience, isAccessAudience } from '@/lib/auth/access';
 import { getCurrentSession } from '@/lib/auth/session';
 import { createUserClient } from '@/lib/db/server';
 import { findDemoRole, HOME_BY_TYPE } from '@/lib/demo/roles';
+import { isPilot } from '@/lib/env';
 
 /**
  * One-click demo sign-in. The visitor only sends a role key from a fixed list;
  * the password stays in the server environment and never reaches the browser.
+ * Refused on the pilot site (pilot-2 item 1), even if a form is posted by hand.
  */
 export async function signInAsDemoRole(formData: FormData) {
+  if (isPilot()) redirect('/?erreur=role');
   const role = findDemoRole(String(formData.get('role') ?? ''));
   if (!role) redirect('/?erreur=role');
 
@@ -57,7 +60,7 @@ export async function signInToSpace(formData: FormData) {
   redirect(type === 'pharmacy' ? '/pharmacie/signaler' : HOME_BY_TYPE[type]);
 }
 
-/** "Changer de rôle": ends the demo session and returns to the role picker. */
+/** "Changer de rôle" (or "Se déconnecter"): ends the session and returns to the doors. */
 export async function switchRole() {
   const supabase = await createUserClient();
   // Local scope: the demo accounts are shared, so never end other visitors' sessions.

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { buttonClass } from '@/components/Button';
 import { OriginBadge } from '@/components/OriginBadge';
 import { SiteFooter, Wordmark } from '@/components/SiteChrome';
+import { isPilot } from '@/lib/env';
 import { type MessageKey, t } from '@/lib/i18n';
 
 // Every space is one click from here: the patient search and the three sign-in doors.
@@ -26,9 +27,86 @@ const EXPLORE = [
   { key: 'method', href: '/methode', icon: Waypoints },
 ] as const;
 
+/**
+ * The pilot site's home (pilot-2 item 1): two doors first, « Je suis pharmacien·ne » (invitation,
+ * then sign-in) and « Je cherche un médicament ». No scenario, no demo role, no simulated story;
+ * the directory, the replay and the method stay (real, sourced data).
+ */
+function PilotHome({ signInError }: { signInError: string | null }) {
+  return (
+    <>
+      <header className="home-masthead">
+        <div className="home-wrap home-nav">
+          <Wordmark />
+          <nav aria-label={t('core.redesign.navLabel')} className="flex items-center gap-x-6">
+            <Link href="/medicaments?recherche=1" className="home-nav-link hidden md:inline-flex">{t('core.redesign.search')}</Link>
+            <Link href="/connexion/pharmacie" className="home-nav-link">{t('core.pilot.signIn')}</Link>
+          </nav>
+        </div>
+      </header>
+
+      <main id="contenu" className="home-read flex-1">
+        <div className="home-wrap">
+          <section className="home-hero" aria-labelledby="accroche">
+            <div className="home-hero-copy">
+              <h1 id="accroche">{t('core.redesign.headline')}</h1>
+              <p>{t('core.redesign.lead')}</p>
+              {signInError ? <p role="alert" className="text-level-confirmed">{signInError}</p> : null}
+              <div id="roles" className="flex scroll-mt-4 flex-wrap gap-2.5">
+                <Link href="/connexion/pharmacie" className={buttonClass('primary', 'min-h-12 rounded-full')}>
+                  <BriefcaseMedical size={18} aria-hidden="true" /> {t('core.pilot.home.pharmacist')}
+                </Link>
+                <Link href="/medicaments?recherche=1" className={buttonClass('secondary', 'home-search-action rounded-full')}>
+                  <Search size={18} aria-hidden="true" /> {t('core.pilot.home.patient')}
+                </Link>
+              </div>
+              <p>{t('core.pilot.home.invitation')}</p>
+            </div>
+            <div className="home-hero-photo">
+              <Image
+                src="/brand/pharmacy-inventory.webp"
+                alt={t('core.redesign.photoAlt')}
+                fill
+                sizes="(min-width: 1100px) 52vw, (min-width: 720px) 46vw, 100vw"
+                fetchPriority="high"
+                unoptimized
+              />
+            </div>
+          </section>
+          <ExploreSection />
+        </div>
+      </main>
+      <SiteFooter />
+    </>
+  );
+}
+
+function ExploreSection() {
+  return (
+    <section className="home-explore home-chapter" aria-labelledby="explorer-titre">
+      <div>
+        <h2 id="explorer-titre">{t('core.redesign.exploreTitle')}</h2>
+        <p>{t('core.redesign.exploreBody')}</p>
+      </div>
+      <ul>
+        {EXPLORE.map(({ key, href, icon: Icon }) => (
+          <li key={key}>
+            <Link href={href} className="home-explore-link">
+              <Icon size={21} strokeWidth={1.7} aria-hidden="true" />
+              <span>{t(`core.redesign.explore.${key}`)}</span>
+              <ArrowRight size={17} aria-hidden="true" className="home-arrow" />
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 export default async function HomePage({ searchParams }: PageProps<'/'>) {
   const { erreur } = await searchParams;
   const signInError = erreur === 'occupe' ? t('core.home.signInBusy') : typeof erreur === 'string' ? t('core.home.signInError') : null;
+  if (isPilot()) return <PilotHome signInError={signInError} />;
 
   return (
     <>
@@ -113,23 +191,7 @@ export default async function HomePage({ searchParams }: PageProps<'/'>) {
             </ul>
           </section>
 
-          <section className="home-explore home-chapter" aria-labelledby="explorer-titre">
-            <div>
-              <h2 id="explorer-titre">{t('core.redesign.exploreTitle')}</h2>
-              <p>{t('core.redesign.exploreBody')}</p>
-            </div>
-            <ul>
-              {EXPLORE.map(({ key, href, icon: Icon }) => (
-                <li key={key}>
-                  <Link href={href} className="home-explore-link">
-                    <Icon size={21} strokeWidth={1.7} aria-hidden="true" />
-                    <span>{t(`core.redesign.explore.${key}`)}</span>
-                    <ArrowRight size={17} aria-hidden="true" className="home-arrow" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </section>
+          <ExploreSection />
         </div>
       </main>
       <SiteFooter />

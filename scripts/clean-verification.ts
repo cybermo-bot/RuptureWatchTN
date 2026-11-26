@@ -46,7 +46,7 @@ async function main() {
     console.error('Usage: npm run verify:clean -- --since <ISO date> [--apply]');
     process.exit(1);
   }
-  const supabase = serviceClient();
+  const supabase = serviceClient({ demoOnly: true });
   const demoPharmacies = DEMO_ROLES.filter((r) => r.profileRole === 'pharmacist').map((r) => r.organisationId);
   const demoCentral = DEMO_ROLES.filter((r) => r.home === '/centrale').map((r) => r.organisationId);
   const demoOrder = DEMO_ROLES.filter((r) => r.home === '/ordre').map((r) => r.organisationId);

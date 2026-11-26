@@ -8,6 +8,7 @@ import { SiteFooter, SiteHeader, SiteMain } from '@/components/SiteChrome';
 import { canEnterAudience, isAccessAudience } from '@/lib/auth/access';
 import { getCurrentSession } from '@/lib/auth/session';
 import { type DemoRoleKey, HOME_BY_TYPE } from '@/lib/demo/roles';
+import { isPilot } from '@/lib/env';
 import { t, type MessageKey } from '@/lib/i18n';
 
 // Each door opens on its one-click demos (pilot-1 item 4): two pharmacies in different
@@ -26,6 +27,8 @@ export default async function SignInPage({ params, searchParams }: PageProps<'/c
   const { audience } = await params;
   if (!isAccessAudience(audience)) notFound();
   const { erreur } = await searchParams;
+  // The pilot site has no demo accounts: the form of real accounts, open (pilot-2 item 1).
+  const pilot = isPilot();
   const session = await getCurrentSession();
   if (session && canEnterAudience(audience, session.organisation.type)) {
     const type = session.organisation.type;
@@ -44,7 +47,7 @@ export default async function SignInPage({ params, searchParams }: PageProps<'/c
           <h1 id="connexion-titre" className="text-3xl font-semibold tracking-tight text-ink">{t(`core.access.${audience}.title`)}</h1>
           <p className="mt-2 text-ink-muted">{t(`core.access.${audience}.description`)}</p>
 
-          {audience === 'pharmacie' ? (
+          {!pilot && audience === 'pharmacie' ? (
             <form action={signInAsDemoRole} className="mt-6 grid gap-3" aria-labelledby="demo-pharmacie">
               <p id="demo-pharmacie" className="text-sm text-ink">{t('core.access.pharmacie.demoNote')}</p>
               {PHARMACY_DEMOS.map((demo) => (
@@ -54,14 +57,14 @@ export default async function SignInPage({ params, searchParams }: PageProps<'/c
               ))}
             </form>
           ) : null}
-          {audience === 'grossiste' ? (
+          {!pilot && audience === 'grossiste' ? (
             <form action={signInAsDemoRole} className="mt-6 grid">
               <Button type="submit" name="role" value="grossiste" className="w-full">
                 {t('core.access.demo')}
               </Button>
             </form>
           ) : null}
-          {audience === 'institution' ? (
+          {!pilot && audience === 'institution' ? (
             <form action={signInAsDemoRole} className="mt-6" aria-labelledby="demo-institution">
               <h2 id="demo-institution" className="text-base font-semibold text-ink">{t('core.access.institution.demoTitle')}</h2>
               <p className="mt-1 text-sm text-ink-muted">{t('core.access.institution.demoNote')}</p>
@@ -77,7 +80,7 @@ export default async function SignInPage({ params, searchParams }: PageProps<'/c
             </form>
           ) : null}
 
-          <details open={erreur ? true : undefined} className="group mt-6 border-t border-line">
+          <details open={erreur || pilot ? true : undefined} className={`group mt-6 ${pilot ? '' : 'border-t border-line'}`}>
             <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 py-2 font-medium text-brand [&::-webkit-details-marker]:hidden">
               {t('core.access.haveAccount')}
               <ChevronDown size={18} aria-hidden="true" className="shrink-0 group-open:rotate-180" />

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { t } from '@/lib/i18n';
-import { UNDERSTAND } from '@/lib/nav';
+import { understandLinks } from '@/lib/nav';
 
 // The "Comprendre" pages in the showcase header; the current one is marked.
 export function UnderstandNav() {
@@ -11,7 +11,7 @@ export function UnderstandNav() {
   return (
     <nav aria-label={t('core.site.navLabel')}>
       <ul className="flex gap-x-1 whitespace-nowrap">
-        {UNDERSTAND.map((u) => {
+        {understandLinks().map((u) => {
           const current = pathname === u.href || pathname.startsWith(`${u.href}/`);
           return (
             <li key={u.href}>

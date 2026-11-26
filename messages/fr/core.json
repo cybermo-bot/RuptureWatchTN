@@ -1623,5 +1623,14 @@
     "pilotNote": "À l’échelle d’un pilote : {min} pharmacies dans au moins {governorates} gouvernorats suffisent pour « confirmée » tant que le réseau compte au plus {members} pharmacies membres actives. Au-delà, il en faut {pct} % des pharmacies membres actives.",
     "memoryNote": "La comparaison se calcule dans votre navigateur avec les règles du site. Rien n’est enregistré.",
     "explorerLink": "Faire varier les seuils sur la page Méthode"
+  },
+  "pilot": {
+    "signIn": "Se connecter",
+    "footer": "Prototype étudiant, AOTN TSYP 14. Aucun statut officiel. Signalements réels de pharmacies testeuses.",
+    "home": {
+      "pharmacist": "Je suis pharmacien·ne",
+      "patient": "Je cherche un médicament",
+      "invitation": "Pharmacies : inscription sur invitation de l’équipe RuptureWatch, puis connexion par cette porte."
+    }
   }
 }

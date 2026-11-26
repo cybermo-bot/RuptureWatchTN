@@ -8,6 +8,7 @@ import { SiteFooter, SiteHeader, SiteMain } from '@/components/SiteChrome';
 import { FourViewsPanels } from '@/components/views/FourViewsPanels';
 import { selectedParam } from '@/lib/coordination/dashboard';
 import { findDemoRole } from '@/lib/demo/roles';
+import { isPilot } from '@/lib/env';
 import { t } from '@/lib/i18n';
 import { VIEW_ROLES, viewClients, viewPharmacyOrganisationId } from '@/lib/views/demo-clients';
 import { loadFourViews, type FourViews } from '@/lib/views/four-views';
@@ -17,6 +18,7 @@ export const metadata: Metadata = { title: t('core.views.indexTitle') };
 // One shortage, four views. Each panel is loaded as its own role (lib/views/four-views.ts).
 export default async function FourViewsPage({ params }: PageProps<'/vues/[moleculeId]'>) {
   await connection();
+  if (isPilot()) notFound();
   const id = selectedParam((await params).moleculeId);
   if (!id) notFound();
 

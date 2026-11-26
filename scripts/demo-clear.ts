@@ -10,7 +10,7 @@ import { supabaseNationalStore } from './lib/national-store';
 import { serviceClient } from './lib/script-env';
 
 async function main() {
-  const client = serviceClient();
+  const client = serviceClient({ demoOnly: true });
   const national = await runNationalClear(supabaseNationalStore(client));
   const n = national.deleted;
   console.log('National picture cleared.');

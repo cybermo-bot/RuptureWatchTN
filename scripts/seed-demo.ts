@@ -23,7 +23,7 @@ interface SeedOrganisation {
 }
 
 async function main() {
-  const supabase = serviceClient();
+  const supabase = serviceClient({ demoOnly: true });
   const password = need('DEMO_ACCOUNT_PASSWORD');
   if (password.length < 24) {
     console.error('DEMO_ACCOUNT_PASSWORD should be a long random string (24 characters or more).');

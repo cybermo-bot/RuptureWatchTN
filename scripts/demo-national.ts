@@ -12,7 +12,7 @@ import { supabaseNationalStore } from './lib/national-store';
 import { serviceClient } from './lib/script-env';
 
 async function main() {
-  const client = serviceClient();
+  const client = serviceClient({ demoOnly: true });
   const shortage = await runDemoShortage(supabaseDemoStore(client));
   if (shortage.status === 'refused') {
     console.error(`Not created: ${shortage.reason}.`);

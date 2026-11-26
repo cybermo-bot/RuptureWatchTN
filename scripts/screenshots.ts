@@ -106,6 +106,9 @@ export const SHOTS: Shot[] = [
   { name: 'pharmacie-alertes-sfax', path: '/pharmacie/alertes', role: 'pharmacie-sfax' },
   { name: 'pharmacie-medicament', path: `/pharmacie/molecule/${SHOWCASE_ID}`, role: 'pharmacie-tunis' },
   { name: 'vues-showcase', path: `/vues/${SHOWCASE_ID}` },
+  // Pilot-2 item 1: with NEXT_PUBLIC_APP_MODE=pilot, the home's two doors and the line on every page.
+  { name: 'pilote-accueil', path: '/', fullPage: false },
+  { name: 'pilote-prescripteurs', path: '/prescripteurs', fullPage: false },
   // Pilot-1 item 7: the pharmacy tab bar (« Demandes »), the coordination tiles, the scenario line.
   { name: 'pharmacie-barre', path: '/pharmacie', role: 'pharmacie-tunis', fullPage: false },
   { name: 'coordination-chiffres', path: '/coordination', role: 'coordination', fullPage: false },
