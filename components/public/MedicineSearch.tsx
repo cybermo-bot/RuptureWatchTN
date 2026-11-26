@@ -2,6 +2,7 @@
 
 import { ArrowUpLeft, ChevronRight, Search } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useEffect, useId, useState } from 'react';
 import { Input } from '@/components/Input';
 import { FormPicture } from '@/components/medicine/FormPicture';
@@ -55,6 +56,7 @@ export function MedicineSearch({ locale, linkPrefix = '/medicaments/', label, au
   title?: string;
 }) {
   const t = translator(locale);
+  const pathname = usePathname();
   const [q, setQ] = useState('');
   const [state, setState] = useState<State | null>(null);
   const [attempt, setAttempt] = useState(0);
@@ -152,6 +154,15 @@ export function MedicineSearch({ locale, linkPrefix = '/medicaments/', label, au
         <div className="flex flex-col gap-1" role="status">
           <p className="font-medium text-ink">{data.dpm ? t('public.dpm.searchTitle') : t('public.medicines.none', { q: query })}</p>
           <p className="text-sm text-ink-muted">{data.dpm ? t('public.dpm.notFollowed') : t('public.medicines.noneHint')}</p>
+          {/* A product outside the CNAM list (pilot-2 item 5): say so, and let the visitor tell us. */}
+          {data.dpm ? null : (
+            <>
+              <p className="text-sm text-ink-muted">{t('public.medicines.notInList')}</p>
+              <Link href={`/avis?depuis=${encodeURIComponent(pathname)}`} className="inline-flex min-h-12 items-center self-start text-sm text-brand underline">
+                {t('public.medicines.tellUs')}
+              </Link>
+            </>
+          )}
         </div>
       ) : null}
       {data && hasResults ? (

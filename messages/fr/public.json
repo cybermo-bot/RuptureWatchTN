@@ -91,7 +91,9 @@
     "presentationsOne": "1 présentation dans la liste CNAM",
     "none": "Aucun médicament trouvé pour « {q} » dans la liste CNAM.",
     "noneHint": "Vérifiez l’orthographe, ou essayez le nom de la molécule écrit sur la boîte.",
-    "source": "Recherche dans la liste des médicaments remboursés par la CNAM."
+    "source": "Recherche dans la liste des médicaments remboursés par la CNAM.",
+    "notInList": "Ce médicament n’est peut-être pas dans la liste CNAM des médicaments remboursés.",
+    "tellUs": "Écrire à l’équipe RuptureWatch"
   },
   "medicine": {
     "statusTitle": "Signal de rupture pour la molécule",

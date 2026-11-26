@@ -98,3 +98,26 @@ describe('plural messages', () => {
     }
   });
 });
+
+// Pilot-2: every public text of the pilot exists in French and in Arabic, not only through the
+// French fallback.
+describe('pilot texts on public pages', () => {
+  it.each([
+    'public.pilot.line',
+    'public.feedback.title',
+    'public.feedback.noPatient',
+    'public.request.noneParticipating',
+    'public.request.openPharmacies',
+    'public.request.statusLink',
+    'public.request.pilotFew',
+    'public.medicines.notInList',
+    'public.medicines.tellUs',
+    'public.prescribers.signedOutBodyPilot',
+  ] as const)('%s is written in both languages', (key) => {
+    const path = key.split('.').slice(1);
+    const lookup = (locale: string) => path.reduce<unknown>((node, part) => (node as Record<string, unknown>)?.[part], read(locale, 'public'));
+    expect(typeof lookup('fr')).toBe('string');
+    expect(typeof lookup('ar')).toBe('string');
+    expect(lookup('ar')).not.toBe(lookup('fr'));
+  });
+});

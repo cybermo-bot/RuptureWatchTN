@@ -124,6 +124,15 @@ export const SHOTS: Shot[] = [
   { name: 'pilote-demande-ar', path: `/medicaments/${SHOWCASE_ID}/demande`, locale: 'ar', fullPage: false, before: async (page) => {
     await page.locator('select').first().scrollIntoViewIfNeeded();
   } },
+  // Pilot-2 item 5: a product outside the CNAM list, in French and Arabic.
+  { name: 'recherche-vide', path: '/medicaments?recherche=1', fullPage: false, before: async (page) => {
+    await page.getByRole('searchbox').fill('zzqxw');
+    await page.locator('[role="status"] a[href^="/avis?depuis="]').waitFor();
+  } },
+  { name: 'recherche-vide-ar', path: '/medicaments?recherche=1', locale: 'ar', fullPage: false, before: async (page) => {
+    await page.getByRole('searchbox').fill('zzqxw');
+    await page.locator('[role="status"] a[href^="/avis?depuis="]').waitFor();
+  } },
   // Pilot-1 item 7: the pharmacy tab bar (« Demandes »), the coordination tiles, the scenario line.
   { name: 'pharmacie-barre', path: '/pharmacie', role: 'pharmacie-tunis', fullPage: false },
   { name: 'coordination-chiffres', path: '/coordination', role: 'coordination', fullPage: false },
