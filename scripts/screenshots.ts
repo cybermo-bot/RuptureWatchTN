@@ -80,6 +80,9 @@ export const SHOTS: Shot[] = [
   { name: 'resultat', path: `/pharmacie/molecule/${SHOWCASE_ID}/resultat?avant=likely`, role: 'pharmacie-tunis' },
   { name: 'pharmacie-whatsapp', path: '/pharmacie/whatsapp', role: 'pharmacie-tunis' },
   { name: 'coordination', path: '/coordination', role: 'coordination' },
+  // Pilot-4 step 5: the coordination tabs, in the URL.
+  { name: 'coordination-demande', path: '/coordination?vue=demande', role: 'coordination' },
+  { name: 'coordination-journal', path: '/coordination?vue=journal', role: 'coordination' },
   { name: 'coordination-export', path: '/coordination/export', role: 'coordination' },
   { name: 'coordination-invitation', path: '/coordination/invitation', role: 'coordination' },
   { name: 'grossiste', path: '/grossiste', role: 'grossiste' },

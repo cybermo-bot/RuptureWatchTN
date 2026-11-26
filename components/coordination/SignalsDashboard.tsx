@@ -4,6 +4,7 @@ import type { ReportedPresentation } from '@/lib/presentations/reported';
 import { LevelBand } from '@/components/charts/LevelBand';
 import { KeyFigures, type KeyFigure } from '@/components/console/KeyFigures';
 import { Panel } from '@/components/console/Panel';
+import { Journal } from '@/components/ui/Journal';
 import { QuickSearch } from '@/components/console/QuickSearch';
 import { EmptyState } from '@/components/EmptyState';
 import { CatalogueLine } from '@/components/institutions/Lines';
@@ -260,17 +261,24 @@ export function NoticesPanel({ notices }: { notices: ForeignNotice[] }) {
 
 export function TimelineList({ events }: { events: EventRow[] }) {
   if (events.length === 0) return <p className="text-sm text-ink-muted">{t('core.coordination.timelineEmpty')}</p>;
+  // The level history as a Journal: dated rows joined by a line, the level's shape in each dot.
   return (
-    <ol className="hairline-list">
-      {events.map((e) => (
-        <li key={e.id} className="flex flex-col gap-1 py-3 first:pt-0">
-          <When at={e.at} />
-          <Change from={e.from_level} to={e.to_level} />
-          <Origins origins={e.evidence.origins} />
-          <RuleDetails rule={e.rule} />
-        </li>
-      ))}
-    </ol>
+    <Journal
+      label={t('core.coordination.timelineTitle')}
+      entries={events.map((e) => ({
+        key: String(e.id),
+        date: t('core.common.dateAt', { date: formatDate(e.at), time: formatTime(e.at) }),
+        dateTime: e.at,
+        level: e.to_level,
+        title: <Change from={e.from_level} to={e.to_level} />,
+        body: (
+          <span className="flex flex-col gap-1">
+            <Origins origins={e.evidence.origins} />
+            <RuleDetails rule={e.rule} />
+          </span>
+        ),
+      }))}
+    />
   );
 }
 
@@ -420,8 +428,16 @@ export function SignalsDashboard({
   facts,
   detailNote,
   presentations,
+  tabs,
+  view = 'signaux',
+  demandView,
 }: {
   data: DashboardData;
+  /** Coordination: sub-views under Tabs, the current one from the URL (?vue=). */
+  tabs?: ReactNode;
+  view?: 'signaux' | 'demande' | 'journal';
+  /** What « Demande des patients » shows. */
+  demandView?: ReactNode;
   /** Pilot-3 item 2: the selected molecule's reported presentations. */
   presentations?: ReportedPresentation[] | null;
   basePath: string;
@@ -453,8 +469,10 @@ export function SignalsDashboard({
       <KeyFigures label={t('core.figures.label')} figures={figures ?? levelFigures(signals, data.history)} />
       {extraFigures ? <KeyFigures label={t('core.ministry.figuresLabel')} figures={extraFigures} columns={extraFigures.length} /> : null}
       {overview}
+      {tabs}
 
-      {signals.length === 0 ? (
+      {tabs && view === 'demande' ? demandView : null}
+      {tabs && view !== 'signaux' ? null : signals.length === 0 ? (
         <div className="panel px-4">
           <EmptyState afterRule title={t('core.coordination.emptyTitle')} body={t('core.coordination.emptyBody')} />
         </div>
@@ -478,7 +496,7 @@ export function SignalsDashboard({
                     {selected.molecule_name}
                   </h2>
                   <MedicineDecision signal={selected} presentations={presentations} action={decisionAction ?? (
-                    <ButtonLink href={basePath === '/coordination' ? '#journal-decisions' : '#carte'}>
+                    <ButtonLink href={basePath === '/coordination' ? (tabs ? `${basePath}?vue=journal#journal-decisions` : '#journal-decisions') : '#carte'}>
                       {t(basePath === '/coordination' ? 'core.decisionBlock.log' : 'core.decisionBlock.hospital')}
                     </ButtonLink>
                   )}>
@@ -508,7 +526,7 @@ export function SignalsDashboard({
           ) : null}
         </div>
       )}
-      {data.events ? <EventLog events={data.events} decisions={data.decisions ?? []} arrivals={data.arrivals ?? []} /> : null}
+      {data.events && (!tabs || view === 'journal') ? <EventLog events={data.events} decisions={data.decisions ?? []} arrivals={data.arrivals ?? []} /> : null}
     </div>
   );
 }

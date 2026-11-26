@@ -6,7 +6,9 @@ import { presentationsReported } from '@/lib/presentations/reported';
 import { EmptyState } from '@/components/EmptyState';
 import { ArrivalLine, CatalogueLine } from '@/components/institutions/Lines';
 import { LiveRefresh } from '@/components/LiveRefresh';
+import { LevelBadge } from '@/components/LevelBadge';
 import { PageHeader } from '@/components/PageHeader';
+import { Stat, StatRow } from '@/components/ui/Stat';
 import { getCurrentSession } from '@/lib/auth/session';
 import { createUserClient } from '@/lib/db/server';
 import { HOME_BY_TYPE } from '@/lib/demo/roles';
@@ -34,6 +36,8 @@ export default async function CentralHome({ searchParams }: PageProps<'/centrale
   // Pilot-3 item 2: the presentations reported for each medicine of the list.
   const presentations = new Map(await Promise.all(signals.map(async (s) => [s.molecule_id, await presentationsReported(s.molecule_id)] as const)));
   const today = tunisToday();
+  // Key figures, computed from the list itself: medicines at each level, arrivals announced.
+  const atLevel = (level: string) => signals.filter((x) => x.level === level).length;
   const max = tunisDayIn(365);
   const named = signals.find((s) => s.molecule_id === m)?.molecule_name ?? '';
   const message =
@@ -51,6 +55,14 @@ export default async function CentralHome({ searchParams }: PageProps<'/centrale
     <div className="flex flex-col gap-6">
       <PageHeader meta={t('core.orgTypes.central_pharmacy')} title={t('core.space.titles.central_pharmacy')} description={t('core.central.intro')} />
       <LiveRefresh table="signals" fallbackMs={15_000} />
+      {signals.length > 0 ? (
+        <StatRow label={t('core.central.figures.label')}>
+          <Stat value={atLevel('confirmed')} label={<LevelBadge level="confirmed" />} />
+          <Stat value={atLevel('likely')} label={<LevelBadge level="likely" />} />
+          <Stat value={atLevel('watch')} label={<LevelBadge level="watch" />} />
+          <Stat value={arrivals.size} label={t('core.central.figures.arrivals')} />
+        </StatRow>
+      ) : null}
       {message ? (
         <p role="status" className={`panel border-s-4 p-4 text-ink ${message.ok ? 'border-s-level-cleared' : 'border-s-level-confirmed'}`}>
           {message.text}

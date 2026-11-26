@@ -4,6 +4,12 @@ Newest first. Each entry: what was decided, and why.
 
 ## 2026-11-26, session B (branch `pilot-b`)
 
+### Coordination in tabs; the centrale with key figures (pilot-4, step 5)
+
+- Coordination: the figures, the map and the recent changes stay on the first screen; below them `Tabs` « Signaux » (the default: the list, `section[aria-labelledby="signaux"]`, and the selected medicine's detail, `?m=<id>#detail` unchanged), « Demande des patients » (the national demand chart, moved out of « À examiner », and the selected medicine's demand by governorate) and « Journal » (the decision log). The tab is `?vue=` in the URL, keeping the selection; « Voir le journal » links to `?vue=journal#journal-decisions`. The other users of `SignalsDashboard` (hospital) get no tabs and see everything as before.
+- The level history (« Historique des niveaux ») is drawn with `Journal`: dated rows, the new level's shape in each dot, a connecting line, the change in words.
+- Centrale: a `StatRow` over the list, computed from it (medicines at each level, with the level's shape and word, and arrivals announced). The `#m-<id>` anchors and the « Annoncer un arrivage » / « Annoncer l'arrivage » labels are unchanged.
+
 ### Page transitions use the fallback; shells share one header style (pilot-4, step 2)
 
 - **Fallback, not React `<ViewTransition>`.** React 19.3 ships `ViewTransition` and Next 16.4 needs no flag, but its own guide says enter and exit never fire for a wrapper in a layout, and a layout-level wrapper animates every `router.refresh()`: « Aujourd'hui » and the answers page refresh every 10–15 s and would fade each time. The brief says to switch at the first such problem. A family `template.tsx` only remounts when its own child segment changes (Next docs: deeper navigations do not remount higher templates), so the fallback is one `PageEnter` in each shell (public layout, `SiteMain`, the console's `<main>`), keyed on the path: the new page fades in rising 8 px (`--dur-base`, enter easing, fill `backwards` so fixed toasts are never held in a transformed box). No animation on the first page, on a refresh or on a query change. Header, rail and bottom bar sit outside it and stay still.

@@ -3,11 +3,12 @@ import { redirect } from 'next/navigation';
 import { ButtonLink } from '@/components/Button';
 import { DemandChart, NationalMapPanel, SourcesAndNews } from '@/components/coordination/MinistryPanels';
 import { MedicineDecision } from '@/components/coordination/MedicineDecision';
-import { SignalsDashboard } from '@/components/coordination/SignalsDashboard';
+import { DemandTable, SignalsDashboard } from '@/components/coordination/SignalsDashboard';
 import { presentationsReported } from '@/lib/presentations/reported';
 import { ArrivalLine } from '@/components/institutions/Lines';
 import { LevelShape } from '@/components/LevelBadge';
 import { Panel } from '@/components/console/Panel';
+import { Tabs } from '@/components/ui/Tabs';
 import { LiveRefresh } from '@/components/LiveRefresh';
 import { PageHeader } from '@/components/PageHeader';
 import { RecentChangesList } from '@/components/RecentChanges';
@@ -19,6 +20,7 @@ import { HOME_BY_TYPE } from '@/lib/demo/roles';
 import { t } from '@/lib/i18n';
 import { DEFAULT_PARAMS } from '@/lib/signal';
 import { RECENT_CHANGES } from '@/lib/signals/recent';
+import { DEMAND_WINDOW_DAYS } from '@/lib/signals/views';
 
 // The ministry's space (cellule nationale), designed for the Ministry of Health, never "used by":
 // key figures, the national map by level, every molecule with a level in the ministry's order
@@ -30,13 +32,16 @@ export default async function CoordinationHome({ searchParams }: PageProps<'/coo
   if (!session) redirect('/#roles');
   if (session.organisation.type !== 'coordinator') redirect(HOME_BY_TYPE[session.organisation.type]);
 
-  const { m, niveau } = await searchParams;
+  const { m, niveau, vue } = await searchParams;
+  const view = vue === 'demande' || vue === 'journal' ? vue : 'signaux';
   const mapLevel = levelParam(niveau);
   const supabase = await createUserClient();
   const data = await loadMinistry(supabase, selectedParam(m), mapLevel);
   const selectedId = data.dashboard.selected?.molecule_id ?? null;
   const presentations = selectedId ? await presentationsReported(selectedId) : null;
   const priority = data.dashboard.signals[0];
+  const keep = selectedId ? `m=${selectedId}` : '';
+  const tabHref = (v: string) => `/coordination${v === 'signaux' ? (keep ? `?${keep}` : '') : `?${keep ? `${keep}&` : ''}vue=${v}`}`;
 
   return (
     <div className="flex flex-col gap-6">
@@ -54,9 +59,8 @@ export default async function CoordinationHome({ searchParams }: PageProps<'/coo
                 <Link href={`/coordination?m=${priority.molecule_id}#detail`}>{priority.molecule_name}</Link>
               </h3>
               <MedicineDecision signal={priority} action={<ButtonLink href="/coordination/note">{t('core.ministry.noteLink')}</ButtonLink>} />
-              <Link href="#journal-decisions" className="min-h-12 w-fit content-center text-sm">{t('core.decisionBlock.log')}</Link>
+              <Link href="/coordination?vue=journal#journal-decisions" className="min-h-12 w-fit content-center text-sm">{t('core.decisionBlock.log')}</Link>
             </div>
-            {data.activity ? <DemandChart rows={data.activity} /> : null}
           </div>
         ) : <p className="text-ink-muted">{t('core.coordination.emptyTitle')}</p>}
       </Panel>
@@ -104,6 +108,32 @@ export default async function CoordinationHome({ searchParams }: PageProps<'/coo
           </div>
         }
         detailNote={data.arrival ? <ArrivalLine arrival={data.arrival} /> : null}
+        view={view}
+        tabs={
+          <Tabs
+            label={t('core.coordination.tabs.label')}
+            current={view}
+            items={[
+              { key: 'signaux', label: t('core.coordination.tabs.signals'), href: tabHref('signaux') },
+              { key: 'demande', label: t('core.coordination.tabs.demand'), href: tabHref('demande') },
+              { key: 'journal', label: t('core.coordination.tabs.journal'), href: tabHref('journal') },
+            ]}
+          />
+        }
+        demandView={
+          <div className="grid gap-5 lg:grid-cols-2">
+            {data.activity ? (
+              <Panel title={t('core.coordination.tabs.demand')} titleId="demande-nationale">
+                <DemandChart rows={data.activity} />
+              </Panel>
+            ) : null}
+            {data.dashboard.selected ? (
+              <Panel title={`${data.dashboard.selected.molecule_name} · ${t('core.coordination.demandTitle', { days: DEMAND_WINDOW_DAYS })}`} titleId="demande">
+                <DemandTable demand={data.dashboard.demand} />
+              </Panel>
+            ) : null}
+          </div>
+        }
       />
       <SourcesAndNews />
     </div>

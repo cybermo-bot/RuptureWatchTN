@@ -638,6 +638,12 @@
     "back": "Retour"
   },
   "coordination": {
+    "tabs": {
+      "label": "Vues de la cellule nationale",
+      "signals": "Signaux",
+      "demand": "Demande des patients",
+      "journal": "Journal"
+    },
     "signalsTitle": "Médicaments avec un signal",
     "emptyTitle": "Aucun signal pour l’instant",
     "emptyBody": "Dès qu’une pharmacie signale une commande non livrée, le médicament apparaît ici avec son niveau et son explication.",
@@ -1406,6 +1412,10 @@
     "footer": "Note produite automatiquement : chaque valeur est calculée, aucune phrase n’est écrite à la main."
   },
   "central": {
+    "figures": {
+      "label": "Chiffres clés de la centrale",
+      "arrivals": "Arrivages annoncés"
+    },
     "intro": "Les médicaments qui ont un niveau en Tunisie, avec leur catégorie CNAM et le nombre d’autres marques. Pour un médicament « probable » ou « confirmée », annoncez un arrivage : les pharmacies le voient, le niveau ne change pas.",
     "listTitle": "Médicaments à risque",
     "listIntro": "Classés par niveau, puis catégorie (vitaux d’abord), puis nombre d’autres marques (le moins d’abord).",
