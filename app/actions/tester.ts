@@ -68,5 +68,6 @@ export async function joinAsTester(formData: FormData): Promise<void> {
     console.error('tester: sign in failed', { code: signInError.code, status: signInError.status });
     redirect(`${back}?erreur=1`);
   }
-  redirect('/pharmacie');
+  // The first-visit guide, then « Mes médicaments » (pilot-2 item 2).
+  redirect('/pharmacie/bienvenue?premiere=1&rejoint=1');
 }

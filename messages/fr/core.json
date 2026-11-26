@@ -1624,13 +1624,29 @@
     "memoryNote": "La comparaison se calcule dans votre navigateur avec les règles du site. Rien n’est enregistré.",
     "explorerLink": "Faire varier les seuils sur la page Méthode"
   },
+  "onboarding": {
+    "title": "Comment ça marche",
+    "step": "Écran {n} sur {total}",
+    "steps": {
+      "report": "Une commande n’arrive pas depuis plus de {days} jours ? Signalez-la en deux gestes.",
+      "level": "Quand plusieurs pharmacies signalent le même médicament, un niveau apparaît et tout le monde est prévenu.",
+      "patients": "Des patients près de chez vous cherchent un médicament : répondez en un geste, et choisissez si votre pharmacie s’affiche."
+    },
+    "next": "Suivant",
+    "skip": "Passer",
+    "start": "Commencer",
+    "keepBrowser": "Gardez ce navigateur : votre accès est lié à ce téléphone et à ce navigateur.",
+    "moreLink": "Comment ça marche",
+    "moreHint": "Les trois idées de RuptureWatch, en trois écrans."
+  },
   "pilot": {
     "signIn": "Se connecter",
+    "moreHomeHint": "La recherche de médicaments, les pharmacies, la méthode.",
     "footer": "Prototype étudiant, AOTN TSYP 14. Aucun statut officiel. Signalements réels de pharmacies testeuses.",
     "home": {
       "pharmacist": "Je suis pharmacien·ne",
       "patient": "Je cherche un médicament",
-      "invitation": "Pharmacies : inscription sur invitation de l’équipe RuptureWatch, puis connexion par cette porte."
+      "invitation": "Pharmacies : inscription sur invitation de l’équipe RuptureWatch, puis connexion par cette porte."
     }
   }
 }

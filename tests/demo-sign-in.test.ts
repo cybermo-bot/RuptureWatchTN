@@ -39,3 +39,24 @@ describe('signInAsDemoRole', () => {
     expect(signInWithPassword).toHaveBeenCalledTimes(1);
   });
 });
+
+// Pilot-2 item 2: on the pilot, a pharmacy signing in lands on « Mes médicaments » through the
+// first-visit guide; the demo keeps « Signaler » (video and e2e).
+describe('signInToSpace for a pharmacy', () => {
+  it('goes through the guide on the pilot, to « Signaler » on the demo', async () => {
+    vi.resetModules();
+    vi.doMock('@/lib/auth/session', () => ({
+      getCurrentSession: async () => ({ organisation: { type: 'pharmacy', origin: 'tester' } }),
+    }));
+    const { signInToSpace } = await import('@/app/actions/auth');
+    const data = new FormData();
+    data.set('espace', 'pharmacie');
+    data.set('email', 'pharmacie@example.org');
+    data.set('password', 'secret');
+    vi.stubEnv('NEXT_PUBLIC_APP_MODE', 'pilot');
+    await expect(signInToSpace(data)).rejects.toThrow('redirect /pharmacie/bienvenue?premiere=1');
+    vi.stubEnv('NEXT_PUBLIC_APP_MODE', 'demo');
+    await expect(signInToSpace(data)).rejects.toThrow('redirect /pharmacie/signaler');
+    vi.doUnmock('@/lib/auth/session');
+  });
+});

@@ -57,7 +57,10 @@ export async function signInToSpace(formData: FormData) {
   }
 
   const type = session.organisation.type;
-  redirect(type === 'pharmacy' ? '/pharmacie/signaler' : HOME_BY_TYPE[type]);
+  // On the pilot, a pharmacy lands on « Mes médicaments » through the first-visit guide, shown
+  // once per browser (pilot-2 item 2); the demo keeps « Signaler » for the video and e2e.
+  if (type === 'pharmacy') redirect(isPilot() ? '/pharmacie/bienvenue?premiere=1' : '/pharmacie/signaler');
+  redirect(HOME_BY_TYPE[type]);
 }
 
 /** "Changer de rôle" (or "Se déconnecter"): ends the session and returns to the doors. */

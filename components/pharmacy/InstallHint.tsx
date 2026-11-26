@@ -17,15 +17,31 @@ const DISMISSED = 'rw-install-hint-dismissed';
 
 type Mode = 'hidden' | 'prompt' | 'ios' | 'other';
 
-export function InstallHint({ compact = false }: { compact?: boolean }) {
+/**
+ * What the hint shows before any install prompt arrives. Hidden once installed or dismissed, and
+ * on iPhone for tester accounts: a home-screen app there has its own storage, so the tester
+ * would be signed out of the account that lives in this browser (pilot-2 item 2).
+ */
+export function initialInstallMode(env: { standalone: boolean; ios: boolean; dismissed: boolean; compact: boolean; hideOnIos: boolean }): Mode {
+  if (env.standalone || (!env.compact && env.dismissed)) return 'hidden';
+  if (env.ios && env.hideOnIos) return 'hidden';
+  return env.ios ? 'ios' : 'other';
+}
+
+export function InstallHint({ compact = false, hideOnIos = false }: { compact?: boolean; hideOnIos?: boolean }) {
   const [mode, setMode] = useState<Mode>('hidden');
   const [prompt, setPrompt] = useState<InstallPromptEvent | null>(null);
 
   useEffect(() => {
-    const standalone = window.matchMedia('(display-mode: standalone)').matches;
-    if (standalone || (!compact && localStorage.getItem(DISMISSED))) return;
-    const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
-    const frame = requestAnimationFrame(() => setMode(ios ? 'ios' : 'other'));
+    const initial = initialInstallMode({
+      standalone: window.matchMedia('(display-mode: standalone)').matches,
+      ios: /iphone|ipad|ipod/i.test(navigator.userAgent),
+      dismissed: Boolean(localStorage.getItem(DISMISSED)),
+      compact,
+      hideOnIos,
+    });
+    if (initial === 'hidden') return;
+    const frame = requestAnimationFrame(() => setMode(initial));
     const onPrompt = (e: Event) => {
       e.preventDefault();
       setPrompt(e as InstallPromptEvent);
@@ -39,7 +55,7 @@ export function InstallHint({ compact = false }: { compact?: boolean }) {
       window.removeEventListener('beforeinstallprompt', onPrompt);
       window.removeEventListener('appinstalled', onInstalled);
     };
-  }, [compact]);
+  }, [compact, hideOnIos]);
 
   if (mode === 'hidden') return null;
 
