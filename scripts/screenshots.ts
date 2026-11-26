@@ -112,6 +112,11 @@ export const SHOTS: Shot[] = [
   // Pilot-2 item 2: the first-visit guide (first screen just after joining, last screen).
   { name: 'guide-1', path: '/pharmacie/bienvenue?rejoint=1', role: 'pharmacie-tunis' },
   { name: 'guide-3', path: '/pharmacie/bienvenue?etape=3', role: 'pharmacie-tunis' },
+  // Pilot-2 item 3: « Un problème ? Une idée ? », public (French, Arabic, sent) and pharmacy.
+  { name: 'avis', path: '/avis?depuis=%2Fmedicaments' },
+  { name: 'avis-ar', path: '/avis?depuis=%2Fmedicaments', locale: 'ar' },
+  { name: 'avis-envoye', path: '/avis?depuis=%2Fmedicaments&envoye=1', fullPage: false },
+  { name: 'pharmacie-avis', path: '/pharmacie/avis?erreur=limite', role: 'pharmacie-tunis' },
   // Pilot-1 item 7: the pharmacy tab bar (« Demandes »), the coordination tiles, the scenario line.
   { name: 'pharmacie-barre', path: '/pharmacie', role: 'pharmacie-tunis', fullPage: false },
   { name: 'coordination-chiffres', path: '/coordination', role: 'coordination', fullPage: false },

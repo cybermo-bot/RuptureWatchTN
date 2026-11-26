@@ -4,6 +4,11 @@ Newest first. Each entry: what was decided, and why.
 
 ## 2026-11-26, session A (branch `pilot-a`)
 
+### « Un problème ? Une idée ? » keeps no visitor identifier (pilot-2, item 3)
+
+- Table `feedback`, written only through `submit_feedback` (security definer, `search_path = ''`), read only by the service role (the lead, in the dashboard). The path is a route pattern: the server replaces every segment that is not a plain lowercase word by `[id]` and drops the query, and the database refuses any other shape, so no medicine id, request id or invitation code is stored. Rate limits use no identifier: 5 messages per hour per organisation when signed in, 200 per hour for all anonymous visitors together (an advisory lock makes the count exact under parallel calls).
+- Origin: the organisation's own origin when signed in, as for reports (a demo account's message is `simulated`, its organisation says which); `tester` for an anonymous visitor, a real person trying the prototype; never `official_source`.
+
 ### One codebase, two sites: `NEXT_PUBLIC_APP_MODE` (pilot-2, item 1)
 
 - `demo` (the default) is the jury's site, unchanged. `pilot` is the site real tester pharmacies use, on its own Supabase project with the real catalogue and no simulated row: `signInAsDemoRole` refuses on the server, no demo button anywhere (`/connexion` opens the form of real accounts, `/prescripteurs` says the view is not open yet), `/scenario` and `/vues` answer 404 and leave the « Comprendre » links, the home page leads with two doors (« Je suis pharmacien·ne », « Je cherche un médicament ») and keeps the directory, the replay and the method, and a thin petrol line at the top of every page reads « Pilote RuptureWatch : signalements réels de pharmacies testeuses. » Why: real and simulated reports share one level per molecule; a real report of LEVETIRACETAM on the demo database would be counted with 24 simulated pharmacies.

@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { Logo, LogoMark } from '@/components/brand/Logo';
 import { UnderstandNav } from '@/components/console/UnderstandNav';
+import { FeedbackLink } from '@/components/feedback/FeedbackLink';
 import { isPilot } from '@/lib/env';
 import { t } from '@/lib/i18n';
 
@@ -50,6 +51,7 @@ export function SiteFooter() {
           <Link href="/medicaments" className="text-ink-muted underline hover:text-ink">
             {t('core.site.public')}
           </Link>
+          <FeedbackLink label={t('core.feedback.link')} className="text-ink-muted underline hover:text-ink" />
         </div>
       </div>
     </footer>

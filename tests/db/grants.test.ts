@@ -36,6 +36,8 @@ const TABLES: Record<string, { anon?: Priv[]; authenticated?: Priv[]; service_ro
   // Part 5: announcements only through announce_arrival; messages insert on columns only.
   arrival_announcements: { authenticated: ['select'], service_role: ALL },
   order_messages: { authenticated: ['select'], service_role: ALL },
+  // Pilot-2 item 3: feedback only through submit_feedback; nobody but the service role reads it.
+  feedback: { service_role: ALL },
 };
 
 const FUNCTIONS: Record<string, { anon: boolean; authenticated: boolean }> = {
@@ -70,6 +72,7 @@ const FUNCTIONS: Record<string, { anon: boolean; authenticated: boolean }> = {
   'public.public_molecule_history(uuid, integer)': { anon: true, authenticated: true },
   'public.requests_for_pharmacy(uuid)': { anon: false, authenticated: false },
   'public.answer_request_as(uuid, uuid, availability_answer, boolean)': { anon: false, authenticated: false },
+  'public.submit_feedback(text, feedback_rating, text)': { anon: true, authenticated: true },
 };
 
 const ROLES = ['anon', 'authenticated', 'service_role'] as const;

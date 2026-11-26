@@ -1624,6 +1624,28 @@
     "memoryNote": "La comparaison se calcule dans votre navigateur avec les règles du site. Rien n’est enregistré.",
     "explorerLink": "Faire varier les seuils sur la page Méthode"
   },
+  "feedback": {
+    "link": "Un problème ? Une idée ?",
+    "title": "Un problème ? Une idée ?",
+    "intro": "Dites-nous en quelques mots ce qui marche et ce qui bloque dans votre espace.",
+    "messageLabel": "Votre message",
+    "noPatient": "N’écrivez ni nom ni numéro de patient.",
+    "limit": "1 000 caractères au plus.",
+    "ratingLegend": "Votre impression (facultatif)",
+    "ratings": {
+      "easy": "Facile",
+      "unclear": "Pas clair",
+      "broken": "Ne marche pas"
+    },
+    "submit": "Envoyer",
+    "sentTitle": "Merci, votre message est envoyé.",
+    "sentBody": "L’équipe RuptureWatch le lit, avec le nom de votre pharmacie.",
+    "back": "Revenir à la page précédente",
+    "errorEmpty": "Écrivez un message avant d’envoyer.",
+    "errorLimit": "Trop de messages pour l’instant. Réessayez dans une heure.",
+    "errorFailed": "Le message n’a pas pu être envoyé. Réessayez.",
+    "moreHint": "Un souci, une idée : écrivez à l’équipe RuptureWatch."
+  },
   "onboarding": {
     "title": "Comment ça marche",
     "step": "Écran {n} sur {total}",

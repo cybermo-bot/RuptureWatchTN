@@ -1,4 +1,4 @@
-import { Bell, BookOpen, ChevronRight, CircleHelp, House, MessageCircle } from 'lucide-react';
+import { Bell, BookOpen, ChevronRight, CircleHelp, House, MessageCircle, MessageSquareText } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -15,6 +15,7 @@ const LINKS: { href: string; icon: typeof House; title: MessageKey; hint: Messag
   { href: '/pharmacie/alertes', icon: Bell, title: 'core.nav.items.alerts', hint: 'core.more.alertsHint' },
   { href: '/pharmacie/whatsapp', icon: MessageCircle, title: 'core.more.whatsapp', hint: 'core.more.whatsappHint' },
   { href: '/methode', icon: BookOpen, title: 'core.more.method', hint: 'core.more.methodHint' },
+  { href: '/pharmacie/avis', icon: MessageSquareText, title: 'core.feedback.link', hint: 'core.feedback.moreHint' },
   { href: '/', icon: House, title: 'core.more.home', hint: 'core.more.homeHint' },
 ];
 

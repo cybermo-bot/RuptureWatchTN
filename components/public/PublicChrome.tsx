@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { Logo, LogoMark } from '@/components/brand/Logo';
+import { FeedbackLink } from '@/components/feedback/FeedbackLink';
 import { translator, type Locale } from '@/lib/i18n';
 import { LanguageSwitch } from './LanguageSwitch';
 import { PublicNav } from './PublicNav';
@@ -51,6 +52,9 @@ export function PublicFooter({ locale }: { locale: Locale }) {
               <Link href="/" className="inline-flex min-h-12 items-center text-ink-muted underline hover:text-ink">
                 {t('public.shell.professionals')}
               </Link>
+            </li>
+            <li>
+              <FeedbackLink label={t('public.feedback.link')} className="inline-flex min-h-12 items-center text-ink-muted underline hover:text-ink" />
             </li>
           </ul>
         </div>

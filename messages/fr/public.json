@@ -304,5 +304,26 @@
   },
   "pilot": {
     "line": "Pilote RuptureWatch : signalements réels de pharmacies testeuses."
+  },
+  "feedback": {
+    "link": "Un problème ? Une idée ?",
+    "title": "Un problème ? Une idée ?",
+    "intro": "Dites-nous en quelques mots ce qui marche et ce qui bloque. Aucun compte, aucun nom.",
+    "messageLabel": "Votre message",
+    "noPatient": "N’écrivez ni nom ni numéro de patient.",
+    "limit": "1 000 caractères au plus.",
+    "ratingLegend": "Votre impression (facultatif)",
+    "ratings": {
+      "easy": "Facile",
+      "unclear": "Pas clair",
+      "broken": "Ne marche pas"
+    },
+    "submit": "Envoyer",
+    "sentTitle": "Merci, votre message est envoyé.",
+    "sentBody": "L’équipe RuptureWatch le lit. Nous ne savons pas qui vous êtes : aucune réponse ne vous sera envoyée.",
+    "back": "Revenir à la page précédente",
+    "errorEmpty": "Écrivez un message avant d’envoyer.",
+    "errorLimit": "Trop de messages pour l’instant. Réessayez dans une heure.",
+    "errorFailed": "Le message n’a pas pu être envoyé. Réessayez."
   }
 }
