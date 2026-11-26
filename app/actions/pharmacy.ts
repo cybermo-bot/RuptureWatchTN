@@ -5,6 +5,7 @@ import { after } from 'next/server';
 import { redirect } from 'next/navigation';
 import { getCurrentSession, type CurrentSession } from '@/lib/auth/session';
 import { createUserClient } from '@/lib/db/server';
+import { isOneClickPharmacy, isShowcaseMolecule } from '@/lib/demo/showcase';
 import { hasReportedNotDelivered, signalsFor } from '@/lib/pharmacy/data';
 import { DELAY_DAYS, type DelayChoice } from '@/lib/pharmacy/delay';
 import type { Level } from '@/lib/signal';
@@ -17,7 +18,12 @@ const DAY = 86_400_000;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 
-export type ReportState = { status: 'idle' } | { status: 'too_early' } | { status: 'error' } | { status: 'rate_limited' };
+export type ReportState =
+  | { status: 'idle' }
+  | { status: 'too_early' }
+  | { status: 'error' }
+  | { status: 'rate_limited' }
+  | { status: 'showcase' };
 
 /** Reports filed by the signed-in pharmacy in the last ten minutes (row-level security: its own only). */
 async function recentReports(supabase: Awaited<ReturnType<typeof createUserClient>>, now: Date): Promise<number> {
@@ -32,6 +38,19 @@ async function recentReports(supabase: Awaited<ReturnType<typeof createUserClien
 async function requirePharmacy(): Promise<CurrentSession | null> {
   const session = await getCurrentSession();
   return session?.organisation.type === 'pharmacy' ? session : null;
+}
+
+/**
+ * A one-click demo pharmacy may not report a showcase medicine (lib/demo/showcase.ts): one juror's
+ * report would change the demonstration for every visitor (pilot-1 item 3). Checked on the server
+ * before any insert; the screens only tag those medicines. Refuses when the name cannot be read.
+ */
+async function showcaseLockedFor(session: CurrentSession, moleculeId: string): Promise<boolean> {
+  if (!isOneClickPharmacy(session.organisation.id)) return false;
+  const supabase = await createUserClient();
+  const { data, error } = await supabase.from('molecules').select('name').eq('id', moleculeId).maybeSingle();
+  if (error) return true;
+  return data ? isShowcaseMolecule(data.name as string) : false;
 }
 
 function moleculeIdFrom(formData: FormData): string | null {
@@ -84,6 +103,7 @@ export async function submitReport(_prev: ReportState, formData: FormData): Prom
   if (!session || !moleculeId) return { status: 'error' };
   if (choice === 'lt3') return { status: 'too_early' };
   if (!(choice in DELAY_DAYS)) return { status: 'error' };
+  if (await showcaseLockedFor(session, moleculeId)) return { status: 'showcase' };
 
   const now = new Date();
   const supabase = await createUserClient();
@@ -118,6 +138,7 @@ export async function reportDeliveredAgain(formData: FormData): Promise<void> {
   const session = await requirePharmacy();
   const moleculeId = moleculeIdFrom(formData);
   if (!session || !moleculeId) redirect('/pharmacie');
+  if (await showcaseLockedFor(session, moleculeId)) redirect(`/pharmacie/molecule/${moleculeId}?erreur=demo`);
 
   const signal = (await signalsFor([moleculeId])).get(moleculeId);
   const allowed =

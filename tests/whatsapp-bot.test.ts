@@ -198,6 +198,25 @@ describe('the report in four taps', () => {
     expect(bodyOf(one(await botReply({ ...text(''), replyId: 'rw:d:not-a-uuid:d3' }, pharmacy, deps, ctx)))).toBe(t('core.whatsapp.help'));
     expect(deps.reports).toEqual([]);
   });
+
+  it('a one-click demo pharmacy cannot report a showcase medicine: no delay list, no report (pilot-1 item 3)', async () => {
+    const showcase = (name: string) =>
+      fakeDeps({ molecule: async () => ({ name, level: 'likely', rule: 'single_governorate_cap', evidence: evidence(5, 1) }) });
+    const deps = showcase('TAMOXIFENE');
+    const list = one(await botReply({ ...text(''), replyId: `rw:m:${MOL}` }, pharmacy, deps, ctx));
+    expect(list.type).toBe('text');
+    expect(bodyOf(list)).toContain(t('core.showcase.locked'));
+    expect(bodyOf(list)).toContain('CARBAMAZEPINE');
+    const reply = one(await botReply({ ...text(''), replyId: `rw:d:${MOL}:d5` }, pharmacy, deps, ctx));
+    expect(bodyOf(reply)).toContain(t('core.showcase.locked'));
+    expect(deps.reports).toEqual([]);
+
+    // Any other pharmacy (a tester) reports it as usual.
+    const tester: LinkedPharmacy = { linkId: 'link-2', organisationId: '00000000-0000-4000-8000-00000000c001' };
+    const other = showcase('TAMOXIFENE');
+    await botReply({ ...text(''), replyId: `rw:d:${MOL}:d5` }, tester, other, ctx);
+    expect(other.reports).toEqual([`${MOL}:d5`]);
+  });
 });
 
 describe('search and help', () => {

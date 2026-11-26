@@ -17,7 +17,7 @@ All of it comes from demo accounts, whose organisations are marked `simulated`:
 
 | Test | Rows created |
 | --- | --- |
-| 1. Pharmacy report | One `reports` row (`not_delivered`) from "Pharmacie démo A, Tunis" for its first followed medicine other than the showcase LEVETIRACETAM; possibly a `signals` row, a `signal_events` row and `alerts` rows if the level changes. |
+| 1. Pharmacy report | One `reports` row (`not_delivered`) from "Pharmacie démo A, Tunis" for its first followed medicine that is not a showcase medicine (`lib/demo/showcase.ts`: the one-click pharmacies cannot report those); possibly a `signals` row, a `signal_events` row and `alerts` rows if the level changes. |
 | 2. Coordination | Nothing. |
 | 3. Scenario | Nothing: the scenario runs in the browser. |
 | 4. Patient request | One `availability_requests` row (LEVETIRACETAM, Tunis) and one answer from "Pharmacie démo A, Tunis", name shown. A browser can ask once a day per medicine: each run uses a fresh context. |
@@ -26,4 +26,4 @@ All of it comes from demo accounts, whose organisations are marked `simulated`:
 | 6. Ordre message | One `order_messages` row to Sfax from "Conseil régional démo, Sfax". |
 | 7. Note de situation | Nothing. |
 
-Note the time before a run. The team lead removes the rows with `npm run verify:clean -- --since <time> --apply` (reports, follows, arrival announcements, Ordre messages and the one-click pharmacies' answers; add `--requests` to remove the test's patient request too, before real patients use the site).
+Note the time before a run. The team lead removes the rows with `npm run verify:clean -- --since <time> --apply` (reports, follows, arrival announcements, Ordre messages and the one-click pharmacies' answers; add `--requests` to remove the test's patient request too, before real patients use the site). On the demo site, `npm run demo:reset -- --since <time>` does that with `--requests`, then rebuilds the demo picture.

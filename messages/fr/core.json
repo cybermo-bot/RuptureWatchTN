@@ -466,7 +466,7 @@
   },
   "follow": {
     "searchLabel": "Rechercher un médicament",
-    "searchPlaceholder": "Nom commercial ou DCI, ex. levetiracetam",
+    "searchPlaceholder": "Nom commercial ou DCI, ex. carbamazepine",
     "follow": "Suivre",
     "following": "Suivi",
     "unfollow": "Ne plus suivre",
@@ -1523,7 +1523,7 @@
   "tryHint": {
     "label": "Par où commencer",
     "dismiss": "Masquer ce conseil",
-    "pharmacy": "Essayez : signaler un médicament commandé et non livré, en deux gestes.",
+    "pharmacy": "Essayez : signaler {molecule}, commandé et non livré, en deux gestes.",
     "pharmacyLink": "Signaler",
     "wholesaler": "Essayez : changer le stock et comparer les deux répartitions.",
     "wholesalerLink": "Proposer une répartition",
@@ -1531,6 +1531,14 @@
     "central": "Essayez : annoncer un arrivage pour un médicament en tension, puis voir ce qu’en lisent les pharmacies.",
     "order": "Essayez : écrire aux pharmacies d’un gouvernorat.",
     "orderLink": "Écrire un message"
+  },
+  "showcase": {
+    "tag": "démonstration",
+    "tagLabel": "Médicament de la démonstration, que les pharmacies démo ne peuvent pas signaler",
+    "locked": "Médicament de la démonstration : son niveau reste le même pour tous les visiteurs, les pharmacies démo ne peuvent pas le signaler.",
+    "scenario": "Pour voir un niveau passer à « Confirmée », jouez le scénario : il ne modifie rien.",
+    "scenarioLink": "Jouer le scénario",
+    "tryOther": "Essayez plutôt {molecule}."
   },
   "freshness": {
     "now": "Mis à jour à l’instant",

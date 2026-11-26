@@ -24,8 +24,12 @@ test.describe('pharmacy report, then coordination', () => {
     await expect(page).toHaveURL(/\/pharmacie\/signaler$/);
 
     await page.goto('/pharmacie/signaler');
-    // Never the showcase medicine (followed too): its simulated history stays untouched.
-    const followed = page.locator('section[aria-labelledby="choix-suivis"] a').filter({ hasNotText: SHOWCASE_NAME }).first();
+    // Never a showcase medicine (followed too): its simulated history stays untouched. Pilot-1
+    // item 3: the one-click pharmacies cannot report them; their rows carry data-showcase.
+    const followed = page
+      .locator('section[aria-labelledby="choix-suivis"] a:not([data-showcase])')
+      .filter({ hasNotText: SHOWCASE_NAME })
+      .first();
     await expect(followed).toBeVisible();
     reported = (await followed.locator('span.text-lg').first().innerText()).trim();
 

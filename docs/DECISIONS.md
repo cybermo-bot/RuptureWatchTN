@@ -4,6 +4,11 @@ Newest first. Each entry: what was decided, and why.
 
 ## 2026-11-26, session A (branch `pilot-a`)
 
+### The one-click pharmacies cannot report the showcase medicines (pilot-1, item 3)
+
+- Reverses "the one-click pharmacies stay free for a live report during the demo", for the showcase medicines only: LEVETIRACETAM and the four national situations, one list in `lib/demo/showcase.ts` (`SHOWCASE_MOLECULES`), read by the pharmacy screens, the report actions, the WhatsApp bot and `scripts/clean-verification.ts`. Why: one juror reporting TAMOXIFENE from « Pharmacie démo A, Tunis » turned "concentrated in Sfax, stays probable" into « confirmée » for every visitor. The rows are tagged « démonstration » and open the medicine page; « non livré » and « livré à nouveau » are refused on the server, and the bot offers no delay list. Every other medicine stays free to report; the hint now names CARBAMAZEPINE. Gate two is shown without writing anything in `/scenario`, which the refusal links to.
+- The database insert policy on `reports` is unchanged: a direct insert with a demo account's session is still possible. The lead's `npm run demo:reset -- --since <time>` (clean, clear, shortage, national, in that order) restores the picture.
+
 ### A simulated public status says « Démonstration » first (pilot-1, item 1)
 
 - Reverses session 6's "« Simulation » sits in the heading block": when the status shown on a public page rests on simulated data (`isSimulatedStatus()`), a full-width petrol band above it reads « Démonstration : ce niveau vient de données simulées. Il ne dit rien de la situation réelle de ce médicament. », and the status sentence below it is set smaller. The same sentence is the first line of the shared text, of the page description and the headline of the share card, replacing the « Simulé : … » line. Why: LEVETIRACETAM is a real antiepileptic; a simulated « Rupture confirmée » shared to WhatsApp out of context is the rumour the product exists to stop. On `/vues` only the public panel carries it, as the visitor would see it. The share feature stays (session 6).

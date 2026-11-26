@@ -20,7 +20,7 @@ import { createHash } from 'node:crypto';
 import { demoSplit, recommendedJson } from '@/lib/allocation/decisions';
 import { recomputeSignal, type RecomputeResult, type SignalStore } from '@/lib/signals/recompute';
 import { DEMO_ROLES } from './roles';
-import { DEMO_SHORTAGE_MOLECULE } from './shortage';
+import { DEMO_SHORTAGE_MOLECULE, NATIONAL_MOLECULES } from './showcase';
 
 const HOUR = 3_600_000;
 const DAY = 24 * HOUR;
@@ -28,12 +28,8 @@ const ORDER_DELAY_DAYS = 5;
 
 const fixedId = (prefix: string, n: number) => `00000000-0000-4000-8000-${prefix}${n.toString(16).padStart(12 - prefix.length, '0')}`;
 
-export const NATIONAL_MOLECULES = {
-  probable: 'TAMOXIFENE',
-  watchLocal: 'METFORMINE',
-  watchForeign: 'AZATHIOPRINE',
-  cleared: 'CIPROFLOXACINE',
-} as const;
+// The four names live in the showcase list (lib/demo/showcase.ts), with the demo shortage's.
+export { NATIONAL_MOLECULES };
 type Situation = keyof typeof NATIONAL_MOLECULES;
 
 /** The demo wholesaler (one-click role), author of the two simulated decisions. */

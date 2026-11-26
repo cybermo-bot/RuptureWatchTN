@@ -8,6 +8,7 @@ import { LiveRefresh } from '@/components/LiveRefresh';
 import { MoleculeSearch } from '@/components/MoleculeSearch';
 import { MoleculeRow } from '@/components/pharmacy/MoleculeRow';
 import { getCurrentSession } from '@/lib/auth/session';
+import { showcaseLocked } from '@/lib/demo/showcase';
 import { t } from '@/lib/i18n';
 import { getFollowed } from '@/lib/pharmacy/data';
 import { countOpenRequests } from '@/lib/pharmacy/requests';
@@ -63,7 +64,12 @@ export default async function PharmacyHome() {
           <ul className="hairline-list border-y border-line">
             {followed.map((m) => (
               <li key={m.moleculeId}>
-                <MoleculeRow molecule={m} href={`/pharmacie/molecule/${m.moleculeId}`} label={t('core.pharmacy.openMolecule', { molecule: m.name })} />
+                <MoleculeRow
+                  molecule={m}
+                  href={`/pharmacie/molecule/${m.moleculeId}`}
+                  label={t('core.pharmacy.openMolecule', { molecule: m.name })}
+                  showcase={showcaseLocked(session.organisation.id, m.name)}
+                />
               </li>
             ))}
           </ul>

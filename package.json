@@ -20,6 +20,7 @@
     "demo:shortage": "tsx --conditions=react-server scripts/demo-shortage.ts",
     "demo:national": "tsx --conditions=react-server scripts/demo-national.ts",
     "demo:clear": "tsx --conditions=react-server scripts/demo-clear.ts",
+    "demo:reset": "tsx scripts/demo-reset.ts",
     "db:fingerprint": "tsx scripts/db-fingerprint.ts",
     "directory:areas": "tsx scripts/build-directory-areas.ts",
     "osm:export": "tsx scripts/export-osm-pharmacies.ts",

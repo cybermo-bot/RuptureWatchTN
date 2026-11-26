@@ -63,6 +63,8 @@ export const SHOTS: Shot[] = [
   { name: 'pharmacie-alertes', path: '/pharmacie/alertes', role: 'pharmacie-tunis' },
   { name: 'pharmacie-plus', path: '/pharmacie/plus', role: 'pharmacie-tunis' },
   { name: 'signaler-1-recherche', path: '/pharmacie/signaler', role: 'pharmacie-tunis' },
+  // Pilot-1 item 3: a showcase medicine reached from the search, refused to the one-click pharmacy.
+  { name: 'signaler-2-showcase', path: `/pharmacie/signaler/${SHOWCASE_ID}`, role: 'pharmacie-tunis' },
   { name: 'pharmacie-whatsapp', path: '/pharmacie/whatsapp', role: 'pharmacie-tunis' },
   { name: 'coordination', path: '/coordination', role: 'coordination' },
   { name: 'coordination-export', path: '/coordination/export', role: 'coordination' },

@@ -7,14 +7,24 @@
 import type { OrganisationType } from '@/lib/demo/roles';
 import type { MessageKey } from '@/lib/i18n';
 
+/**
+ * The medicine the pharmacy hint suggests reporting: followed by both demo pharmacies, with no
+ * signal of its own, never a showcase medicine (lib/demo/showcase.ts, tested), which the one-click
+ * pharmacies cannot report (pilot-1 item 3). Kept here, not in showcase.ts: this file reaches the
+ * browser, the demo roles list need not.
+ */
+export const HINT_MOLECULE = 'CARBAMAZEPINE';
+
 export interface SpaceHint {
   text: MessageKey;
+  /** Values inserted in the text ({molecule}). */
+  vars?: Record<string, string>;
   link?: { label: MessageKey; href: string };
 }
 
 /** The prescriber's view is a public page, outside the console: no hint there. */
 export const SPACE_HINTS: Record<Exclude<OrganisationType, 'prescriber'>, SpaceHint> = {
-  pharmacy: { text: 'core.tryHint.pharmacy', link: { label: 'core.tryHint.pharmacyLink', href: '/pharmacie/signaler' } },
+  pharmacy: { text: 'core.tryHint.pharmacy', vars: { molecule: HINT_MOLECULE }, link: { label: 'core.tryHint.pharmacyLink', href: '/pharmacie/signaler' } },
   wholesaler: { text: 'core.tryHint.wholesaler', link: { label: 'core.tryHint.wholesalerLink', href: '/grossiste#repartition-equitable' } },
   hospital_pharmacy: { text: 'core.tryHint.panel' },
   coordinator: { text: 'core.tryHint.panel' },
