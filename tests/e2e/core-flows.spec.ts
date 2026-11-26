@@ -173,7 +173,8 @@ test.describe('patient request', () => {
       await expect(page.locator('main header p')).toContainText(product);
       if (index === 0) await expect(page.getByText('Pharmacie démo A, Tunis').first()).toBeVisible({ timeout: 30_000 });
       else {
-        await expect(page.getByText('moins de 3', { exact: true }).last()).toBeVisible({ timeout: 30_000 });
+        // Pilot-1 item 7: the patient's own answer count reads « 1 ou 2 réponses » below 3.
+        await expect(page.getByText('1 ou 2 réponses', { exact: true })).toBeVisible({ timeout: 30_000 });
         await expect(page.getByText('Pharmacie démo A, Tunis')).toHaveCount(0);
       }
     }
