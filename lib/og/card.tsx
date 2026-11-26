@@ -14,6 +14,8 @@ export const OG_CONTENT_TYPE = 'image/png';
 const INK = '#153442';
 const MUTED = '#475E67';
 const LINE = '#CCD8DA';
+const STAGE = '#163846';
+const ON_STAGE = '#F5FBFF';
 const LEVELS = [
   { key: 'watch', colour: '#8B5900' },
   { key: 'likely', colour: '#A94412' },
@@ -82,19 +84,22 @@ export async function ogCard({ title, body }: { title: string; body: string }): 
 
 /**
  * The card of a public medicine page (part 8, item 4): the medicine, its public status sentence
- * with the level's shape ("confirmée" or "levée" only, rule 10), "Simulé" when the status rests on
- * demonstration data, and the disclaimer. French: a link preview is fetched without a language.
+ * with the level's shape ("confirmée" or "levée" only, rule 10), and the disclaimer. When the
+ * status rests on demonstration data, the demonstration banner is the headline, in the petrol band
+ * of the page (pilot-1 item 1), above a smaller name and status. French: a link preview is fetched
+ * without a language.
  */
 export async function medicineCard({
   name,
   level,
   sentence,
-  simulated,
+  banner,
 }: {
   name: string;
   level: 'confirmed' | 'cleared' | 'none' | null;
   sentence: string;
-  simulated: boolean;
+  /** « Démonstration : ce niveau vient de données simulées… » (simulatedBanner), or null. */
+  banner: string | null;
 }): Promise<ImageResponse> {
   const [regular, semibold] = await Promise.all([font('IBMPlexSans-Regular.ttf'), font('IBMPlexSans-SemiBold.ttf')]);
   const shape = level === 'confirmed' || level === 'cleared' ? LEVELS.find((l) => l.key === level) : undefined;
@@ -111,20 +116,17 @@ export async function medicineCard({
           </div>
           <div style={{ display: 'flex', fontSize: 24, color: MUTED }}>{t('public.medicine.statusTitle')}</div>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', marginTop: 'auto', gap: 24 }}>
-          <div style={{ display: 'flex', fontSize: 68, fontWeight: 600, lineHeight: 1.1, letterSpacing: -1 }}>{name}</div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 38, fontWeight: 600, lineHeight: 1.25 }}>
+        {banner ? (
+          <div style={{ display: 'flex', marginTop: 36, borderRadius: 12, background: STAGE, color: ON_STAGE, padding: '24px 30px', fontSize: 38, fontWeight: 600, lineHeight: 1.25 }}>
+            {banner}
+          </div>
+        ) : null}
+        <div style={{ display: 'flex', flexDirection: 'column', marginTop: 'auto', gap: banner ? 14 : 24 }}>
+          <div style={{ display: 'flex', fontSize: banner ? 48 : 68, fontWeight: 600, lineHeight: 1.1, letterSpacing: -1 }}>{name}</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: banner ? 30 : 38, fontWeight: banner ? 400 : 600, lineHeight: 1.25 }}>
             {shape ? <Shape level={shape.key} colour={shape.colour} /> : null}
             <span>{sentence}</span>
           </div>
-          {simulated ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 26, color: MUTED }}>
-              <span style={{ display: 'flex', border: `2px dashed ${MUTED}`, borderRadius: 4, padding: '2px 12px', letterSpacing: 2, textTransform: 'uppercase', color: INK }}>
-                {t('public.origin.simulated')}
-              </span>
-              <span>{t('public.share.simulatedNote')}</span>
-            </div>
-          ) : null}
         </div>
         <div style={{ display: 'flex', marginTop: 44, paddingTop: 26, borderTop: `2px solid ${LINE}`, fontSize: 26, color: MUTED }}>
           {t('public.medicine.disclaimer')}

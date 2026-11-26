@@ -2,6 +2,12 @@
 
 Newest first. Each entry: what was decided, and why.
 
+## 2026-11-26, session A (branch `pilot-a`)
+
+### A simulated public status says « Démonstration » first (pilot-1, item 1)
+
+- Reverses session 6's "« Simulation » sits in the heading block": when the status shown on a public page rests on simulated data (`isSimulatedStatus()`), a full-width petrol band above it reads « Démonstration : ce niveau vient de données simulées. Il ne dit rien de la situation réelle de ce médicament. », and the status sentence below it is set smaller. The same sentence is the first line of the shared text, of the page description and the headline of the share card, replacing the « Simulé : … » line. Why: LEVETIRACETAM is a real antiepileptic; a simulated « Rupture confirmée » shared to WhatsApp out of context is the rumour the product exists to stop. On `/vues` only the public panel carries it, as the visitor would see it. The share feature stays (session 6).
+
 ## 2026-11-24, session 6
 
 ### Visual direction: plum stage, lavender paper, violet action, citron accent (part 6, branch `ui-refresh`)

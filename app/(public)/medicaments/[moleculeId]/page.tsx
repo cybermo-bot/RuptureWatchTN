@@ -19,7 +19,8 @@ import { LevelBand } from '@/components/charts/LevelBand';
 import { getBrands, getPublicHistory, getPublicMolecule, getPublicPresentation, getPublicStatus } from '@/lib/public/medicine';
 import { ShareStatus } from '@/components/public/ShareStatus';
 import { OG_BASE } from '@/lib/og/meta';
-import { publicStatusSentence, shareText, statusLines } from '@/lib/public/share';
+import { publicStatusSentence, shareText, simulatedBanner, statusLines } from '@/lib/public/share';
+import { SimulatedBanner } from '@/components/public/SimulatedBanner';
 import { presentationText } from '@/lib/public/presentation';
 import { siteUrl } from '@/lib/site';
 
@@ -65,6 +66,8 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
   const requestHref = `/medicaments/${molecule.id}/demande${presentation ? `?presentation=${presentation.id}` : ''}`;
 
   const shown = status.level === 'confirmed' || status.level === 'cleared';
+  // A simulated « confirmée » or « levée » says so first, in the strongest band (pilot-1 item 1).
+  const banner = simulatedBanner(status, t);
   // "Mis à jour il y a …": the last evaluation of a shown status (never below "confirmée").
   const fresh = shown && status.evaluatedAt ? freshness(status.evaluatedAt, new Date()) : null;
   const body = shown ? t(status.level === 'confirmed' ? 'public.medicine.confirmedBody' : 'public.medicine.clearedBody') : null;
@@ -96,6 +99,8 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
         </div>
       </header>
 
+      {banner ? <SimulatedBanner text={banner} /> : null}
+
       <section aria-labelledby="status-title" className="flex flex-col gap-2.5 rounded-xl bg-surface-subtle p-4 sm:p-6">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <p className="text-sm font-medium text-ink-muted">{t('public.medicine.statusTitle')}</p>
@@ -103,10 +108,10 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
             <OriginBadge key={origin} origin={origin} locale={locale} />
           ))}
         </div>
-        <h2 id="status-title" className="flex items-start gap-2.5 text-xl leading-snug font-semibold text-ink">
+        <h2 id="status-title" className={`flex items-start gap-2.5 leading-snug font-semibold text-ink ${banner ? 'text-base' : 'text-xl'}`}>
           {status.level === 'confirmed' || status.level === 'cleared' ? (
-            <span className="pt-1">
-              <LevelShape level={status.level} size={18} />
+            <span className={banner ? 'pt-0.5' : 'pt-1'}>
+              <LevelShape level={status.level} size={banner ? 16 : 18} />
             </span>
           ) : null}
           <span>{publicStatusSentence(status, t, locale)}</span>

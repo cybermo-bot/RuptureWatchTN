@@ -118,8 +118,7 @@
     },
     "back": "Chercher un autre médicament",
     "arrival": "Arrivage annoncé par la centrale d’achat pour le {date}.",
-    "simulation": "Simulation",
-    "simulationNote": "Ce statut vient des données de démonstration, pas de signalements réels."
+    "simulatedBanner": "Démonstration : ce niveau vient de données simulées. Il ne dit rien de la situation réelle de ce médicament."
   },
   "request": {
     "product": "Quel produit cherchez-vous ?",
@@ -230,10 +229,8 @@
     "copied": "Lien copié.",
     "copyFailed": "Copie impossible : copiez l’adresse depuis la barre du navigateur.",
     "text": "{name} : {status}",
-    "simulated": "Simulé : données de démonstration, pas des signalements réels.",
     "ogAlt": "Statut public d’un médicament sur RuptureWatch TN",
-    "ogUnavailable": "Statut à vérifier sur la page du médicament.",
-    "simulatedNote": "Données de démonstration, pas des signalements réels."
+    "ogUnavailable": "Statut à vérifier sur la page du médicament."
   },
   "freshness": {
     "now": "Mis à jour à l’instant",
