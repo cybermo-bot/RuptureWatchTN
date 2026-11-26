@@ -51,10 +51,14 @@
     "busy": "Trop de tentatives. Réessayez dans quelques minutes.",
     "demo": "Essayer avec le compte de démonstration",
     "invitation": "Utilisez le lien ou les identifiants transmis par l’équipe RuptureWatch.",
+    "haveAccount": "J’ai un compte",
     "home": "Retour à l’accueil",
     "pharmacie": {
       "title": "Espace pharmacie",
-      "description": "Accédez à vos signalements, aux médicaments suivis et aux demandes reçues."
+      "description": "Accédez à vos signalements, aux médicaments suivis et aux demandes reçues.",
+      "demoTunis": "Pharmacie démo, Tunis",
+      "demoSfax": "Pharmacie démo, Sfax",
+      "demoNote": "Deux pharmacies de gouvernorats différents : essayez-les l’une après l’autre."
     },
     "grossiste": {
       "title": "Espace grossiste",

@@ -59,6 +59,10 @@ export const SHOTS: Shot[] = [
     await page.getByText(/Vous demandez.*ANTIOMAL.*Tunis/).waitFor();
   } },
   { name: 'accueil', path: '/' },
+  // The three doors (pilot-1 item 4: the demo first, the form folded).
+  { name: 'connexion-pharmacie', path: '/connexion/pharmacie' },
+  { name: 'connexion-grossiste', path: '/connexion/grossiste' },
+  { name: 'connexion-institution', path: '/connexion/institution' },
   { name: 'pharmacie', path: '/pharmacie', role: 'pharmacie-tunis' },
   { name: 'pharmacie-alertes', path: '/pharmacie/alertes', role: 'pharmacie-tunis' },
   { name: 'pharmacie-plus', path: '/pharmacie/plus', role: 'pharmacie-tunis' },
