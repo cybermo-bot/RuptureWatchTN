@@ -117,6 +117,13 @@ export const SHOTS: Shot[] = [
   { name: 'avis-ar', path: '/avis?depuis=%2Fmedicaments', locale: 'ar' },
   { name: 'avis-envoye', path: '/avis?depuis=%2Fmedicaments&envoye=1', fullPage: false },
   { name: 'pharmacie-avis', path: '/pharmacie/avis?erreur=limite', role: 'pharmacie-tunis' },
+  // Pilot-2 item 4: with NEXT_PUBLIC_APP_MODE=pilot, the request form says few pharmacies take part.
+  { name: 'pilote-demande', path: `/medicaments/${SHOWCASE_ID}/demande`, fullPage: false, before: async (page) => {
+    await page.locator('select').first().scrollIntoViewIfNeeded();
+  } },
+  { name: 'pilote-demande-ar', path: `/medicaments/${SHOWCASE_ID}/demande`, locale: 'ar', fullPage: false, before: async (page) => {
+    await page.locator('select').first().scrollIntoViewIfNeeded();
+  } },
   // Pilot-1 item 7: the pharmacy tab bar (« Demandes »), the coordination tiles, the scenario line.
   { name: 'pharmacie-barre', path: '/pharmacie', role: 'pharmacie-tunis', fullPage: false },
   { name: 'coordination-chiffres', path: '/coordination', role: 'coordination', fullPage: false },

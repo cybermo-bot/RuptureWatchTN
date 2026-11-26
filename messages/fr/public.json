@@ -199,7 +199,11 @@
     "notFoundBody": "Cette demande n’existe pas, ou elle a été retirée.",
     "hours": "{h} h",
     "closed": "Les demandes aux pharmacies ne sont pas encore ouvertes sur ce site. Le statut de ce médicament, sur la page précédente, reste à jour.",
-    "loading": "Chargement des réponses…"
+    "loading": "Chargement des réponses…",
+    "noneParticipating": "Aucune pharmacie participante dans ce gouvernorat pour l’instant.",
+    "openPharmacies": "Voir les pharmacies ouvertes près de vous",
+    "statusLink": "Voir le statut de ce médicament",
+    "pilotFew": "RuptureWatch est en test : peu de pharmacies participent pour l’instant."
   },
   "watch": {
     "follow": "Préviens-moi",

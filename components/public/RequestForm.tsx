@@ -7,6 +7,7 @@ import { useId, useState, useTransition } from 'react';
 import { createRequest } from '@/app/(public)/medicaments/[moleculeId]/demande/actions';
 import { buttonClass } from '@/components/Button';
 import { FormPicture } from '@/components/medicine/FormPicture';
+import { isPilot } from '@/lib/env';
 import { governorateAt, type GovernorateMapFile } from '@/lib/geo/locate';
 import { translator, type Locale } from '@/lib/i18n';
 import { deviceId, myRequest, rememberRequest } from '@/lib/public/device';
@@ -142,6 +143,8 @@ export function RequestForm({ molecule, presentation, list, locale }: { molecule
               </option>
             ))}
           </select>
+          {/* The pilot site: say that few pharmacies take part yet (pilot-2 item 4). */}
+          {isPilot() ? <p className="text-sm text-ink-muted">{t('public.request.pilotFew')}</p> : null}
         </div>
         <div className="flex flex-col gap-2">
           <button type="button" onClick={locate} disabled={pending || locating === 'locating'} className={buttonClass('quiet', 'self-start')}>
