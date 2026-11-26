@@ -120,7 +120,11 @@
     },
     "back": "Chercher un autre médicament",
     "arrival": "Arrivage annoncé par la centrale d’achat pour le {date}.",
-    "simulatedBanner": "Démonstration : ce niveau vient de données simulées. Il ne dit rien de la situation réelle de ce médicament."
+    "simulatedBanner": "Démonstration : ce niveau vient de données simulées. Il ne dit rien de la situation réelle de ce médicament.",
+    "reported": {
+      "title": "Présentations signalées par les pharmacies",
+      "tag": "signalée"
+    }
   },
   "request": {
     "product": "Quel produit cherchez-vous ?",

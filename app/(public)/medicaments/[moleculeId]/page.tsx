@@ -18,9 +18,10 @@ import { createAnonClient } from '@/lib/db/server';
 import { publicArrival } from '@/lib/institutions/data';
 import { LevelBand } from '@/components/charts/LevelBand';
 import { getBrands, getPublicHistory, getPublicMolecule, getPublicPresentation, getPublicStatus } from '@/lib/public/medicine';
+import { presentationsReportedPublic } from '@/lib/presentations/reported';
 import { ShareStatus } from '@/components/public/ShareStatus';
 import { OG_BASE } from '@/lib/og/meta';
-import { publicStatusSentence, shareText, simulatedBanner, statusLines } from '@/lib/public/share';
+import { publicStatusSentence, shareText, simulatedBanner, statusLines, isSimulatedStatus } from '@/lib/public/share';
 import { SimulatedBanner } from '@/components/public/SimulatedBanner';
 import { presentationText } from '@/lib/public/presentation';
 import { siteUrl } from '@/lib/site';
@@ -49,6 +50,14 @@ export async function generateMetadata(props: PageProps<'/medicaments/[moleculeI
   };
 }
 
+/**
+ * « signalée »: a presentation named on the reports behind a confirmed shortage (pilot-3 item 2).
+ * A word, no level shape: the level belongs to the molecule, not to one product.
+ */
+function ReportedTag({ text }: { text: string }) {
+  return <span className="inline-flex shrink-0 items-center rounded-sm border border-ink-muted px-1.5 text-xs font-medium text-ink">{text}</span>;
+}
+
 export default async function MedicinePage(props: PageProps<'/medicaments/[moleculeId]'>) {
   const { t, locale } = await getTranslator();
   const molecule = await getPublicMolecule((await props.params).moleculeId);
@@ -64,6 +73,9 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
     requestedPresentation === undefined ? null : getPublicPresentation(molecule.id, requestedPresentation),
   ]);
   if (requestedPresentation !== undefined && !presentation) notFound();
+  // Pilot-3 item 2: once « confirmée » on real data, the products pharmacies named (names only).
+  const reported = status.level === 'confirmed' && !isSimulatedStatus(status) ? await presentationsReportedPublic(molecule.id) : [];
+  const reportedIds = new Set(reported.map((r) => r.medicine_id));
   const requestHref = `/medicaments/${molecule.id}/demande${presentation ? `?presentation=${presentation.id}` : ''}`;
 
   const shown = status.level === 'confirmed' || status.level === 'cleared';
@@ -124,6 +136,19 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
             <span>{t('public.medicine.arrival', { date: formatPublicDate(arrival.expectedOn, locale) })}</span>
             <OriginBadge origin={arrival.origin} locale={locale} />
           </p>
+        ) : null}
+        {reported.length > 0 ? (
+          <div data-reported-presentations className="flex flex-col gap-1.5 border-t border-line pt-3">
+            <h3 className="text-sm font-medium text-ink">{t('public.medicine.reported.title')}</h3>
+            <ul className="flex flex-col gap-1">
+              {reported.map((r) => (
+                <li key={r.medicine_id} className="flex min-h-10 items-center gap-3">
+                  <FormPicture label={r.label} brand={r.brand} locale={locale} />
+                  <Ltr className="text-sm break-words text-ink">{r.label}</Ltr>
+                </li>
+              ))}
+            </ul>
+          </div>
         ) : null}
         <p className="text-sm text-ink-muted">{t('public.medicine.disclaimer')}</p>
       </section>
@@ -208,7 +233,10 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
                   <details className="group">
                     <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-2 py-2 hover:bg-surface-subtle [&::-webkit-details-marker]:hidden">
                       <span className="flex min-w-0 flex-col gap-0.5">
-                        <Ltr className="self-start font-medium break-words text-ink">{brand}</Ltr>
+                        <span className="flex flex-wrap items-center gap-2">
+                          <Ltr className="font-medium break-words text-ink">{brand}</Ltr>
+                          {items.some((b) => reportedIds.has(b.id)) ? <ReportedTag text={t('public.medicine.reported.tag')} /> : null}
+                        </span>
                         <span className="text-sm text-ink-muted">
                           {items.length === 1
                             ? t('public.medicines.presentationsOne')
@@ -232,6 +260,7 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
                           <Link href={`/medicaments/${molecule.id}?presentation=${b.id}`} prefetch={false} aria-current={b.id === presentation?.id ? 'page' : undefined} className="inline-flex min-h-12 items-center gap-3">
                             <FormPicture label={b.label} brand={b.brand} locale={locale} />
                             <Ltr className="text-sm break-words">{b.label}</Ltr>
+                            {reportedIds.has(b.id) ? <ReportedTag text={t('public.medicine.reported.tag')} /> : null}
                           </Link>
                         </li>
                       ))}

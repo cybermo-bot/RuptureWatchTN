@@ -4,6 +4,7 @@ import { ButtonLink } from '@/components/Button';
 import { DemandChart, NationalMapPanel, SourcesAndNews } from '@/components/coordination/MinistryPanels';
 import { MedicineDecision } from '@/components/coordination/MedicineDecision';
 import { SignalsDashboard } from '@/components/coordination/SignalsDashboard';
+import { presentationsReported } from '@/lib/presentations/reported';
 import { ArrivalLine } from '@/components/institutions/Lines';
 import { LevelShape } from '@/components/LevelBadge';
 import { Panel } from '@/components/console/Panel';
@@ -34,6 +35,7 @@ export default async function CoordinationHome({ searchParams }: PageProps<'/coo
   const supabase = await createUserClient();
   const data = await loadMinistry(supabase, selectedParam(m), mapLevel);
   const selectedId = data.dashboard.selected?.molecule_id ?? null;
+  const presentations = selectedId ? await presentationsReported(selectedId) : null;
   const priority = data.dashboard.signals[0];
 
   return (
@@ -60,6 +62,7 @@ export default async function CoordinationHome({ searchParams }: PageProps<'/coo
       </Panel>
       <SignalsDashboard
         data={data.dashboard}
+        presentations={presentations}
         basePath="/coordination"
         facts={data.facts}
         extraFigures={[

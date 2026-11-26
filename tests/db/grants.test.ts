@@ -43,6 +43,9 @@ const TABLES: Record<string, { anon?: Priv[]; authenticated?: Priv[]; service_ro
 const FUNCTIONS: Record<string, { anon: boolean; authenticated: boolean }> = {
   'public.announce_arrival(uuid, date, arrival_quantity)': { anon: false, authenticated: true },
   'public.public_arrival(uuid)': { anon: true, authenticated: true },
+  // Pilot-3 item 2: presentations reported (professionals), and product names once confirmed (public).
+  'public.presentations_reported(uuid)': { anon: false, authenticated: true },
+  'public.presentations_reported_public(uuid)': { anon: true, authenticated: true },
   'public.order_messages_for_me(integer)': { anon: false, authenticated: true },
   'public.pharmacy_network(integer)': { anon: false, authenticated: true },
   'public.network_weekly(integer)': { anon: false, authenticated: true },

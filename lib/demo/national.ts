@@ -21,6 +21,7 @@ import { demoSplit, recommendedJson } from '@/lib/allocation/decisions';
 import { recomputeSignal, type RecomputeResult, type SignalStore } from '@/lib/signals/recompute';
 import { DEMO_ROLES } from './roles';
 import { DEMO_SHORTAGE_MOLECULE, NATIONAL_MOLECULES } from './showcase';
+import { DEMO_PRESENTATION_CODES, demoMedicineFor } from './presentations';
 
 const HOUR = 3_600_000;
 const DAY = 24 * HOUR;
@@ -117,6 +118,8 @@ export interface NationalPlan {
     organisation_id: string;
     governorate_code: string;
     molecule_id: string;
+    /** The product named (pilot-3), a real CNAM presentation, or null (« livré à nouveau »). */
+    medicine_id: string | null;
     kind: 'not_delivered' | 'delivered_again';
     ordered_at: string | null;
     reported_at: string;
@@ -160,6 +163,7 @@ export function buildDemoNational(
   ids: Record<Situation, string> & { confirmed: string },
   now: Date,
   governorateNames: Map<string, string>,
+  medicines: Partial<Record<Situation, readonly string[]>> = {},
 ): NationalPlan {
   const organisations = NEW_PHARMACIES.map((code, i) => ({
     id: NATIONAL_IDS.organisations[i],
@@ -168,13 +172,17 @@ export function buildDemoNational(
     governorate_code: code,
     origin: 'simulated' as const,
   }));
+  const named = new Map<Situation, number>();
   const reports = REPORTS.map(([situation, organisation, code, kind, daysAgo], i) => {
     const reportedAt = new Date(now.getTime() - daysAgo * DAY);
+    const n = named.get(situation) ?? 0;
+    if (kind === 'not_delivered') named.set(situation, n + 1);
     return {
       id: NATIONAL_IDS.reports[i],
       organisation_id: organisation,
       governorate_code: code,
       molecule_id: ids[situation],
+      medicine_id: kind === 'not_delivered' ? demoMedicineFor(medicines[situation] ?? [], n) : null,
       kind,
       ordered_at: kind === 'not_delivered' ? new Date(reportedAt.getTime() - ORDER_DELAY_DAYS * DAY).toISOString() : null,
       reported_at: reportedAt.toISOString(),
@@ -233,6 +241,8 @@ export function buildDemoNational(
 
 export interface NationalStore {
   moleculeIdByName(name: string): Promise<string | null>;
+  /** The ids of these CNAM codes among the molecule's presentations, in the codes' order. */
+  medicineIdsByCode(moleculeId: string, codes: readonly string[]): Promise<string[]>;
   governorateNames(): Promise<Map<string, string>>;
   /** Rows on the molecule that are not this demo's: reports, follows, notices, requests, decisions, a signal. */
   otherUses(moleculeId: string): Promise<number>;
@@ -268,7 +278,11 @@ export async function runDemoNational(store: NationalStore, now: Date = new Date
     }
     molecules[situation] = id;
   }
-  const plan = buildDemoNational({ ...molecules, confirmed }, now, await store.governorateNames());
+  const medicines: Partial<Record<Situation, string[]>> = {};
+  for (const [situation, name] of Object.entries(NATIONAL_MOLECULES) as [Situation, string][]) {
+    medicines[situation] = await store.medicineIdsByCode(molecules[situation], DEMO_PRESENTATION_CODES[name] ?? []);
+  }
+  const plan = buildDemoNational({ ...molecules, confirmed }, now, await store.governorateNames(), medicines);
   await store.insert(plan);
 
   // Replay in time order: each report and the notice, at its own time.

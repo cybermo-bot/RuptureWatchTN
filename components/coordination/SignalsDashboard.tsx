@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
+import type { ReportedPresentation } from '@/lib/presentations/reported';
 import { LevelBand } from '@/components/charts/LevelBand';
 import { KeyFigures, type KeyFigure } from '@/components/console/KeyFigures';
 import { Panel } from '@/components/console/Panel';
@@ -418,8 +419,11 @@ export function SignalsDashboard({
   overview,
   facts,
   detailNote,
+  presentations,
 }: {
   data: DashboardData;
+  /** Pilot-3 item 2: the selected molecule's reported presentations. */
+  presentations?: ReportedPresentation[] | null;
   basePath: string;
   /** A second strip of key figures (the ministry's situation). */
   extraFigures?: KeyFigure[];
@@ -473,7 +477,7 @@ export function SignalsDashboard({
                   <h2 id="detail-titre" className="text-xl font-semibold break-words text-ink">
                     {selected.molecule_name}
                   </h2>
-                  <MedicineDecision signal={selected} action={decisionAction ?? (
+                  <MedicineDecision signal={selected} presentations={presentations} action={decisionAction ?? (
                     <ButtonLink href={basePath === '/coordination' ? '#journal-decisions' : '#carte'}>
                       {t(basePath === '/coordination' ? 'core.decisionBlock.log' : 'core.decisionBlock.hospital')}
                     </ButtonLink>

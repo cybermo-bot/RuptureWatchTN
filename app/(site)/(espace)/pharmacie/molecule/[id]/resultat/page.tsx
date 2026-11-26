@@ -5,14 +5,39 @@ import { Guidance } from '@/components/Guidance';
 import { LevelBadge } from '@/components/LevelBadge';
 import { LevelExplanation } from '@/components/LevelExplanation';
 import { Origins } from '@/components/Origins';
+import { getCurrentSession } from '@/lib/auth/session';
+import { createUserClient } from '@/lib/db/server';
 import { t } from '@/lib/i18n';
 import { getImpact, getMoleculeView } from '@/lib/pharmacy/data';
 import { belowThresholdText, impactText, type Impact } from '@/lib/pharmacy/impact-text';
+import { presentationText } from '@/lib/public/presentation';
 import type { Level } from '@/lib/signal';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const LEVELS: Level[] = ['none', 'watch', 'likely', 'confirmed', 'cleared'];
 const asLevel = (v: unknown): Level | null => (typeof v === 'string' && (LEVELS as string[]).includes(v) ? (v as Level) : null);
+
+/**
+ * Pilot-3 item 2: the product named on this pharmacy's latest « non livré » report for the
+ * molecule (its own reports only, row-level security), or null. No count of other pharmacies.
+ */
+async function reportedProduct(moleculeId: string): Promise<{ label: string; brand: string } | null> {
+  const session = await getCurrentSession();
+  if (!session) return null;
+  const supabase = await createUserClient();
+  const { data, error } = await supabase
+    .from('reports')
+    .select('medicine:medicines(label, brand)')
+    .eq('organisation_id', session.organisation.id)
+    .eq('molecule_id', moleculeId)
+    .eq('kind', 'not_delivered')
+    .order('reported_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error || !data) return null;
+  const medicine = (data as { medicine: { label: string; brand: string } | { label: string; brand: string }[] | null }).medicine;
+  return Array.isArray(medicine) ? (medicine[0] ?? null) : medicine;
+}
 
 /** The national count the report added to, as a plain figure with its unit. Below 3, words only. */
 function ImpactFigure({ impact }: { impact: Impact }) {
@@ -46,7 +71,11 @@ export default async function ReportResult({ params, searchParams }: PageProps<'
   const query = await searchParams;
   const delivered = query.type === 'da';
 
-  const [view, impact] = await Promise.all([getMoleculeView(id), delivered ? Promise.resolve(null) : getImpact(id)]);
+  const [view, impact, product] = await Promise.all([
+    getMoleculeView(id),
+    delivered ? Promise.resolve(null) : getImpact(id),
+    delivered ? Promise.resolve(null) : reportedProduct(id),
+  ]);
   if (!view) notFound();
 
   const after = view.signal?.level ?? asLevel(query.apres) ?? 'none';
@@ -65,6 +94,11 @@ export default async function ReportResult({ params, searchParams }: PageProps<'
           {delivered ? t('core.result.titleDelivered') : t('core.result.title')}
         </h1>
         <p className="text-lg break-words text-ink">{view.name}</p>
+        {product ? (
+          <p data-reported-product className="text-ink-muted">
+            {t('core.presentations.own', { product: presentationText(product, t) })}
+          </p>
+        ) : null}
       </header>
 
       <section aria-labelledby="change" className="panel flex flex-col gap-4 p-4">

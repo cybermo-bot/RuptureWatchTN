@@ -514,6 +514,13 @@
     },
     "rule72": "Règle des {hours} heures : une commande compte comme signal si elle n’est toujours pas livrée {hours} heures après l’avoir passée. Commandée il y a moins de 3 jours ? Rien n’est envoyé, revenez si elle n’arrive pas."
   },
+  "presentations": {
+    "title": "Présentations signalées",
+    "window": "· {days} derniers jours",
+    "none": "Les signalements ne précisent pas encore de présentation.",
+    "count": "{n} pharmacies",
+    "own": "Présentation signalée : {product}"
+  },
   "result": {
     "title": "Signalement reçu",
     "titleDelivered": "Signalement reçu : médicament de nouveau livré",

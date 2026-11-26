@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { Button } from '@/components/Button';
 import { Panel } from '@/components/console/Panel';
 import { MedicineDecision } from '@/components/coordination/MedicineDecision';
+import { presentationsReported } from '@/lib/presentations/reported';
 import { EmptyState } from '@/components/EmptyState';
 import { ArrivalLine, CatalogueLine } from '@/components/institutions/Lines';
 import { LiveRefresh } from '@/components/LiveRefresh';
@@ -30,6 +31,8 @@ export default async function CentralHome({ searchParams }: PageProps<'/centrale
   const ids = all.map((s) => s.molecule_id);
   const [facts, arrivals] = await Promise.all([loadCatalogueFacts(client, ids), upcomingArrivals(client, ids)]);
   const signals = byLevelCategoryBrands(all, facts);
+  // Pilot-3 item 2: the presentations reported for each medicine of the list.
+  const presentations = new Map(await Promise.all(signals.map(async (s) => [s.molecule_id, await presentationsReported(s.molecule_id)] as const)));
   const today = tunisToday();
   const max = tunisDayIn(365);
   const named = signals.find((s) => s.molecule_id === m)?.molecule_name ?? '';
@@ -67,7 +70,7 @@ export default async function CentralHome({ searchParams }: PageProps<'/centrale
               return (
                 <li key={s.molecule_id} id={`m-${s.molecule_id}`} className="flex scroll-mt-20 flex-col gap-2 px-4 py-4">
                   <span className="font-medium break-words text-ink">{s.molecule_name}</span>
-                  <MedicineDecision signal={s} action={eligible ? (
+                  <MedicineDecision signal={s} presentations={presentations.get(s.molecule_id)} action={eligible ? (
                     <details className="group mt-1" open={m === s.molecule_id && Boolean(erreur)}>
                       <summary className="min-h-12 w-fit cursor-pointer content-center rounded-md bg-brand px-5 font-medium text-white hover:bg-brand-strong">
                         {t('core.central.announceTitle')}
