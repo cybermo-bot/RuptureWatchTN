@@ -69,6 +69,12 @@ export const SHOTS: Shot[] = [
   { name: 'signaler-1-recherche', path: '/pharmacie/signaler', role: 'pharmacie-tunis' },
   // Pilot-1 item 3: a showcase medicine reached from the search, refused to the one-click pharmacy.
   { name: 'signaler-2-showcase', path: `/pharmacie/signaler/${SHOWCASE_ID}`, role: 'pharmacie-tunis' },
+  // Pilot-3 item 1: step 2 of a followed, non-showcase medicine, with « Quelle présentation ? ».
+  // Opens the row only; nothing is sent.
+  { name: 'signaler-2-presentation', path: '/pharmacie/signaler', role: 'pharmacie-tunis', before: async (page) => {
+    await page.locator('section[aria-labelledby="choix-suivis"] a:not([data-showcase])').first().click();
+    await page.locator('[data-presentations]').waitFor();
+  } },
   { name: 'pharmacie-whatsapp', path: '/pharmacie/whatsapp', role: 'pharmacie-tunis' },
   { name: 'coordination', path: '/coordination', role: 'coordination' },
   { name: 'coordination-export', path: '/coordination/export', role: 'coordination' },
@@ -188,6 +194,9 @@ async function take(browser: Browser, shot: Shot, width: number, out: string, qu
     await page.goto(`${BASE}${shot.path}`, { waitUntil: 'domcontentloaded', timeout: 60_000 });
     await settle(page);
     if (shot.before) await shot.before(page);
+    // Every shot: say when the page scrolls sideways (the ux-audit viewport check).
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+    if (overflow > 0) console.warn(`OVERFLOW ${shot.name} @${width}: ${overflow}px`);
     if (shot.name.startsWith('s7-')) {
       const reflows = await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
       if (!reflows) throw new Error('Horizontal overflow');

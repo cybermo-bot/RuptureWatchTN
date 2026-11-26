@@ -2,6 +2,14 @@
 
 Newest first. Each entry: what was decided, and why.
 
+## 2026-11-26, session B (branch `pilot-b`)
+
+### Reports name the product; the level stays per molecule (pilot-3)
+
+- Shortages hit products (EPITAM syrup missing, EPITAM 500 mg tablets fine), and professionals order by `code_pct`. Step 2 of « Signaler » now asks « Quelle présentation ? » above the delay buttons, preselected with the last product this pharmacy reported for the molecule, or « Plusieurs ou je ne sais pas ». A delay button still sends the report: two taps after the medicine is found.
+- `reports.medicine_id` (already in the schema, nullable) is stored when a product is chosen. The server action and the insert policy (migration `20261126010000_report_medicine.sql`) both require it to be a presentation of the reported molecule; `tests/db/pharmacy-flow.test.ts` and `tests/db/access.test.ts` stayed green with the policy, so it stays in the database.
+- The signal is unchanged: `lib/signal/` still keys on the molecule, and « Livré à nouveau » stays per molecule. A signal per presentation group (molecule + strength + form) is planned before 15 December in a separate brief. WhatsApp reports, the seeds and the molecule page's own report form still insert without a product.
+
 ## 2026-11-26, session A (branch `pilot-a`)
 
 ### « Un problème ? Une idée ? » keeps no visitor identifier (pilot-2, item 3)

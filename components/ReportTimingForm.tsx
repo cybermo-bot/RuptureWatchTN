@@ -1,8 +1,9 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, type ReactNode } from 'react';
 import { useFormStatus } from 'react-dom';
 import { submitReport, type ReportState } from '@/app/actions/pharmacy';
+import { PresentationChoice, type ReportPresentation } from '@/components/pharmacy/PresentationChoice';
 import { t, type MessageKey } from '@/lib/i18n';
 
 // Tap two of the report flow: when the order was placed. One tap sends the report.
@@ -46,13 +47,31 @@ function Choices() {
   );
 }
 
-export function ReportTimingForm({ moleculeId, headingId }: { moleculeId: string; headingId?: string }) {
+export function ReportTimingForm({
+  moleculeId,
+  headingId,
+  presentations = [],
+  preselected = null,
+  children,
+}: {
+  moleculeId: string;
+  headingId?: string;
+  /** Pilot-3 item 1: the molecule's CNAM presentations, chosen above the delay buttons. */
+  presentations?: ReportPresentation[];
+  preselected?: string | null;
+  /** The delay question, between the product choice and the delay buttons. */
+  children?: ReactNode;
+}) {
   const [state, action] = useActionState<ReportState, FormData>(submitReport, { status: 'idle' });
   return (
     <div className="flex flex-col gap-4">
-      <form action={action} aria-labelledby={headingId}>
+      <form action={action} aria-labelledby={headingId} className="flex flex-col gap-6">
         <input type="hidden" name="molecule_id" value={moleculeId} />
-        <Choices />
+        {presentations.length > 0 ? <PresentationChoice presentations={presentations} preselected={preselected} /> : null}
+        <div className="flex flex-col gap-4">
+          {children}
+          <Choices />
+        </div>
       </form>
       <div aria-live="polite">
         {state.status === 'too_early' ? (

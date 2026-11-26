@@ -507,6 +507,11 @@
       "when": "La date de commande"
     },
     "changeMedicine": "Changer de médicament",
+    "presentation": {
+      "title": "Quelle présentation ?",
+      "unknown": "Plusieurs ou je ne sais pas",
+      "more": "Autres présentations ({n})"
+    },
     "rule72": "Règle des {hours} heures : une commande compte comme signal si elle n’est toujours pas livrée {hours} heures après l’avoir passée. Commandée il y a moins de 3 jours ? Rien n’est envoyé, revenez si elle n’arrive pas."
   },
   "result": {

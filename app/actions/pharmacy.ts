@@ -59,6 +59,16 @@ function moleculeIdFrom(formData: FormData): string | null {
 }
 
 /**
+ * Pilot-3 item 1: the product the pharmacist chose, if any. Empty means « Plusieurs ou je ne
+ * sais pas » (or a form without the choice); anything else must be a presentation id.
+ */
+function medicineIdFrom(formData: FormData): string | null | 'invalid' {
+  const id = String(formData.get('medicine_id') ?? '');
+  if (id === '') return null;
+  return UUID.test(id) ? id : 'invalid';
+}
+
+/**
  * Recomputes after a report; the report is saved even if this fails (the daily run catches up).
  * A level change also goes to the linked pharmacies on WhatsApp, after the response.
  */
@@ -104,14 +114,27 @@ export async function submitReport(_prev: ReportState, formData: FormData): Prom
   if (choice === 'lt3') return { status: 'too_early' };
   if (!(choice in DELAY_DAYS)) return { status: 'error' };
   if (await showcaseLockedFor(session, moleculeId)) return { status: 'showcase' };
+  const medicineId = medicineIdFrom(formData);
+  if (medicineId === 'invalid') return { status: 'error' };
 
   const now = new Date();
   const supabase = await createUserClient();
+  if (medicineId) {
+    // The product must be a presentation of this molecule (the insert policy checks it too).
+    const { data: product, error: productError } = await supabase
+      .from('medicines')
+      .select('id')
+      .eq('id', medicineId)
+      .eq('molecule_id', moleculeId)
+      .maybeSingle();
+    if (productError || !product) return { status: 'error' };
+  }
   if ((await recentReports(supabase, now)) >= REPORTS_PER_10_MIN) return { status: 'rate_limited' };
   const { error } = await supabase.from('reports').insert({
     organisation_id: session.organisation.id,
     governorate_code: session.organisation.governorateCode,
     molecule_id: moleculeId,
+    medicine_id: medicineId,
     kind: 'not_delivered',
     ordered_at: new Date(now.getTime() - DELAY_DAYS[choice as keyof typeof DELAY_DAYS] * DAY).toISOString(),
     reported_at: now.toISOString(),
