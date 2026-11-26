@@ -88,6 +88,11 @@ export const SHOTS: Shot[] = [
   { name: 'grossiste', path: '/grossiste', role: 'grossiste' },
   { name: 'hopital', path: '/hopital', role: 'hopital' },
   { name: 'scenario', path: '/scenario' },
+  // Pilot-4 step 6: the stepper rail and the level chart at « confirmée » (five steps in).
+  { name: 'scenario-etape', path: '/scenario#scenario-complet', before: async (page) => {
+    for (let i = 0; i < 5; i++) await page.keyboard.press('ArrowRight');
+    await page.locator('[data-step="5"]').waitFor();
+  } },
   { name: 'vues', path: '/vues' },
   { name: 'methode', path: '/methode' },
   { name: 'retour', path: '/retour' },

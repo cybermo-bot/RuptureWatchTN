@@ -4,6 +4,17 @@ Newest first. Each entry: what was decided, and why.
 
 ## 2026-11-26, session B (branch `pilot-b`)
 
+### The scenario's stepper rail and level chart; the wholesaler's decisions as rows (pilot-4, step 6)
+
+- `lib/landing/tour.ts` and its test are ported from `origin/olfa` (`git show`). The test's message check now reads `core.rules`, because this branch has no `core.landing` texts. `tourStops()` gives six stops: the start, the foreign notice (J0), the first report (J2), the step where one governorate is not enough (J4), « confirmée » (J5) and the stand-down (J22).
+- On `/scenario` they drive `StopRail`, which replaces the coloured band (`StateTimeline`, removed):
+  - one 48 px node per stop, the level's shape inside;
+  - `--scenario-accent` for the walked path and the current stop, on petrol, with no glow;
+  - stops still to come show an empty ring and no level, as the band did.
+  - A node jumps to its step. Play, the arrow keys, `data-step` and `data-done` are unchanged, so e2e test 3 still holds.
+- `LevelStepChart` is Olfa's step curve in `var(--level-*)`, with no gradient, glow or drawing animation. It is one chart, shown up to the step on screen; the steps still to come stay empty, like the rail. It uses percentage coordinates, so its labels keep their size at 360 px. Each row carries its level's shape and word, and the change list under it is the text version.
+- Ordre and hospital already used the console shell, `PageHeader` and `Button`. The Ordre's lists are tables of counts, which stay tables. The wholesaler's « Vos dernières décisions » moves to `List`/`ListRow` (one tappable row per decision, with date, outcome and origin). No new feature.
+
 ### Coordination in tabs; the centrale with key figures (pilot-4, step 5)
 
 - Coordination: the figures, the map and the recent changes stay on the first screen; below them `Tabs` « Signaux » (the default: the list, `section[aria-labelledby="signaux"]`, and the selected medicine's detail, `?m=<id>#detail` unchanged), « Demande des patients » (the national demand chart, moved out of « À examiner », and the selected medicine's demand by governorate) and « Journal » (the decision log). The tab is `?vue=` in the URL, keeping the selection; « Voir le journal » links to `?vue=journal#journal-decisions`. The other users of `SignalsDashboard` (hospital) get no tabs and see everything as before.

@@ -992,6 +992,18 @@
     }
   },
   "scenario": {
+    "rail": {
+      "label": "Étapes clés du scénario",
+      "start": "Départ",
+      "startLabel": "Départ : aucun signal",
+      "ahead": "Jour {day} : à venir"
+    },
+    "chart": {
+      "title": "Niveau jour par jour",
+      "label": "Niveau du médicament fictif jour par jour : {steps}.",
+      "step": "{level} au jour {day}",
+      "none": "aucun changement pour l’instant"
+    },
     "title": "Le scénario : une rupture simulée, du premier signe à la levée",
     "intro": "Trois semaines de signalements fictifs pour un médicament fictif, joués pas à pas par les vraies règles d’alerte. Tout se passe dans votre navigateur : rien n’est écrit dans la base de données.",
     "molecule": "Médicament de démonstration (fictif)",

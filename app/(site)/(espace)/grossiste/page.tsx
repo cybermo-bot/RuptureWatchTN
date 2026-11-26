@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { ButtonLink } from '@/components/Button';
 import { Panel } from '@/components/console/Panel';
@@ -6,6 +5,7 @@ import { FIGURE_DAYS, levelFigures, SignalsDashboard } from '@/components/coordi
 import { LiveRefresh } from '@/components/LiveRefresh';
 import { OriginBadge } from '@/components/OriginBadge';
 import { PageHeader } from '@/components/PageHeader';
+import { List, ListRow } from '@/components/ui/ListRow';
 import { listDecisions } from '@/lib/allocation/decisions';
 import { getCurrentSession } from '@/lib/auth/session';
 import { lastDays } from '@/lib/charts/series';
@@ -63,26 +63,28 @@ export default async function WholesalerHome({ searchParams }: PageProps<'/gross
 
       <SignalsDashboard data={data} basePath="/grossiste" figures={figures} decisionAction={action} />
 
-      <Panel title={t('wholesaler.home.decisionsTitle')} titleId="mes-decisions" bodyClassName="px-4">
+      <Panel title={t('wholesaler.home.decisionsTitle')} titleId="mes-decisions" bodyClassName="">
         {decisions === null ? (
-          <p className="py-4 text-sm text-ink-muted">{t('wholesaler.home.decisionsUnavailable')}</p>
+          <p className="p-4 text-sm text-ink-muted">{t('wholesaler.home.decisionsUnavailable')}</p>
         ) : decisions.length === 0 ? (
-          <p className="py-4 text-sm text-ink-muted">{t('wholesaler.home.decisionsEmpty')}</p>
+          <p className="p-4 text-sm text-ink-muted">{t('wholesaler.home.decisionsEmpty')}</p>
         ) : (
-          <ul className="hairline-list text-sm">
+          <List className="border-y-0">
             {decisions.slice(0, 5).map((d) => (
-              <li key={d.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 py-3">
-                <span className="text-ink-muted tabular-nums">{formatDate(d.decided_at)}</span>
-                <Link href={`/grossiste/repartition/${d.molecule_id}`} className="font-medium">
-                  {d.molecule_name}
-                </Link>
-                <span className="text-ink">
-                  {d.applied ? t('wholesaler.split.historyApplied') : t('wholesaler.split.historyRejected')}
-                </span>
-                <OriginBadge origin={d.origin} />
-              </li>
+              <ListRow
+                key={d.id}
+                href={`/grossiste/repartition/${d.molecule_id}`}
+                title={d.molecule_name}
+                meta={
+                  <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <span className="tabular-nums">{formatDate(d.decided_at)}</span>
+                    <span>{d.applied ? t('wholesaler.split.historyApplied') : t('wholesaler.split.historyRejected')}</span>
+                    <OriginBadge origin={d.origin} />
+                  </span>
+                }
+              />
             ))}
-          </ul>
+          </List>
         )}
       </Panel>
     </div>

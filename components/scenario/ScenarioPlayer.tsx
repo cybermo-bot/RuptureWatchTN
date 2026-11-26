@@ -7,7 +7,9 @@ import { explanationText, RuleDetails } from '@/components/LevelExplanation';
 import { LevelBadge } from '@/components/LevelBadge';
 import { MissingLine } from '@/components/MissingLine';
 import { OriginBadge } from '@/components/OriginBadge';
-import { StateTimeline } from '@/components/scenario/StateTimeline';
+import { LevelStepChart } from '@/components/scenario/LevelStepChart';
+import { StopRail } from '@/components/scenario/StopRail';
+import { tourStops } from '@/lib/landing/tour';
 import { t, type MessageKey } from '@/lib/i18n';
 import { PLATFORM_ACTORS } from '@/lib/playbooks/actors';
 import { scenarioFrames, type ScenarioFrame } from '@/lib/scenario/frames';
@@ -47,6 +49,7 @@ function isTyping(target: EventTarget | null): boolean {
 
 export function ScenarioPlayer() {
   const frames = useMemo(() => scenarioFrames(t('core.scenario.noticeSource'), '/methode#garde-fous'), []);
+  const stops = useMemo(() => tourStops(frames), [frames]);
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
   const last = frames.length - 1;
@@ -158,10 +161,13 @@ export function ScenarioPlayer() {
             </p>
           </div>
 
-          <StateTimeline
-            steps={frames.map((f) => ({ index: f.index, day: f.day, level: f.level, changed: f.changed }))}
-            selected={index}
-            label={t('core.scenario.timelineLabel')}
+          <StopRail
+            stops={stops}
+            index={index}
+            onSelect={(i) => {
+              setPlaying(false);
+              setIndex(i);
+            }}
           />
 
           <div className="grid gap-6 sm:grid-cols-[minmax(0,1fr)_10rem] lg:grid-cols-[minmax(0,1fr)_11rem]">
@@ -255,6 +261,7 @@ export function ScenarioPlayer() {
           {t('core.scenario.historyTitle')}
           <OriginBadge origin="simulated" />
         </h2>
+        <LevelStepChart frames={frames} index={index} />
         {changes.length === 0 ? (
           <p className="text-sm text-ink-muted">{t('core.scenario.historyEmpty')}</p>
         ) : (
