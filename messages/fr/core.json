@@ -602,6 +602,7 @@
     "linkLabel": "Lien d’invitation",
     "qrLabel": "Code QR du lien d’invitation",
     "missing": "Le code d’invitation n’est pas configuré sur le serveur.",
+    "hiddenInDemo": "Lien d’invitation masqué dans la démonstration.",
     "back": "Retour"
   },
   "coordination": {

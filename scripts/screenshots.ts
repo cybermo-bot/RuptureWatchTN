@@ -91,6 +91,7 @@ export const SHOTS: Shot[] = [
   { name: 'centrale-amont', path: '/centrale/amont', role: 'centrale' },
   { name: 'ordre', path: '/ordre', role: 'ordre' },
   { name: 'ordre-message', path: '/ordre/message', role: 'ordre' },
+  { name: 'ordre-invitation', path: '/ordre/invitation', role: 'ordre' },
   { name: 'pharmacie-alertes-sfax', path: '/pharmacie/alertes', role: 'pharmacie-sfax' },
   { name: 'pharmacie-medicament', path: `/pharmacie/molecule/${SHOWCASE_ID}`, role: 'pharmacie-tunis' },
   { name: 'vues-showcase', path: `/vues/${SHOWCASE_ID}` },
