@@ -28,7 +28,7 @@ export function DecisionForm({ moleculeId, stock }: { moleculeId: string; stock:
           maxLength={2000}
           aria-describedby={missing ? `${hintId} ${errorId}` : hintId}
           aria-invalid={missing || undefined}
-          className="w-full rounded-md border border-ink-muted bg-surface px-3.5 py-3 text-base text-ink focus:border-brand aria-invalid:border-level-confirmed"
+          className="w-full rounded-sm border border-ink-muted bg-surface px-3.5 py-3 text-base text-ink focus:border-brand aria-invalid:border-level-confirmed"
         />
         <p id={hintId} className="text-sm text-ink-muted">
           {t('wholesaler.split.reasonHint')}
@@ -50,7 +50,7 @@ export function DecisionForm({ moleculeId, stock }: { moleculeId: string; stock:
           name="decision"
           value="apply"
           disabled={pending}
-          className="min-h-12 rounded-md bg-brand px-5 font-medium text-white hover:opacity-90 disabled:opacity-50"
+          className="min-h-12 rounded-sm bg-brand px-5 font-medium text-white hover:opacity-90 disabled:opacity-50"
         >
           {t('wholesaler.split.apply')}
         </button>
@@ -59,7 +59,7 @@ export function DecisionForm({ moleculeId, stock }: { moleculeId: string; stock:
           name="decision"
           value="reject"
           disabled={pending}
-          className="min-h-12 rounded-md border border-ink px-5 font-medium text-ink hover:bg-surface-subtle disabled:opacity-50"
+          className="min-h-12 rounded-sm border border-ink px-5 font-medium text-ink hover:bg-surface-subtle disabled:opacity-50"
         >
           {t('wholesaler.split.reject')}
         </button>

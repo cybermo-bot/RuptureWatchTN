@@ -72,10 +72,10 @@ export default async function CentralHome({ searchParams }: PageProps<'/centrale
                   <span className="font-medium break-words text-ink">{s.molecule_name}</span>
                   <MedicineDecision signal={s} presentations={presentations.get(s.molecule_id)} action={eligible ? (
                     <details className="group mt-1" open={m === s.molecule_id && Boolean(erreur)}>
-                      <summary className="min-h-12 w-fit cursor-pointer content-center rounded-md bg-brand px-5 font-medium text-white hover:bg-brand-strong">
+                      <summary className="min-h-12 w-fit cursor-pointer content-center rounded-sm bg-brand px-5 font-medium text-white hover:bg-brand-strong">
                         {t('core.central.announceTitle')}
                       </summary>
-                      <form action={announceArrival} aria-labelledby={`${formId}-titre`} className="mt-2 flex max-w-xl flex-col gap-4 rounded-md border border-line p-4">
+                      <form action={announceArrival} aria-labelledby={`${formId}-titre`} className="mt-2 flex max-w-xl flex-col gap-4 rounded-sm border border-line p-4">
                         <input type="hidden" name="molecule_id" value={s.molecule_id} />
                         <p id={`${formId}-titre`} className="text-sm text-ink-muted">
                           {t('core.central.announceHint')}
@@ -88,7 +88,7 @@ export default async function CentralHome({ searchParams }: PageProps<'/centrale
                             required
                             min={today}
                             max={max}
-                            className="min-h-12 w-full max-w-xs rounded-md border border-ink-muted bg-surface px-3 text-base font-normal"
+                            className="min-h-12 w-full max-w-xs rounded-sm border border-ink-muted bg-surface px-3 text-base font-normal"
                           />
                         </label>
                         <fieldset className="flex flex-col gap-1">

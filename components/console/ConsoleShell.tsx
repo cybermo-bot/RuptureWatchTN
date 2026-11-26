@@ -19,7 +19,7 @@ import { MORE_NAV, NAV, PHARMACY_TABS, UNDERSTAND } from '@/lib/nav';
 function WhoAmI({ session }: { session: CurrentSession }) {
   const { organisation } = session;
   return (
-    <div className="flex flex-col gap-1.5 rounded-md border border-sidebar-line px-3 py-3">
+    <div className="flex flex-col gap-1.5 rounded-sm border border-sidebar-line px-3 py-3">
       <p className="text-xs text-sidebar-muted">{t(`core.orgTypes.${organisation.type}`)}</p>
       <p className="text-[0.9375rem] leading-snug font-medium text-white">{organisation.displayName}</p>
       <p>
@@ -41,7 +41,7 @@ export function SwitchRole({ session, tone = 'dark' }: { session: CurrentSession
         type="submit"
         className={
           dark
-            ? 'flex min-h-12 w-full items-center gap-3 rounded-md px-3 text-start text-[0.9375rem] text-sidebar-text hover:bg-sidebar-raised hover:text-white focus-visible:outline-sidebar-accent'
+            ? 'flex min-h-12 w-full items-center gap-3 rounded-sm px-3 text-start text-[0.9375rem] text-sidebar-text hover:bg-sidebar-raised hover:text-white focus-visible:outline-sidebar-accent'
             : 'flex min-h-14 w-full items-center gap-3 px-4 text-start text-ink hover:bg-surface-subtle'
         }
       >
@@ -61,7 +61,7 @@ function Understand({ demo }: { demo: boolean }) {
           <li key={u.href}>
             <Link
               href={u.href}
-              className="flex min-h-12 items-center rounded-md px-3 text-sm text-sidebar-muted no-underline hover:bg-sidebar-raised hover:text-white focus-visible:outline-sidebar-accent"
+              className="flex min-h-12 items-center rounded-sm px-3 text-sm text-sidebar-muted no-underline hover:bg-sidebar-raised hover:text-white focus-visible:outline-sidebar-accent"
             >
               {t(u.label)}
             </Link>
@@ -82,7 +82,7 @@ function SidebarBody({ session, badges }: { session: CurrentSession; badges: Bad
         <SidebarNav items={NAV[type]} badges={badges} />
         {type !== 'pharmacy' ? (
           <details>
-            <summary className="min-h-12 cursor-pointer content-center rounded-md px-3 text-sm text-sidebar-text hover:bg-sidebar-raised focus-visible:outline-sidebar-accent">{t('core.nav.items.more')}</summary>
+            <summary className="min-h-12 cursor-pointer content-center rounded-sm px-3 text-sm text-sidebar-text hover:bg-sidebar-raised focus-visible:outline-sidebar-accent">{t('core.nav.items.more')}</summary>
             {secondary ? <SidebarNav items={secondary} /> : null}
             <Understand demo={session.organisation.origin === 'simulated'} />
           </details>
@@ -111,7 +111,7 @@ export function ConsoleShell({
       {/* Desktop: the sidebar, a full-height column whose content stays in view. */}
       <aside className="hidden bg-sidebar lg:block print:hidden">
         <div className="sticky top-0 flex h-dvh flex-col overflow-y-auto px-3 pt-4 pb-4">
-          <Link href="/" className="mb-6 flex min-h-12 items-center rounded-md px-3 no-underline focus-visible:outline-sidebar-accent">
+          <Link href="/" className="mb-6 flex min-h-12 items-center rounded-sm px-3 no-underline focus-visible:outline-sidebar-accent">
             <Logo tone="dark" />
             <span className="sr-only">, {t('core.nav.home')}</span>
           </Link>

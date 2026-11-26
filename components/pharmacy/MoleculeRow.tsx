@@ -30,7 +30,7 @@ export function MoleculeRow({
       aria-label={label}
       data-pulse={molecule.moleculeId}
       data-showcase={showcase ? '' : undefined}
-      className="flex min-h-16 items-center justify-between gap-4 px-4 py-3 no-underline transition-colors duration-150 hover:bg-surface-subtle active:bg-surface-subtle"
+      className="flex min-h-16 items-center justify-between gap-4 px-4 py-3 no-underline transition-colors duration-(--dur-fast) hover:bg-surface-subtle active:bg-surface-subtle"
     >
       <FormPicture />
       <span className="flex min-w-0 flex-1 flex-col gap-1">

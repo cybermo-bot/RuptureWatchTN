@@ -306,7 +306,7 @@ export function PatientMap({
             type="button"
             onClick={locate}
             disabled={status === 'loading'}
-            className="inline-flex min-h-12 w-fit items-center rounded-md border border-brand px-4 font-medium text-brand hover:bg-surface-subtle disabled:opacity-50"
+            className="inline-flex min-h-12 w-fit items-center rounded-sm border border-brand px-4 font-medium text-brand hover:bg-surface-subtle disabled:opacity-50"
           >
             {t('public.map.nearMe')}
           </button>
@@ -323,7 +323,7 @@ export function PatientMap({
           role="region"
           aria-label={label}
           data-provider={status}
-          className={`w-full overflow-hidden rounded-md border border-line bg-surface-subtle ${className}`}
+          className={`w-full overflow-hidden rounded-sm border border-line bg-surface-subtle ${className}`}
         />
         {status === 'loading' ? (
           <p className="absolute inset-0 flex items-center justify-center text-sm text-ink-muted">{t('public.map.loading')}</p>

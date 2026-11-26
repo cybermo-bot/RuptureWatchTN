@@ -33,7 +33,7 @@ export function FormPicture({ label, brand, locale = 'fr', className = '' }: {
       strokeWidth={1.65}
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={`size-10 shrink-0 rounded-md bg-surface-subtle text-brand ${className}`}
+      className={`size-10 shrink-0 rounded-sm bg-surface-subtle text-brand ${className}`}
     >
       {shapes[form]}
     </svg>

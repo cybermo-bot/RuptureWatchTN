@@ -114,7 +114,7 @@ export default async function MedicinePage(props: PageProps<'/medicaments/[molec
 
       {banner ? <SimulatedBanner text={banner} /> : null}
 
-      <section aria-labelledby="status-title" className="flex flex-col gap-2.5 rounded-xl bg-surface-subtle p-4 sm:p-6">
+      <section aria-labelledby="status-title" className="flex flex-col gap-2.5 rounded-md bg-surface-subtle p-4 sm:p-6">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <p className="text-sm font-medium text-ink-muted">{t('public.medicine.statusTitle')}</p>
           {status.origins.map((origin) => (

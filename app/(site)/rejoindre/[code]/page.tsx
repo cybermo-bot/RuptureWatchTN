@@ -48,7 +48,7 @@ export default async function JoinPage({ params, searchParams }: PageProps<'/rej
                 name="governorate"
                 required
                 defaultValue=""
-                className="min-h-12 w-full rounded-md border border-ink-muted bg-surface px-3 text-base text-ink focus:border-brand"
+                className="min-h-12 w-full rounded-sm border border-ink-muted bg-surface px-3 text-base text-ink focus:border-brand"
               >
                 <option value="" disabled>
                   {t('core.tester.choose')}

@@ -23,13 +23,13 @@ export default async function ExportPage() {
           {/* Plain links: the route answers with a file download. */}
           <a
             href="/api/coordination/export?format=csv"
-            className="inline-flex min-h-12 items-center rounded-md bg-brand px-5 font-medium text-white no-underline hover:bg-brand-strong hover:text-white"
+            className="inline-flex min-h-12 items-center rounded-sm bg-brand px-5 font-medium text-white no-underline hover:bg-brand-strong hover:text-white"
           >
             {t('core.export.csv')}
           </a>
           <a
             href="/api/coordination/export?format=json"
-            className="inline-flex min-h-12 items-center rounded-md border border-brand px-5 font-medium text-brand no-underline hover:bg-surface-subtle"
+            className="inline-flex min-h-12 items-center rounded-sm border border-brand px-5 font-medium text-brand no-underline hover:bg-surface-subtle"
           >
             {t('core.export.json')}
           </a>

@@ -14,7 +14,7 @@ import { scenarioFrames, type ScenarioFrame } from '@/lib/scenario/frames';
 
 // Plays the scenario in the browser: buildScenario() and evaluate() from lib/signal, in memory.
 // It never calls the server; "Recommencer" is the whole reset.
-// Two editorial regions (session 6): on the plum stage, the state timeline and the event that just
+// Two editorial regions (session 6): on the petrol stage, the state timeline and the event that just
 // happened; beside it, a pane answering "Pourquoi ce niveau ?" and "Qui peut agir ?". Manual by
 // default: the visitor steps through, or presses play. Arrow keys step, Space plays or pauses.
 
@@ -38,7 +38,7 @@ function mapValues(f: ScenarioFrame): Partial<Record<string, GovernorateValue>> 
 }
 
 const STAGE_BUTTON =
-  'inline-flex min-h-12 items-center justify-center gap-2 rounded-md px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45 sm:px-4';
+  'inline-flex min-h-12 items-center justify-center gap-2 rounded-sm px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45 sm:px-4';
 
 function isTyping(target: EventTarget | null): boolean {
   const el = target as HTMLElement | null;
@@ -100,8 +100,8 @@ export function ScenarioPlayer() {
   return (
     <div className="flex flex-col gap-6" data-step={index} data-level={frame.level} data-done={done ? 'true' : 'false'}>
       <div className="grid gap-5 lg:grid-cols-12 lg:items-start">
-        {/* Region 1, on the plum stage: controls, the timeline, what just happened. */}
-        <section aria-labelledby="etape" className="stage flex flex-col gap-6 rounded-xl bg-stage p-5 text-on-stage sm:p-7 lg:col-span-8">
+        {/* Region 1, on the petrol stage: controls, the timeline, what just happened. */}
+        <section aria-labelledby="etape" className="stage flex flex-col gap-6 rounded-md bg-stage p-5 text-on-stage sm:p-7 lg:col-span-8">
           <div role="group" aria-label={t('core.scenario.controls')} className="flex flex-col gap-3">
             <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
               {running ? (

@@ -41,7 +41,7 @@ function FollowAction({ moleculeId, followed }: { moleculeId: string; followed: 
       <input type="hidden" name="molecule_id" value={moleculeId} />
       <button
         type="submit"
-        className="min-h-12 rounded-md border border-brand px-4 text-sm font-medium text-brand hover:bg-surface-subtle"
+        className="min-h-12 rounded-sm border border-brand px-4 text-sm font-medium text-brand hover:bg-surface-subtle"
       >
         {t('core.follow.follow')}
       </button>

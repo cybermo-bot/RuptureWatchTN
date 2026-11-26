@@ -385,7 +385,7 @@ export function SignalList({
               href={`${basePath}?m=${s.molecule_id}#detail`}
               aria-current={isSelected ? 'true' : undefined}
               data-pulse={s.molecule_id}
-              className={`relative flex min-h-14 flex-col gap-1 px-4 py-3 no-underline transition-colors duration-150 hover:bg-surface-subtle ${
+              className={`relative flex min-h-14 flex-col gap-1 px-4 py-3 no-underline transition-colors duration-(--dur-fast) hover:bg-surface-subtle ${
                 isSelected ? 'bg-surface-subtle before:absolute before:inset-y-0 before:start-0 before:w-0.5 before:bg-brand' : ''
               }`}
             >

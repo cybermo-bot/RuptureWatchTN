@@ -21,7 +21,7 @@ const PHARMACY_DEMOS = [
   { key: 'pharmacie-sfax', label: 'core.access.pharmacie.demoSfax' },
 ] as const satisfies readonly { key: DemoRoleKey; label: MessageKey }[];
 
-const inputClass = 'min-h-12 w-full rounded-md border border-ink-muted bg-surface px-3 text-base font-normal text-ink';
+const inputClass = 'min-h-12 w-full rounded-sm border border-ink-muted bg-surface px-3 text-base font-normal text-ink';
 
 export default async function SignInPage({ params, searchParams }: PageProps<'/connexion/[audience]'>) {
   const { audience } = await params;

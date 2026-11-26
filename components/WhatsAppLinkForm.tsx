@@ -13,7 +13,7 @@ function Submit({ label }: { label: string }) {
     <button
       type="submit"
       disabled={pending}
-      className="flex min-h-12 w-full items-center justify-center rounded-md bg-brand px-5 font-medium text-white hover:bg-brand/90 disabled:cursor-wait disabled:opacity-70 sm:w-auto"
+      className="flex min-h-12 w-full items-center justify-center rounded-sm bg-brand px-5 font-medium text-white hover:bg-brand/90 disabled:cursor-wait disabled:opacity-70 sm:w-auto"
     >
       {pending ? t('core.common.sending') : label}
     </button>
@@ -55,7 +55,7 @@ export function WhatsAppLinkForm() {
           autoComplete="tel"
           required
           aria-describedby="wa-phone-hint"
-          className="min-h-12 rounded-md border border-line bg-surface px-4 text-lg text-ink"
+          className="min-h-12 rounded-sm border border-line bg-surface px-4 text-lg text-ink"
         />
         <p id="wa-phone-hint" className="text-sm text-ink-muted">
           {t('core.whatsappLink.phoneHint')}
@@ -83,7 +83,7 @@ export function WhatsAppLinkForm() {
           maxLength={7}
           required
           aria-describedby="wa-code-hint"
-          className="min-h-12 rounded-md border border-line bg-surface px-4 font-mono text-lg tracking-widest text-ink"
+          className="min-h-12 rounded-sm border border-line bg-surface px-4 font-mono text-lg tracking-widest text-ink"
         />
         <p id="wa-code-hint" className="text-sm text-ink-muted">
           {t('core.whatsappLink.codeHint')}

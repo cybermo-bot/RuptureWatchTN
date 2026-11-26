@@ -12,7 +12,7 @@ const COLOR: Record<Level, string> = {
   cleared: 'text-level-cleared',
 };
 
-/** On the plum stage (home, scenario): lighter tints, 7:1 or more on plum. */
+/** On the petrol stage (home, scenario): lighter tints, 7:1 or more on petrol. */
 const COLOR_ON_STAGE: Record<Level, string> = {
   none: 'text-on-stage-muted',
   watch: 'text-level-watch-on-stage',

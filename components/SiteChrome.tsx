@@ -29,7 +29,7 @@ export function SiteHeader({ children, compact = false }: { children?: ReactNode
         {children ?? (!compact && (
           <Link
             href={isPilot() ? '/connexion/pharmacie' : '/#roles'}
-            className="inline-flex min-h-11 items-center rounded-md bg-brand px-4 text-sm font-medium text-white no-underline hover:bg-brand-strong hover:text-white"
+            className="inline-flex min-h-11 items-center rounded-sm bg-brand px-4 text-sm font-medium text-white no-underline hover:bg-brand-strong hover:text-white"
           >
             {t(isPilot() ? 'core.pilot.signIn' : 'core.site.chooseRole')}
           </Link>

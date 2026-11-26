@@ -75,7 +75,7 @@ export function InstallHint({ compact = false, hideOnIos = false }: { compact?: 
               const choice = await prompt.userChoice;
               if (choice.outcome === 'accepted') setMode('hidden');
             }}
-            className="inline-flex min-h-12 w-fit items-center rounded-md bg-brand px-4 text-sm font-medium text-white hover:bg-brand-strong"
+            className="inline-flex min-h-12 w-fit items-center rounded-sm bg-brand px-4 text-sm font-medium text-white hover:bg-brand-strong"
           >
             {t('core.install.action')}
           </button>
@@ -90,7 +90,7 @@ export function InstallHint({ compact = false, hideOnIos = false }: { compact?: 
             localStorage.setItem(DISMISSED, '1');
             setMode('hidden');
           }}
-          className="-m-2 inline-flex min-h-12 min-w-12 shrink-0 items-center justify-center rounded-md text-ink-muted hover:text-ink"
+          className="-m-2 inline-flex min-h-12 min-w-12 shrink-0 items-center justify-center rounded-sm text-ink-muted hover:text-ink"
         >
           <X size={18} aria-hidden="true" />
           <span className="sr-only">{t('core.install.dismiss')}</span>

@@ -33,7 +33,7 @@ export default async function Guide({ searchParams }: PageProps<'/pharmacie/bien
     <div className="mx-auto flex w-full max-w-xl flex-col gap-6 pt-2">
       <GuideSeen first={first} joined={joined} />
       {joined ? (
-        <p role="note" className="flex items-start gap-3 rounded-md border border-line bg-surface px-4 py-3 text-ink">
+        <p role="note" className="flex items-start gap-3 rounded-sm border border-line bg-surface px-4 py-3 text-ink">
           <ShieldCheck size={20} aria-hidden="true" className="mt-0.5 shrink-0 text-brand" />
           {t('core.onboarding.keepBrowser')}
         </p>

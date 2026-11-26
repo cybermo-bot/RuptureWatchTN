@@ -77,7 +77,7 @@ export function LevelChangeWatcher({ items, map }: { items: WatchedLevel[]; map?
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className="rw-toast pointer-events-auto flex items-start gap-3 rounded-lg border border-sidebar-line bg-sidebar px-4 py-3 text-sm text-sidebar-text shadow-[0_8px_24px_rgba(11,26,22,0.18)]"
+          className="rw-toast pointer-events-auto flex items-start gap-3 rounded-md border border-sidebar-line bg-sidebar px-4 py-3 text-sm text-sidebar-text shadow-[0_8px_24px_rgba(11,26,22,0.18)]"
         >
           <span className="mt-1 rounded-full bg-white p-0.5">
             <LevelShape level={toast.to} size={12} />
@@ -92,7 +92,7 @@ export function LevelChangeWatcher({ items, map }: { items: WatchedLevel[]; map?
           <button
             type="button"
             onClick={() => setToasts((list) => list.filter((x) => x.id !== toast.id))}
-            className="-m-2 inline-flex min-h-10 min-w-10 items-center justify-center rounded-md text-sidebar-muted hover:text-white focus-visible:outline-sidebar-accent"
+            className="-m-2 inline-flex min-h-10 min-w-10 items-center justify-center rounded-sm text-sidebar-muted hover:text-white focus-visible:outline-sidebar-accent"
           >
             <X size={16} aria-hidden="true" />
             <span className="sr-only">{t('core.toast.close')}</span>

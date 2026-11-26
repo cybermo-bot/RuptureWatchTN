@@ -61,7 +61,7 @@ export default async function OrderMessagePage({ searchParams }: PageProps<'/ord
                 minLength={10}
                 maxLength={600}
                 rows={5}
-                className="w-full rounded-md border border-ink-muted bg-surface p-3 text-base font-normal text-ink"
+                className="w-full rounded-sm border border-ink-muted bg-surface p-3 text-base font-normal text-ink"
               />
             </div>
             <fieldset className="flex flex-col gap-2">

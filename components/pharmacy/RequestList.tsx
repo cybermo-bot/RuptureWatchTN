@@ -150,7 +150,7 @@ export function RequestList({ requests }: { requests: OpenRequest[] }) {
                 </div>
               </div>
               {done ? (
-                <p role="status" className="flex items-start gap-2 rounded-md border border-level-cleared px-3 py-3 text-ink">
+                <p role="status" className="flex items-start gap-2 rounded-sm border border-level-cleared px-3 py-3 text-ink">
                   <CircleCheck size={20} aria-hidden="true" className="mt-0.5 shrink-0 text-level-cleared" />
                   {t(DONE[done.choice])}
                 </p>

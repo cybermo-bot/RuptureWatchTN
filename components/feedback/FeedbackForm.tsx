@@ -70,7 +70,7 @@ export function FeedbackForm({
           maxLength={FEEDBACK_MAX}
           rows={6}
           aria-describedby="avis-patient avis-limite"
-          className="w-full rounded-md border border-ink-muted bg-surface px-3 py-2.5 text-base text-ink"
+          className="w-full rounded-sm border border-ink-muted bg-surface px-3 py-2.5 text-base text-ink"
         />
         <p id="avis-patient" className="font-medium text-ink">
           {texts.noPatient}
@@ -85,7 +85,7 @@ export function FeedbackForm({
           {FEEDBACK_RATINGS.map((rating) => (
             <label
               key={rating}
-              className="inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-md border border-line bg-surface px-4 text-ink has-[:checked]:border-brand has-[:checked]:bg-surface-subtle has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-brand"
+              className="inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-sm border border-line bg-surface px-4 text-ink has-[:checked]:border-brand has-[:checked]:bg-surface-subtle has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-brand"
             >
               <input type="radio" name="note" value={rating} className="size-4 accent-[var(--brand)]" />
               {texts.ratings[rating]}

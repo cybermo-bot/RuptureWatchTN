@@ -4,6 +4,13 @@ Newest first. Each entry: what was decided, and why.
 
 ## 2026-11-26, session B (branch `pilot-b`)
 
+### One set of scales: type, radii, motion, shells (pilot-4, step 0)
+
+- Tokens in `app/globals.css` (`@theme static`, so CSS and components read the same variables): `title-1/2/3`, `eyebrow` and `figure` utilities, body 1rem/1.55 and small 0.875rem/1.45; radii `--radius-sm` 6 px, `--radius-md` 12 px, `--radius-lg` 22 px, `--radius-pill`; motion `--dur-instant` 100, `--dur-fast` 150, `--dur-base` 200, `--dur-slow` 300 ms, `--ease-out` (enter) and `--ease-exit` (exit); shells `--shell-wide` 82rem, `--shell-narrow` 48rem, `--shell-console` 90rem. Spacing stays on the 4 px grid.
+- **One timing exception, `--dur-emph` 600 ms:** a chart line or bar drawing itself once (`rw-grow`). A drawing shorter than that reads as a jump, not as a trend arriving. Nothing else may use it.
+- Radius classes were renamed so their pixels stay put (`rounded-md` 6 px became `rounded-sm`, `rounded-xl` 12 px became `rounded-md`); the two odd radii joined the scale (4 px badges now 6 px, 8 px boxes now 12 px). The single highlights (`rw-pulse-*`, the scenario's stage pulse) went from 0.9–1.2 s to `--dur-slow`; the hover transitions from 180 ms to the tokens. Reduced motion now also stops view transitions.
+- The plum-palette note further down this file is out of date: the stage is petrol (`--stage`), and the comments saying "plum" were corrected.
+
 ### Reports name the product; the level stays per molecule (pilot-3)
 
 - Shortages hit products (EPITAM syrup missing, EPITAM 500 mg tablets fine), and professionals order by `code_pct`. Step 2 of « Signaler » now asks « Quelle présentation ? » above the delay buttons, preselected with the last product this pharmacy reported for the molecule, or « Plusieurs ou je ne sais pas ». A delay button still sends the report: two taps after the medicine is found.

@@ -132,12 +132,12 @@ export function SplitComparison(props: SplitComparisonProps) {
               }}
               aria-describedby={`${stockId}-hint`}
               aria-invalid={stock === null || undefined}
-              className="min-h-12 w-full rounded-md border border-ink-muted bg-surface px-3.5 font-mono text-base text-ink tabular-nums focus:border-brand"
+              className="min-h-12 w-full rounded-sm border border-ink-muted bg-surface px-3.5 font-mono text-base text-ink tabular-nums focus:border-brand"
             />
             {showAll ? <input type="hidden" name="gouvernorats" value="tous" /> : null}
             <button
               type="submit"
-              className="min-h-12 shrink-0 rounded-md border border-brand px-4 font-medium text-brand hover:bg-surface-subtle"
+              className="min-h-12 shrink-0 rounded-sm border border-brand px-4 font-medium text-brand hover:bg-surface-subtle"
             >
               {t('wholesaler.split.compute')}
             </button>
@@ -296,11 +296,11 @@ export function SplitComparison(props: SplitComparisonProps) {
                     replaceQuery({ cible: e.target.value.trim() || null });
                   }}
                   aria-describedby={`${targetId}-result ${targetId}-note`}
-                  className="min-h-12 w-full rounded-md border border-ink-muted bg-surface px-3.5 font-mono text-base text-ink tabular-nums focus:border-brand"
+                  className="min-h-12 w-full rounded-sm border border-ink-muted bg-surface px-3.5 font-mono text-base text-ink tabular-nums focus:border-brand"
                 />
                 <button
                   type="submit"
-                  className="min-h-12 shrink-0 rounded-md border border-brand px-4 font-medium text-brand hover:bg-surface-subtle"
+                  className="min-h-12 shrink-0 rounded-sm border border-brand px-4 font-medium text-brand hover:bg-surface-subtle"
                 >
                   {t('wholesaler.split.compare.targetCompute')}
                 </button>
@@ -361,7 +361,7 @@ function ResultCard({
   proposed?: boolean;
 }) {
   return (
-    <div className={`flex flex-col gap-3 rounded-lg border p-4 ${proposed ? 'border-brand' : 'border-line'}`}>
+    <div className={`flex flex-col gap-3 rounded-md border p-4 ${proposed ? 'border-brand' : 'border-line'}`}>
       <div className="flex flex-col gap-1">
         <span className="flex items-center gap-2 text-sm font-medium text-ink-muted">
           {shape}

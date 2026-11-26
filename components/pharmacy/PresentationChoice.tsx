@@ -22,7 +22,7 @@ const SHOWN = 3;
 function Option({ value, checked, title, picture }: { value: string; checked: boolean; title: string; picture?: React.ReactNode }) {
   return (
     <li>
-      <label className="flex min-h-12 cursor-pointer items-center gap-3 px-2 py-1 transition-colors duration-100 has-[:checked]:bg-surface-subtle has-[:focus-visible]:outline-2 has-[:focus-visible]:-outline-offset-2 has-[:focus-visible]:outline-brand">
+      <label className="flex min-h-12 cursor-pointer items-center gap-3 px-2 py-1 transition-colors duration-(--dur-instant) has-[:checked]:bg-surface-subtle has-[:focus-visible]:outline-2 has-[:focus-visible]:-outline-offset-2 has-[:focus-visible]:outline-brand">
         <input type="radio" name="medicine_id" value={value} defaultChecked={checked} className="size-5 shrink-0 accent-brand focus-visible:outline-none" />
         {picture}
         <span className="min-w-0 break-words text-ink">{title}</span>
@@ -57,7 +57,7 @@ export function PresentationChoice({ presentations, preselected }: { presentatio
         <details className="group">
           <summary className="inline-flex min-h-12 cursor-pointer list-none items-center gap-1 text-sm font-medium text-brand underline [&::-webkit-details-marker]:hidden">
             {t('core.report.presentation.more', { n: folded.length })}
-            <ChevronDown size={16} strokeWidth={1.75} aria-hidden="true" className="transition-transform duration-150 group-open:rotate-180" />
+            <ChevronDown size={16} strokeWidth={1.75} aria-hidden="true" className="transition-transform duration-(--dur-fast) group-open:rotate-180" />
           </summary>
           <ul className="hairline-list border-b border-line">{folded.map(option)}</ul>
         </details>

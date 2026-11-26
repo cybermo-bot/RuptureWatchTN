@@ -95,7 +95,7 @@ export function MedicineSearch({ locale, linkPrefix = '/medicaments/', label, au
 
   return (
     <div className="flex flex-col gap-5">
-      <div className={title ? 'flex flex-col gap-4 rounded-xl bg-surface-subtle p-5 sm:gap-6 sm:p-8' : undefined}>
+      <div className={title ? 'flex flex-col gap-4 rounded-md bg-surface-subtle p-5 sm:gap-6 sm:p-8' : undefined}>
         {title ? (
           <header className="flex flex-col gap-1.5">
             <h1 className="text-3xl leading-tight font-semibold tracking-tight text-ink sm:text-4xl">{title}</h1>
@@ -128,7 +128,7 @@ export function MedicineSearch({ locale, linkPrefix = '/medicaments/', label, au
                 <button type="button" onClick={() => {
                   changeQuery(example);
                   document.getElementById(inputId)?.focus();
-                }} className="inline-flex min-h-12 items-center gap-2 rounded-md border border-line px-3 font-medium text-brand hover:border-brand hover:bg-surface-subtle">
+                }} className="inline-flex min-h-12 items-center gap-2 rounded-sm border border-line px-3 font-medium text-brand hover:border-brand hover:bg-surface-subtle">
                   <Ltr>{example}</Ltr>
                   <ArrowUpLeft size={15} aria-hidden="true" className="rtl:-scale-x-100" />
                 </button>

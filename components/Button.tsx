@@ -4,7 +4,7 @@ import type { ButtonHTMLAttributes, ComponentProps, ReactNode } from 'react';
 type Variant = 'primary' | 'secondary' | 'quiet' | 'stage';
 
 const BASE =
-  'inline-flex min-h-12 items-center justify-center gap-2 rounded-md px-5 text-base font-medium no-underline transition-colors disabled:cursor-not-allowed disabled:opacity-60';
+  'inline-flex min-h-12 items-center justify-center gap-2 rounded-sm px-5 text-base font-medium no-underline transition-colors disabled:cursor-not-allowed disabled:opacity-60';
 
 const VARIANT: Record<Variant, string> = {
   primary: 'bg-brand text-white hover:bg-brand-strong hover:text-white',

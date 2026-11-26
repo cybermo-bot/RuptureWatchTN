@@ -86,7 +86,7 @@ export function QuickSearch({ levels, basePath }: { levels: SpaceLevel[]; basePa
       <button
         type="button"
         onClick={open}
-        className="inline-flex min-h-11 items-center gap-2 rounded-md border border-line bg-surface px-3 text-sm text-ink hover:bg-surface-subtle"
+        className="inline-flex min-h-11 items-center gap-2 rounded-sm border border-line bg-surface px-3 text-sm text-ink hover:bg-surface-subtle"
       >
         <Search size={16} aria-hidden="true" />
         {t('core.quickSearch.open')}
@@ -97,7 +97,7 @@ export function QuickSearch({ levels, basePath }: { levels: SpaceLevel[]; basePa
         ref={dialog}
         aria-labelledby={`${inputId}-title`}
         onClose={() => setQ('')}
-        className="mx-auto mt-[10vh] w-[min(36rem,calc(100%-2rem))] rounded-lg border border-line bg-surface p-0 text-ink backdrop:bg-ink/40"
+        className="mx-auto mt-[10vh] w-[min(36rem,calc(100%-2rem))] rounded-md border border-line bg-surface p-0 text-ink backdrop:bg-ink/40"
       >
         <div className="flex items-center justify-between gap-3 border-b border-line px-4 py-3">
           <h2 id={`${inputId}-title`} className="text-base font-semibold">
@@ -106,7 +106,7 @@ export function QuickSearch({ levels, basePath }: { levels: SpaceLevel[]; basePa
           <button
             type="button"
             onClick={() => dialog.current?.close()}
-            className="inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 text-sm text-ink-muted hover:bg-surface-subtle"
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-sm px-2 text-sm text-ink-muted hover:bg-surface-subtle"
           >
             <X size={16} aria-hidden="true" />
             {t('core.quickSearch.close')}
@@ -134,7 +134,7 @@ export function QuickSearch({ levels, basePath }: { levels: SpaceLevel[]; basePa
             spellCheck={false}
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            className="min-h-12 rounded-md border border-ink-muted px-3 text-base"
+            className="min-h-12 rounded-sm border border-ink-muted px-3 text-base"
           />
           <p role="status" className="text-sm text-ink-muted">
             {status}

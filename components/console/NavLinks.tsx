@@ -31,7 +31,7 @@ export function SidebarNav({ items, badges = {}, onNavigate }: { items: NavItem[
               href={item.href}
               onClick={onNavigate}
               aria-current={current ? 'page' : undefined}
-              className={`relative flex min-h-12 items-center gap-3 rounded-md px-3 text-[0.9375rem] no-underline transition-colors duration-150 focus-visible:outline-sidebar-accent ${
+              className={`relative flex min-h-12 items-center gap-3 rounded-sm px-3 text-[0.9375rem] no-underline transition-colors duration-(--dur-fast) focus-visible:outline-sidebar-accent ${
                 current
                   ? 'bg-sidebar-raised font-medium text-white before:absolute before:inset-y-2.5 before:start-0 before:w-0.5 before:rounded-full before:bg-sidebar-accent'
                   : 'text-sidebar-text hover:bg-sidebar-raised hover:text-white'
@@ -75,7 +75,7 @@ export function BottomTabs({ items, badges = {} }: { items: NavItem[]; badges?: 
               <Link
                 href={item.href}
                 aria-current={current ? 'page' : undefined}
-                className={`relative flex min-h-16 flex-col items-center justify-center gap-1 text-[0.75rem] leading-tight whitespace-nowrap no-underline transition-colors duration-150 ${
+                className={`relative flex min-h-16 flex-col items-center justify-center gap-1 text-[0.75rem] leading-tight whitespace-nowrap no-underline transition-colors duration-(--dur-fast) ${
                   current ? 'font-semibold text-brand' : 'text-ink-muted hover:text-ink'
                 }`}
               >

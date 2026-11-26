@@ -41,7 +41,7 @@ function mapValues(f: CompareFrame): Partial<Record<string, GovernorateValue>> {
   return values;
 }
 
-const BUTTON = 'inline-flex min-h-12 items-center justify-center rounded-md px-5 font-medium disabled:cursor-not-allowed disabled:opacity-50';
+const BUTTON = 'inline-flex min-h-12 items-center justify-center rounded-sm px-5 font-medium disabled:cursor-not-allowed disabled:opacity-50';
 
 export function CompareCases() {
   const frames = useMemo(() => ({ spread: compareFrames('spread'), concentrated: compareFrames('concentrated') }), []);
@@ -66,7 +66,7 @@ export function CompareCases() {
           {COMPARE_CASES.map((c) => (
             <label
               key={c}
-              className={`flex min-h-12 cursor-pointer items-start gap-3 rounded-lg border p-4 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-brand ${
+              className={`flex min-h-12 cursor-pointer items-start gap-3 rounded-md border p-4 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-brand ${
                 chosen === c ? 'border-brand bg-surface' : 'border-line bg-surface hover:border-ink-muted'
               }`}
             >

@@ -27,7 +27,7 @@ function Choices() {
           name="delay"
           value={c.value}
           disabled={pending}
-          className={`flex min-h-14 w-full items-center justify-between rounded-md border px-5 text-start text-lg font-medium transition-colors disabled:cursor-wait ${
+          className={`flex min-h-14 w-full items-center justify-between rounded-sm border px-5 text-start text-lg font-medium transition-colors disabled:cursor-wait ${
             c.value === 'lt3'
               ? 'border-line bg-surface text-ink-muted hover:border-ink-muted'
               : 'border-brand bg-surface text-ink hover:bg-surface-subtle'

@@ -70,7 +70,7 @@ async function MoleculeCheck({ moleculeId }: { moleculeId: string }) {
         <GovernoratePanel level={level} counts={counts} headingLevel={3} />
       </div>
 
-      <p className="rounded-md border border-ink-muted px-4 py-3 font-medium text-ink">{french('core.prescribers.substitution')}</p>
+      <p className="rounded-sm border border-ink-muted px-4 py-3 font-medium text-ink">{french('core.prescribers.substitution')}</p>
     </section>
   );
 }

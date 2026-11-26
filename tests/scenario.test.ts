@@ -55,7 +55,6 @@ describe('the scenario, in memory', () => {
       'lib/scenario/frames.ts',
       'components/scenario/ScenarioPlayer.tsx',
       'components/scenario/StateTimeline.tsx',
-      'components/home/HomeStage.tsx',
     ];
     for (const f of files) {
       const src = readFileSync(join(__dirname, '..', f), 'utf8');

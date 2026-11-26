@@ -247,7 +247,7 @@ export function PharmacyFinder({ locale, areas }: { locale: Locale; areas: Area[
           value={origin?.kind === 'area' ? origin.code : ''}
           onChange={(e) => chooseArea(e.target.value)}
           disabled={!provider}
-          className="min-h-12 w-full max-w-sm rounded-md border border-line bg-surface px-3 text-ink disabled:opacity-50"
+          className="min-h-12 w-full max-w-sm rounded-sm border border-line bg-surface px-3 text-ink disabled:opacity-50"
         >
           <option value="" disabled>
             {t('directory.where.choose')}
@@ -269,7 +269,7 @@ export function PharmacyFinder({ locale, areas }: { locale: Locale; areas: Area[
               type="button"
               aria-pressed={filters.has(f)}
               onClick={() => toggle(f)}
-              className="inline-flex min-h-12 items-center gap-2 rounded-md border border-line px-4 text-ink aria-pressed:border-brand aria-pressed:bg-surface-subtle aria-pressed:font-medium"
+              className="inline-flex min-h-12 items-center gap-2 rounded-sm border border-line px-4 text-ink aria-pressed:border-brand aria-pressed:bg-surface-subtle aria-pressed:font-medium"
             >
               <span aria-hidden="true" className="inline-block w-3 text-brand">
                 {filters.has(f) ? '\u2713' : ''}
@@ -315,7 +315,7 @@ export function PharmacyFinder({ locale, areas }: { locale: Locale; areas: Area[
             <button
               type="button"
               onClick={() => setFilters(new Set())}
-              className="min-h-12 rounded-md border border-brand px-4 font-medium text-brand hover:bg-surface-subtle"
+              className="min-h-12 rounded-sm border border-brand px-4 font-medium text-brand hover:bg-surface-subtle"
             >
               {t('directory.filters.clear')}
             </button>

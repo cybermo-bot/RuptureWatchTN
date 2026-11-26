@@ -99,7 +99,7 @@ export function ThresholdExplorer({ noticeSource }: { noticeSource: string }) {
   const changed = SETTINGS.some((k) => values[k] !== EXPLORER_DEFAULTS[k]);
 
   return (
-    <section aria-labelledby="explorer" className="flex flex-col gap-6 rounded-lg bg-surface-subtle p-4 sm:p-5">
+    <section aria-labelledby="explorer" className="flex flex-col gap-6 rounded-md bg-surface-subtle p-4 sm:p-5">
       <div className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center gap-3">
           <h3 id="explorer" className="font-semibold text-ink">
@@ -142,7 +142,7 @@ export function ThresholdExplorer({ noticeSource }: { noticeSource: string }) {
         type="button"
         onClick={() => setValues(EXPLORER_DEFAULTS)}
         disabled={!changed}
-        className="flex min-h-12 w-fit items-center rounded-md border border-line px-4 font-medium text-ink hover:bg-surface-subtle disabled:text-ink-muted"
+        className="flex min-h-12 w-fit items-center rounded-sm border border-line px-4 font-medium text-ink hover:bg-surface-subtle disabled:text-ink-muted"
       >
         {t('core.method.explorer.reset')}
       </button>

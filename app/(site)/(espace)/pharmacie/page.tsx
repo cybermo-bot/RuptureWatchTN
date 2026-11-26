@@ -33,7 +33,7 @@ export default async function PharmacyHome() {
       {openRequests > 0 ? (
         <Link
           href="/pharmacie/demandes"
-          className="flex min-h-14 items-center gap-3 rounded-md bg-surface-subtle px-3 py-2 no-underline hover:bg-surface-subtle/60 sm:px-4"
+          className="flex min-h-14 items-center gap-3 rounded-sm bg-surface-subtle px-3 py-2 no-underline hover:bg-surface-subtle/60 sm:px-4"
         >
           <Inbox size={20} aria-hidden="true" className="shrink-0 text-brand" />
           <span className="flex-1 text-ink">

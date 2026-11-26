@@ -9,7 +9,7 @@ export function PrintButton() {
     <button
       type="button"
       onClick={() => window.print()}
-      className="inline-flex min-h-12 items-center gap-2 rounded-md bg-brand px-4 font-medium text-white transition-colors duration-150 hover:bg-brand-strong"
+      className="inline-flex min-h-12 items-center gap-2 rounded-sm bg-brand px-4 font-medium text-white transition-colors duration-(--dur-fast) hover:bg-brand-strong"
     >
       <Printer size={18} aria-hidden="true" />
       {t('core.note.print')}
