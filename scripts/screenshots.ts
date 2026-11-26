@@ -91,6 +91,11 @@ export const SHOTS: Shot[] = [
   { name: 'demande', path: `/medicaments/${SHOWCASE_ID}/demande` },
   { name: 'pharmacie-demandes', path: '/pharmacie/demandes', role: 'pharmacie-tunis' },
   { name: 'prescripteurs-verification', path: `/prescripteurs?m=${TAMOXIFEN_ID}`, role: 'medecin' },
+  // Pilot-1 item 6: « Pourquoi ? » opened, the rule's name where its code was.
+  { name: 'prescripteurs-pourquoi', path: `/prescripteurs?m=${TAMOXIFEN_ID}`, role: 'medecin', fullPage: false, before: async (page) => {
+    await page.getByText('Pourquoi ?').first().click();
+    await page.getByText('Règle appliquée').first().scrollIntoViewIfNeeded();
+  } },
   // Part 5: the institutions' spaces, and where their work shows.
   { name: 'coordination-note', path: '/coordination/note', role: 'coordination' },
   { name: 'centrale', path: '/centrale', role: 'centrale' },

@@ -50,3 +50,21 @@ describe('team content in messages/fr/core.json', () => {
     }
   });
 });
+
+// Pilot-1 item 6: no raw rule code on any screen. The "Pourquoi ?" details (RuleDetails), which
+// every level journal uses (recent changes, coordination journal and decision, scenario), show
+// the rule's name from the methods page, never its code; the code stays only in the link anchor.
+describe('rule names on screen', () => {
+  it.each(Object.keys(RULES))('rule %s has a name, and "Pourquoi ?" shows it instead of the code', async (rule) => {
+    const { createElement } = await import('react');
+    const { renderToStaticMarkup } = await import('react-dom/server');
+    const { RuleDetails, ruleName } = await import('@/components/LevelExplanation');
+    const name = ruleName(rule as RuleId);
+    expect(name).toBe(t(`core.method.rules.${rule as RuleId}.name`));
+    expect(name).not.toMatch(/_/);
+    const html = renderToStaticMarkup(createElement(RuleDetails, { rule: rule as RuleId }));
+    const text = html.replace(/<[^>]*>/g, ' ');
+    expect(text).toContain(name);
+    expect(text).not.toContain(rule);
+  });
+});

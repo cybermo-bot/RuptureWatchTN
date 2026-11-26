@@ -176,7 +176,6 @@ export default function MethodPage() {
                 <div key={rule} id={rule} className="flex scroll-mt-4 flex-col gap-1 py-4 target:bg-surface-subtle">
                   <dt className="flex flex-wrap items-baseline gap-x-3">
                     <span className="font-medium text-ink">{t(`core.method.rules.${rule}.name`)}</span>
-                    <code className="font-mono text-xs text-ink-muted">{rule}</code>
                   </dt>
                   <dd className="text-ink">{tv(`core.method.rules.${rule}.body`)}</dd>
                 </div>
