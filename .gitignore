@@ -37,3 +37,6 @@ next-env.d.ts
 
 # Local deliverables, not part of the app
 Claude outputs/
+
+# Claude Code personal permissions
+.claude/settings.local.json
